@@ -47,7 +47,7 @@ Usage
 ===============================================================================
 
 ```JavaScript
-const Collisions = require('detect-collisions').default;
+const Collisions = require('detect-collisions');
 
 // Create the collision system
 const system = new Collisions();
@@ -92,7 +92,7 @@ Getting Started
 Call the Collisions constructor to create a collision system.
 
 ```JavaScript
-const Collisions = require('detect-collisions').default;
+const Collisions = require('detect-collisions');
 
 const system = new Collisions();
 ```
@@ -125,7 +125,7 @@ system.insert(polygon, line, point);
 Collision systems expose several convenience functions for creating bodies and inserting them into the system in one step. This also avoids having to require the different body classes.
 
 ```JavaScript
-const Collisions = require('detect-collisions').default;
+const Collisions = require('detect-collisions');
 
 const system = new Collisions();
 
