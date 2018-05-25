@@ -1,9 +1,8 @@
 {
-	"name": "collisions",
-	"version": "2.2.0",
-	"description": "Collision detection for circles, polygons, and points",
-	"module": "src/Collisions.mjs",
-	"types": "collisions.d.ts",
+	"name": "detect-collisions",
+	"version": "2.3.0",
+	"description": "[forked] Collision detection for circles, polygons, and points",
+	"main": "source/index.js",
 	"scripts": {
 		"lint": "eslint ./source --fix",
 		"compile": "babel ./source --out-dir ./es2015",
