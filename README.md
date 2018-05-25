@@ -1,8 +1,9 @@
-Collisions
+Detect Collisions
 ===============================================================================
 
-**Collisions** is a JavaScript library for quickly and accurately detecting collisions between Polygons, Circles, and Points. It combines the efficiency of a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and the accuracy of the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
+**detect-collisions** is a JavaScript library for quickly and accurately detecting collisions between Polygons, Circles, and Points. It combines the efficiency of a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and the accuracy of the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
 
+* [Credits](#anchor-credits)
 * [Installation](#anchor-installation)
 * [Documentation](#anchor-documentation)
 * [Demos](#anchor-demos)
@@ -21,6 +22,12 @@ Collisions
 * [Only using SAT](#anchor-only-using-sat)
 * [FAQ](#anchor-faq)
 
+<a name="anchor-credits"></a>
+Credits
+===============================================================================
+
+It was originally forked from (github.com/Sinova/Collisions)[https://github.com/Sinova/Collisions]
+
 <a name="anchor-installation"></a>
 Installation
 ===============================================================================
@@ -33,14 +40,14 @@ npm install detect-collisions
 Documentation
 ===============================================================================
 
-View the [documentation](https://sinova.github.com/Collisions/) (this README is also there).
+View the [documentation](https://prozi.github.com/detect-collisions/) (this README is also there).
 
 <a name="anchor-demos"></a>
 Demos
 ===============================================================================
 
-* [Tank](https://sinova.github.com/Collisions/demo/)
-* [Stress Test](https://sinova.github.com/Collisions/demo/?stress)
+* [Tank](https://prozi.github.com/detect-collisions/demo/)
+* [Stress Test](https://prozi.github.com/detect-collisions/demo/?stress)
 
 <a name="anchor-usage"></a>
 Usage
@@ -213,7 +220,7 @@ if (polygon.collides(line)) {
 <a name="anchor-step-5"></a>
 ## 5. Getting Detailed Collision Information
 
-There is often a need for detailed information about a collision in order to react to it appropriately. This information is stored using a `Result` object. `Result` objects have several properties set on them when a collision occurs, all of which are described in the [documentation](https://sinova.github.com/Collisions/).
+There is often a need for detailed information about a collision in order to react to it appropriately. This information is stored using a `Result` object. `Result` objects have several properties set on them when a collision occurs, all of which are described in the [documentation](https://prozi.github.com/detect-collisions/).
 
 For convenience, there are several ways to create a `Result` object. `Result` objects do not belong to any particular collision system, so any of the following methods for creating one can be used interchangeably. This also means the same `Result` object can be used for collisions across multiple systems.
 
@@ -329,7 +336,7 @@ When bodies move around within a collision system, the internal BVH has to remov
 
 The tradeoff is that the slightly larger bounding volumes can trigger more false-positives during the broad-phase `potentials()` search. While the narrow phase will ultimately rule these out using Axis Aligned Bounding Box tests, putting too much padding on bodies that are crowded can lead to too many false positives and a diminishing return in performance. It is up to the developer to determine how much padding each body will need based on how much it can move within a single frame and how crowded the bodies in the system are.
 
-Padding can be added to a body when instantiating it (see the [documentation](https://sinova.github.com/Collisions/) for each body) or at any time by changing its `padding` property.
+Padding can be added to a body when instantiating it (see the [documentation](https://prozi.github.com/detect-collisions/) for each body) or at any time by changing its `padding` property.
 
 ```JavaScript
 const padding = 5;

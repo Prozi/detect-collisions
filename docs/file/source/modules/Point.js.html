@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl">
-  <title data-ice="title">Reference | detect-collisions</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">source/modules/Point.js | detect-collisions</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -33,15 +33,35 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1>References</h1>
+<div class="content" data-ice="content"><h1 data-ice="title">source/modules/Point.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const Polygon = require(&apos;./Polygon&apos;)
 
-<div class="identifiers-wrap">
-  <div>
-    
-  </div>
+/**
+ * A point used to detect collisions
+ * @class
+ */
+class Point extends Polygon {
+  /**
+   * @constructor
+   * @param {Number} [x = 0] The starting X coordinate
+   * @param {Number} [y = 0] The starting Y coordinate
+   * @param {Number} [padding = 0] The amount to pad the bounding volume when testing for potential collisions
+   */
+  constructor (x = 0, y = 0, padding = 0) {
+    super(x, y, [[0, 0]], 0, 1, 1, padding)
 
-  
-</div>
+    /** @private */
+    this._point = true
+  }
+};
+
+Point.prototype.setPoints = undefined
+
+module.exports = Point
+
+module.exports.default = module.exports
+</code></pre>
+
 </div>
 
 <footer class="footer">

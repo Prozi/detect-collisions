@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl">
-  <title data-ice="title">Reference | detect-collisions</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">source/modules/Circle.js | detect-collisions</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -33,15 +33,57 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1>References</h1>
+<div class="content" data-ice="content"><h1 data-ice="title">source/modules/Circle.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const Body = require(&apos;./Body&apos;)
 
-<div class="identifiers-wrap">
-  <div>
-    
-  </div>
+/**
+ * A circle used to detect collisions
+ * @class
+ */
+class Circle extends Body {
+  /**
+   * @constructor
+   * @param {Number} [x = 0] The starting X coordinate
+   * @param {Number} [y = 0] The starting Y coordinate
+   * @param {Number} [radius = 0] The radius
+   * @param {Number} [scale = 1] The scale
+   * @param {Number} [padding = 0] The amount to pad the bounding volume when testing for potential collisions
+   */
+  constructor (x = 0, y = 0, radius = 0, scale = 1, padding = 0) {
+    super(x, y, padding)
 
-  
-</div>
+    /**
+     * @desc
+     * @type {Number}
+     */
+    this.radius = radius
+
+    /**
+     * @desc
+     * @type {Number}
+     */
+    this.scale = scale
+  }
+
+  /**
+   * Draws the circle to a CanvasRenderingContext2D&apos;s current path
+   * @param {CanvasRenderingContext2D} context The context to add the arc to
+   */
+  draw (context) {
+    const x = this.x
+    const y = this.y
+    const radius = this.radius * this.scale
+
+    context.moveTo(x + radius, y)
+    context.arc(x, y, radius, 0, Math.PI * 2)
+  }
+};
+
+module.exports = Circle
+
+module.exports.default = module.exports
+</code></pre>
+
 </div>
 
 <footer class="footer">

@@ -1,49 +1,67 @@
 {
-  "coverage": "100%",
-  "expectCount": 110,
-  "actualCount": 110,
+  "coverage": "90.24%",
+  "expectCount": 123,
+  "actualCount": 111,
   "files": {
-    "src/Collisions.mjs": {
-      "expectCount": 15,
-      "actualCount": 15,
-      "undocumentLines": []
-    },
-    "src/modules/BVH.mjs": {
-      "expectCount": 11,
-      "actualCount": 11,
-      "undocumentLines": []
-    },
-    "src/modules/BVHBranch.mjs": {
-      "expectCount": 15,
-      "actualCount": 15,
-      "undocumentLines": []
-    },
-    "src/modules/Body.mjs": {
+    "source/index.js": {
       "expectCount": 21,
+      "actualCount": 15,
+      "undocumentLines": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    "source/modules/BVH.js": {
+      "expectCount": 12,
+      "actualCount": 11,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "source/modules/BVHBranch.js": {
+      "expectCount": 15,
+      "actualCount": 15,
+      "undocumentLines": []
+    },
+    "source/modules/Body.js": {
+      "expectCount": 23,
       "actualCount": 21,
-      "undocumentLines": []
+      "undocumentLines": [
+        1,
+        2
+      ]
     },
-    "src/modules/Circle.mjs": {
-      "expectCount": 5,
+    "source/modules/Circle.js": {
+      "expectCount": 6,
       "actualCount": 5,
-      "undocumentLines": []
+      "undocumentLines": [
+        1
+      ]
     },
-    "src/modules/Point.mjs": {
-      "expectCount": 3,
+    "source/modules/Point.js": {
+      "expectCount": 4,
       "actualCount": 3,
-      "undocumentLines": []
+      "undocumentLines": [
+        1
+      ]
     },
-    "src/modules/Polygon.mjs": {
-      "expectCount": 25,
+    "source/modules/Polygon.js": {
+      "expectCount": 26,
       "actualCount": 25,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "source/modules/Result.js": {
+      "expectCount": 10,
+      "actualCount": 10,
       "undocumentLines": []
     },
-    "src/modules/Result.mjs": {
-      "expectCount": 9,
-      "actualCount": 9,
-      "undocumentLines": []
-    },
-    "src/modules/SAT.mjs": {
+    "source/modules/SAT.js": {
       "expectCount": 6,
       "actualCount": 6,
       "undocumentLines": []

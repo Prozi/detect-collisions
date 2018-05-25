@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl">
-  <title data-ice="title">Reference | detect-collisions</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">source/modules/Result.js | detect-collisions</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -33,15 +33,73 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1>References</h1>
+<div class="content" data-ice="content"><h1 data-ice="title">source/modules/Result.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+ * An object used to collect the detailed results of a collision test
+ *
+ * &gt; **Note:** It is highly recommended you recycle the same Result object if possible in order to avoid wasting memory
+ * @class
+ */
+class Result {
+  /**
+   * @constructor
+   */
+  constructor () {
+    /**
+     * @desc True if a collision was detected
+     * @type {Boolean}
+     */
+    this.collision = false
 
-<div class="identifiers-wrap">
-  <div>
-    
-  </div>
+    /**
+     * @desc The source body tested
+     * @type {Circle|Polygon|Point}
+     */
+    this.a = null
 
-  
-</div>
+    /**
+     * @desc The target body tested against
+     * @type {Circle|Polygon|Point}
+     */
+    this.b = null
+
+    /**
+     * @desc True if A is completely contained within B
+     * @type {Boolean}
+     */
+    this.a_in_b = false
+
+    /**
+     * @desc True if B is completely contained within A
+     * @type {Boolean}
+     */
+    this.b_in_a = false
+
+    /**
+     * @desc The magnitude of the shortest axis of overlap
+     * @type {Number}
+     */
+    this.overlap = 0
+
+    /**
+     * @desc The X direction of the shortest axis of overlap
+     * @type {Number}
+     */
+    this.overlap_x = 0
+
+    /**
+     * @desc The Y direction of the shortest axis of overlap
+     * @type {Number}
+     */
+    this.overlap_y = 0
+  }
+};
+
+module.exports = Result
+
+module.exports.default = module.exports
+</code></pre>
+
 </div>
 
 <footer class="footer">

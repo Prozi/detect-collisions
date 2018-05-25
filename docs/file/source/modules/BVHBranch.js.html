@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl">
-  <title data-ice="title">Reference | detect-collisions</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">source/modules/BVHBranch.js | detect-collisions</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -33,15 +33,86 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1>References</h1>
+<div class="content" data-ice="content"><h1 data-ice="title">source/modules/BVHBranch.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+ * @private
+ */
+const branch_pool = []
 
-<div class="identifiers-wrap">
-  <div>
-    
-  </div>
+/**
+ * A branch within a BVH
+ * @class
+ * @private
+ */
+class BVHBranch {
+  /**
+   * @constructor
+   */
+  constructor () {
+    /** @private */
+    this._bvh_parent = null
 
-  
-</div>
+    /** @private */
+    this._bvh_branch = true
+
+    /** @private */
+    this._bvh_left = null
+
+    /** @private */
+    this._bvh_right = null
+
+    /** @private */
+    this._bvh_sort = 0
+
+    /** @private */
+    this._bvh_min_x = 0
+
+    /** @private */
+    this._bvh_min_y = 0
+
+    /** @private */
+    this._bvh_max_x = 0
+
+    /** @private */
+    this._bvh_max_y = 0
+  }
+
+  /**
+   * Returns a branch from the branch pool or creates a new branch
+   * @returns {BVHBranch}
+   */
+  static getBranch () {
+    if (branch_pool.length) {
+      return branch_pool.pop()
+    }
+
+    return new BVHBranch()
+  }
+
+  /**
+   * Releases a branch back into the branch pool
+   * @param {BVHBranch} branch The branch to release
+   */
+  static releaseBranch (branch) {
+    branch_pool.push(branch)
+  }
+
+  /**
+   * Sorting callback used to sort branches by deepest first
+   * @param {BVHBranch} a The first branch
+   * @param {BVHBranch} b The second branch
+   * @returns {Number}
+   */
+  static sortBranches (a, b) {
+    return a.sort &gt; b.sort ? -1 : 1
+  }
+};
+
+module.exports = BVHBranch
+
+module.exports.default = module.exports
+</code></pre>
+
 </div>
 
 <footer class="footer">

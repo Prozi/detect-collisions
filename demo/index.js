@@ -1,5 +1,5 @@
-import Tank   from './examples/Tank.mjs';
-import Stress from './examples/Stress.mjs';
+const Tank = require('./examples/Tank')
+const Stress = require('./examples/Stress')
 
 let example;
 

@@ -1,5 +1,5 @@
 {
-	"source"      : "./src",
+	"source"      : "./source",
 	"destination" : "./docs",
 	"includes"    : ["\\.js$", "\\.mjs$"],
 
