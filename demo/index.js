@@ -1,16 +1,12 @@
-const Tank = require('./examples/Tank')
-const Stress = require('./examples/Stress')
+const Tank = require('./examples/Tank').default
+const Stress = require('./examples/Stress').default
 
-let example;
+let example
 
-switch(window.location.search) {
-	case '?stress':
-		example = new Stress();
-		break;
-
-	default:
-		example = new Tank();
-		break;
+if (window.location.search.indexOf('?stress') !== -1) {
+  example = new Stress()
+} else {
+  example = new Tank()
 }
 
-document.body.appendChild(example.element);
+document.body.appendChild(example.element)
