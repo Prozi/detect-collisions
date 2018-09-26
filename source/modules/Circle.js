@@ -17,13 +17,11 @@ class Circle extends Body {
     super(x, y, padding)
 
     /**
-     * @desc
      * @type {Number}
      */
     this.radius = radius
 
     /**
-     * @desc
      * @type {Number}
      */
     this.scale = scale
