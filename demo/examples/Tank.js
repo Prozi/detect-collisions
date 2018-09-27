@@ -1,11 +1,11 @@
 const { Collisions } = require('../../source')
 
-const width = 800
-const height = 600
 const result = Collisions.createResult()
 
 export default class Tank {
   constructor () {
+    const width = window.innerWidth
+    const height = window.innerHeight
     const collisions = new Collisions()
 
     this.element = document.createElement('div')

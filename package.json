@@ -9,6 +9,7 @@
 		"docs": "yarn docs:make && yarn docs:copy",
 		"docs:dev": "yarn docs && http-server docs",
 		"lint": "eslint ./source --fix",
+		"demo": "yarn webpack && cp demo/index.html docs/demo && http-server docs/demo",
 		"compile": "babel ./source --out-dir ./es2015",
 		"build": "rm -rf ./docs/* && esdoc && webpack"
 	},
@@ -52,7 +53,8 @@
 		"webpack-command": "^0.4.1"
 	},
 	"dependencies": {
-		"jsdoc-template": "https://github.com/braintree/jsdoc-template.git"
+		"jsdoc-template": "https://github.com/braintree/jsdoc-template.git",
+		"webpack-cli": "^3.1.1"
 	},
 	"editions": [
 		{
