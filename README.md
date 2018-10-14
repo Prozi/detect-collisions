@@ -54,7 +54,11 @@ Usage
 ===============================================================================
 
 ```JavaScript
-const Collisions = require('detect-collisions');
+const {Collisions} = require('detect-collisions');
+
+// other options:
+// const Collisions = require('detect-collisions').default;
+// import Collisions from 'detect-collisions';
 
 // Create the collision system
 const system = new Collisions();
