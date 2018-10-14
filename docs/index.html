@@ -122,7 +122,11 @@
 <li><a href="https://prozi.github.com/detect-collisions/demo/?stress">Stress Test</a></li>
 </ul>
 <p><a name="anchor-usage"></a></p>
-<h1>Usage</h1><pre class="prettyprint source lang-JavaScript"><code>const Collisions = require('detect-collisions');
+<h1>Usage</h1><pre class="prettyprint source lang-JavaScript"><code>const {Collisions} = require('detect-collisions');
+
+// other options:
+// const Collisions = require('detect-collisions').default;
+// import Collisions from 'detect-collisions';
 
 // Create the collision system
 const system = new Collisions();

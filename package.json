@@ -1,11 +1,11 @@
 {
 	"name": "detect-collisions",
-	"version": "2.4.1",
+	"version": "2.4.2",
 	"description": "[forked] Collision detection for circles, polygons, and points",
 	"main": "source/index.js",
 	"scripts": {
 		"docs:make": "jsdoc --configure .jsdoc.json --verbose",
-		"docs:copy": "rm -rf docs/ && mkdir docs && mv out/detect-collisions/2.4.0/* docs/ && git add docs/",
+		"docs:copy": "rm -rf docs/ && mkdir docs && mv out/detect-collisions/*/* docs/ && git add docs/",
 		"docs": "yarn docs:make && yarn docs:copy",
 		"docs:dev": "yarn docs && http-server docs",
 		"lint": "eslint ./source --fix",
@@ -42,7 +42,7 @@
 	"homepage": "https://github.com/Prozi/detect-collisions#readme",
 	"devDependencies": {
 		"babel-cli": "^6.26.0",
-		"babel-loader": "^8.0.2",
+		"babel-loader": "^8.0.4",
 		"babel-preset-es2015": "^6.24.1",
 		"chalk": "^2.4.1",
 		"esdoc-standard-plugin": "^1.0.0",
@@ -53,8 +53,9 @@
 		"webpack-command": "^0.4.1"
 	},
 	"dependencies": {
+		"esdoc": "^1.1.0",
 		"jsdoc-template": "https://github.com/braintree/jsdoc-template.git",
-		"webpack-cli": "^3.1.1"
+		"webpack-cli": "^3.1.2"
 	},
 	"editions": [
 		{
