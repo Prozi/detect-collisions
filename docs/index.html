@@ -160,7 +160,7 @@ for(const wall of potentials) {
 <h1>Getting Started</h1><p><a name="anchor-step-1"></a></p>
 <h2>1. Creating a Collision System</h2><p><strong>Collisions</strong> provides functions for performing both broad-phase and narrow-phase collision tests. In order to take full advantage of both phases, bodies need to be tracked within a collision system.</p>
 <p>Call the Collisions constructor to create a collision system.</p>
-<pre class="prettyprint source lang-JavaScript"><code>const Collisions = require('detect-collisions');
+<pre class="prettyprint source lang-JavaScript"><code>const {Collisions} = require('detect-collisions');
 
 const system = new Collisions();</code></pre><p><a name="anchor-step-2"></a></p>
 <h2>2. Creating, Inserting, Updating, and Removing Bodies</h2><p><strong>Collisions</strong> supports the following body types:</p>
@@ -181,7 +181,7 @@ const point   = new Point(10, 10);
 
 system.insert(circle)
 system.insert(polygon, line, point);</code></pre><p>Collision systems expose several convenience functions for creating bodies and inserting them into the system in one step. This also avoids having to require the different body classes.</p>
-<pre class="prettyprint source lang-JavaScript"><code>const Collisions = require('detect-collisions');
+<pre class="prettyprint source lang-JavaScript"><code>const {Collisions} = require('detect-collisions');
 
 const system = new Collisions();
 
