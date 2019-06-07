@@ -50,13 +50,11 @@
 		"http-server": "^0.11.1",
 		"jsdoc": "^3.5.5",
 		"webpack": "^4.20.2",
-		"webpack-command": "^0.4.1"
-	},
-	"dependencies": {
+		"webpack-command": "^0.4.1",
 		"esdoc": "^1.1.0",
 		"jsdoc-template": "https://github.com/braintree/jsdoc-template.git",
 		"webpack-cli": "^3.1.2"
-	},
+	}
 	"editions": [
 		{
 			"description": "Source + ESNext + Import",
