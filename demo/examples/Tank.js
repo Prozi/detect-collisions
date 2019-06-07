@@ -46,7 +46,7 @@ export default class Tank {
     this.element.appendChild(this.canvas)
 
     this.createPlayer(400, 300)
-    this.createMap()
+    this.createMap(width, height)
 
     const frame = () => {
       this.update()
@@ -144,7 +144,7 @@ export default class Tank {
     this.player.velocity = 0
   }
 
-  createMap () {
+  createMap (width, height) {
     // World bounds
     this.collisions.createPolygon(0, 0, [[0, 0], [width, 0]])
     this.collisions.createPolygon(0, 0, [[width, 0], [width, height]])
