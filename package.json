@@ -1,6 +1,7 @@
 {
 	"name": "detect-collisions",
 	"version": "2.4.3",
+	"types": "collisions.d.ts",
 	"description": "[forked] Collision detection for circles, polygons, and points",
 	"main": "source/index.js",
 	"scripts": {
