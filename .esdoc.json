@@ -1,21 +1,16 @@
 {
-	"source"      : "./source",
-	"destination" : "./docs",
-	"includes"    : ["\\.js$", "\\.mjs$"],
-
-	"plugins" : [
-		{
-			"name" : "esdoc-standard-plugin",
-
-			"option" : {
-				"accessor": {
-					"access" : ["public", "protected"],
-					"autoPrivate" : true
-				},
-
-				"lint": {"enable": false},
-				"typeInference": {"enable": false}
-			}
-		}
-	]
+    "source": "./source",
+    "destination": "./docs",
+    "includes": ["\\.js$", "\\.mjs$"],
+    "plugins": [{
+        "name": "esdoc-standard-plugin",
+        "option": {
+            "accessor": {
+                "access": ["public", "protected"],
+                "autoPrivate": true
+            },
+            "lint": { "enable": true },
+            "typeInference": { "enable": true }
+        }
+    }]
 }

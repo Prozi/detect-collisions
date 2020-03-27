@@ -1,0 +1,77 @@
+{
+  "coverage": "89.51%",
+  "expectCount": 124,
+  "actualCount": 111,
+  "files": {
+    "source/index.js": {
+      "expectCount": 16,
+      "actualCount": 15,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "source/modules/BVH.js": {
+      "expectCount": 12,
+      "actualCount": 11,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "source/modules/BVHBranch.js": {
+      "expectCount": 15,
+      "actualCount": 15,
+      "undocumentLines": []
+    },
+    "source/modules/Body.js": {
+      "expectCount": 23,
+      "actualCount": 21,
+      "undocumentLines": [
+        1,
+        2
+      ]
+    },
+    "source/modules/Circle.js": {
+      "expectCount": 6,
+      "actualCount": 5,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "source/modules/Point.js": {
+      "expectCount": 4,
+      "actualCount": 3,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "source/modules/Polygon.js": {
+      "expectCount": 26,
+      "actualCount": 25,
+      "undocumentLines": [
+        1
+      ]
+    },
+    "source/modules/Result.js": {
+      "expectCount": 10,
+      "actualCount": 10,
+      "undocumentLines": []
+    },
+    "source/modules/SAT.js": {
+      "expectCount": 6,
+      "actualCount": 6,
+      "undocumentLines": []
+    },
+    "source/modules/index.js": {
+      "expectCount": 6,
+      "actualCount": 0,
+      "undocumentLines": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ]
+    }
+  }
+}

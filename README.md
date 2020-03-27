@@ -1,39 +1,38 @@
-Detect Collisions
-===============================================================================
+# Detect Collisions
 
-**detect-collisions** is a JavaScript library for quickly and accurately detecting collisions between Polygons, Circles, and Points. It combines the efficiency of a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and the accuracy of the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
+**detect-collisions** is a zero dependency JavaScript library for quickly and accurately detecting collisions between Polygons, Circles, and Points. It combines the efficiency of a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and the accuracy of the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
 
-* [Credits](#anchor-credits)
-* [Installation](#anchor-installation)
-* [Documentation](#anchor-documentation)
-* [Demos](#anchor-demos)
-* [Usage](#anchor-usage)
-* [Getting Started](#anchor-getting-started)
-	1. [Creating a Collision System](#anchor-step-1)
-	2. [Creating, Inserting, Updating, and Removing Bodies](#anchor-step-2)
-	3. [Updating the Collision System](#anchor-step-3)
-	4. [Testing for Collisions](#anchor-step-4)
-	5. [Getting Detailed Collision Information](#anchor-step-5)
-	6. [Negating Overlap](#anchor-step-6)
-* [Lines](#anchor-lines)
-* [Concave Polygons](#anchor-concave-polygons)
-* [Rendering](#anchor-rendering)
-* [Bounding Volume Padding](#anchor-bounding-volume-padding)
-* [Only using SAT](#anchor-only-using-sat)
-* [FAQ](#anchor-faq)
+- [Credits](#anchor-credits)
+- [Installation](#anchor-installation)
+- [Documentation](#anchor-documentation)
+- [Demos](#anchor-demos)
+- [Usage](#anchor-usage)
+- [Getting Started](#anchor-getting-started) 1. [Creating a Collision System](#anchor-step-1) 2. [Creating, Inserting, Updating, and Removing Bodies](#anchor-step-2) 3. [Updating the Collision System](#anchor-step-3) 4. [Testing for Collisions](#anchor-step-4) 5. [Getting Detailed Collision Information](#anchor-step-5) 6. [Negating Overlap](#anchor-step-6)
+- [Lines](#anchor-lines)
+- [Concave Polygons](#anchor-concave-polygons)
+- [Rendering](#anchor-rendering)
+- [Bounding Volume Padding](#anchor-bounding-volume-padding)
+- [Only using SAT](#anchor-only-using-sat)
+- [FAQ](#anchor-faq)
 
 <a name="anchor-credits"></a>
 Credits
 ===============================================================================
 
-It was originally forked from (github.com/Sinova/Collisions)[https://github.com/Sinova/Collisions]
+It was originally forked from [github.com/Sinova/Collisions](https://github.com/Sinova/Collisions)
+
+Since then not much has changed, but the project is maintained. The demos were updated.
 
 <a name="anchor-installation"></a>
 Installation
 ===============================================================================
 
 ```bash
-npm install detect-collisions
+yarn add detect-collisions --save
+
+# or
+
+npm i detect-collisions --save
 ```
 
 <a name="anchor-documentation"></a>
@@ -46,15 +45,15 @@ View the [documentation](https://prozi.github.com/detect-collisions/) (this READ
 Demos
 ===============================================================================
 
-* [Tank](https://prozi.github.com/detect-collisions/demo/)
-* [Stress Test](https://prozi.github.com/detect-collisions/demo/?stress)
+- [Tank](https://prozi.github.com/detect-collisions/demo/)
+- [Stress Test](https://prozi.github.com/detect-collisions/demo/?stress)
 
 <a name="anchor-usage"></a>
 Usage
 ===============================================================================
 
 ```JavaScript
-const {Collisions} = require('detect-collisions');
+const { Collisions } = require('detect-collisions');
 
 // other options:
 // const Collisions = require('detect-collisions').default;
@@ -77,13 +76,14 @@ const wall3 = system.createPolygon(400, 50, [[-60, -20], [60, -20], [60, 20], [-
 // Update the collision system
 system.update();
 
-// Get any potential collisions (this quickly rules out walls that have no chance of colliding with the player)
+// Get any potential collisions
+// (this quickly rules out walls that have no chance of colliding with the player)
 const potentials = player.potentials();
 
 // Loop through the potential wall collisions
-for(const wall of potentials) {
+for (const wall of potentials) {
 	// Test if the player collides with the wall
-	if(player.collides(wall, result)) {
+	if (player.collides(wall, result)) {
 		// Push the player out of the wall
 		player.x -= result.overlap * result.overlap_x;
 		player.y -= result.overlap * result.overlap_y;
@@ -96,6 +96,7 @@ Getting Started
 ===============================================================================
 
 <a name="anchor-step-1"></a>
+
 ## 1. Creating a Collision System
 
 **Collisions** provides functions for performing both broad-phase and narrow-phase collision tests. In order to take full advantage of both phases, bodies need to be tracked within a collision system.
@@ -103,27 +104,27 @@ Getting Started
 Call the Collisions constructor to create a collision system.
 
 ```JavaScript
-const {Collisions} = require('detect-collisions');
+const { Collisions } = require('detect-collisions');
 
 const system = new Collisions();
 ```
 
 <a name="anchor-step-2"></a>
+
 ## 2. Creating, Inserting, Updating, and Removing Bodies
 
 **Collisions** supports the following body types:
 
-* **Circle:** A shape with infinite sides equidistant from a single point
-* **Polygon:** A shape made up of line segments
-* **Point:** A single coordinate
+- **Circle:** A shape with infinite sides equidistant from a single point
+- **Polygon:** A shape made up of line segments
+- **Point:** A single coordinate
 
 To use them, require the desired body class, call its constructor, and insert it into the collision system using `insert()`.
 
 ```JavaScript
-const {Collisions, Circle, Polygon, Point} = require('detect-collisions');
+const { Collisions, Circle, Polygon, Point } = require('detect-collisions');
 
-const system = new Collisions();
-
+const system  = new Collisions();
 const circle  = new Circle(100, 100, 10);
 const polygon = new Polygon(50, 50, [[0, 0], [20, 20], [-10, 10]]);
 const line    = new Polygon(200, 5, [[-30, 0], [10, 20]]);
@@ -136,10 +137,9 @@ system.insert(polygon, line, point);
 Collision systems expose several convenience functions for creating bodies and inserting them into the system in one step. This also avoids having to require the different body classes.
 
 ```JavaScript
-const {Collisions} = require('detect-collisions');
+const { Collisions } = require('detect-collisions');
 
-const system = new Collisions();
-
+const system  = new Collisions();
 const circle  = system.createCircle(100, 100, 10);
 const polygon = system.createPolygon(50, 50, [[0, 0], [20, 20], [-10, 10]]);
 const line    = system.createPolygon(200, 5, [[-30, 0], [10, 20]]);
@@ -168,6 +168,7 @@ circle.remove();
 ```
 
 <a name="anchor-step-3"></a>
+
 ## 3. Updating the Collision System
 
 Collision systems need to be updated when the bodies within them change. This includes when bodies are inserted, removed, or when their properties change (e.g. position, angle, scaling, etc.). Updating a collision system is done by calling `update()` and should typically occur once per frame.
@@ -191,6 +192,7 @@ function gameLoop() {
 ```
 
 <a name="anchor-step-4"></a>
+
 ## 4. Testing for Collisions
 
 When testing for collisions on a body, it is generally recommended that a broad-phase search be performed first by calling `potentials()` in order to quickly rule out bodies that are too far away to collide. **Collisions** uses a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for its broad-phase search. Calling `potentials()` on a body traverses the BVH and builds a list of potential collision candidates.
@@ -204,8 +206,8 @@ Once a list of potential collisions is acquired, loop through them and perform a
 ```JavaScript
 const potentials = polygon.potentials();
 
-for(const body of potentials) {
-	if(polygon.collides(body)) {
+for (const body of potentials) {
+	if (polygon.collides(body)) {
 		console.log('Collision detected!');
 	}
 }
@@ -213,7 +215,7 @@ for(const body of potentials) {
 
 It is also possible to skip the broad-phase search entirely and call `collides()` directly on two bodies.
 
-> **Note:** Skipping the broad-phase search is not recommended. When testing for collisions against large numbers of bodies, performing a broad-phase search using a BVH is *much* more efficient.
+> **Note:** Skipping the broad-phase search is not recommended. When testing for collisions against large numbers of bodies, performing a broad-phase search using a BVH is _much_ more efficient.
 
 ```JavaScript
 if (polygon.collides(line)) {
@@ -222,6 +224,7 @@ if (polygon.collides(line)) {
 ```
 
 <a name="anchor-step-5"></a>
+
 ## 5. Getting Detailed Collision Information
 
 There is often a need for detailed information about a collision in order to react to it appropriately. This information is stored using a `Result` object. `Result` objects have several properties set on them when a collision occurs, all of which are described in the [documentation](https://prozi.github.com/detect-collisions/).
@@ -231,7 +234,7 @@ For convenience, there are several ways to create a `Result` object. `Result` ob
 > **Note:** It is highly recommended that `Result` objects be recycled when performing multiple collision tests in order to save memory. The following example creates multiple `Result` objects strictly as a demonstration.
 
 ```JavaScript
-const {Collisions, Result, Polygon} = require('detect-collisions');
+const { Collisions, Result, Polygon } = require('detect-collisions');
 
 const system     = new Collisions();
 const my_polygon = new Polygon(100, 100, 10);
@@ -249,14 +252,15 @@ To use a `Result` object, pass it into `collides()`. If a collision occurs, it w
 const result     = system.createResult();
 const potentials = point.potentials();
 
-for(const body of potentials) {
-	if(point.collides(body, result)) {
+for (const body of potentials) {
+	if (point.collides(body, result)) {
 		console.log(result);
 	}
 }
 ```
 
 <a name="anchor-step-6"></a>
+
 ## 6. Negating Overlap
 
 A common use-case in collision detection is negating overlap when a collision occurs (such as when a player hits a wall). This can be done using the collision information in a `Result` object (see [Getting Detailed Collision Information](#anchor-getting-detailed-collision-information)).
@@ -266,7 +270,7 @@ The three most useful properties on a `Result` object are `overlap`, `overlap_x`
 These values can be used to "push" one body out of another using the minimum distance required. More simply, subtracting this vector from the source body's position will cause the bodies to no longer collide. Here's an example:
 
 ```JavaScript
-if(player.collides(wall, result)) {
+if (player.collides(wall, result)) {
 	player.x -= result.overlap * result.overlap_x;
 	player.y -= result.overlap * result.overlap_y;
 }
@@ -336,7 +340,7 @@ context.stroke();
 Bounding Volume Padding
 ===============================================================================
 
-When bodies move around within a collision system, the internal BVH has to remove and reinsert the body in order to determine where it belongs in the hierarchy. This is one of the most costly operations in maintaining a BVH. In general, most projects will never see a performance issue from this unless they are dealing with thousands of moving bodies at once. In these cases, it can *sometimes* be beneficial to "pad" the bounding volumes of each body so that the BVH doesn't need to remove and reinsert bodies that haven't changed position too much. In other words, padding the bounding volume allows "breathing room" for the body within it to move around without being flagged for an update.
+When bodies move around within a collision system, the internal BVH has to remove and reinsert the body in order to determine where it belongs in the hierarchy. This is one of the most costly operations in maintaining a BVH. In general, most projects will never see a performance issue from this unless they are dealing with thousands of moving bodies at once. In these cases, it can _sometimes_ be beneficial to "pad" the bounding volumes of each body so that the BVH doesn't need to remove and reinsert bodies that haven't changed position too much. In other words, padding the bounding volume allows "breathing room" for the body within it to move around without being flagged for an update.
 
 The tradeoff is that the slightly larger bounding volumes can trigger more false-positives during the broad-phase `potentials()` search. While the narrow phase will ultimately rule these out using Axis Aligned Bounding Box tests, putting too much padding on bodies that are crowded can lead to too many false positives and a diminishing return in performance. It is up to the developer to determine how much padding each body will need based on how much it can move within a single frame and how crowded the bodies in the system are.
 
@@ -358,13 +362,13 @@ Only using SAT
 Some projects may only have a need to perform SAT collision tests without broad-phase searching. This can be achieved by avoiding collision systems altogether and only using the `collides()` function.
 
 ```JavaScript
-const {Circle, Polygon, Result} = require('collisions');
+const { Circle, Polygon, Result } = require('collisions');
 
 const circle  = new Circle(45, 45, 20);
 const polygon = new Polygon(50, 50, [[0, 0], [20, 20], [-10, 10]]);
 const result  = new Result();
 
-if(circle.collides(polygon, result)) {
+if (circle.collides(polygon, result)) {
 	console.log(result);
 }
 ```
