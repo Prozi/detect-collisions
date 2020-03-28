@@ -14,6 +14,7 @@
 	4. [Testing for Collisions](#anchor-step-4)
 	5. [Getting Detailed Collision Information](#anchor-step-5)
 	6. [Negating Overlap](#anchor-step-6)
+	7. [Detecting collision after insertion](#anchor-step-7)
 - [Lines](#anchor-lines)
 - [Concave Polygons](#anchor-concave-polygons)
 - [Rendering](#anchor-rendering)
@@ -278,6 +279,34 @@ These values can be used to "push" one body out of another using the minimum dis
 if (player.collides(wall, result)) {
 	player.x -= result.overlap * result.overlap_x;
 	player.y -= result.overlap * result.overlap_y;
+}
+```
+
+<a name="anchor-step-7"></a>
+
+## 7. Detecting collision after insertion
+
+```JavaScript
+const { Collisions } = require("detect-collisions")
+
+const system     = new Collisions();
+const collider   = system.createCircle(100, 100, 10);
+const potentials = collider.potentials();
+
+const obj  = { name: 'coin', collider };
+const done = console.log
+
+let result   = system.createResult();
+let collided = false;
+
+for (const wall of potentials) {
+	if (obj.collider.collides(wall, result)) {
+		collided = done(obj, wall, result) || collided;
+	}
+}
+
+if (collided) {
+	obj.collider.remove()
 }
 ```
 

@@ -40,7 +40,16 @@
 <li><a href="#anchor-documentation">Documentation</a></li>
 <li><a href="#anchor-demos">Demos</a></li>
 <li><a href="#anchor-usage">Usage</a></li>
-<li><a href="#anchor-getting-started">Getting Started</a> 1. <a href="#anchor-step-1">Creating a Collision System</a> 2. <a href="#anchor-step-2">Creating, Inserting, Updating, and Removing Bodies</a> 3. <a href="#anchor-step-3">Updating the Collision System</a> 4. <a href="#anchor-step-4">Testing for Collisions</a> 5. <a href="#anchor-step-5">Getting Detailed Collision Information</a> 6. <a href="#anchor-step-6">Negating Overlap</a></li>
+<li><a href="#anchor-getting-started">Getting Started</a><ol>
+<li><a href="#anchor-step-1">Creating a Collision System</a></li>
+<li><a href="#anchor-step-2">Creating, Inserting, Updating, and Removing Bodies</a></li>
+<li><a href="#anchor-step-3">Updating the Collision System</a></li>
+<li><a href="#anchor-step-4">Testing for Collisions</a></li>
+<li><a href="#anchor-step-5">Getting Detailed Collision Information</a></li>
+<li><a href="#anchor-step-6">Negating Overlap</a></li>
+<li><a href="#anchor-step-7">Detecting collision after insertion</a></li>
+</ol>
+</li>
 <li><a href="#anchor-lines">Lines</a></li>
 <li><a href="#anchor-concave-polygons">Concave Polygons</a></li>
 <li><a href="#anchor-rendering">Rendering</a></li>
@@ -69,8 +78,7 @@ npm i detect-collisions --save</code>
 <h1 id="usage">Usage</h1><pre><code class="lang-JavaScript"><code class="source-code prettyprint">const { Collisions } = require(&apos;detect-collisions&apos;);
 
 // other options:
-// const Collisions = require(&apos;detect-collisions&apos;).default;
-// import Collisions from &apos;detect-collisions&apos;;
+// import { Collisions } from &apos;detect-collisions&apos;;
 
 // Create the collision system
 const system = new Collisions();
@@ -224,6 +232,29 @@ for (const body of potentials) {
 <pre><code class="lang-JavaScript"><code class="source-code prettyprint">if (player.collides(wall, result)) {
     player.x -= result.overlap * result.overlap_x;
     player.y -= result.overlap * result.overlap_y;
+}</code>
+</code></pre>
+<p><a name="anchor-step-7"></a></p>
+<h2 id="7--detecting-collision-after-insertion">7. Detecting collision after insertion</h2><pre><code class="lang-JavaScript"><code class="source-code prettyprint">const { Collisions } = require(&quot;detect-collisions&quot;)
+
+const system     = new Collisions();
+const collider   = system.createCircle(100, 100, 10);
+const potentials = collider.potentials();
+
+const obj  = { name: &apos;coin&apos;, collider };
+const done = console.log
+
+let result   = system.createResult();
+let collided = false;
+
+for (const wall of potentials) {
+    if (obj.collider.collides(wall, result)) {
+        collided = done(obj, wall, result) || collided;
+    }
+}
+
+if (collided) {
+    obj.collider.remove()
 }</code>
 </code></pre>
 <p><a name="anchor-lines"></a></p>
