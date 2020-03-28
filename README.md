@@ -7,7 +7,13 @@
 - [Documentation](#anchor-documentation)
 - [Demos](#anchor-demos)
 - [Usage](#anchor-usage)
-- [Getting Started](#anchor-getting-started) 1. [Creating a Collision System](#anchor-step-1) 2. [Creating, Inserting, Updating, and Removing Bodies](#anchor-step-2) 3. [Updating the Collision System](#anchor-step-3) 4. [Testing for Collisions](#anchor-step-4) 5. [Getting Detailed Collision Information](#anchor-step-5) 6. [Negating Overlap](#anchor-step-6)
+- [Getting Started](#anchor-getting-started)
+	1. [Creating a Collision System](#anchor-step-1)
+	2. [Creating, Inserting, Updating, and Removing Bodies](#anchor-step-2)
+	3. [Updating the Collision System](#anchor-step-3)
+	4. [Testing for Collisions](#anchor-step-4)
+	5. [Getting Detailed Collision Information](#anchor-step-5)
+	6. [Negating Overlap](#anchor-step-6)
 - [Lines](#anchor-lines)
 - [Concave Polygons](#anchor-concave-polygons)
 - [Rendering](#anchor-rendering)
@@ -56,8 +62,7 @@ Usage
 const { Collisions } = require('detect-collisions');
 
 // other options:
-// const Collisions = require('detect-collisions').default;
-// import Collisions from 'detect-collisions';
+// import { Collisions } from 'detect-collisions';
 
 // Create the collision system
 const system = new Collisions();
