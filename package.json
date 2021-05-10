@@ -42,6 +42,7 @@
     },
     "homepage": "https://github.com/Prozi/detect-collisions#readme",
     "devDependencies": {
+        "@babel/plugin-transform-modules-commonjs": "^7.14.0",
         "babel-cli": "^6.26.0",
         "babel-eslint": "^10.1.0",
         "babel-loader": "^8.2.2",
@@ -57,8 +58,10 @@
         "eslint-plugin-promise": "^5.1.0",
         "html-webpack-plugin": "^5.3.1",
         "http-server": "^0.12.3",
+        "jest": "^26.6.3",
         "jsdoc": "^3.6.6",
         "jsdoc-template": "https://github.com/braintree/jsdoc-template.git",
+        "pixi-shim": "^2.2.0",
         "prettier": "^2.3.0",
         "webpack": "^5.37.0",
         "webpack-cli": "^4.7.0",

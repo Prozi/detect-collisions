@@ -54,7 +54,10 @@ export class Stress {
     `
 
         this.bvh_checkbox = this.element.querySelector('#bvh')
-        this.element.appendChild(this.canvas)
+
+        if (this.canvas instanceof Node) {
+            this.element.appendChild(this.canvas)
+        }
 
         const self = this
 
@@ -63,7 +66,12 @@ export class Stress {
         this.frame = requestAnimationFrame(function frame() {
             const current_time = performance.now()
 
-            self.update(1000 / (current_time - time))
+            try {
+                self.update(1000 / (current_time - time))
+            } catch (err) {
+                console.warn(err.message || err)
+            }
+
             self.frame = requestAnimationFrame(frame)
 
             time = current_time

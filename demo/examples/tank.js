@@ -43,13 +43,20 @@ export class Tank {
         document.addEventListener("keyup", updateKeys);
 
         this.bvh_checkbox = this.element.querySelector("#bvh");
-        this.element.appendChild(this.canvas);
+
+        if (this.canvas instanceof Node) {
+            this.element.appendChild(this.canvas);
+        }
 
         this.createPlayer(width / 2, height / 2);
         this.createMap(width, height);
 
         const frame = () => {
-            this.update();
+            try {
+                this.update();
+            } catch (err) {
+                console.warn(err.message || err)
+            }
             requestAnimationFrame(frame);
         };
 
@@ -135,11 +142,11 @@ export class Tank {
         this.player = this.collisions.createPolygon(
             x,
             y, [
-                [-size * 2, -size],
-                [size * 2, -size],
-                [size * 2, size],
-                [-size * 2, size]
-            ],
+            [-size * 2, -size],
+            [size * 2, -size],
+            [size * 2, size],
+            [-size * 2, size]
+        ],
             0.2
         );
 
@@ -195,21 +202,21 @@ export class Tank {
         this.createPolygon(
             100,
             100, [
-                [-50, -50],
-                [50, -50],
-                [50, 50],
-                [-50, 50]
-            ],
+            [-50, -50],
+            [50, -50],
+            [50, 50],
+            [-50, 50]
+        ],
             0.4
         );
         this.createPolygon(
             190,
             105, [
-                [-20, -20],
-                [20, -20],
-                [20, 20],
-                [-20, 20]
-            ],
+            [-20, -20],
+            [20, -20],
+            [20, 20],
+            [-20, 20]
+        ],
             0.4
         );
         this.createCircle(170, 140, 8);
@@ -221,11 +228,11 @@ export class Tank {
         this.createPolygon(
             230,
             50, [
-                [-150, -30],
-                [150, -30],
-                [150, 30],
-                [-150, 30]
-            ],
+            [-150, -30],
+            [150, -30],
+            [150, 30],
+            [-150, 30]
+        ],
             0.4
         );
 
@@ -233,11 +240,11 @@ export class Tank {
         this.createPolygon(
             100,
             500, [
-                [-40, -50],
-                [40, -50],
-                [50, 50],
-                [-50, 50]
-            ],
+            [-40, -50],
+            [40, -50],
+            [50, 50],
+            [-50, 50]
+        ],
             0.2
         );
         this.createCircle(180, 490, 20);
@@ -247,21 +254,21 @@ export class Tank {
         this.createPolygon(
             400,
             500, [
-                [-60, -20],
-                [60, -20],
-                [60, 20],
-                [-60, 20]
-            ],
+            [-60, -20],
+            [60, -20],
+            [60, 20],
+            [-60, 20]
+        ],
             1.7
         );
         this.createPolygon(
             350,
             494, [
-                [-60, -20],
-                [60, -20],
-                [60, 20],
-                [-60, 20]
-            ],
+            [-60, -20],
+            [60, -20],
+            [60, 20],
+            [-60, 20]
+        ],
             1.7
         );
 
