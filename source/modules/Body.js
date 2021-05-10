@@ -115,7 +115,7 @@ class Body {
   static createResult () {
     return new Result()
   }
-};
+}
 
 module.exports = Body
 

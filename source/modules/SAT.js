@@ -58,12 +58,14 @@ function SAT (a, b, result = null, aabb = true) {
       b._calculateNormals()
     }
 
-    collision = (
-      a_polygon && b_polygon ? polygonPolygon(a, b, result)
-        : a_polygon ? polygonCircle(a, b, result, false)
-          : b_polygon ? polygonCircle(b, a, result, true)
+    collision =
+      a_polygon && b_polygon
+        ? polygonPolygon(a, b, result)
+        : a_polygon
+          ? polygonCircle(a, b, result, false)
+          : b_polygon
+            ? polygonCircle(b, a, result, true)
             : circleCircle(a, b, result)
-    )
   }
 
   if (result) {
@@ -71,7 +73,7 @@ function SAT (a, b, result = null, aabb = true) {
   }
 
   return collision
-};
+}
 
 /**
  * Determines if two bodies' axis aligned bounding boxes are colliding
@@ -97,7 +99,12 @@ function aabbAABB (a, b) {
   const b_max_x = b_polygon ? b._max_x : b_x + b_radius
   const b_max_y = b_polygon ? b._max_y : b_y + b_radius
 
-  return a_min_x < b_max_x && a_min_y < b_max_y && a_max_x > b_min_x && a_max_y > b_min_y
+  return (
+    a_min_x < b_max_x &&
+    a_min_y < b_max_y &&
+    a_max_x > b_min_x &&
+    a_max_y > b_min_y
+  )
 }
 
 /**
@@ -130,7 +137,9 @@ function polygonPolygon (a, b, result = null) {
 
   if (a_count > 2) {
     for (let ix = 0, iy = 1; ix < a_count; ix += 2, iy += 2) {
-      if (separatingAxis(a_coords, b_coords, a_normals[ix], a_normals[iy], result)) {
+      if (
+        separatingAxis(a_coords, b_coords, a_normals[ix], a_normals[iy], result)
+      ) {
         return false
       }
     }
@@ -138,7 +147,9 @@ function polygonPolygon (a, b, result = null) {
 
   if (b_count > 2) {
     for (let ix = 0, iy = 1; ix < b_count; ix += 2, iy += 2) {
-      if (separatingAxis(a_coords, b_coords, b_normals[ix], b_normals[iy], result)) {
+      if (
+        separatingAxis(a_coords, b_coords, b_normals[ix], b_normals[iy], result)
+      ) {
         return false
       }
     }
@@ -197,27 +208,39 @@ function polygonCircle (a, b, result = null, reverse = false) {
       const edge_x = a_edges[ix]
       const edge_y = a_edges[iy]
       const dot = coord_x * edge_x + coord_y * edge_y
-      const region = dot < 0 ? -1 : dot > edge_x * edge_x + edge_y * edge_y ? 1 : 0
+      const region =
+        dot < 0 ? -1 : dot > edge_x * edge_x + edge_y * edge_y ? 1 : 0
 
       let tmp_overlapping = false
       let tmp_overlap = 0
       let tmp_overlap_x = 0
       let tmp_overlap_y = 0
 
-      if (result && a_in_b && coord_x * coord_x + coord_y * coord_y > radius_squared) {
+      if (
+        result &&
+        a_in_b &&
+        coord_x * coord_x + coord_y * coord_y > radius_squared
+      ) {
         a_in_b = false
       }
 
       if (region) {
         const left = region === -1
-        const other_x = left ? (ix === 0 ? count - 2 : ix - 2) : (ix === count - 2 ? 0 : ix + 2)
+        const other_x = left
+          ? ix === 0
+            ? count - 2
+            : ix - 2
+          : ix === count - 2
+            ? 0
+            : ix + 2
         const other_y = other_x + 1
         const coord2_x = b_x - a_coords[other_x]
         const coord2_y = b_y - a_coords[other_y]
         const edge2_x = a_edges[other_x]
         const edge2_y = a_edges[other_y]
         const dot2 = coord2_x * edge2_x + coord2_y * edge2_y
-        const region2 = dot2 < 0 ? -1 : dot2 > edge2_x * edge2_x + edge2_y * edge2_y ? 1 : 0
+        const region2 =
+          dot2 < 0 ? -1 : dot2 > edge2_x * edge2_x + edge2_y * edge2_y ? 1 : 0
 
         if (region2 === -region) {
           const target_x = left ? coord_x : coord2_x
@@ -254,7 +277,7 @@ function polygonCircle (a, b, result = null, reverse = false) {
           tmp_overlap_x = normal_x
           tmp_overlap_y = normal_y
 
-          if (b_in_a && (length >= 0) || (tmp_overlap < b_radius2)) {
+          if ((b_in_a && length >= 0) || tmp_overlap < b_radius2) {
             b_in_a = false
           }
         }
@@ -292,7 +315,8 @@ function circleCircle (a, b, result = null) {
   const difference_x = b.x - a.x
   const difference_y = b.y - a.y
   const radius_sum = a_radius + b_radius
-  const length_squared = difference_x * difference_x + difference_y * difference_y
+  const length_squared =
+    difference_x * difference_x + difference_y * difference_y
 
   if (length_squared > radius_sum * radius_sum) {
     return false
