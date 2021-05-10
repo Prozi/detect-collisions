@@ -6453,10 +6453,10 @@ pirates@^4.0.1:
   dependencies:
     node-modules-regexp "^1.0.0"
 
-pixi-shim@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/pixi-shim/-/pixi-shim-2.2.0.tgz#c9841c603a636cabba5537475b85cffce160eba5"
-  integrity sha512-8ByQxxj8WGyIo0jbhJ8cHafi8YaUiy2P+BjfI6aKXXR/KeeXx7fzB+iVSwUrUxmLuxpu3hDNlRZVXP9HYuUuqQ==
+pixi-shim@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/pixi-shim/-/pixi-shim-2.2.1.tgz#53855d1341c3ffb5cc557a28cf633fa586a2c736"
+  integrity sha512-cj6a/mJd6si3IvPL5hYJo18d5h6tip+FPWQ4s+VaGXZdRRQMNLFFIfK0zFf31a3+wyG4j9gRivZzL/cSin2TcA==
   dependencies:
     jsdom "*"
     jsdom-global "*"

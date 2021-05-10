@@ -8,13 +8,13 @@
 - [Demos](#anchor-demos)
 - [Usage](#anchor-usage)
 - [Getting Started](#anchor-getting-started)
-	1. [Creating a Collision System](#anchor-step-1)
-	2. [Creating, Inserting, Updating, and Removing Bodies](#anchor-step-2)
-	3. [Updating the Collision System](#anchor-step-3)
-	4. [Testing for Collisions](#anchor-step-4)
-	5. [Getting Detailed Collision Information](#anchor-step-5)
-	6. [Negating Overlap](#anchor-step-6)
-	7. [Detecting collision after insertion](#anchor-step-7)
+  1.  [Creating a Collision System](#anchor-step-1)
+  2.  [Creating, Inserting, Updating, and Removing Bodies](#anchor-step-2)
+  3.  [Updating the Collision System](#anchor-step-3)
+  4.  [Testing for Collisions](#anchor-step-4)
+  5.  [Getting Detailed Collision Information](#anchor-step-5)
+  6.  [Negating Overlap](#anchor-step-6)
+  7.  [Detecting collision after insertion](#anchor-step-7)
 - [Lines](#anchor-lines)
 - [Concave Polygons](#anchor-concave-polygons)
 - [Rendering](#anchor-rendering)
@@ -46,14 +46,14 @@ npm i detect-collisions --save
 Documentation
 ===============================================================================
 
-View the [documentation](https://prozi.github.com/detect-collisions/) (this README is also there).
+View the [documentation](https://prozi.github.io/detect-collisions/) (this README is also there).
 
 <a name="anchor-demos"></a>
 Demos
 ===============================================================================
 
-- [Tank](https://prozi.github.com/detect-collisions/demo/)
-- [Stress Test](https://prozi.github.com/detect-collisions/demo/?stress)
+- [Tank](https://prozi.github.io/detect-collisions/demo/)
+- [Stress Test](https://prozi.github.io/detect-collisions/demo/?stress)
 
 <a name="anchor-usage"></a>
 Usage
@@ -233,7 +233,7 @@ if (polygon.collides(line)) {
 
 ## 5. Getting Detailed Collision Information
 
-There is often a need for detailed information about a collision in order to react to it appropriately. This information is stored using a `Result` object. `Result` objects have several properties set on them when a collision occurs, all of which are described in the [documentation](https://prozi.github.com/detect-collisions/).
+There is often a need for detailed information about a collision in order to react to it appropriately. This information is stored using a `Result` object. `Result` objects have several properties set on them when a collision occurs, all of which are described in the [documentation](https://prozi.github.io/detect-collisions/).
 
 For convenience, there are several ways to create a `Result` object. `Result` objects do not belong to any particular collision system, so any of the following methods for creating one can be used interchangeably. This also means the same `Result` object can be used for collisions across multiple systems.
 
@@ -378,7 +378,7 @@ When bodies move around within a collision system, the internal BVH has to remov
 
 The tradeoff is that the slightly larger bounding volumes can trigger more false-positives during the broad-phase `potentials()` search. While the narrow phase will ultimately rule these out using Axis Aligned Bounding Box tests, putting too much padding on bodies that are crowded can lead to too many false positives and a diminishing return in performance. It is up to the developer to determine how much padding each body will need based on how much it can move within a single frame and how crowded the bodies in the system are.
 
-Padding can be added to a body when instantiating it (see the [documentation](https://prozi.github.com/detect-collisions/) for each body) or at any time by changing its `padding` property.
+Padding can be added to a body when instantiating it (see the [documentation](https://prozi.github.io/detect-collisions/) for each body) or at any time by changing its `padding` property.
 
 ```JavaScript
 const padding = 5;

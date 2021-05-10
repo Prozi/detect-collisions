@@ -1,103 +1,104 @@
 {
-    "name": "detect-collisions",
-    "types": "collisions.d.ts",
-    "version": "2.5.3",
-    "description": "zero-dependency 2d collision detection for circles, polygons, and points (with SAT and BVH)",
-    "main": "source/index.js",
-    "scripts": {
-        "docs:make": "jsdoc --configure .jsdoc.json --verbose",
-        "docs:copy": "rm -rf docs/ && mkdir docs && mv out/detect-collisions/*/* docs/ && git add docs/",
-        "docs": "yarn docs:make && yarn docs:copy",
-        "docs:dev": "yarn docs && http-server docs",
-        "lint": "eslint ./source --fix",
-        "demo": "yarn webpack && cp demo/index.html docs/demo && http-server docs/demo",
-        "compile": "babel ./source --presets es2015 --out-dir ./es2015",
-        "build": "rm -rf ./docs/* && esdoc && webpack"
+  "name": "detect-collisions",
+  "types": "collisions.d.ts",
+  "version": "2.5.4",
+  "description": "zero-dependency 2d collision detection for circles, polygons, and points (with SAT and BVH)",
+  "main": "source/index.js",
+  "scripts": {
+    "test": "jest",
+    "docs:make": "jsdoc --configure .jsdoc.json --verbose",
+    "docs:copy": "rm -rf docs/ && mkdir docs && mv out/detect-collisions/*/* docs/ && git add docs/",
+    "docs": "yarn docs:make && yarn docs:copy",
+    "docs:dev": "yarn docs && http-server docs",
+    "lint": "eslint ./source --fix",
+    "demo": "yarn webpack && cp demo/index.html docs/demo && http-server docs/demo",
+    "compile": "babel ./source --presets es2015 --out-dir ./es2015",
+    "build": "rm -rf ./docs/* && esdoc && webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Prozi/detect-collisions.git"
+  },
+  "keywords": [
+    "Collision",
+    "Separating Axis Theorem",
+    "Bounding Volume Hierarchy",
+    "SAT",
+    "BVH",
+    "Circle",
+    "Polygon",
+    "Line",
+    "Shape",
+    "Separating",
+    "Axis",
+    "Theorem",
+    "Bounding",
+    "Volume",
+    "Hierarchy"
+  ],
+  "author": "Samuel Hodge",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Prozi/detect-collisions/issues"
+  },
+  "homepage": "https://github.com/Prozi/detect-collisions#readme",
+  "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.14.0",
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^10.1.0",
+    "babel-loader": "^8.2.2",
+    "babel-preset-es2015": "^6.24.1",
+    "chalk": "^4.1.1",
+    "esdoc": "^1.1.0",
+    "esdoc-standard-plugin": "^1.0.0",
+    "eslint": "^7.26.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-html": "^6.1.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "html-webpack-plugin": "^5.3.1",
+    "http-server": "^0.12.3",
+    "jest": "^26.6.3",
+    "jsdoc": "^3.6.6",
+    "jsdoc-template": "https://github.com/braintree/jsdoc-template.git",
+    "pixi-shim": "^2.2.1",
+    "prettier": "^2.3.0",
+    "webpack": "^5.37.0",
+    "webpack-cli": "^4.7.0",
+    "webpack-command": "^0.5.1"
+  },
+  "dependencies": {},
+  "editions": [
+    {
+      "description": "Source + ESNext + Import",
+      "entry": "index.js",
+      "directory": "source",
+      "syntaxes": [
+        "javascript",
+        "esnext",
+        "require",
+        "arrows",
+        "getset",
+        "const",
+        "let",
+        "classes",
+        "defaults",
+        "spread",
+        "rest",
+        "destructuring",
+        "template strings"
+      ]
     },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/Prozi/detect-collisions.git"
-    },
-    "keywords": [
-        "Collision",
-        "Separating Axis Theorem",
-        "Bounding Volume Hierarchy",
-        "SAT",
-        "BVH",
-        "Circle",
-        "Polygon",
-        "Line",
-        "Shape",
-        "Separating",
-        "Axis",
-        "Theorem",
-        "Bounding",
-        "Volume",
-        "Hierarchy"
-    ],
-    "author": "Samuel Hodge",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/Prozi/detect-collisions/issues"
-    },
-    "homepage": "https://github.com/Prozi/detect-collisions#readme",
-    "devDependencies": {
-        "@babel/plugin-transform-modules-commonjs": "^7.14.0",
-        "babel-cli": "^6.26.0",
-        "babel-eslint": "^10.1.0",
-        "babel-loader": "^8.2.2",
-        "babel-preset-es2015": "^6.24.1",
-        "chalk": "^4.1.1",
-        "esdoc": "^1.1.0",
-        "esdoc-standard-plugin": "^1.0.0",
-        "eslint": "^7.26.0",
-        "eslint-config-standard": "^16.0.2",
-        "eslint-plugin-html": "^6.1.2",
-        "eslint-plugin-import": "^2.22.1",
-        "eslint-plugin-node": "^11.1.0",
-        "eslint-plugin-promise": "^5.1.0",
-        "html-webpack-plugin": "^5.3.1",
-        "http-server": "^0.12.3",
-        "jest": "^26.6.3",
-        "jsdoc": "^3.6.6",
-        "jsdoc-template": "https://github.com/braintree/jsdoc-template.git",
-        "pixi-shim": "^2.2.0",
-        "prettier": "^2.3.0",
-        "webpack": "^5.37.0",
-        "webpack-cli": "^4.7.0",
-        "webpack-command": "^0.5.1"
-    },
-    "dependencies": {},
-    "editions": [
-        {
-            "description": "Source + ESNext + Import",
-            "entry": "index.js",
-            "directory": "source",
-            "syntaxes": [
-                "javascript",
-                "esnext",
-                "require",
-                "arrows",
-                "getset",
-                "const",
-                "let",
-                "classes",
-                "defaults",
-                "spread",
-                "rest",
-                "destructuring",
-                "template strings"
-            ]
-        },
-        {
-            "description": "Compiled + ES2015 + Require",
-            "entry": "index.js",
-            "directory": "es2015",
-            "syntaxes": [
-                "javascript",
-                "es2015",
-                "require"
-            ]
-        }
-    ]
+    {
+      "description": "Compiled + ES2015 + Require",
+      "entry": "index.js",
+      "directory": "es2015",
+      "syntaxes": [
+        "javascript",
+        "es2015",
+        "require"
+      ]
+    }
+  ]
 }
