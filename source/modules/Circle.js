@@ -1,4 +1,4 @@
-const Body = require('./Body')
+const Body = require("./Body");
 
 /**
  * A circle used to detect collisions
@@ -13,34 +13,34 @@ class Circle extends Body {
    * @param {Number} [scale = 1] The scale
    * @param {Number} [padding = 0] The amount to pad the bounding volume when testing for potential collisions
    */
-  constructor (x = 0, y = 0, radius = 0, scale = 1, padding = 0) {
-    super(x, y, padding)
+  constructor(x = 0, y = 0, radius = 0, scale = 1, padding = 0) {
+    super(x, y, padding);
 
     /**
      * @type {Number}
      */
-    this.radius = radius
+    this.radius = radius;
 
     /**
      * @type {Number}
      */
-    this.scale = scale
+    this.scale = scale;
   }
 
   /**
    * Draws the circle to a CanvasRenderingContext2D's current path
    * @param {CanvasRenderingContext2D} context The context to add the arc to
    */
-  draw (context) {
-    const x = this.x
-    const y = this.y
-    const radius = this.radius * this.scale
+  draw(context) {
+    const x = this.x;
+    const y = this.y;
+    const radius = this.radius * this.scale;
 
-    context.moveTo(x + radius, y)
-    context.arc(x, y, radius, 0, Math.PI * 2)
+    context.moveTo(x + radius, y);
+    context.arc(x, y, radius, 0, Math.PI * 2);
   }
 }
 
-module.exports = Circle
+module.exports = Circle;
 
-module.exports.default = module.exports
+module.exports.default = module.exports;

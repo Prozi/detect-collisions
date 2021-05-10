@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -8,7 +8,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Body = require('./Body');
+var Body = require("./Body");
 
 /**
  * A polygon used to detect collisions
@@ -118,7 +118,7 @@ var Polygon = function (_Body) {
 
 
   _createClass(Polygon, [{
-    key: 'draw',
+    key: "draw",
     value: function draw(context) {
       if (this._dirty_coords || this.x !== this._x || this.y !== this._y || this.angle !== this._angle || this.scale_x !== this._scale_x || this.scale_y !== this._scale_y) {
         this._calculateCoords();
@@ -148,7 +148,7 @@ var Polygon = function (_Body) {
      */
 
   }, {
-    key: 'setPoints',
+    key: "setPoints",
     value: function setPoints(new_points) {
       var count = new_points.length;
 
@@ -174,7 +174,7 @@ var Polygon = function (_Body) {
      */
 
   }, {
-    key: '_calculateCoords',
+    key: "_calculateCoords",
     value: function _calculateCoords() {
       var x = this.x;
       var y = this.y;
@@ -246,7 +246,7 @@ var Polygon = function (_Body) {
      */
 
   }, {
-    key: '_calculateNormals',
+    key: "_calculateNormals",
     value: function _calculateNormals() {
       var coords = this._coords;
       var edges = this._edges;

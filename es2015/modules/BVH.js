@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var BVHBranch = require('./BVHBranch');
+var BVHBranch = require("./BVHBranch");
 
 /**
  * A Bounding Volume Hierarchy (BVH) used to find potential collisions quickly
@@ -37,7 +37,7 @@ var BVH = function () {
 
 
   _createClass(BVH, [{
-    key: 'insert',
+    key: "insert",
     value: function insert(body) {
       var updating = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
@@ -45,7 +45,7 @@ var BVH = function () {
         var bvh = body._bvh;
 
         if (bvh && bvh !== this) {
-          throw new Error('Body belongs to another collision system');
+          throw new Error("Body belongs to another collision system");
         }
 
         body._bvh = this;
@@ -154,7 +154,7 @@ var BVH = function () {
      */
 
   }, {
-    key: 'remove',
+    key: "remove",
     value: function remove(body) {
       var updating = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
@@ -162,7 +162,7 @@ var BVH = function () {
         var bvh = body._bvh;
 
         if (bvh && bvh !== this) {
-          throw new Error('Body belongs to another collision system');
+          throw new Error("Body belongs to another collision system");
         }
 
         body._bvh = null;
@@ -227,7 +227,7 @@ var BVH = function () {
      */
 
   }, {
-    key: 'update',
+    key: "update",
     value: function update() {
       var bodies = this._bodies;
       var count = bodies.length;
@@ -276,7 +276,7 @@ var BVH = function () {
      */
 
   }, {
-    key: 'potentials',
+    key: "potentials",
     value: function potentials(body) {
       var results = [];
       var min_x = body._bvh_min_x;
@@ -338,7 +338,7 @@ var BVH = function () {
      */
 
   }, {
-    key: 'draw',
+    key: "draw",
     value: function draw(context) {
       var bodies = this._bodies;
       var count = bodies.length;
@@ -354,7 +354,7 @@ var BVH = function () {
      */
 
   }, {
-    key: 'drawBVH',
+    key: "drawBVH",
     value: function drawBVH(context) {
       var current = this._hierarchy;
       var traverse_left = true;

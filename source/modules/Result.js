@@ -8,57 +8,57 @@ class Result {
   /**
    * @constructor
    */
-  constructor () {
+  constructor() {
     /**
      * @desc True if a collision was detected
      * @type {Boolean}
      */
-    this.collision = false
+    this.collision = false;
 
     /**
      * @desc The source body tested
      * @type {Circle|Polygon|Point}
      */
-    this.a = null
+    this.a = null;
 
     /**
      * @desc The target body tested against
      * @type {Circle|Polygon|Point}
      */
-    this.b = null
+    this.b = null;
 
     /**
      * @desc True if A is completely contained within B
      * @type {Boolean}
      */
-    this.a_in_b = false
+    this.a_in_b = false;
 
     /**
      * @desc True if B is completely contained within A
      * @type {Boolean}
      */
-    this.b_in_a = false
+    this.b_in_a = false;
 
     /**
      * @desc The magnitude of the shortest axis of overlap
      * @type {Number}
      */
-    this.overlap = 0
+    this.overlap = 0;
 
     /**
      * @desc The X direction of the shortest axis of overlap
      * @type {Number}
      */
-    this.overlap_x = 0
+    this.overlap_x = 0;
 
     /**
      * @desc The Y direction of the shortest axis of overlap
      * @type {Number}
      */
-    this.overlap_y = 0
+    this.overlap_y = 0;
   }
 }
 
-module.exports = Result
+module.exports = Result;
 
-module.exports.default = module.exports
+module.exports.default = module.exports;

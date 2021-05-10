@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Result = require('./Result');
-var SAT = require('./SAT');
+var Result = require("./Result");
+var SAT = require("./SAT");
 
 /**
  * The base class for bodies used to detect collisions
@@ -89,7 +89,7 @@ var Body = function () {
 
 
   _createClass(Body, [{
-    key: 'collides',
+    key: "collides",
     value: function collides(target) {
       var result = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
       var aabb = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
@@ -103,12 +103,12 @@ var Body = function () {
      */
 
   }, {
-    key: 'potentials',
+    key: "potentials",
     value: function potentials() {
       var bvh = this._bvh;
 
       if (bvh === null) {
-        throw new Error('Body does not belong to a collision system');
+        throw new Error("Body does not belong to a collision system");
       }
 
       return bvh.potentials(this);
@@ -119,7 +119,7 @@ var Body = function () {
      */
 
   }, {
-    key: 'remove',
+    key: "remove",
     value: function remove() {
       var bvh = this._bvh;
 
@@ -133,7 +133,7 @@ var Body = function () {
      */
 
   }, {
-    key: 'createResult',
+    key: "createResult",
     value: function createResult() {
       return new Result();
     }
@@ -143,7 +143,7 @@ var Body = function () {
      */
 
   }], [{
-    key: 'createResult',
+    key: "createResult",
     value: function createResult() {
       return new Result();
     }
