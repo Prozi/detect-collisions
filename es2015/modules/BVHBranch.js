@@ -94,8 +94,6 @@ var BVHBranch = function () {
   return BVHBranch;
 }();
 
-;
-
 module.exports = BVHBranch;
 
 module.exports.default = module.exports;

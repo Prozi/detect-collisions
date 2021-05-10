@@ -272,8 +272,6 @@ var Polygon = function (_Body) {
   return Polygon;
 }(Body);
 
-;
-
 module.exports = Polygon;
 
 module.exports.default = module.exports;

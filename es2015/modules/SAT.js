@@ -57,7 +57,7 @@ function SAT(a, b) {
   }
 
   return collision;
-};
+}
 
 /**
  * Determines if two bodies' axis aligned bounding boxes are colliding

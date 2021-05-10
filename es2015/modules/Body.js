@@ -152,8 +152,6 @@ var Body = function () {
   return Body;
 }();
 
-;
-
 module.exports = Body;
 
 module.exports.default = module.exports;

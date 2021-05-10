@@ -70,8 +70,6 @@ var Circle = function (_Body) {
   return Circle;
 }(Body);
 
-;
-
 module.exports = Circle;
 
 module.exports.default = module.exports;

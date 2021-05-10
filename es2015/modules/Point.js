@@ -39,8 +39,6 @@ var Point = function (_Polygon) {
   return Point;
 }(Polygon);
 
-;
-
 Point.prototype.setPoints = undefined;
 
 module.exports = Point;

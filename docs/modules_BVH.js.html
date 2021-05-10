@@ -171,12 +171,19 @@ class BVH {
           const left_min_y = left._bvh_min_y
           const left_max_x = left._bvh_max_x
           const left_max_y = left._bvh_max_y
-          const left_new_min_x = body_min_x &lt; left._bvh_min_x ? body_min_x : left._bvh_min_x
-          const left_new_min_y = body_min_y &lt; left_min_y ? body_min_y : left_min_y
-          const left_new_max_x = body_max_x > left_max_x ? body_max_x : left_max_x
-          const left_new_max_y = body_max_y > left_max_y ? body_max_y : left_max_y
-          const left_volume = (left_max_x - left._bvh_min_x) * (left_max_y - left_min_y)
-          const left_new_volume = (left_new_max_x - left_new_min_x) * (left_new_max_y - left_new_min_y)
+          const left_new_min_x =
+            body_min_x &lt; left._bvh_min_x ? body_min_x : left._bvh_min_x
+          const left_new_min_y =
+            body_min_y &lt; left_min_y ? body_min_y : left_min_y
+          const left_new_max_x =
+            body_max_x > left_max_x ? body_max_x : left_max_x
+          const left_new_max_y =
+            body_max_y > left_max_y ? body_max_y : left_max_y
+          const left_volume =
+            (left_max_x - left._bvh_min_x) * (left_max_y - left_min_y)
+          const left_new_volume =
+            (left_new_max_x - left_new_min_x) *
+            (left_new_max_y - left_new_min_y)
           const left_difference = left_new_volume - left_volume
 
           const right = current._bvh_right
@@ -184,38 +191,56 @@ class BVH {
           const right_min_y = right._bvh_min_y
           const right_max_x = right._bvh_max_x
           const right_max_y = right._bvh_max_y
-          const right_new_min_x = body_min_x &lt; right_min_x ? body_min_x : right_min_x
-          const right_new_min_y = body_min_y &lt; right_min_y ? body_min_y : right_min_y
-          const right_new_max_x = body_max_x > right_max_x ? body_max_x : right_max_x
-          const right_new_max_y = body_max_y > right_max_y ? body_max_y : right_max_y
-          const right_volume = (right_max_x - right_min_x) * (right_max_y - right_min_y)
-          const right_new_volume = (right_new_max_x - right_new_min_x) * (right_new_max_y - right_new_min_y)
+          const right_new_min_x =
+            body_min_x &lt; right_min_x ? body_min_x : right_min_x
+          const right_new_min_y =
+            body_min_y &lt; right_min_y ? body_min_y : right_min_y
+          const right_new_max_x =
+            body_max_x > right_max_x ? body_max_x : right_max_x
+          const right_new_max_y =
+            body_max_y > right_max_y ? body_max_y : right_max_y
+          const right_volume =
+            (right_max_x - right_min_x) * (right_max_y - right_min_y)
+          const right_new_volume =
+            (right_new_max_x - right_new_min_x) *
+            (right_new_max_y - right_new_min_y)
           const right_difference = right_new_volume - right_volume
 
           current._bvh_sort = sort++
-          current._bvh_min_x = left_new_min_x &lt; right_new_min_x ? left_new_min_x : right_new_min_x
-          current._bvh_min_y = left_new_min_y &lt; right_new_min_y ? left_new_min_y : right_new_min_y
-          current._bvh_max_x = left_new_max_x > right_new_max_x ? left_new_max_x : right_new_max_x
-          current._bvh_max_y = left_new_max_y > right_new_max_y ? left_new_max_y : right_new_max_y
+          current._bvh_min_x =
+            left_new_min_x &lt; right_new_min_x ? left_new_min_x : right_new_min_x
+          current._bvh_min_y =
+            left_new_min_y &lt; right_new_min_y ? left_new_min_y : right_new_min_y
+          current._bvh_max_x =
+            left_new_max_x > right_new_max_x ? left_new_max_x : right_new_max_x
+          current._bvh_max_y =
+            left_new_max_y > right_new_max_y ? left_new_max_y : right_new_max_y
 
           current = left_difference &lt;= right_difference ? left : right
         } else {
-        // Leaf
+          // Leaf
           const grandparent = current._bvh_parent
           const parent_min_x = current._bvh_min_x
           const parent_min_y = current._bvh_min_y
           const parent_max_x = current._bvh_max_x
           const parent_max_y = current._bvh_max_y
-          const new_parent = current._bvh_parent = body._bvh_parent = BVHBranch.getBranch()
+          const new_parent =
+            (current._bvh_parent =
+            body._bvh_parent =
+              BVHBranch.getBranch())
 
           new_parent._bvh_parent = grandparent
           new_parent._bvh_left = current
           new_parent._bvh_right = body
           new_parent._bvh_sort = sort++
-          new_parent._bvh_min_x = body_min_x &lt; parent_min_x ? body_min_x : parent_min_x
-          new_parent._bvh_min_y = body_min_y &lt; parent_min_y ? body_min_y : parent_min_y
-          new_parent._bvh_max_x = body_max_x > parent_max_x ? body_max_x : parent_max_x
-          new_parent._bvh_max_y = body_max_y > parent_max_y ? body_max_y : parent_max_y
+          new_parent._bvh_min_x =
+            body_min_x &lt; parent_min_x ? body_min_x : parent_min_x
+          new_parent._bvh_min_y =
+            body_min_y &lt; parent_min_y ? body_min_y : parent_min_y
+          new_parent._bvh_max_x =
+            body_max_x > parent_max_x ? body_max_x : parent_max_x
+          new_parent._bvh_max_y =
+            body_max_y > parent_max_y ? body_max_y : parent_max_y
 
           if (!grandparent) {
             this._hierarchy = new_parent
@@ -342,7 +367,11 @@ class BVH {
         const max_x = polygon ? body._max_x : x + radius
         const max_y = polygon ? body._max_y : y + radius
 
-        update = min_x &lt; body._bvh_min_x || min_y &lt; body._bvh_min_y || max_x > body._bvh_max_x || max_y > body._bvh_max_y
+        update =
+          min_x &lt; body._bvh_min_x ||
+          min_y &lt; body._bvh_min_y ||
+          max_x > body._bvh_max_x ||
+          max_y > body._bvh_max_y
       }
 
       if (update) {
@@ -489,7 +518,7 @@ class BVH {
       }
     }
   }
-};
+}
 
 module.exports = BVH
 
@@ -506,7 +535,7 @@ module.exports.default = module.exports
   <br class="clear">
 
   <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.3</a>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
   </footer>
 
   <script src="scripts/linenumber.js"></script>

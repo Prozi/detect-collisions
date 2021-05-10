@@ -64,8 +64,6 @@ function Result() {
   this.overlap_y = 0;
 };
 
-;
-
 module.exports = Result;
 
 module.exports.default = module.exports;

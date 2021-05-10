@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var _require = require('./modules'),
+var _require = require("./modules"),
     BVH = _require.BVH,
     Circle = _require.Circle,
     Polygon = _require.Polygon,
@@ -41,7 +41,7 @@ var Collisions = function () {
 
 
   _createClass(Collisions, [{
-    key: 'createCircle',
+    key: "createCircle",
     value: function createCircle() {
       var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
       var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
@@ -69,7 +69,7 @@ var Collisions = function () {
      */
 
   }, {
-    key: 'createPolygon',
+    key: "createPolygon",
     value: function createPolygon() {
       var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
       var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
@@ -95,7 +95,7 @@ var Collisions = function () {
      */
 
   }, {
-    key: 'createPoint',
+    key: "createPoint",
     value: function createPoint() {
       var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
       var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
@@ -113,7 +113,7 @@ var Collisions = function () {
      */
 
   }, {
-    key: 'createResult',
+    key: "createResult",
     value: function createResult() {
       return new Result();
     }
@@ -123,7 +123,7 @@ var Collisions = function () {
      */
 
   }, {
-    key: 'insert',
+    key: "insert",
 
 
     /**
@@ -169,7 +169,7 @@ var Collisions = function () {
      */
 
   }, {
-    key: 'remove',
+    key: "remove",
     value: function remove() {
       for (var _len2 = arguments.length, bodies = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
         bodies[_key2] = arguments[_key2];
@@ -208,7 +208,7 @@ var Collisions = function () {
      */
 
   }, {
-    key: 'update',
+    key: "update",
     value: function update() {
       this._bvh.update();
 
@@ -221,7 +221,7 @@ var Collisions = function () {
      */
 
   }, {
-    key: 'draw',
+    key: "draw",
     value: function draw(context) {
       return this._bvh.draw(context);
     }
@@ -232,7 +232,7 @@ var Collisions = function () {
      */
 
   }, {
-    key: 'drawBVH',
+    key: "drawBVH",
     value: function drawBVH(context) {
       return this._bvh.drawBVH(context);
     }
@@ -244,7 +244,7 @@ var Collisions = function () {
      */
 
   }, {
-    key: 'potentials',
+    key: "potentials",
     value: function potentials(body) {
       return this._bvh.potentials(body);
     }
@@ -258,7 +258,7 @@ var Collisions = function () {
      */
 
   }, {
-    key: 'collides',
+    key: "collides",
     value: function collides(source, target) {
       var result = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
       var aabb = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
@@ -266,7 +266,7 @@ var Collisions = function () {
       return SAT(source, target, result, aabb);
     }
   }], [{
-    key: 'createResult',
+    key: "createResult",
     value: function createResult() {
       return new Result();
     }
@@ -275,8 +275,12 @@ var Collisions = function () {
   return Collisions;
 }();
 
-;
-
 module.exports = {
-  Collisions: Collisions, BVH: BVH, Circle: Circle, Polygon: Polygon, Point: Point, Result: Result, SAT: SAT
+  Collisions: Collisions,
+  BVH: BVH,
+  Circle: Circle,
+  Polygon: Polygon,
+  Point: Point,
+  Result: Result,
+  SAT: SAT
 };

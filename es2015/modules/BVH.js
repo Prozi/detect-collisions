@@ -408,8 +408,6 @@ var BVH = function () {
   return BVH;
 }();
 
-;
-
 module.exports = BVH;
 
 module.exports.default = module.exports;
