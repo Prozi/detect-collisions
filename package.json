@@ -9,14 +9,14 @@
     "docs:make": "jsdoc --configure .jsdoc.json --verbose",
     "docs:copy": "rm -rf docs/ && mkdir docs && mv out/detect-collisions/*/* docs/ && git add docs/",
     "docs": "yarn docs:make && yarn docs:copy",
-    "docs:dev": "yarn docs && http-server docs",
+    "docs:dev": "yarn docs && node node_modules/@jacekpietal/bouncer.js/bin docs",
     "lint": "eslint ./source --fix",
     "demo": "yarn build-demo && http-server docs/demo",
-    "build-demo": "webpack && cp demo/index.html docs/demo",
+    "build-demo": "webpack && cp -r demo/ docs/",
     "compile": "babel ./source --presets es2015 --out-dir ./es2015",
     "build": "rm -rf ./docs/* && esdoc && webpack",
     "format": "prettier `find ./source -name '*.js'` --write",
-    "precommit": "yarn lint; yarn format && yarn build && yarn build-demo && yarn docs"
+    "precommit": "yarn lint; yarn format && yarn build && yarn docs && yarn build-demo"
   },
   "repository": {
     "type": "git",
@@ -47,6 +47,7 @@
   "homepage": "https://github.com/Prozi/detect-collisions#readme",
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.14.0",
+    "@jacekpietal/bouncer.js": "^2.26.0",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
@@ -61,7 +62,6 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
     "html-webpack-plugin": "^5.3.1",
-    "http-server": "^0.12.3",
     "jest": "^26.6.3",
     "jsdoc": "^3.6.6",
     "jsdoc-template": "https://github.com/braintree/jsdoc-template.git",

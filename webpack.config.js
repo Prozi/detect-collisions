@@ -3,7 +3,7 @@ module.exports = {
   mode: "development",
   target: "web",
   output: {
-    path: `${__dirname}/docs/demo/`,
-    filename: "index.js",
+    path: `${__dirname}/demo/`,
+    filename: "demo.bundle.js",
   },
 };
