@@ -1,7 +1,7 @@
 {
   "name": "detect-collisions",
   "types": "collisions.d.ts",
-  "version": "2.5.4",
+  "version": "2.5.5",
   "description": "zero-dependency 2d collision detection for circles, polygons, and points (with SAT and BVH)",
   "main": "source/index.js",
   "scripts": {
@@ -11,9 +11,12 @@
     "docs": "yarn docs:make && yarn docs:copy",
     "docs:dev": "yarn docs && http-server docs",
     "lint": "eslint ./source --fix",
-    "demo": "yarn webpack && cp demo/index.html docs/demo && http-server docs/demo",
+    "demo": "yarn build-demo && http-server docs/demo",
+    "build-demo": "webpack && cp demo/index.html docs/demo",
     "compile": "babel ./source --presets es2015 --out-dir ./es2015",
-    "build": "rm -rf ./docs/* && esdoc && webpack"
+    "build": "rm -rf ./docs/* && esdoc && webpack",
+    "format": "prettier `find ./source -name '*.js'` --write",
+    "precommit": "yarn lint; yarn format && yarn build && yarn build-demo && yarn docs"
   },
   "repository": {
     "type": "git",

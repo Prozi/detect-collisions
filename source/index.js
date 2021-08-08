@@ -146,6 +146,7 @@ class Collisions {
 
   /**
    * Determines if two bodies are colliding
+   * @param {Circle|Polygon|Point} source Source body to test against
    * @param {Circle|Polygon|Point} target The target body to test against
    * @param {Result} [result = null] A Result object on which to store information about the collision
    * @param {Boolean} [aabb = true] Set to false to skip the AABB test (useful if you use your own potential collision heuristic)

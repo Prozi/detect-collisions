@@ -11,6 +11,7 @@ export abstract class Body {
 
   /**
    * Determines if the body is colliding with another body
+   * @param {Circle|Polygon|Point} source Source body to test against
    * @param {Circle|Polygon|Point} target The target body to test against
    * @param {Result} [result = null] A Result object on which to store information about the collision
    * @param {boolean} [aabb = true] Set to false to skip the AABB test (useful if you use your own potential collision heuristic)

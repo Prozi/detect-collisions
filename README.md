@@ -24,7 +24,7 @@
 
 <a name="anchor-credits"></a>
 Credits
-===============================================================================
+=====
 
 It was originally forked from [github.com/Sinova/Collisions](https://github.com/Sinova/Collisions)
 
@@ -32,32 +32,32 @@ Since then not much has changed, but the project is maintained. The demos were u
 
 <a name="anchor-installation"></a>
 Installation
-===============================================================================
+=====
 
 ```bash
-yarn add detect-collisions --save
+yarn add detect-collisions -D
 
 # or
 
-npm i detect-collisions --save
+npm i detect-collisions --save-dev
 ```
 
 <a name="anchor-documentation"></a>
 Documentation
-===============================================================================
+=====
 
 View the [documentation](https://prozi.github.io/detect-collisions/) (this README is also there).
 
 <a name="anchor-demos"></a>
 Demos
-===============================================================================
+=====
 
 - [Tank](https://prozi.github.io/detect-collisions/demo/)
 - [Stress Test](https://prozi.github.io/detect-collisions/demo/?stress)
 
 <a name="anchor-usage"></a>
 Usage
-===============================================================================
+=====
 
 ```JavaScript
 const { Collisions } = require('detect-collisions');
@@ -99,7 +99,7 @@ for (const wall of potentials) {
 
 <a name="anchor-getting-started"></a>
 Getting Started
-===============================================================================
+=====
 
 <a name="anchor-step-1"></a>
 
@@ -312,7 +312,7 @@ if (collided) {
 
 <a name="anchor-lines"></a>
 Lines
-===============================================================================
+=====
 
 Creating a line is simply a matter of creating a single-sided polygon (i.e. a polygon with only two coordinate pairs).
 
@@ -322,7 +322,7 @@ const line = new Polygon(200, 5, [[-30, 0], [10, 20]]);
 
 <a name="anchor-concave-polygons"></a>
 Concave Polygons
-===============================================================================
+=====
 
 **Collisions** uses the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for its narrow-phase collision tests. One caveat to SAT is that it only works properly on convex bodies. However, concave polygons can be "faked" by using a series of [Lines](#anchor-lines). Keep in mind that a polygon drawn using [Lines](#anchor-lines) is "hollow".
 
@@ -330,7 +330,7 @@ Handling true concave polygons requires breaking them down into their component 
 
 <a name="anchor-rendering"></a>
 Rendering
-===============================================================================
+=====
 
 For debugging, it is often useful to be able to visualize the collision bodies. All of the bodies in a Collision system can be drawn to a `<canvas>` element by calling `draw()` and passing in the canvas' 2D context.
 
@@ -372,7 +372,7 @@ context.stroke();
 
 <a name="anchor-bounding-volume-padding"></a>
 Bounding Volume Padding
-===============================================================================
+=====
 
 When bodies move around within a collision system, the internal BVH has to remove and reinsert the body in order to determine where it belongs in the hierarchy. This is one of the most costly operations in maintaining a BVH. In general, most projects will never see a performance issue from this unless they are dealing with thousands of moving bodies at once. In these cases, it can _sometimes_ be beneficial to "pad" the bounding volumes of each body so that the BVH doesn't need to remove and reinsert bodies that haven't changed position too much. In other words, padding the bounding volume allows "breathing room" for the body within it to move around without being flagged for an update.
 
@@ -391,7 +391,7 @@ circle.padding = 10;
 
 <a name="anchor-only-using-sat"></a>
 Only using SAT
-===============================================================================
+=====
 
 Some projects may only have a need to perform SAT collision tests without broad-phase searching. This can be achieved by avoiding collision systems altogether and only using the `collides()` function.
 
@@ -409,7 +409,7 @@ if (circle.collides(polygon, result)) {
 
 <a name="anchor-faq"></a>
 FAQ
-===============================================================================
+=====
 
 ## Why shouldn't I just use a physics engine?
 

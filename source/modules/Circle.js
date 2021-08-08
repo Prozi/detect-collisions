@@ -1,10 +1,23 @@
-const Body = require("./Body");
+const Polygon = require("./Polygon");
 
-/**
- * A circle used to detect collisions
- * @class
- */
-class Circle extends Body {
+class Circle extends Polygon {
+  /**
+   * minimum a pentagon
+   * @param {Number} radius
+   */
+  static createCirclePoints(radius) {
+    const steps = Math.max(5, radius / 2);
+    const points = [];
+
+    for (let i = 0; i < steps; i++) {
+      const r = (2 * Math.PI * i) / steps;
+
+      points.push([Math.cos(r) * radius, Math.sin(r) * radius]);
+    }
+
+    return points;
+  }
+
   /**
    * @constructor
    * @param {Number} [x = 0] The starting X coordinate
@@ -14,7 +27,9 @@ class Circle extends Body {
    * @param {Number} [padding = 0] The amount to pad the bounding volume when testing for potential collisions
    */
   constructor(x = 0, y = 0, radius = 0, scale = 1, padding = 0) {
-    super(x, y, padding);
+    const points = Circle.createCirclePoints(radius);
+
+    super(x, y, points, 0, scale, scale, padding);
 
     /**
      * @type {Number}
@@ -27,17 +42,16 @@ class Circle extends Body {
     this.scale = scale;
   }
 
-  /**
-   * Draws the circle to a CanvasRenderingContext2D's current path
-   * @param {CanvasRenderingContext2D} context The context to add the arc to
-   */
-  draw(context) {
-    const x = this.x;
-    const y = this.y;
-    const radius = this.radius * this.scale;
+  set scale(scale) {
+    this.scale_x = scale;
+    this.scale_y = scale;
+  }
 
-    context.moveTo(x + radius, y);
-    context.arc(x, y, radius, 0, Math.PI * 2);
+  get scale() {
+    return {
+      x: this.scale_x,
+      y: this.scale_y,
+    };
   }
 }
 
