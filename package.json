@@ -1,7 +1,7 @@
 {
   "name": "detect-collisions",
   "types": "collisions.d.ts",
-  "version": "2.5.6",
+  "version": "2.6.0",
   "description": "zero-dependency 2d collision detection for circles, polygons, and points (with SAT and BVH)",
   "main": "source/index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "docs": "yarn docs:make && yarn docs:copy",
     "docs:dev": "yarn docs && node node_modules/@jacekpietal/bouncer.js/bin docs",
     "lint": "eslint ./source --fix",
-    "demo": "yarn build-demo && http-server docs/demo",
+    "demo": "yarn build-demo && bouncer.js docs/demo",
     "build-demo": "webpack && cp -r demo/ docs/",
     "compile": "babel ./source --presets es2015 --out-dir ./es2015",
     "build": "rm -rf ./docs/* && esdoc && webpack",

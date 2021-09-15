@@ -48,10 +48,8 @@ class Circle extends Polygon {
   }
 
   get scale() {
-    return {
-      x: this.scale_x,
-      y: this.scale_y,
-    };
+    // for compatibility in SAT
+    return (this.scale_x + this.scale_y) / 2;
   }
 }
 

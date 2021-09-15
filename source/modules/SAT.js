@@ -8,8 +8,8 @@
  * @returns {Boolean}
  */
 function SAT(a, b, result = null, aabb = true) {
-  const a_polygon = a._polygon;
-  const b_polygon = b._polygon;
+  const a_polygon = a._polygon && !a.radius;
+  const b_polygon = b._polygon && !b.radius;
 
   let collision = false;
 
@@ -328,8 +328,8 @@ function circleCircle(a, b, result = null) {
     result.a_in_b = a_radius <= b_radius && length <= b_radius - a_radius;
     result.b_in_a = b_radius <= a_radius && length <= a_radius - b_radius;
     result.overlap = radius_sum - length;
-    result.overlap_x = difference_x / length;
-    result.overlap_y = difference_y / length;
+    result.overlap_x = length ? difference_x / length : 1;
+    result.overlap_y = length ? difference_y / length : 1;
   }
 
   return true;
