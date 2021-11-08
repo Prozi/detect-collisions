@@ -1,7 +1,7 @@
 {
   "name": "detect-collisions",
   "types": "collisions.d.ts",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "description": "zero-dependency 2d collision detection for circles, polygons, and points (with SAT and BVH)",
   "main": "source/index.js",
   "scripts": {
