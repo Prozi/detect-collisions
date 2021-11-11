@@ -1,5 +1,6 @@
 import { BBox } from "rbush";
 import SAT from "sat";
+
 export { Response } from "sat";
 
 /**
@@ -12,12 +13,23 @@ export enum Types {
   Polygon = "Polygon",
 }
 
+/**
+ * potential vector
+ */
 export type Vector = SAT.Vector | { x?: number; y?: number };
 
+/**
+ * commonly used
+ */
 export interface ICollider extends BBox {
-  pos: SAT.Vector;
+  /**
+   * type of collider
+   */
   type: Types;
 
+  /**
+   * draw the collider
+   */
   draw(context: CanvasRenderingContext2D): void;
 
   /**

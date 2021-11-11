@@ -10,13 +10,24 @@ export declare enum Types {
     Point = "Point",
     Polygon = "Polygon"
 }
+/**
+ * potential vector
+ */
 export declare type Vector = SAT.Vector | {
     x?: number;
     y?: number;
 };
+/**
+ * commonly used
+ */
 export interface ICollider extends BBox {
-    pos: SAT.Vector;
+    /**
+     * type of collider
+     */
     type: Types;
+    /**
+     * draw the collider
+     */
     draw(context: CanvasRenderingContext2D): void;
     /**
      * should be called only by System.updateBody
