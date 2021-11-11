@@ -58,14 +58,14 @@ const { System } = require('detect-collisions');
 const system = new System();
 
 // Create the player (represented by a Circle)
-const player = system.createCircle(100, 100, 10);
+const player = system.createCircle({ x: 100, y: 100 }, 10);
 
 const points = [{ x: -60, y: -20 }, { x: 60, y: -20 }, { x: 60, y: 20 }, { x: -60, y: 20 }];
 // Create some walls (represented by Polygons)
 // Last parameter is angle - in radians
-const wall1 = system.createPolygon(400, 500, points, 1.7);
-const wall2 = system.createPolygon(200, 100, points, 2.2);
-const wall3 = system.createPolygon(400, 50, points, 0.7);
+const wall1 = system.createPolygon({ x: 400, y: 500 }, points, 1.7);
+const wall2 = system.createPolygon({ x: 200, y: 100 }, points, 2.2);
+const wall3 = system.createPolygon({ x: 400, y: 50 }, points, 0.7);
 
 // Update bounding boxes of collision tree
 system.update();
@@ -123,10 +123,10 @@ To use them, require the desired body class, call its constructor, and insert it
 const { System, Circle, Polygon, Point } = require('detect-collisions');
 
 const system = new System();
-const circle = new Circle(100, 100, 10);
-const polygon = new Polygon(50, 50, [{ x: 0, y: 0 }, { x: 20, y: 20}, { x: -10, y: 10 }]);
-const line = new Polygon(200, 5, [{ x: -30, y: 0 }, { x: 10, y: 20 }]);
-const point = new Point(10, 10);
+const circle = new Circle({ x: 100, y: 100 }, 10);
+const polygon = new Polygon({ x: 50, y: 50 }, [{ x: 0, y: 0 }, { x: 20, y: 20}, { x: -10, y: 10 }]);
+const line = new Polygon({ x: 200, y: 5 }, [{ x: -30, y: 0 }, { x: 10, y: 20 }]);
+const point = new Point({ x: 10, y: 10 });
 
 system.tree.insert(circle)
 system.tree.insert(polygon);
@@ -140,10 +140,10 @@ Collision systems expose several convenience functions for creating bodies and i
 const { System } = require('detect-collisions');
 
 const system = new System();
-const circle = system.createCircle(100, 100, 10);
-const polygon = system.createPolygon(50, 50, [{ x: 0, y: 0 }, { x: 20, y: 20}, { x: -10, y: 10 }]);
-const line = system.createPolygon(200, 5, [{ x: -30, y: 0 }, { x: 10, y: 20 }]);
-const point = system.createPoint(10, 10);
+const circle = system.createCircle({ x: 100, y: 100 }, 10);
+const polygon = system.createPolygon({ x: 50, y: 50 }, [{ x: 0, y: 0 }, { x: 20, y: 20}, { x: -10, y: 10 }]);
+const line = system.createPolygon({ x: 200, y: 5 }, [{ x: -30, y: 0 }, { x: 10, y: 20 }]);
+const point = system.createPoint({ x: 10, y: 10 });
 ```
 
 All bodies have `pos` property with `x` and `y` properties that can be manipulated. Additionally, All bodies have an `angle` property to rotate their points around their current position (using radians). Use `setAngle` to alter the value and recalculate points.
@@ -258,7 +258,7 @@ if (system.collides(player, wall)) {
 const { System } = require("detect-collisions")
 
 const system = new System();
-const collider = system.createCircle(100, 100, 10);
+const collider = system.createCircle({ x: 100, y: 100 }, 10);
 const potentials = system.getPotentials(collider);
 const obj = { name: 'coin', collider };
 const collided = potentials.some((body) => system.collides(collider, body));
@@ -276,7 +276,7 @@ Lines
 Creating a line is simply a matter of creating a single-sided polygon (i.e. a polygon with only two coordinate pairs).
 
 ```javascript
-const line = new Polygon(200, 5, [{ x: -30, y: 0 }, { x: 10, y: 20 }]);
+const line = new Polygon({ x: 200, y: 5 }, [{ x: -30, y: 0 }, { x: 10, y: 20 }]);
 ```
 
 <a name="anchor-concave-polygons"></a>
@@ -338,9 +338,8 @@ Some projects may only have a need to perform SAT collision tests without broad-
 ```javascript
 const { Circle, Polygon, Response } = require('collisions');
 
-const circle = new Circle(45, 45, 20);
-const polygon = new Polygon(50, 50, [{ x: 0, y: 0 }, { x: 20, y: 20 }, { x: -10, y: 10 }]);
-const result = new Response();
+const circle = new Circle({ x: 45, y: 45 }, 20);
+const polygon = new Polygon({ x: 50, y: 50 }, [{ x: 0, y: 0 }, { x: 20, y: 20 }, { x: -10, y: 10 }]);
 
 if (system.collides(polygon, circle)) {
   console.log(system.result);
