@@ -56,7 +56,7 @@ export class System extends RBush {
      */
     update() {
         this.all().forEach((body) => {
-            // no need to every cycle update static body aabb
+            // no need to update static body aabb each cycle
             if (!body.isStatic) {
                 this.updateBody(body);
             }
@@ -81,10 +81,6 @@ export class System extends RBush {
      * @param {function} callback
      */
     checkOne(body, callback) {
-        // no need to check static body collision
-        if (body.isStatic) {
-            return;
-        }
         this.getPotentials(body).forEach((candidate) => {
             if (this.checkCollision(body, candidate)) {
                 callback(this.response);
