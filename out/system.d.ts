@@ -8,14 +8,8 @@ import { Point } from "./bodies/point";
 /**
  * collision system
  */
-export declare class System {
+export declare class System extends RBush<ICollider> {
     response: SAT.Response;
-    tree: RBush<ICollider>;
-    constructor();
-    /**
-     * getter for all tree bodies
-     */
-    get bodies(): ICollider[];
     /**
      * draw bodies
      * @param {CanvasRenderingContext2D} context
@@ -59,7 +53,7 @@ export declare class System {
      * @param {object} collider
      * @param {object} candidate
      */
-    collides(body: ICollider, candidate: ICollider): boolean;
+    checkCollision(body: ICollider, candidate: ICollider): boolean;
     /**
      * create point
      * @param {Vector} position {x, y}

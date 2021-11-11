@@ -52,30 +52,65 @@ function _classCallCheck(instance, Constructor) {
   }
 }
 
+function _possibleConstructorReturn(self, call) {
+  if (!self) {
+    throw new ReferenceError(
+      "this hasn't been initialised - super() hasn't been called"
+    );
+  }
+  return call && (typeof call === "object" || typeof call === "function")
+    ? call
+    : self;
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError(
+      "Super expression must either be null or a function, not " +
+        typeof superClass
+    );
+  }
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true,
+    },
+  });
+  if (superClass)
+    Object.setPrototypeOf
+      ? Object.setPrototypeOf(subClass, superClass)
+      : (subClass.__proto__ = superClass);
+}
+
 /**
  * collision system
  */
-var System = (exports.System = (function () {
+var System = (exports.System = (function (_RBush) {
+  _inherits(System, _RBush);
+
   function System() {
     _classCallCheck(this, System);
 
-    this.response = new _sat2.default.Response();
-    this.tree = new _rbush2.default();
+    var _this = _possibleConstructorReturn(
+      this,
+      (System.__proto__ || Object.getPrototypeOf(System)).apply(this, arguments)
+    );
+
+    _this.response = new _sat2.default.Response();
+    return _this;
   }
   /**
-   * getter for all tree bodies
+   * draw bodies
+   * @param {CanvasRenderingContext2D} context
    */
 
   _createClass(System, [
     {
       key: "draw",
-
-      /**
-       * draw bodies
-       * @param {CanvasRenderingContext2D} context
-       */
       value: function draw(context) {
-        this.bodies.forEach(function (body) {
+        this.all().forEach(function (body) {
           body.draw(context);
         });
       },
@@ -87,7 +122,7 @@ var System = (exports.System = (function () {
     {
       key: "drawBVH",
       value: function drawBVH(context) {
-        this.tree.data.children.forEach(function (_ref) {
+        this.data.children.forEach(function (_ref) {
           var minX = _ref.minX,
             maxX = _ref.maxX,
             minY = _ref.minY,
@@ -101,7 +136,7 @@ var System = (exports.System = (function () {
             context
           );
         });
-        this.bodies.forEach(function (body) {
+        this.all().forEach(function (body) {
           var _body$getAABBAsBox = body.getAABBAsBox(),
             pos = _body$getAABBAsBox.pos,
             w = _body$getAABBAsBox.w,
@@ -124,9 +159,9 @@ var System = (exports.System = (function () {
     {
       key: "updateBody",
       value: function updateBody(body) {
-        this.tree.remove(body);
+        this.remove(body);
         body.updateAABB();
-        this.tree.insert(body);
+        this.insert(body);
       },
       /**
        * update all bodies aabb
@@ -135,12 +170,12 @@ var System = (exports.System = (function () {
     {
       key: "update",
       value: function update() {
-        var _this = this;
+        var _this2 = this;
 
-        this.bodies.forEach(function (body) {
+        this.all().forEach(function (body) {
           // no need to every cycle update static body aabb
           if (!body.isStatic) {
-            _this.updateBody(body);
+            _this2.updateBody(body);
           }
         });
       },
@@ -151,16 +186,16 @@ var System = (exports.System = (function () {
     {
       key: "separate",
       value: function separate() {
-        var _this2 = this;
+        var _this3 = this;
 
         this.checkAll(function (response) {
           // static bodies and triggers do not move back / separate
-          if (response.a.isStatic || response.a.isTrigger) {
+          if (response.a.isTrigger) {
             return;
           }
           response.a.pos.x -= response.overlapV.x;
           response.a.pos.y -= response.overlapV.y;
-          _this2.updateBody(response.a);
+          _this3.updateBody(response.a);
         });
       },
       /**
@@ -171,11 +206,15 @@ var System = (exports.System = (function () {
     {
       key: "checkOne",
       value: function checkOne(body, callback) {
-        var _this3 = this;
+        var _this4 = this;
 
+        // no need to check static body collision
+        if (body.isStatic) {
+          return;
+        }
         this.getPotentials(body).forEach(function (candidate) {
-          if (_this3.collides(body, candidate)) {
-            callback(_this3.response);
+          if (_this4.checkCollision(body, candidate)) {
+            callback(_this4.response);
           }
         });
       },
@@ -187,13 +226,10 @@ var System = (exports.System = (function () {
     {
       key: "checkAll",
       value: function checkAll(callback) {
-        var _this4 = this;
+        var _this5 = this;
 
-        this.bodies.forEach(function (body) {
-          // no need to check static body collision
-          if (!body.isStatic) {
-            _this4.checkOne(body, callback);
-          }
+        this.all().forEach(function (body) {
+          _this5.checkOne(body, callback);
         });
       },
       /**
@@ -204,12 +240,8 @@ var System = (exports.System = (function () {
     {
       key: "getPotentials",
       value: function getPotentials(body) {
-        // static bodies dont have potential colliders
-        if (body.isStatic) {
-          return [];
-        }
         // filter here is required as collides with self
-        return this.tree.search(body).filter(function (candidate) {
+        return this.search(body).filter(function (candidate) {
           return candidate !== body;
         });
       },
@@ -220,11 +252,8 @@ var System = (exports.System = (function () {
        */
     },
     {
-      key: "collides",
-      value: function collides(body, candidate) {
-        if (body.isStatic) {
-          return false;
-        }
+      key: "checkCollision",
+      value: function checkCollision(body, candidate) {
         this.response.clear();
         if (
           body.type === _model.Types.Circle &&
@@ -272,7 +301,7 @@ var System = (exports.System = (function () {
       key: "createPoint",
       value: function createPoint(position) {
         var point = new _point.Point(position);
-        this.tree.insert(point);
+        this.insert(point);
         return point;
       },
       /**
@@ -285,7 +314,7 @@ var System = (exports.System = (function () {
       key: "createCircle",
       value: function createCircle(position, radius) {
         var circle = new _circle.Circle(position, radius);
-        this.tree.insert(circle);
+        this.insert(circle);
         return circle;
       },
       /**
@@ -304,7 +333,7 @@ var System = (exports.System = (function () {
 
         var box = new _box.Box(position, width, height);
         box.setAngle(angle);
-        this.tree.insert(box);
+        this.insert(box);
         return box;
       },
       /**
@@ -322,17 +351,11 @@ var System = (exports.System = (function () {
 
         var polygon = new _polygon.Polygon(position, points);
         polygon.setAngle(angle);
-        this.tree.insert(polygon);
+        this.insert(polygon);
         return polygon;
-      },
-    },
-    {
-      key: "bodies",
-      get: function get() {
-        return this.tree.all();
       },
     },
   ]);
 
   return System;
-})());
+})(_rbush2.default));

@@ -10,25 +10,15 @@ import { createBox } from "./utils";
 /**
  * collision system
  */
-export class System {
+export class System extends RBush<ICollider> {
   public response: SAT.Response = new SAT.Response();
-  public tree: RBush<ICollider> = new RBush();
-
-  constructor() {}
-
-  /**
-   * getter for all tree bodies
-   */
-  get bodies(): ICollider[] {
-    return this.tree.all();
-  }
 
   /**
    * draw bodies
    * @param {CanvasRenderingContext2D} context
    */
   draw(context: CanvasRenderingContext2D): void {
-    this.bodies.forEach((body: ICollider) => {
+    this.all().forEach((body: ICollider) => {
       body.draw(context);
     });
   }
@@ -38,19 +28,17 @@ export class System {
    * @param {CanvasRenderingContext2D} context
    */
   drawBVH(context: CanvasRenderingContext2D) {
-    (this.tree as any).data.children.forEach(
-      ({ minX, maxX, minY, maxY }: any) => {
-        Polygon.prototype.draw.call(
-          {
-            pos: { x: minX, y: minY },
-            calcPoints: createBox(maxX - minX, maxY - minY),
-          },
-          context
-        );
-      }
-    );
+    (this as any).data.children.forEach(({ minX, maxX, minY, maxY }: any) => {
+      Polygon.prototype.draw.call(
+        {
+          pos: { x: minX, y: minY },
+          calcPoints: createBox(maxX - minX, maxY - minY),
+        },
+        context
+      );
+    });
 
-    this.bodies.forEach((body: any) => {
+    this.all().forEach((body: any) => {
       const { pos, w, h } = body.getAABBAsBox();
 
       Polygon.prototype.draw.call(
@@ -68,18 +56,18 @@ export class System {
    * @param {object} body
    */
   updateBody(body: ICollider): void {
-    this.tree.remove(body);
+    this.remove(body);
 
     body.updateAABB();
 
-    this.tree.insert(body);
+    this.insert(body);
   }
 
   /**
    * update all bodies aabb
    */
   update() {
-    this.bodies.forEach((body: ICollider) => {
+    this.all().forEach((body: ICollider) => {
       // no need to every cycle update static body aabb
       if (!body.isStatic) {
         this.updateBody(body);
@@ -93,7 +81,7 @@ export class System {
   separate() {
     this.checkAll((response: SAT.Response) => {
       // static bodies and triggers do not move back / separate
-      if (response.a.isStatic || response.a.isTrigger) {
+      if (response.a.isTrigger) {
         return;
       }
 
@@ -109,8 +97,13 @@ export class System {
    * @param {function} callback
    */
   checkOne(body: ICollider, callback: (response: SAT.Response) => void): void {
+    // no need to check static body collision
+    if (body.isStatic) {
+      return;
+    }
+
     this.getPotentials(body).forEach((candidate: ICollider) => {
-      if (this.collides(body, candidate)) {
+      if (this.checkCollision(body, candidate)) {
         callback(this.response);
       }
     });
@@ -121,11 +114,8 @@ export class System {
    * @param {function} callback
    */
   checkAll(callback: (response: SAT.Response) => void): void {
-    this.bodies.forEach((body: ICollider) => {
-      // no need to check static body collision
-      if (!body.isStatic) {
-        this.checkOne(body, callback);
-      }
+    this.all().forEach((body: ICollider) => {
+      this.checkOne(body, callback);
     });
   }
 
@@ -134,13 +124,8 @@ export class System {
    * @param {object} collider
    */
   getPotentials(body: ICollider): ICollider[] {
-    // static bodies dont have potential colliders
-    if (body.isStatic) {
-      return [];
-    }
-
     // filter here is required as collides with self
-    return this.tree.search(body).filter((candidate) => candidate !== body);
+    return this.search(body).filter((candidate) => candidate !== body);
   }
 
   /**
@@ -148,11 +133,7 @@ export class System {
    * @param {object} collider
    * @param {object} candidate
    */
-  collides(body: ICollider, candidate: ICollider): boolean {
-    if (body.isStatic) {
-      return false;
-    }
-
+  checkCollision(body: ICollider, candidate: ICollider): boolean {
     this.response.clear();
 
     if (body.type === Types.Circle && candidate.type === Types.Circle) {
@@ -195,7 +176,7 @@ export class System {
   createPoint(position: Vector): Point {
     const point = new Point(position);
 
-    this.tree.insert(point);
+    this.insert(point);
 
     return point;
   }
@@ -208,7 +189,7 @@ export class System {
   createCircle(position: Vector, radius: number): Circle {
     const circle = new Circle(position, radius);
 
-    this.tree.insert(circle);
+    this.insert(circle);
 
     return circle;
   }
@@ -230,7 +211,7 @@ export class System {
 
     box.setAngle(angle);
 
-    this.tree.insert(box);
+    this.insert(box);
 
     return box;
   }
@@ -250,7 +231,7 @@ export class System {
 
     polygon.setAngle(angle);
 
-    this.tree.insert(polygon);
+    this.insert(polygon);
 
     return polygon;
   }

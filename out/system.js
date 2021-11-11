@@ -9,23 +9,17 @@ import { createBox } from "./utils";
 /**
  * collision system
  */
-export class System {
+export class System extends RBush {
     constructor() {
+        super(...arguments);
         this.response = new SAT.Response();
-        this.tree = new RBush();
-    }
-    /**
-     * getter for all tree bodies
-     */
-    get bodies() {
-        return this.tree.all();
     }
     /**
      * draw bodies
      * @param {CanvasRenderingContext2D} context
      */
     draw(context) {
-        this.bodies.forEach((body) => {
+        this.all().forEach((body) => {
             body.draw(context);
         });
     }
@@ -34,13 +28,13 @@ export class System {
      * @param {CanvasRenderingContext2D} context
      */
     drawBVH(context) {
-        this.tree.data.children.forEach(({ minX, maxX, minY, maxY }) => {
+        this.data.children.forEach(({ minX, maxX, minY, maxY }) => {
             Polygon.prototype.draw.call({
                 pos: { x: minX, y: minY },
                 calcPoints: createBox(maxX - minX, maxY - minY),
             }, context);
         });
-        this.bodies.forEach((body) => {
+        this.all().forEach((body) => {
             const { pos, w, h } = body.getAABBAsBox();
             Polygon.prototype.draw.call({
                 pos,
@@ -53,15 +47,15 @@ export class System {
      * @param {object} body
      */
     updateBody(body) {
-        this.tree.remove(body);
+        this.remove(body);
         body.updateAABB();
-        this.tree.insert(body);
+        this.insert(body);
     }
     /**
      * update all bodies aabb
      */
     update() {
-        this.bodies.forEach((body) => {
+        this.all().forEach((body) => {
             // no need to every cycle update static body aabb
             if (!body.isStatic) {
                 this.updateBody(body);
@@ -74,7 +68,7 @@ export class System {
     separate() {
         this.checkAll((response) => {
             // static bodies and triggers do not move back / separate
-            if (response.a.isStatic || response.a.isTrigger) {
+            if (response.a.isTrigger) {
                 return;
             }
             response.a.pos.x -= response.overlapV.x;
@@ -87,8 +81,12 @@ export class System {
      * @param {function} callback
      */
     checkOne(body, callback) {
+        // no need to check static body collision
+        if (body.isStatic) {
+            return;
+        }
         this.getPotentials(body).forEach((candidate) => {
-            if (this.collides(body, candidate)) {
+            if (this.checkCollision(body, candidate)) {
                 callback(this.response);
             }
         });
@@ -98,11 +96,8 @@ export class System {
      * @param {function} callback
      */
     checkAll(callback) {
-        this.bodies.forEach((body) => {
-            // no need to check static body collision
-            if (!body.isStatic) {
-                this.checkOne(body, callback);
-            }
+        this.all().forEach((body) => {
+            this.checkOne(body, callback);
         });
     }
     /**
@@ -110,22 +105,15 @@ export class System {
      * @param {object} collider
      */
     getPotentials(body) {
-        // static bodies dont have potential colliders
-        if (body.isStatic) {
-            return [];
-        }
         // filter here is required as collides with self
-        return this.tree.search(body).filter((candidate) => candidate !== body);
+        return this.search(body).filter((candidate) => candidate !== body);
     }
     /**
      * check do 2 objects collide
      * @param {object} collider
      * @param {object} candidate
      */
-    collides(body, candidate) {
-        if (body.isStatic) {
-            return false;
-        }
+    checkCollision(body, candidate) {
         this.response.clear();
         if (body.type === Types.Circle && candidate.type === Types.Circle) {
             return SAT.testCircleCircle(body, candidate, this.response);
@@ -146,7 +134,7 @@ export class System {
      */
     createPoint(position) {
         const point = new Point(position);
-        this.tree.insert(point);
+        this.insert(point);
         return point;
     }
     /**
@@ -156,7 +144,7 @@ export class System {
      */
     createCircle(position, radius) {
         const circle = new Circle(position, radius);
-        this.tree.insert(circle);
+        this.insert(circle);
         return circle;
     }
     /**
@@ -169,7 +157,7 @@ export class System {
     createBox(position, width, height, angle = 0) {
         const box = new Box(position, width, height);
         box.setAngle(angle);
-        this.tree.insert(box);
+        this.insert(box);
         return box;
     }
     /**
@@ -181,7 +169,7 @@ export class System {
     createPolygon(position, points, angle = 0) {
         const polygon = new Polygon(position, points);
         polygon.setAngle(angle);
-        this.tree.insert(polygon);
+        this.insert(polygon);
         return polygon;
     }
 }

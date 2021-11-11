@@ -128,10 +128,10 @@ const polygon = new Polygon({ x: 50, y: 50 }, [{ x: 0, y: 0 }, { x: 20, y: 20}, 
 const line = new Polygon({ x: 200, y: 5 }, [{ x: -30, y: 0 }, { x: 10, y: 20 }]);
 const point = new Point({ x: 10, y: 10 });
 
-system.tree.insert(circle)
-system.tree.insert(polygon);
-system.tree.insert(line);
-system.tree.insert(point);
+system.insert(circle)
+system.insert(polygon);
+system.insert(line);
+system.insert(point);
 ```
 
 Collision systems expose several convenience functions for creating bodies and inserting them into the system in one step. This also avoids having to require the different body classes.
@@ -161,8 +161,8 @@ polygon.setAngle(1.2);
 And, of course, bodies can be removed when they are no longer needed.
 
 ```javascript
-system.tree.remove(polygon)
-system.tree.remove(point);
+system.remove(polygon)
+system.remove(point);
 ```
 
 <a name="anchor-step-3"></a>
@@ -173,6 +173,12 @@ Collision systems need to be updated when the bodies within them change. This in
 
 ```javascript
 system.update();
+```
+
+You can also update one body AABB by calling:
+
+```javascript
+system.updateBody(body);
 ```
 
 The optimal time for updating a collision system is **after** its bodies have changed and **before** collisions are tested. For example, a game loop might use the following order of events:
