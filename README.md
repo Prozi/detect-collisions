@@ -60,7 +60,7 @@ const system = new System();
 // Create the player (represented by a Circle)
 const player = system.createCircle(100, 100, 10);
 
-const points = [{ x: -60, y: -20], { x: 60, y: -20 }, { x: 60, y: 20 }, { x: -60, y: 20 }];
+const points = [{ x: -60, y: -20 }, { x: 60, y: -20 }, { x: 60, y: 20 }, { x: -60, y: 20 }];
 // Create some walls (represented by Polygons)
 // Last parameter is angle - in radians
 const wall1 = system.createPolygon(400, 500, points, 1.7);
