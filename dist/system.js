@@ -173,7 +173,7 @@ var System = (exports.System = (function (_RBush) {
         var _this2 = this;
 
         this.all().forEach(function (body) {
-          // no need to update static body aabb each cycle
+          // no need to every cycle update static body aabb
           if (!body.isStatic) {
             _this2.updateBody(body);
           }
@@ -208,6 +208,10 @@ var System = (exports.System = (function (_RBush) {
       value: function checkOne(body, callback) {
         var _this4 = this;
 
+        // no need to check static body collision
+        if (body.isStatic) {
+          return;
+        }
         this.getPotentials(body).forEach(function (candidate) {
           if (_this4.checkCollision(body, candidate)) {
             callback(_this4.response);
