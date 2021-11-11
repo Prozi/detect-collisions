@@ -3,22 +3,20 @@
 Object.defineProperty(exports, "__esModule", {
   value: true,
 });
+
+var _sat = require("sat");
+
 Object.defineProperty(exports, "Response", {
   enumerable: true,
   get: function get() {
     return _sat.Response;
   },
 });
-exports.Types = void 0;
-
-var _sat = require("sat");
 
 /**
  * types
  */
-var Types;
-exports.Types = Types;
-
+var Types = (exports.Types = undefined);
 (function (Types) {
   Types["Circle"] = "Circle";
   Types["Box"] = "Box";

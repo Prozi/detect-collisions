@@ -1,6 +1,6 @@
 const { System } = require("../../dist");
 
-export class Tank {
+module.exports.Tank = class Tank {
   constructor() {
     const width = document.body.offsetWidth;
     const height = document.body.offsetHeight;
@@ -313,4 +313,4 @@ export class Tank {
       [-100, 20],
     ]);
   }
-}
+};

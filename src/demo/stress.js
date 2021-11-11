@@ -9,7 +9,7 @@ const size = 5;
 let frame = 0;
 let fps_total = 0;
 
-export class Stress {
+module.exports.Stress = class Stress {
   constructor() {
     this.element = document.createElement("div");
     this.canvas = document.createElement("canvas");
@@ -169,7 +169,7 @@ export class Stress {
 
     this.bodies.push(body);
   }
-}
+};
 
 function random(min, max) {
   return Math.floor(Math.random() * max) + min;

@@ -27,7 +27,7 @@
 
 <nav >
     
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Box.html">Box</a><ul class='methods'><li data-type='method'><a href="Box.html#draw">draw</a></li><li data-type='method'><a href="Box.html#updateAABB">updateAABB</a></li></ul></li><li><a href="Circle.html">Circle</a><ul class='methods'><li data-type='method'><a href="Circle.html#draw">draw</a></li><li data-type='method'><a href="Circle.html#updateAABB">updateAABB</a></li></ul></li><li><a href="Point.html">Point</a><ul class='methods'><li data-type='method'><a href="Point.html#draw">draw</a></li><li data-type='method'><a href="Point.html#updateAABB">updateAABB</a></li></ul></li><li><a href="Polygon.html">Polygon</a><ul class='methods'><li data-type='method'><a href="Polygon.html#draw">draw</a></li><li data-type='method'><a href="Polygon.html#updateAABB">updateAABB</a></li></ul></li><li><a href="System.html">System</a><ul class='methods'><li data-type='method'><a href="System.html#checkAll">checkAll</a></li><li data-type='method'><a href="System.html#checkOne">checkOne</a></li><li data-type='method'><a href="System.html#collides">collides</a></li><li data-type='method'><a href="System.html#createBox">createBox</a></li><li data-type='method'><a href="System.html#createCircle">createCircle</a></li><li data-type='method'><a href="System.html#createPoint">createPoint</a></li><li data-type='method'><a href="System.html#createPolygon">createPolygon</a></li><li data-type='method'><a href="System.html#draw">draw</a></li><li data-type='method'><a href="System.html#drawBVH">drawBVH</a></li><li data-type='method'><a href="System.html#getPotentials">getPotentials</a></li><li data-type='method'><a href="System.html#separate">separate</a></li><li data-type='method'><a href="System.html#update">update</a></li><li data-type='method'><a href="System.html#updateBody">updateBody</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#clockwise">clockwise</a></li><li><a href="global.html#createBox">createBox</a></li><li><a href="global.html#ensurePolygonPoints">ensurePolygonPoints</a></li><li><a href="global.html#ensureVectorPoint">ensureVectorPoint</a></li><li><a href="global.html#Types">Types</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Box">Box</a></li><li><a href="global.html#Circle">Circle</a></li><li><a href="global.html#clockwise">clockwise</a></li><li><a href="global.html#createBox">createBox</a></li><li><a href="global.html#ensurePolygonPoints">ensurePolygonPoints</a></li><li><a href="global.html#ensureVectorPoint">ensureVectorPoint</a></li><li><a href="global.html#Point">Point</a></li><li><a href="global.html#Polygon">Polygon</a></li><li><a href="global.html#System">System</a></li><li><a href="global.html#Types">Types</a></li><li><a href="global.html#value">value</a></li></ul>
 </nav>
 
 <div id="main">
@@ -47,9 +47,28 @@
 Object.defineProperty(exports, "__esModule", {
   value: true,
 });
-exports.Point = void 0;
+exports.Point = undefined;
 
-var _sat = _interopRequireDefault(require("sat"));
+var _createClass = (function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i &lt; props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+})();
+
+var _sat = require("sat");
+
+var _sat2 = _interopRequireDefault(_sat);
 
 var _box = require("./box");
 
@@ -61,40 +80,95 @@ function _interopRequireDefault(obj) {
   return obj &amp;&amp; obj.__esModule ? obj : { default: obj };
 }
 
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+function _possibleConstructorReturn(self, call) {
+  if (!self) {
+    throw new ReferenceError(
+      "this hasn't been initialised - super() hasn't been called"
+    );
+  }
+  return call &amp;&amp; (typeof call === "object" || typeof call === "function")
+    ? call
+    : self;
+}
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" &amp;&amp; superClass !== null) {
+    throw new TypeError(
+      "Super expression must either be null or a function, not " +
+        typeof superClass
+    );
+  }
+  subClass.prototype = Object.create(superClass &amp;&amp; superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true,
+    },
+  });
+  if (superClass)
+    Object.setPrototypeOf
+      ? Object.setPrototypeOf(subClass, superClass)
+      : (subClass.__proto__ = superClass);
+}
+
 /**
  * collider - point (very tiny box)
  */
-class Point extends _sat.default.Polygon {
+var Point = (exports.Point = (function (_SAT$Polygon) {
+  _inherits(Point, _SAT$Polygon);
+
   /**
    * collider - point (very tiny box)
    * @param {Vector} position {x, y}
    */
-  constructor(position) {
-    super(
-      (0, _utils.ensureVectorPoint)(position),
-      (0, _utils.createBox)(0.1, 0.1)
+  function Point(position) {
+    _classCallCheck(this, Point);
+
+    var _this = _possibleConstructorReturn(
+      this,
+      (Point.__proto__ || Object.getPrototypeOf(Point)).call(
+        this,
+        (0, _utils.ensureVectorPoint)(position),
+        (0, _utils.createBox)(0.1, 0.1)
+      )
     );
-    this.type = _model.Types.Point;
-    this.updateAABB();
+
+    _this.type = _model.Types.Point;
+    _this.updateAABB();
+    return _this;
   }
   /**
    * Updates Bounding Box of collider
    */
 
-  updateAABB() {
-    _box.Box.prototype.updateAABB.call(this);
-  }
-  /**
-   * Draws collider on a CanvasRenderingContext2D's current path
-   * @param {CanvasRenderingContext2D} context The canvas context to draw on
-   */
+  _createClass(Point, [
+    {
+      key: "updateAABB",
+      value: function updateAABB() {
+        _box.Box.prototype.updateAABB.call(this);
+      },
+      /**
+       * Draws collider on a CanvasRenderingContext2D's current path
+       * @param {CanvasRenderingContext2D} context The canvas context to draw on
+       */
+    },
+    {
+      key: "draw",
+      value: function draw(context) {
+        _box.Box.prototype.draw.call(this, context);
+      },
+    },
+  ]);
 
-  draw(context) {
-    _box.Box.prototype.draw.call(this, context);
-  }
-}
-
-exports.Point = Point;
+  return Point;
+})(_sat2.default.Polygon));
 </code></pre>
         </article>
     </section>
@@ -109,7 +183,7 @@ exports.Point = Point;
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Thu Nov 11 2021 18:08:44 GMT+0100 (Central European Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Thu Nov 11 2021 18:21:30 GMT+0100 (Central European Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
