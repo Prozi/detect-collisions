@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>bodies/polygon.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Box.html">Box</a><ul class='methods'><li data-type='method'><a href="Box.html#draw">draw</a></li><li data-type='method'><a href="Box.html#updateAABB">updateAABB</a></li></ul></li><li><a href="Circle.html">Circle</a><ul class='methods'><li data-type='method'><a href="Circle.html#draw">draw</a></li><li data-type='method'><a href="Circle.html#updateAABB">updateAABB</a></li></ul></li><li><a href="Point.html">Point</a><ul class='methods'><li data-type='method'><a href="Point.html#draw">draw</a></li><li data-type='method'><a href="Point.html#updateAABB">updateAABB</a></li></ul></li><li><a href="Polygon.html">Polygon</a><ul class='methods'><li data-type='method'><a href="Polygon.html#draw">draw</a></li><li data-type='method'><a href="Polygon.html#updateAABB">updateAABB</a></li></ul></li><li><a href="System.html">System</a><ul class='methods'><li data-type='method'><a href="System.html#checkAll">checkAll</a></li><li data-type='method'><a href="System.html#checkOne">checkOne</a></li><li data-type='method'><a href="System.html#collides">collides</a></li><li data-type='method'><a href="System.html#createBox">createBox</a></li><li data-type='method'><a href="System.html#createCircle">createCircle</a></li><li data-type='method'><a href="System.html#createPoint">createPoint</a></li><li data-type='method'><a href="System.html#createPolygon">createPolygon</a></li><li data-type='method'><a href="System.html#draw">draw</a></li><li data-type='method'><a href="System.html#drawBVH">drawBVH</a></li><li data-type='method'><a href="System.html#getPotentials">getPotentials</a></li><li data-type='method'><a href="System.html#separate">separate</a></li><li data-type='method'><a href="System.html#update">update</a></li><li data-type='method'><a href="System.html#updateBody">updateBody</a></li></ul></li></ul><h3>Global</h3><ul><li><a href="global.html#clockwise">clockwise</a></li><li><a href="global.html#createBox">createBox</a></li><li><a href="global.html#ensurePolygonPoints">ensurePolygonPoints</a></li><li><a href="global.html#ensureVectorPoint">ensureVectorPoint</a></li><li><a href="global.html#Types">Types</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">bodies/polygon.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true,
+});
+exports.Polygon = void 0;
+
+var _sat = _interopRequireDefault(require("sat"));
+
+var _model = require("../model");
+
+var _utils = require("../utils");
+
+function _interopRequireDefault(obj) {
+  return obj &amp;&amp; obj.__esModule ? obj : { default: obj };
+}
+
+/**
+ * collider - polygon
+ */
+class Polygon extends _sat.default.Polygon {
+  /**
+   * collider - polygon
+   * @param {Vector} position {x, y}
+   * @param {Vector[]} points
+   */
+  constructor(position, points) {
+    super(
+      (0, _utils.ensureVectorPoint)(position),
+      (0, _utils.ensurePolygonPoints)(points)
+    );
+    this.type = _model.Types.Polygon;
+    this.updateAABB();
+  }
+  /**
+   * Updates Bounding Box of collider
+   */
+
+  updateAABB() {
+    const { pos, w, h } = this.getAABBAsBox();
+    this.minX = pos.x;
+    this.minY = pos.y;
+    this.maxX = pos.x + w;
+    this.maxY = pos.y + h;
+  }
+  /**
+   * Draws collider on a CanvasRenderingContext2D's current path
+   * @param {CanvasRenderingContext2D} context The canvas context to draw on
+   */
+
+  draw(context) {
+    this.calcPoints.forEach((point, index) => {
+      const posX = this.pos.x + point.x;
+      const posY = this.pos.y + point.y;
+
+      if (!index) {
+        if (this.calcPoints.length === 1) {
+          context.arc(posX, posY, 1, 0, Math.PI * 2);
+        } else {
+          context.moveTo(posX, posY);
+        }
+      } else {
+        context.lineTo(posX, posY);
+      }
+    });
+
+    if (this.calcPoints.length > 2) {
+      context.lineTo(
+        this.pos.x + this.calcPoints[0].x,
+        this.pos.y + this.calcPoints[0].y
+      );
+    }
+  }
+}
+
+exports.Polygon = Polygon;
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Thu Nov 11 2021 17:52:43 GMT+0100 (Central European Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+
+
+</body>
+</html>

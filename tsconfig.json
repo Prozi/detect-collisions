@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "declaration": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "target": "es2017",
+    "module": "esnext",
+    "outDir": "out",
+    "paths": {
+      "mini-signals": ["./node_modules/mini-signals/index.js"]
+    }
+  },
+  "files": ["src/index.ts"],
+  "include": ["src/*.ts", "src/**/*.ts"],
+  "exclude": ["src/*.spec.ts", "*.js"]
+}

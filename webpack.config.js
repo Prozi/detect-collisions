@@ -1,9 +1,11 @@
+const path = `${__dirname}/dist/demo/`;
+
 module.exports = {
-  entry: "./demo/index.js",
+  entry: "./src/demo/index.js",
   mode: "development",
   target: "web",
   output: {
-    path: `${__dirname}/demo/`,
+    path,
     filename: "demo.bundle.js",
   },
 };

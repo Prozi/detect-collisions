@@ -1,25 +1,36 @@
 {
   "tags": {
     "allowUnknownTags": true,
-    "dictionaries": ["jsdoc"]
+    "dictionaries": [
+      "jsdoc"
+    ]
   },
   "source": {
-    "include": ["source", "package.json", "README.md", "demo"],
+    "include": [
+      "dist",
+      "package.json",
+      "README.md"
+    ],
     "includePattern": ".js$",
-    "excludePattern": "(node_modules/|out)"
+    "excludePattern": "(node_modules)"
   },
   "plugins": [
-    "plugins/markdown"
+    "plugins/markdown",
+    "plugins/summarize"
   ],
   "templates": {
     "referenceTitle": "Collision Detection",
     "disableSort": false
   },
   "opts": {
-    "destination": "./out/",
+    "destination": "./docs/",
     "encoding": "utf8",
     "private": true,
     "recurse": true,
-    "template": "./node_modules/jsdoc-template"
+    "template": "./node_modules/docdash"
+  },
+  "docdash": {
+    "nameInOutputPath": false,
+    "versionInOutputPath": false
   }
 }
