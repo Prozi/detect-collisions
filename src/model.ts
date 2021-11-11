@@ -28,6 +28,16 @@ export interface ICollider extends BBox {
   type: Types;
 
   /**
+   * is the collider non moving
+   */
+  isStatic?: boolean;
+
+  /**
+   * is the collider a "trigger"
+   */
+  isTrigger?: boolean;
+
+  /**
    * draw the collider
    */
   draw(context: CanvasRenderingContext2D): void;

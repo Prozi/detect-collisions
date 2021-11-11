@@ -39,7 +39,7 @@ export class System {
    */
   drawBVH(context: CanvasRenderingContext2D) {
     (this.tree as any).data.children.forEach(
-      ({ minX, maxX, minY, maxY, children }: any) => {
+      ({ minX, maxX, minY, maxY }: any) => {
         Polygon.prototype.draw.call(
           {
             pos: { x: minX, y: minY },
@@ -80,7 +80,10 @@ export class System {
    */
   update() {
     this.bodies.forEach((body: ICollider) => {
-      this.updateBody(body);
+      // no need to every cycle update static body aabb
+      if (!body.isStatic) {
+        this.updateBody(body);
+      }
     });
   }
 
@@ -89,6 +92,11 @@ export class System {
    */
   separate() {
     this.checkAll((response: SAT.Response) => {
+      // static bodies and triggers do not move back / separate
+      if (response.a.isStatic || response.a.isTrigger) {
+        return;
+      }
+
       response.a.pos.x -= response.overlapV.x;
       response.a.pos.y -= response.overlapV.y;
 
@@ -114,7 +122,10 @@ export class System {
    */
   checkAll(callback: (response: SAT.Response) => void): void {
     this.bodies.forEach((body: ICollider) => {
-      this.checkOne(body, callback);
+      // no need to check static body collision
+      if (!body.isStatic) {
+        this.checkOne(body, callback);
+      }
     });
   }
 
@@ -123,6 +134,11 @@ export class System {
    * @param {object} collider
    */
   getPotentials(body: ICollider): ICollider[] {
+    // static bodies dont have potential colliders
+    if (body.isStatic) {
+      return [];
+    }
+
     // filter here is required as collides with self
     return this.tree.search(body).filter((candidate) => candidate !== body);
   }
@@ -133,6 +149,10 @@ export class System {
    * @param {object} candidate
    */
   collides(body: ICollider, candidate: ICollider): boolean {
+    if (body.isStatic) {
+      return false;
+    }
+
     this.response.clear();
 
     if (body.type === Types.Circle && candidate.type === Types.Circle) {

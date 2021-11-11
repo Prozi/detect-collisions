@@ -91,8 +91,7 @@ var System = (exports.System = (function () {
           var minX = _ref.minX,
             maxX = _ref.maxX,
             minY = _ref.minY,
-            maxY = _ref.maxY,
-            children = _ref.children;
+            maxY = _ref.maxY;
 
           _polygon.Polygon.prototype.draw.call(
             {
@@ -139,7 +138,10 @@ var System = (exports.System = (function () {
         var _this = this;
 
         this.bodies.forEach(function (body) {
-          _this.updateBody(body);
+          // no need to every cycle update static body aabb
+          if (!body.isStatic) {
+            _this.updateBody(body);
+          }
         });
       },
       /**
@@ -152,6 +154,10 @@ var System = (exports.System = (function () {
         var _this2 = this;
 
         this.checkAll(function (response) {
+          // static bodies and triggers do not move back / separate
+          if (response.a.isStatic || response.a.isTrigger) {
+            return;
+          }
           response.a.pos.x -= response.overlapV.x;
           response.a.pos.y -= response.overlapV.y;
           _this2.updateBody(response.a);
@@ -184,7 +190,10 @@ var System = (exports.System = (function () {
         var _this4 = this;
 
         this.bodies.forEach(function (body) {
-          _this4.checkOne(body, callback);
+          // no need to check static body collision
+          if (!body.isStatic) {
+            _this4.checkOne(body, callback);
+          }
         });
       },
       /**
@@ -195,6 +204,10 @@ var System = (exports.System = (function () {
     {
       key: "getPotentials",
       value: function getPotentials(body) {
+        // static bodies dont have potential colliders
+        if (body.isStatic) {
+          return [];
+        }
         // filter here is required as collides with self
         return this.tree.search(body).filter(function (candidate) {
           return candidate !== body;
@@ -209,6 +222,9 @@ var System = (exports.System = (function () {
     {
       key: "collides",
       value: function collides(body, candidate) {
+        if (body.isStatic) {
+          return false;
+        }
         this.response.clear();
         if (
           body.type === _model.Types.Circle &&
