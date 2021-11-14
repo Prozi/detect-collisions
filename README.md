@@ -2,6 +2,8 @@
 
 **Detect-Collisions** is JavaScript library* for quickly and accurately detecting collisions between Polygons, Circles, Boxes, and Points. It combines the efficiency of a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and the accuracy of the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
 
+<img src="https://badge.fury.io/js/pixi-shim.svg" alt="https://badge.fury.io/js/pixi-shim" />
+
 *) since 3.0 powered by [RBush](https://github.com/mourner/rbush) and [SAT](https://github.com/jriecken/sat-js)
 
 - [Installation](#anchor-installation)
