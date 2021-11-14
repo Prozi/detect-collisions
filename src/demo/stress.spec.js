@@ -8,7 +8,7 @@ describe("GIVEN Stress test", () => {
   });
 
   describe("AND Stress is instantiated", () => {
-    it("THEN requiring it doesnt throw exception", () => {
+    it("THEN it doesnt throw exception", () => {
       const { Stress } = require("./stress");
       const create = () => new Stress();
 

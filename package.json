@@ -12,7 +12,7 @@
     "docs:postbuild": "mv docs/$npm_package_name/$npm_package_version/* docs && rm -rf docs/$npm_package_name && cp dist/demo -r docs",
     "docs": "yarn build:docs && bouncer.js docs",
     "demo": "yarn build:demo && bouncer.js dist/demo",
-    "test": "yarn build && jest",
+    "test": "yarn build && jest --silent --verbose",
     "format": "prettier --write ./src",
     "precommit": "yarn test && yarn format && yarn build:docs"
   },
