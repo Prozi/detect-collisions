@@ -1,4 +1,8 @@
-# Introduction <img src="https://badge.fury.io/js/detect-collisions.svg" alt="https://badge.fury.io/js/detect-collisions" />
+# Introduction
+
+<img src="https://badge.fury.io/js/detect-collisions.svg" alt="https://badge.fury.io/js/detect-collisions" />
+<img src="https://snyk.io/test/github/Prozi/detect-collisions/badge.svg" alt="https://snyk.io/test/github/Prozi/detect-collisions" />
+<img src="https://circleci.com/gh/Prozi/detect-collisions.svg?style=svg" alt="https://circleci.com/gh/Prozi/detect-collisions" />
 
 **Detect-Collisions** is JavaScript library* for quickly and accurately detecting collisions between Polygons, Circles, Boxes, and Points. It combines the efficiency of a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and the accuracy of the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
 
@@ -27,11 +31,7 @@ Installation
 =====
 
 ```bash
-yarn add detect-collisions -D
-
-# or
-
-npm i detect-collisions --save-dev
+$ yarn add detect-collisions -D
 ```
 
 <a name="anchor-documentation"></a>
@@ -98,7 +98,7 @@ Getting Started
 
 **Detect-Collisions** provides functions for performing both broad-phase and narrow-phase collision tests. In order to take full advantage of both phases, bodies need to be tracked within a collision system.
 
-Call the System constructor to create a collision system.
+Call the System constructor to create a collision system. The `class System` extends `class RBush` ([documentation](https://github.com/mourner/rbush)).
 
 ```javascript
 const { System } = require('detect-collisions');
@@ -181,6 +181,8 @@ You can also update one body AABB by calling:
 system.updateBody(body);
 ```
 
+> **Note:** Calling `system.updateBody(body)` is **required** after each position change for `System` to detect `BVH` correctly.
+
 The optimal time for updating a collision system is **after** its bodies have changed and **before** collisions are tested. For example, a game loop might use the following order of events:
 
 ```javascript
@@ -188,9 +190,8 @@ function gameLoop() {
   handleInput();
   processGameLogic();
 
-  system.update();
+  system.checkAll(handleCollisions);
 
-  handleSystem();
   render();
 }
 ```
@@ -202,24 +203,32 @@ function gameLoop() {
 When testing for collisions on a body, it is generally recommended that a broad-phase search be performed first by calling `getPotentials(body)` in order to quickly rule out bodies that are too far away to collide. **Detect-Collisions** uses a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for its broad-phase search. Calling `getPotentials(body)` on a body traverses the BVH and builds a list of potential collision candidates.
 
 ```javascript
-const potentials = system.getPotentials(polygon);
+const potentials = system.getPotentials(body);
 ```
 
 Once a list of potential collisions is acquired, loop through them and perform a narrow-phase collision test using `collides()`. **Detect-Collisions** uses the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for its narrow-phase collision tests.
 
 ```javascript
-const potentials = system.getPotentials(polygon);
-
-potentials.forEach((body) => {
-  if (system.collides(polygon, body)) {
-    console.log('Collision detected!', system.response);
+system.getPotentials(body).forEach((collider) => {
+  if (system.collides(body, collider)) {
+    handleCollisions(system.response);
   }
 });
 ```
 
-It is also possible to skip the broad-phase search entirely and call `collides()` directly on two bodies.
+The **preferred method** is once-in-a-gameloop checkAll and then handler:
 
-> **Note:** Skipping the broad-phase search is not recommended. When testing for collisions against large numbers of bodies, performing a broad-phase search using a BVH is _much_ more efficient.
+```javascript
+system.checkAll(handleCollisions);
+```
+
+If you really need to check one body then use:
+
+```javascript
+system.checkOne(body, handleCollisions);
+```
+
+It is also possible to skip the broad-phase search entirely and call `collides()` directly on two bodies.
 
 ```javascript
 if (system.collides(polygon, line)) {
@@ -227,15 +236,21 @@ if (system.collides(polygon, line)) {
 }
 ```
 
+> **Note:** Skipping the broad-phase search is not recommended. When testing for collisions against large numbers of bodies, performing a broad-phase search using a BVH is _much_ more efficient.
+
 <a name="anchor-step-5"></a>
 
 ## 5. Getting Detailed Collision Information
 
-There is often a need for detailed information about a collision in order to react to it appropriately. This information is stored using a `Response` object. `Response` objects have several properties set on them when a collision occurs, all of which are described in the [documentation](https://prozi.github.io/detect-collisions/).
+There is often a need for detailed information about a collision in order to react to it appropriately. This information is stored inside `system.response` object. The `SAT.Response` ([documentation](https://github.com/jriecken/sat-js#satresponse)) object has several properties set on them when a collision occurs:
 
-For convenience, there are several ways to create a `Response` object. `Response` objects do not belong to any particular collision system, so any of the following methods for creating one can be used interchangeably. This also means the same `Response` object can be used for collisions across multiple systems.
-
-> **Note:** It is highly recommended that `Response` objects be recycled when performing multiple collision tests in order to save memory. You can access the last response from `system.response`.
+- `a` - The first object in the collision.
+- `b` - The second object in the collison.
+- `overlap` - Magnitude of the overlap on the shortest colliding axis.
+- `overlapN` - The shortest colliding axis (unit-vector)
+- `overlapV` - The overlap vector (i.e. overlapN.scale(overlap, overlap)). If this vector is subtracted from the position of a, a and b will no longer be colliding.
+- `aInB` - Whether the first object is completely inside the second.
+- `bInA` - Whether the second object is completely inside the first.
 
 <a name="anchor-step-6"></a>
 
@@ -243,16 +258,16 @@ For convenience, there are several ways to create a `Response` object. `Response
 
 A common use-case in collision detection is negating overlap when a collision occurs (such as when a player hits a wall). This can be done using the collision information in a `Response` object (see [Getting Detailed Collision Information](#anchor-getting-detailed-collision-information)).
 
-The three most useful properties on a `Response` object are `overlap`, `overlap_x`, and `overlap_y`. Together, these values describe how much and in what direction the source body is overlapping the target body. More specifically, `overlap_x` and `overlap_y` describe the direction vector, and `overlap` describes the magnitude of that vector.
+The three most useful properties on a `Response` object are `overlapV`, `a`, and `b`. Together, these values describe how much and in what direction the source body is overlapping the target body. More specifically, `overlapV.x` and `overlapV.y` describe the scaled direction vector. If this vector is subtracted from the position of a, a and b will no longer be colliding.
 
 These values can be used to "push" one body out of another using the minimum distance required. More simply, subtracting this vector from the source body's position will cause the bodies to no longer collide. Here's an example:
 
 ```javascript
 if (system.collides(player, wall)) {
-  const result = system.response;
+  const { overlapV } = system.response;
 
-  player.x -= result.overlapV.X;
-  player.y -= result.overlapV.y;
+  player.x -= overlapV.X;
+  player.y -= overlapV.y;
 }
 ```
 
@@ -303,7 +318,6 @@ For debugging, it is often useful to be able to visualize the collision bodies. 
 const canvas = document.createElement('canvas');
 const context = canvas.getContext('2d');
 
-// ...
 context.strokeStyle = '#FFFFFF';
 context.beginPath();
 
@@ -342,7 +356,7 @@ Only using SAT
 Some projects may only have a need to perform SAT collision tests without broad-phase searching. This can be achieved by avoiding collision systems altogether and only using the `collides()` function.
 
 ```javascript
-const { Circle, Polygon, Response } = require('collisions');
+const { Circle, Polygon } = require('collisions');
 
 const circle = new Circle({ x: 45, y: 45 }, 20);
 const polygon = new Polygon({ x: 50, y: 50 }, [{ x: 0, y: 0 }, { x: 20, y: 20 }, { x: -10, y: 10 }]);
