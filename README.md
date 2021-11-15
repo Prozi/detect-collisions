@@ -1,8 +1,10 @@
 # Introduction
 
-<img src="https://badge.fury.io/js/detect-collisions.svg" alt="https://badge.fury.io/js/detect-collisions" />
-<img src="https://snyk.io/test/github/Prozi/detect-collisions/badge.svg" alt="https://snyk.io/test/github/Prozi/detect-collisions" />
-<img src="https://circleci.com/gh/Prozi/detect-collisions.svg?style=svg" alt="https://circleci.com/gh/Prozi/detect-collisions" />
+<p>
+  <img src="https://badge.fury.io/js/detect-collisions.svg" alt="https://badge.fury.io/js/detect-collisions" />
+  <img src="https://snyk.io/test/github/Prozi/detect-collisions/badge.svg" alt="https://snyk.io/test/github/Prozi/detect-collisions" />
+  <img src="https://circleci.com/gh/Prozi/detect-collisions.svg?style=svg" alt="https://circleci.com/gh/Prozi/detect-collisions" />
+</p>
 
 **Detect-Collisions** is JavaScript library* for quickly and accurately detecting collisions between Polygons, Circles, Boxes, and Points. It combines the efficiency of a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and the accuracy of the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
 
