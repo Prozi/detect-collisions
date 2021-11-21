@@ -122,7 +122,7 @@ var Circle = (exports.Circle = (function (_SAT$Circle) {
       value: function draw(context) {
         var radius = this.r;
         if (this.isTrigger) {
-          var max = radius / 2;
+          var max = Math.max(8, radius);
           for (var i = 0; i < max; i++) {
             var arc = (i / max) * 2 * Math.PI;
             var arcPrev = ((i - 1) / max) * 2 * Math.PI;

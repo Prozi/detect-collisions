@@ -44,7 +44,7 @@ export class Circle extends SAT.Circle implements ICollider {
     const radius = this.r;
 
     if (this.isTrigger) {
-      const max = radius / 2;
+      const max = Math.max(8, radius);
 
       for (let i = 0; i < max; i++) {
         const arc = (i / max) * 2 * Math.PI;
