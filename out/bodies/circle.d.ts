@@ -8,6 +8,8 @@ export declare class Circle extends SAT.Circle implements ICollider {
     maxX: number;
     minY: number;
     maxY: number;
+    isStatic?: boolean;
+    isTrigger?: boolean;
     readonly type: Types;
     /**
      * collider - circle

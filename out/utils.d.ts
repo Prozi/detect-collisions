@@ -22,3 +22,14 @@ export declare function ensurePolygonPoints(points: Vector[]): SAT.Vector[];
  * @param {SAT.Vector[]} points
  */
 export declare function clockwise(points: Vector[]): boolean;
+/**
+ * draws dashed line on canvas context
+ * @param {CanvasRenderingContext2D} context
+ * @param {number} fromX
+ * @param {number} fromY
+ * @param {number} toX
+ * @param {number} toY
+ * @param {number?} dash
+ * @param {number?} gap
+ */
+export declare function dashLineTo(context: CanvasRenderingContext2D, fromX: number, fromY: number, toX: number, toY: number, dash?: number, gap?: number): void;

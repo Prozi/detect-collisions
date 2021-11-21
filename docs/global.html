@@ -27,7 +27,7 @@
 
 <nav >
     
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Box">Box</a></li><li><a href="global.html#Circle">Circle</a></li><li><a href="global.html#clockwise">clockwise</a></li><li><a href="global.html#createBox">createBox</a></li><li><a href="global.html#ensurePolygonPoints">ensurePolygonPoints</a></li><li><a href="global.html#ensureVectorPoint">ensureVectorPoint</a></li><li><a href="global.html#Point">Point</a></li><li><a href="global.html#Polygon">Polygon</a></li><li><a href="global.html#System">System</a></li><li><a href="global.html#Types">Types</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#Box">Box</a></li><li><a href="global.html#Circle">Circle</a></li><li><a href="global.html#clockwise">clockwise</a></li><li><a href="global.html#createBox">createBox</a></li><li><a href="global.html#dashLineTo">dashLineTo</a></li><li><a href="global.html#ensurePolygonPoints">ensurePolygonPoints</a></li><li><a href="global.html#ensureVectorPoint">ensureVectorPoint</a></li><li><a href="global.html#Point">Point</a></li><li><a href="global.html#Polygon">Polygon</a></li><li><a href="global.html#System">System</a></li><li><a href="global.html#Types">Types</a></li></ul>
 </nav>
 
 <div id="main">
@@ -327,7 +327,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="bodies_polygon.js.html">bodies/polygon.js</a>, <a href="bodies_polygon.js.html#line78">line 78</a>
+        <a href="bodies_polygon.js.html">bodies/polygon.js</a>, <a href="bodies_polygon.js.html#line89">line 89</a>
     </li></ul></dd>
     
 
@@ -532,7 +532,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line53">line 53</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line54">line 54</a>
     </li></ul></dd>
     
 
@@ -670,7 +670,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line25">line 25</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line26">line 26</a>
     </li></ul></dd>
     
 
@@ -827,6 +827,344 @@
 
     
 
+    <h4 class="name" id="dashLineTo"><span class="type-signature"></span>dashLineTo<span class="signature">(context, fromX, fromY, toX, toY, dash<span class="signature-attributes">nullable</span>, gap<span class="signature-attributes">nullable</span>)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>draws dashed line on canvas context</p>.</p>
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line73">line 73</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description usertext">
+    <p>draws dashed line on canvas context</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>context</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">CanvasRenderingContext2D</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fromX</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>fromY</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>toX</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>toY</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>dash</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>gap</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="ensurePolygonPoints"><span class="type-signature"></span>ensurePolygonPoints<span class="signature">(points)</span><span class="type-signature"></span></h4>
 
     
@@ -841,7 +1179,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line46">line 46</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line47">line 47</a>
     </li></ul></dd>
     
 
@@ -979,7 +1317,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line37">line 37</a>
+        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line38">line 38</a>
     </li></ul></dd>
     
 
@@ -1118,7 +1456,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Mon Nov 15 2021 01:22:49 GMT+0100 (Central European Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sun Nov 21 2021 02:42:40 GMT+0100 (Central European Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

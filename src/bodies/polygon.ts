@@ -1,6 +1,6 @@
 import SAT from "sat";
 import { ICollider, Types, Vector } from "../model";
-import { ensureVectorPoint, ensurePolygonPoints } from "../utils";
+import { ensureVectorPoint, ensurePolygonPoints, dashLineTo } from "../utils";
 
 /**
  * collider - polygon
@@ -10,6 +10,8 @@ export class Polygon extends SAT.Polygon implements ICollider {
   maxX: number;
   minY: number;
   maxY: number;
+  isStatic?: boolean;
+  isTrigger?: boolean;
 
   readonly type: Types = Types.Polygon;
 
@@ -41,26 +43,29 @@ export class Polygon extends SAT.Polygon implements ICollider {
    * @param {CanvasRenderingContext2D} context The canvas context to draw on
    */
   draw(context: CanvasRenderingContext2D): void {
-    this.calcPoints.forEach((point, index: number) => {
-      const posX = this.pos.x + point.x;
-      const posY = this.pos.y + point.y;
+    [...this.calcPoints, this.calcPoints[0]].forEach((point, index: number) => {
+      const toX = this.pos.x + point.x;
+      const toY = this.pos.y + point.y;
+      const prev =
+        this.calcPoints[index - 1] ||
+        this.calcPoints[this.calcPoints.length - 1];
 
       if (!index) {
         if (this.calcPoints.length === 1) {
-          context.arc(posX, posY, 1, 0, Math.PI * 2);
+          context.arc(toX, toY, 1, 0, Math.PI * 2);
         } else {
-          context.moveTo(posX, posY);
+          context.moveTo(toX, toY);
         }
-      } else {
-        context.lineTo(posX, posY);
+      } else if (this.calcPoints.length > 1) {
+        if (this.isTrigger) {
+          const fromX = this.pos.x + prev.x;
+          const fromY = this.pos.y + prev.y;
+
+          dashLineTo(context, fromX, fromY, toX, toY);
+        } else {
+          context.lineTo(toX, toY);
+        }
       }
     });
-
-    if (this.calcPoints.length > 2) {
-      context.lineTo(
-        this.pos.x + this.calcPoints[0].x,
-        this.pos.y + this.calcPoints[0].y
-      );
-    }
   }
 }

@@ -1,6 +1,6 @@
 import SAT from "sat";
 import { Types } from "../model";
-import { ensureVectorPoint } from "../utils";
+import { dashLineTo, ensureVectorPoint } from "../utils";
 /**
  * collider - circle
  */
@@ -29,10 +29,22 @@ export class Circle extends SAT.Circle {
      * @param {CanvasRenderingContext2D} context The canvas context to draw on
      */
     draw(context) {
-        const x = this.pos.x;
-        const y = this.pos.y;
         const radius = this.r;
-        context.moveTo(x + radius, y);
-        context.arc(x, y, radius, 0, Math.PI * 2);
+        if (this.isTrigger) {
+            const max = radius / 2;
+            for (let i = 0; i < max; i++) {
+                const arc = (i / max) * 2 * Math.PI;
+                const arcPrev = ((i - 1) / max) * 2 * Math.PI;
+                const fromX = this.pos.x + Math.cos(arcPrev) * radius;
+                const fromY = this.pos.y + Math.sin(arcPrev) * radius;
+                const toX = this.pos.x + Math.cos(arc) * radius;
+                const toY = this.pos.y + Math.sin(arc) * radius;
+                dashLineTo(context, fromX, fromY, toX, toY);
+            }
+        }
+        else {
+            context.moveTo(this.pos.x + radius, this.pos.y);
+            context.arc(this.pos.x, this.pos.y, radius, 0, Math.PI * 2);
+        }
     }
 }

@@ -48,3 +48,45 @@ export function clockwise(points: Vector[]): boolean {
 
   return sum > 0;
 }
+
+/**
+ * draws dashed line on canvas context
+ * @param {CanvasRenderingContext2D} context
+ * @param {number} fromX
+ * @param {number} fromY
+ * @param {number} toX
+ * @param {number} toY
+ * @param {number?} dash
+ * @param {number?} gap
+ */
+export function dashLineTo(
+  context: CanvasRenderingContext2D,
+  fromX: number,
+  fromY: number,
+  toX: number,
+  toY: number,
+  dash = 2,
+  gap = 4
+): void {
+  const xDiff = toX - fromX;
+  const yDiff = toY - fromY;
+  const arc = Math.atan2(yDiff, xDiff);
+  const offsetX = Math.cos(arc);
+  const offsetY = Math.sin(arc);
+
+  let posX = fromX;
+  let posY = fromY;
+  let distance = Math.hypot(xDiff, yDiff);
+
+  while (distance > 0) {
+    const step = Math.min(distance, dash);
+
+    context.moveTo(posX, posY);
+    context.lineTo(posX + offsetX * step, posY + offsetY * step);
+
+    posX += offsetX * (dash + gap);
+    posY += offsetY * (dash + gap);
+
+    distance -= dash + gap;
+  }
+}

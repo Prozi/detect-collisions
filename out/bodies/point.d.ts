@@ -8,6 +8,8 @@ export declare class Point extends SAT.Polygon implements ICollider {
     maxX: number;
     minY: number;
     maxY: number;
+    isStatic?: boolean;
+    isTrigger?: boolean;
     readonly type: Types;
     /**
      * collider - point (very tiny box)

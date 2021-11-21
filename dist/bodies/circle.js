@@ -120,11 +120,22 @@ var Circle = (exports.Circle = (function (_SAT$Circle) {
     {
       key: "draw",
       value: function draw(context) {
-        var x = this.pos.x;
-        var y = this.pos.y;
         var radius = this.r;
-        context.moveTo(x + radius, y);
-        context.arc(x, y, radius, 0, Math.PI * 2);
+        if (this.isTrigger) {
+          var max = radius / 2;
+          for (var i = 0; i < max; i++) {
+            var arc = (i / max) * 2 * Math.PI;
+            var arcPrev = ((i - 1) / max) * 2 * Math.PI;
+            var fromX = this.pos.x + Math.cos(arcPrev) * radius;
+            var fromY = this.pos.y + Math.sin(arcPrev) * radius;
+            var toX = this.pos.x + Math.cos(arc) * radius;
+            var toY = this.pos.y + Math.sin(arc) * radius;
+            (0, _utils.dashLineTo)(context, fromX, fromY, toX, toY);
+          }
+        } else {
+          context.moveTo(this.pos.x + radius, this.pos.y);
+          context.arc(this.pos.x, this.pos.y, radius, 0, Math.PI * 2);
+        }
       },
     },
   ]);

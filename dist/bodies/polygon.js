@@ -34,6 +34,17 @@ function _interopRequireDefault(obj) {
   return obj && obj.__esModule ? obj : { default: obj };
 }
 
+function _toConsumableArray(arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) {
+      arr2[i] = arr[i];
+    }
+    return arr2;
+  } else {
+    return Array.from(arr);
+  }
+}
+
 function _classCallCheck(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
     throw new TypeError("Cannot call a class as a function");
@@ -127,25 +138,30 @@ var Polygon = (exports.Polygon = (function (_SAT$Polygon) {
       value: function draw(context) {
         var _this2 = this;
 
-        this.calcPoints.forEach(function (point, index) {
-          var posX = _this2.pos.x + point.x;
-          var posY = _this2.pos.y + point.y;
-          if (!index) {
-            if (_this2.calcPoints.length === 1) {
-              context.arc(posX, posY, 1, 0, Math.PI * 2);
-            } else {
-              context.moveTo(posX, posY);
+        []
+          .concat(_toConsumableArray(this.calcPoints), [this.calcPoints[0]])
+          .forEach(function (point, index) {
+            var toX = _this2.pos.x + point.x;
+            var toY = _this2.pos.y + point.y;
+            var prev =
+              _this2.calcPoints[index - 1] ||
+              _this2.calcPoints[_this2.calcPoints.length - 1];
+            if (!index) {
+              if (_this2.calcPoints.length === 1) {
+                context.arc(toX, toY, 1, 0, Math.PI * 2);
+              } else {
+                context.moveTo(toX, toY);
+              }
+            } else if (_this2.calcPoints.length > 1) {
+              if (_this2.isTrigger) {
+                var fromX = _this2.pos.x + prev.x;
+                var fromY = _this2.pos.y + prev.y;
+                (0, _utils.dashLineTo)(context, fromX, fromY, toX, toY);
+              } else {
+                context.lineTo(toX, toY);
+              }
             }
-          } else {
-            context.lineTo(posX, posY);
-          }
-        });
-        if (this.calcPoints.length > 2) {
-          context.lineTo(
-            this.pos.x + this.calcPoints[0].x,
-            this.pos.y + this.calcPoints[0].y
-          );
-        }
+          });
       },
     },
   ]);
