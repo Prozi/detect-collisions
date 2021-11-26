@@ -81,3 +81,4 @@ export declare class System extends RBush<ICollider> {
      */
     createPolygon(position: Vector, points: Vector[], angle?: number): Polygon;
 }
+//# sourceMappingURL=system.d.ts.map

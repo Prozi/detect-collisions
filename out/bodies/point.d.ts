@@ -26,3 +26,4 @@ export declare class Point extends SAT.Polygon implements ICollider {
      */
     draw(context: CanvasRenderingContext2D): void;
 }
+//# sourceMappingURL=point.d.ts.map

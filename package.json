@@ -1,6 +1,6 @@
 {
   "name": "detect-collisions",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "2d collision detection for circles, polygons, and points (with SAT and BVH)",
   "main": "dist/index.js",
   "types": "out/index.d.ts",
@@ -37,7 +37,7 @@
     "Volume",
     "Hierarchy"
   ],
-  "author": "Samuel Hodge",
+  "author": "Jacek Pietal",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/Prozi/detect-collisions/issues"

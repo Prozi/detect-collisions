@@ -27,3 +27,4 @@ export declare class Circle extends SAT.Circle implements ICollider {
      */
     draw(context: CanvasRenderingContext2D): void;
 }
+//# sourceMappingURL=circle.d.ts.map

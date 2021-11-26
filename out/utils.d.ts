@@ -33,3 +33,4 @@ export declare function clockwise(points: Vector[]): boolean;
  * @param {number?} gap
  */
 export declare function dashLineTo(context: CanvasRenderingContext2D, fromX: number, fromY: number, toX: number, toY: number, dash?: number, gap?: number): void;
+//# sourceMappingURL=utils.d.ts.map

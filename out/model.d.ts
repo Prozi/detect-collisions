@@ -42,3 +42,4 @@ export interface ICollider extends BBox {
      */
     updateAABB(): void;
 }
+//# sourceMappingURL=model.d.ts.map

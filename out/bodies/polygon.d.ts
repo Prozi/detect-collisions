@@ -27,3 +27,4 @@ export declare class Polygon extends SAT.Polygon implements ICollider {
      */
     draw(context: CanvasRenderingContext2D): void;
 }
+//# sourceMappingURL=polygon.d.ts.map

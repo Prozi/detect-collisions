@@ -4,6 +4,7 @@
     "esModuleInterop": true,
     "allowJs": true,
     "declaration": true,
+    "declarationMap": true,
     "resolveJsonModule": true,
     "moduleResolution": "node",
     "target": "es2017",
