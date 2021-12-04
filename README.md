@@ -1,248 +1,138 @@
 # Introduction
 
+**Detect-Collisions** is JavaScript library for quickly and accurately detecting collisions between Polygons, Circles, Boxes, and Points. It combines the efficiency of a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and the accuracy of the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
+
 <p>
   <img src="https://badge.fury.io/js/detect-collisions.svg" alt="https://badge.fury.io/js/detect-collisions" />
   <img src="https://snyk.io/test/github/Prozi/detect-collisions/badge.svg" alt="https://snyk.io/test/github/Prozi/detect-collisions" />
   <img src="https://circleci.com/gh/Prozi/detect-collisions.svg?style=svg" alt="https://circleci.com/gh/Prozi/detect-collisions" />
 </p>
 
-**Detect-Collisions** is JavaScript library* for quickly and accurately detecting collisions between Polygons, Circles, Boxes, and Points. It combines the efficiency of a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and the accuracy of the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
-
-*) since 3.0 powered by [RBush](https://github.com/mourner/rbush) and [SAT](https://github.com/jriecken/sat-js)
-
-- [Installation](#anchor-installation)
-- [Documentation](#anchor-documentation)
-- [Demos](#anchor-demos)
-- [Usage](#anchor-usage)
-- [Getting Started](#anchor-getting-started)
-  1.  [Creating a Collision System](#anchor-step-1)
-  2.  [Creating, Inserting, Updating, and Removing Bodies](#anchor-step-2)
-  3.  [Updating the Collision System](#anchor-step-3)
-  4.  [Testing for Collisions](#anchor-step-4)
-  5.  [Getting Detailed Collision Information](#anchor-step-5)
-  6.  [Negating Overlap](#anchor-step-6)
-  7.  [Detecting collision after insertion](#anchor-step-7)
-- [Lines](#anchor-lines)
-- [Concave Polygons](#anchor-concave-polygons)
-- [Rendering](#anchor-rendering)
-- [Only using SAT](#anchor-only-using-sat)
-- [FAQ](#anchor-faq)
-
-<a name="anchor-installation"></a>
-Installation
-=====
-
-```bash
-$ yarn add detect-collisions -D
-```
-
-<a name="anchor-documentation"></a>
-Documentation
-=====
-
-View the [documentation](https://prozi.github.io/detect-collisions/) (this README is also there).
-
-<a name="anchor-demos"></a>
-Demos
-=====
+## Demos
 
 - [Tank](https://prozi.github.io/detect-collisions/demo/)
 - [Stress Test](https://prozi.github.io/detect-collisions/demo/?stress)
 
-<a name="anchor-usage"></a>
-Usage
-=====
+## Install
 
-```javascript
-const { System } = require('detect-collisions');
-
-// Create the collision system
-const system = new System();
-
-// Create the player (represented by a Circle)
-const player = system.createCircle({ x: 100, y: 100 }, 10);
-
-const points = [{ x: -60, y: -20 }, { x: 60, y: -20 }, { x: 60, y: 20 }, { x: -60, y: 20 }];
-// Create some walls (represented by Polygons)
-// Last parameter is angle - in radians
-const wall1 = system.createPolygon({ x: 400, y: 500 }, points, 1.7);
-const wall2 = system.createPolygon({ x: 200, y: 100 }, points, 2.2);
-const wall3 = system.createPolygon({ x: 400, y: 50 }, points, 0.7);
-
-// Update bounding boxes of collision tree
-system.update();
-
-// Check one collider
-system.checkOne(player, ({ overlapV }) => {
-  // Move it away from collision
-  player.pos.x -= overlapV.x;
-  player.pos.y -= overlapV.y;
-});
-
-// Check all colliders
-system.checkAll(({ a, overlapV }) => {
-  // Move them away from collision
-  a.pos.x -= overlapV.x;
-  a.pos.y -= overlapV.y;
-});
-
-// Check all colliders and move them away from collision
-system.separate();
+```bash
+$ yarn add detect-collisions
 ```
 
-<a name="anchor-getting-started"></a>
-Getting Started
-=====
+## Usage
 
-<a name="anchor-step-1"></a>
+### 1. Creating a System
 
-## 1. Creating a Collision System
+`System` extends `RBush` so it has [all of its functionalities](https://github.com/mourner/rbush).
 
-**Detect-Collisions** provides functions for performing both broad-phase and narrow-phase collision tests. In order to take full advantage of both phases, bodies need to be tracked within a collision system.
+To start, create a unique collisions system:
 
-Call the System constructor to create a collision system. The `class System` extends `class RBush` ([documentation](https://github.com/mourner/rbush)).
-
-```javascript
-const { System } = require('detect-collisions');
-
+```js
 const system = new System();
 ```
 
-<a name="anchor-step-2"></a>
+### 2. Creating, Inserting, Removing Bodies
 
-## 2. Creating, Inserting, Updating, and Removing Bodies
+`Circle`, `Polygon`, `Box` extend their respective `SAT` counterparts so they have [all of its functionalities](https://github.com/jriecken/sat-js).
 
-**Detect-Collisions** supports the following body types:
+- [Circle](https://github.com/jriecken/sat-js#satcircle): A shape with infinite sides equidistant from a single point
+- [Polygon](https://github.com/jriecken/sat-js#satpolygon): A shape made up of line segments
+- [Box](https://github.com/jriecken/sat-js#satbox) A shape like a rectangle
+- Point: A single coordinate (implemented as tiny box)
 
-- **Circle:** A shape with infinite sides equidistant from a single point
-- **Polygon:** A shape made up of line segments
-- **Box:** A shape like a rectangle
-- **Point:** A single coordinate
+All bodies have `pos` property `{ x, y }`.
 
-To use them, require the desired body class, call its constructor, and insert it into the collision system using `insert()`.
+Create bodies:
 
-```javascript
-const { System, Circle, Polygon, Point } = require('detect-collisions');
-
-const system = new System();
+```js
 const circle = new Circle({ x: 100, y: 100 }, 10);
-const polygon = new Polygon({ x: 50, y: 50 }, [{ x: 0, y: 0 }, { x: 20, y: 20}, { x: -10, y: 10 }]);
+const polygon = new Polygon({ x: 50, y: 50 }, [{ x: 0, y: 0 }, { x: 20, y: 20 }, { x: -10, y: 10 }]);
 const line = new Polygon({ x: 200, y: 5 }, [{ x: -30, y: 0 }, { x: 10, y: 20 }]);
 const point = new Point({ x: 10, y: 10 });
+```
 
-system.insert(circle)
+Insert bodies to system:
+
+```js
+system.insert(circle);
 system.insert(polygon);
 system.insert(line);
 system.insert(point);
 ```
 
-Collision systems expose several convenience functions for creating bodies and inserting them into the system in one step. This also avoids having to require the different body classes.
+Create and insert to system:
 
-```javascript
-const { System } = require('detect-collisions');
-
-const system = new System();
+```js
 const circle = system.createCircle({ x: 100, y: 100 }, 10);
-const polygon = system.createPolygon({ x: 50, y: 50 }, [{ x: 0, y: 0 }, { x: 20, y: 20}, { x: -10, y: 10 }]);
+const polygon = system.createPolygon({ x: 50, y: 50 }, [{ x: 0, y: 0 }, { x: 20, y: 20 }, { x: -10, y: 10 }]);
 const line = system.createPolygon({ x: 200, y: 5 }, [{ x: -30, y: 0 }, { x: 10, y: 20 }]);
 const point = system.createPoint({ x: 10, y: 10 });
 ```
 
-All bodies have `pos` property with `x` and `y` properties that can be manipulated. Additionally, All bodies have an `angle` property to rotate their points around their current position (using radians). Use `setAngle` to alter the value and recalculate points.
+Remove bodies from system:
 
-```javascript
-circle.pos.x = 20;
-circle.pos.y = 30;
-circle.r = 1.5;
-
-polygon.pos.x = 40;
-polygon.pos.y = 100;
-polygon.setAngle(1.2);
-```
-
-And, of course, bodies can be removed when they are no longer needed.
-
-```javascript
-system.remove(polygon)
+```js
+system.remove(circle);
+system.remove(polygon);
+system.remove(line);
 system.remove(point);
 ```
 
-<a name="anchor-step-3"></a>
+### 3. Updating the Collisions System
 
-## 3. Updating the Collision System
+Collisions systems need to be updated when the bodies within them change. This includes when bodies are inserted, removed, or when their properties change (e.g. position, angle, scaling, etc.). Updating a collision system can be done by calling `update()` which should typically occur once per frame. Updating the `System` by after each position change is **required** for `System` to detect `BVH` correctly.
 
-Collision systems need to be updated when the bodies within them change. This includes when bodies are inserted, removed, or when their properties change (e.g. position, angle, scaling, etc.). Updating a collision system is done by calling `update()` and should typically occur once per frame.
+After body moves, update its AABB (bounding box):
 
-```javascript
-system.update();
-```
-
-You can also update one body AABB by calling:
-
-```javascript
+```js
 system.updateBody(body);
 ```
 
-> **Note:** Calling `system.updateBody(body)` is **required** after each position change for `System` to detect `BVH` correctly.
+Update all bodies (use 0-1 times per frame):
 
-The optimal time for updating a collision system is **after** its bodies have changed and **before** collisions are tested. For example, a game loop might use the following order of events:
-
-```javascript
-function gameLoop() {
-  handleInput();
-  processGameLogic();
-
-  system.checkAll(handleCollisions);
-
-  render();
-}
+```js
+system.update();
 ```
 
-<a name="anchor-step-4"></a>
-
-## 4. Testing for Collisions
-
-When testing for collisions on a body, it is generally recommended that a broad-phase search be performed first by calling `getPotentials(body)` in order to quickly rule out bodies that are too far away to collide. **Detect-Collisions** uses a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for its broad-phase search. Calling `getPotentials(body)` on a body traverses the BVH and builds a list of potential collision candidates.
-
-```javascript
-const potentials = system.getPotentials(body);
-```
-
-Once a list of potential collisions is acquired, loop through them and perform a narrow-phase collision test using `collides()`. **Detect-Collisions** uses the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for its narrow-phase collision tests.
-
-```javascript
-system.getPotentials(body).forEach((collider) => {
-  if (system.collides(body, collider)) {
-    handleCollisions(system.response);
-  }
-});
-```
+### 4. Testing for Collisions
 
 The **preferred method** is once-in-a-gameloop checkAll and then handler:
 
-```javascript
+```js
 system.checkAll(handleCollisions);
 ```
 
 If you really need to check one body then use:
 
-```javascript
+```js
 system.checkOne(body, handleCollisions);
 ```
 
-It is also possible to skip the broad-phase search entirely and call `collides()` directly on two bodies.
+When testing for collisions on a body, it is generally recommended that a broad-phase search be performed first by calling `getPotentials(body)` in order to quickly rule out bodies that are too far away to collide. **Detect-Collisions** uses a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for its broad-phase search. Calling `getPotentials(body)` on a body traverses the BVH and builds a list of potential collision candidates. Skipping the broad-phase search is not recommended. When testing for collisions against large numbers of bodies, performing a broad-phase search using a BVH is _much_ more efficient.
 
-```javascript
-if (system.collides(polygon, line)) {
+```js
+const potentials = system.getPotentials(body);
+```
+
+Once a list of potential collisions is acquired, loop through them and perform a narrow-phase collision test using `checkCollision()`. **Detect-Collisions** uses the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for its narrow-phase collision tests.
+
+```js
+system.getPotentials(body).forEach((collider) => {
+  if (system.checkCollision(body, collider)) {
+    handleCollisions(system.response);
+  }
+});
+```
+
+It is also possible to skip the broad-phase search entirely and call `checkCollision()` directly on two bodies.
+
+```js
+if (system.checkCollision(polygon, line)) {
   console.log('Collision detected!', system.response);
 }
 ```
 
-> **Note:** Skipping the broad-phase search is not recommended. When testing for collisions against large numbers of bodies, performing a broad-phase search using a BVH is _much_ more efficient.
-
-<a name="anchor-step-5"></a>
-
-## 5. Getting Detailed Collision Information
+### 5. Getting Detailed Collision Information
 
 There is often a need for detailed information about a collision in order to react to it appropriately. This information is stored inside `system.response` object. The `SAT.Response` ([documentation](https://github.com/jriecken/sat-js#satresponse)) object has several properties set on them when a collision occurs:
 
@@ -254,9 +144,7 @@ There is often a need for detailed information about a collision in order to rea
 - `aInB` - Whether the first object is completely inside the second.
 - `bInA` - Whether the second object is completely inside the first.
 
-<a name="anchor-step-6"></a>
-
-## 6. Negating Overlap
+### 6. Negating Overlap
 
 A common use-case in collision detection is negating overlap when a collision occurs (such as when a player hits a wall). This can be done using the collision information in a `Response` object (see [Getting Detailed Collision Information](#anchor-getting-detailed-collision-information)).
 
@@ -264,8 +152,8 @@ The three most useful properties on a `Response` object are `overlapV`, `a`, and
 
 These values can be used to "push" one body out of another using the minimum distance required. More simply, subtracting this vector from the source body's position will cause the bodies to no longer collide. Here's an example:
 
-```javascript
-if (system.collides(player, wall)) {
+```js
+if (system.checkCollision(player, wall)) {
   const { overlapV } = system.response;
 
   player.x -= overlapV.x;
@@ -273,18 +161,13 @@ if (system.collides(player, wall)) {
 }
 ```
 
-<a name="anchor-step-7"></a>
+### 7. Detecting collision after insertion
 
-## 7. Detecting collision after insertion
-
-```javascript
-const { System } = require("detect-collisions")
-
-const system = new System();
+```js
 const collider = system.createCircle({ x: 100, y: 100 }, 10);
 const potentials = system.getPotentials(collider);
 const obj = { name: 'coin', collider };
-const collided = potentials.some((body) => system.collides(collider, body));
+const collided = potentials.some((body) => system.checkCollision(collider, body));
 
 if (collided) {
   system.remove(obj.collider);
@@ -292,31 +175,25 @@ if (collided) {
 }
 ```
 
-<a name="anchor-lines"></a>
-Lines
-=====
+## Lines
 
 Creating a line is simply a matter of creating a single-sided polygon (i.e. a polygon with only two coordinate pairs).
 
-```javascript
+```js
 const line = new Polygon({ x: 200, y: 5 }, [{ x: -30, y: 0 }, { x: 10, y: 20 }]);
 ```
 
-<a name="anchor-concave-polygons"></a>
-Concave Polygons
-=====
+## Concave Polygons
 
 **Detect-Collisions** uses the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for its narrow-phase collision tests. One caveat to SAT is that it only works properly on convex bodies. However, concave polygons can be "faked" by using a series of [Lines](#anchor-lines). Keep in mind that a polygon drawn using [Lines](#anchor-lines) is "hollow".
 
 Handling true concave polygons requires breaking them down into their component convex polygons (Convex Decomposition) and testing them for collisions individually. There are plans to integrate this functionality into the library in the future, but for now, check out [poly-decomp.js](https://github.com/schteppe/poly-decomp.js).
 
-<a name="anchor-rendering"></a>
-Rendering
-=====
+## Rendering
 
 For debugging, it is often useful to be able to visualize the collision bodies. All of the bodies in a Collision system can be drawn to a `<canvas>` element by calling `draw()` and passing in the canvas' 2D context.
 
-```javascript
+```js
 const canvas = document.createElement('canvas');
 const context = canvas.getContext('2d');
 
@@ -330,7 +207,7 @@ context.stroke();
 
 Bodies can be individually drawn as well.
 
-```javascript
+```js
 context.strokeStyle = '#FFFFFF';
 context.beginPath();
 
@@ -342,7 +219,7 @@ context.stroke();
 
 The BVH can also be drawn to help test [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy).
 
-```javascript
+```js
 context.strokeStyle = '#FFFFFF';
 context.beginPath();
 
@@ -351,32 +228,26 @@ system.drawBVH(context);
 context.stroke();
 ```
 
-<a name="anchor-only-using-sat"></a>
-Only using SAT
-=====
+## Only using SAT
 
-Some projects may only have a need to perform SAT collision tests without broad-phase searching. This can be achieved by avoiding collision systems altogether and only using the `collides()` function.
+Some projects may only have a need to perform SAT collision tests without broad-phase searching. This can be achieved by avoiding collision systems altogether and only using the `checkCollision()` function.
 
-```javascript
-const { Circle, Polygon } = require('collisions');
-
+```js
 const circle = new Circle({ x: 45, y: 45 }, 20);
 const polygon = new Polygon({ x: 50, y: 50 }, [{ x: 0, y: 0 }, { x: 20, y: 20 }, { x: -10, y: 10 }]);
 
-if (system.collides(polygon, circle)) {
+if (system.checkCollision(polygon, circle)) {
   console.log(system.result);
 }
 ```
 
-<a name="anchor-faq"></a>
-FAQ
-=====
+## FAQ
 
-## Why shouldn't I just use a physics engine?
+### Why shouldn't I just use a physics engine?
 
 Projects requiring physics are encouraged to use one of the several physics engines out there (e.g. [Matter.js](https://github.com/liabru/matter-js), [Planck.js](https://github.com/shakiba/planck.js)). However, many projects end up using physics engines solely for collision detection, and developers often find themselves having to work around some of the assumptions that these engines make (gravity, velocity, friction, etc.). **Detect-Collisions** was created to provide robust collision detection and nothing more. In fact, a physics engine could easily be written with **Detect-Collisions** at its core.
 
-## Sometimes bodies can "squeeze" between two other bodies. What's going on?
+### Sometimes bodies can "squeeze" between two other bodies. What's going on?
 
 This isn't caused by faulty collisions, but rather how a project handles its collision responses. There are several ways to go about responding to collisions, the most common of which is to loop through all bodies, find their potential collisions, and negate any overlaps that are found one at a time. Since the overlaps are negated one at a time, the last negation takes precedence and can cause the body to be pushed into another body.
 
