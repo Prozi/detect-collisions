@@ -1,5 +1,6 @@
 import { BBox } from "rbush";
 import SAT from "sat";
+import { System } from ".";
 export { Response } from "sat";
 /**
  * types
@@ -33,6 +34,10 @@ export interface ICollider extends BBox {
      * is the collider a "trigger"
      */
     isTrigger?: boolean;
+    /**
+     * collisions system reference
+     */
+    system?: System;
     /**
      * draw the collider
      */

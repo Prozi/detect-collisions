@@ -22,6 +22,27 @@ var _createClass = (function () {
   };
 })();
 
+var _get = function get(object, property, receiver) {
+  if (object === null) object = Function.prototype;
+  var desc = Object.getOwnPropertyDescriptor(object, property);
+  if (desc === undefined) {
+    var parent = Object.getPrototypeOf(object);
+    if (parent === null) {
+      return undefined;
+    } else {
+      return get(parent, property, receiver);
+    }
+  } else if ("value" in desc) {
+    return desc.value;
+  } else {
+    var getter = desc.get;
+    if (getter === undefined) {
+      return undefined;
+    }
+    return getter.call(receiver);
+  }
+};
+
 var _sat = require("sat");
 
 var _sat2 = _interopRequireDefault(_sat);
@@ -159,9 +180,45 @@ var System = (exports.System = (function (_RBush) {
     {
       key: "updateBody",
       value: function updateBody(body) {
+        // old aabb needs to be removed
         this.remove(body);
+        // then we update aabb
         body.updateAABB();
+        // then we reinsert body to collision tree
         this.insert(body);
+      },
+      /**
+       * remove body aabb from collision tree
+       * @param body
+       * @param equals
+       * @returns System
+       */
+    },
+    {
+      key: "remove",
+      value: function remove(body, equals) {
+        body.system = null;
+        return _get(
+          System.prototype.__proto__ || Object.getPrototypeOf(System.prototype),
+          "remove",
+          this
+        ).call(this, body, equals);
+      },
+      /**
+       * add body aabb to collision tree
+       * @param body
+       * @returns System
+       */
+    },
+    {
+      key: "insert",
+      value: function insert(body) {
+        body.system = this;
+        return _get(
+          System.prototype.__proto__ || Object.getPrototypeOf(System.prototype),
+          "insert",
+          this
+        ).call(this, body);
       },
       /**
        * update all bodies aabb

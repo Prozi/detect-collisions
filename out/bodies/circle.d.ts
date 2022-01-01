@@ -1,4 +1,5 @@
 import SAT from "sat";
+import { System } from "../system";
 import { ICollider, Types, Vector } from "../model";
 /**
  * collider - circle
@@ -10,6 +11,7 @@ export declare class Circle extends SAT.Circle implements ICollider {
     maxY: number;
     isStatic?: boolean;
     isTrigger?: boolean;
+    system?: System;
     readonly type: Types;
     /**
      * collider - circle
@@ -17,6 +19,12 @@ export declare class Circle extends SAT.Circle implements ICollider {
      * @param {number} radius
      */
     constructor(position: Vector, radius: number);
+    /**
+     * update position
+     * @param {number} x
+     * @param {number} y
+     */
+    setPosition(x: number, y: number): void;
     /**
      * Updates Bounding Box of collider
      */

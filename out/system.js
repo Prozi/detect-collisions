@@ -47,9 +47,31 @@ export class System extends RBush {
      * @param {object} body
      */
     updateBody(body) {
+        // old aabb needs to be removed
         this.remove(body);
+        // then we update aabb
         body.updateAABB();
+        // then we reinsert body to collision tree
         this.insert(body);
+    }
+    /**
+     * remove body aabb from collision tree
+     * @param body
+     * @param equals
+     * @returns System
+     */
+    remove(body, equals) {
+        body.system = null;
+        return super.remove(body, equals);
+    }
+    /**
+     * add body aabb to collision tree
+     * @param body
+     * @returns System
+     */
+    insert(body) {
+        body.system = this;
+        return super.insert(body);
     }
     /**
      * update all bodies aabb

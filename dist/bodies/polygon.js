@@ -111,10 +111,26 @@ var Polygon = (exports.Polygon = (function (_SAT$Polygon) {
     return _this;
   }
   /**
-   * Updates Bounding Box of collider
+   * update position
+   * @param {number} x
+   * @param {number} y
    */
 
   _createClass(Polygon, [
+    {
+      key: "setPosition",
+      value: function setPosition(x, y) {
+        var _a;
+        this.pos.x = x;
+        this.pos.y = y;
+        (_a = this.system) === null || _a === void 0
+          ? void 0
+          : _a.updateBody(this);
+      },
+      /**
+       * Updates Bounding Box of collider
+       */
+    },
     {
       key: "updateAABB",
       value: function updateAABB() {

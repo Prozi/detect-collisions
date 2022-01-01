@@ -1,4 +1,5 @@
 import SAT from "sat";
+import { System } from "../system";
 import { ICollider, Types, Vector } from "../model";
 import { ensureVectorPoint, ensurePolygonPoints, dashLineTo } from "../utils";
 
@@ -12,6 +13,7 @@ export class Polygon extends SAT.Polygon implements ICollider {
   maxY: number;
   isStatic?: boolean;
   isTrigger?: boolean;
+  system?: System;
 
   readonly type: Types = Types.Polygon;
 
@@ -24,6 +26,18 @@ export class Polygon extends SAT.Polygon implements ICollider {
     super(ensureVectorPoint(position), ensurePolygonPoints(points));
 
     this.updateAABB();
+  }
+
+  /**
+   * update position
+   * @param {number} x
+   * @param {number} y
+   */
+  setPosition(x: number, y: number): void {
+    this.pos.x = x;
+    this.pos.y = y;
+
+    this.system?.updateBody(this);
   }
 
   /**

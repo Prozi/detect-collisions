@@ -22,4 +22,15 @@ describe("GIVEN System", () => {
       });
     });
   });
+
+  it("THEN you can change position within tree", () => {
+    const { System } = require("../dist/");
+
+    const system = new System();
+    const circle = system.createCircle({ x: 0, y: 0 }, 10);
+
+    expect(circle.x).toBe(undefined);
+    expect(circle.y).toBe(undefined);
+    expect(circle.system).toBe(system);
+  });
 });

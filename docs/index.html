@@ -41,7 +41,7 @@
 
 
     <section class="package">
-        <h3>detect-collisions 3.1.3</h3>		
+        <h3>detect-collisions 3.2.0</h3>		
     </section>
 
 
@@ -78,19 +78,26 @@
 <p>To start, create a unique collisions system:</p>
 <pre class="prettyprint source lang-js"><code>const system = new System();
 </code></pre>
-<h3>2. Creating, Inserting, Removing Bodies</h3>
-<p><code>Circle</code>, <code>Polygon</code>, <code>Box</code> extend their respective <code>SAT</code> counterparts so they have <a href="https://github.com/jriecken/sat-js">all of its functionalities</a>.</p>
+<h3>2. Creating, Inserting, Moving, Removing Bodies</h3>
+<p><code>Circle</code>, <code>Polygon</code>, <code>Box</code>, <code>Point</code> extend their respective <code>SAT</code> counterparts so they have <a href="https://github.com/jriecken/sat-js">all of its functionalities</a>.</p>
 <ul>
 <li><a href="https://github.com/jriecken/sat-js#satcircle">Circle</a>: A shape with infinite sides equidistant from a single point</li>
 <li><a href="https://github.com/jriecken/sat-js#satpolygon">Polygon</a>: A shape made up of line segments</li>
-<li><a href="https://github.com/jriecken/sat-js#satbox">Box</a> A shape like a rectangle</li>
+<li>Box: A shape like a rectangle (implemented as polygon)</li>
 <li>Point: A single coordinate (implemented as tiny box)</li>
 </ul>
-<p>All bodies have <code>pos</code> property <code>{ x, y }</code>.</p>
+<p>all bodies have <code>pos</code> property which is a <code>Vector</code> <code>{ x, y }</code> containing its position</p>
 <p>Create bodies:</p>
 <pre class="prettyprint source lang-js"><code>const circle = new Circle({ x: 100, y: 100 }, 10);
-const polygon = new Polygon({ x: 50, y: 50 }, [{ x: 0, y: 0 }, { x: 20, y: 20 }, { x: -10, y: 10 }]);
-const line = new Polygon({ x: 200, y: 5 }, [{ x: -30, y: 0 }, { x: 10, y: 20 }]);
+const polygon = new Polygon({ x: 50, y: 50 }, [
+  { x: 0, y: 0 },
+  { x: 20, y: 20 },
+  { x: -10, y: 10 },
+]);
+const line = new Polygon({ x: 200, y: 5 }, [
+  { x: -30, y: 0 },
+  { x: 10, y: 20 },
+]);
 const point = new Point({ x: 10, y: 10 });
 </code></pre>
 <p>Insert bodies to system:</p>
@@ -101,9 +108,23 @@ system.insert(point);
 </code></pre>
 <p>Create and insert to system:</p>
 <pre class="prettyprint source lang-js"><code>const circle = system.createCircle({ x: 100, y: 100 }, 10);
-const polygon = system.createPolygon({ x: 50, y: 50 }, [{ x: 0, y: 0 }, { x: 20, y: 20 }, { x: -10, y: 10 }]);
-const line = system.createPolygon({ x: 200, y: 5 }, [{ x: -30, y: 0 }, { x: 10, y: 20 }]);
+const polygon = system.createPolygon({ x: 50, y: 50 }, [
+  { x: 0, y: 0 },
+  { x: 20, y: 20 },
+  { x: -10, y: 10 },
+]);
+const line = system.createPolygon({ x: 200, y: 5 }, [
+  { x: -30, y: 0 },
+  { x: 10, y: 20 },
+]);
 const point = system.createPoint({ x: 10, y: 10 });
+</code></pre>
+<p>Moving bodies:</p>
+<p><code>setPosition</code>: this modifies the <code>element.pos.x</code> and <code>element.pos.y</code> and updates its bounding box in collision system.</p>
+<pre class="prettyprint source lang-js"><code>circle.setPosition(x, y);
+polygon.setPosition(x, y);
+line.setPosition(x, y);
+point.setPosition(x, y);
 </code></pre>
 <p>Remove bodies from system:</p>
 <pre class="prettyprint source lang-js"><code>system.remove(circle);
@@ -112,8 +133,15 @@ system.remove(line);
 system.remove(point);
 </code></pre>
 <h3>3. Updating the Collisions System</h3>
+<ul>
+<li>
+<p>After body moves, its bounding box in collision tree needs to be updated.</p>
+</li>
+<li>
+<p><strong>This is done under-the-hood automatically when you use setPosition()</strong>.</p>
+</li>
+</ul>
 <p>Collisions systems need to be updated when the bodies within them change. This includes when bodies are inserted, removed, or when their properties change (e.g. position, angle, scaling, etc.). Updating a collision system can be done by calling <code>update()</code> which should typically occur once per frame. Updating the <code>System</code> by after each position change is <strong>required</strong> for <code>System</code> to detect <code>BVH</code> correctly.</p>
-<p>After body moves, update its AABB (bounding box):</p>
 <pre class="prettyprint source lang-js"><code>system.updateBody(body);
 </code></pre>
 <p>Update all bodies (use 0-1 times per frame):</p>
@@ -138,7 +166,7 @@ system.remove(point);
 </code></pre>
 <p>It is also possible to skip the broad-phase search entirely and call <code>checkCollision()</code> directly on two bodies.</p>
 <pre class="prettyprint source lang-js"><code>if (system.checkCollision(polygon, line)) {
-  console.log('Collision detected!', system.response);
+  console.log(&quot;Collision detected!&quot;, system.response);
 }
 </code></pre>
 <h3>5. Getting Detailed Collision Information</h3>
@@ -166,8 +194,10 @@ system.remove(point);
 <h3>7. Detecting collision after insertion</h3>
 <pre class="prettyprint source lang-js"><code>const collider = system.createCircle({ x: 100, y: 100 }, 10);
 const potentials = system.getPotentials(collider);
-const obj = { name: 'coin', collider };
-const collided = potentials.some((body) => system.checkCollision(collider, body));
+const obj = { name: &quot;coin&quot;, collider };
+const collided = potentials.some((body) =>
+  system.checkCollision(collider, body)
+);
 
 if (collided) {
   system.remove(obj.collider);
@@ -176,17 +206,20 @@ if (collided) {
 </code></pre>
 <h2>Lines</h2>
 <p>Creating a line is simply a matter of creating a single-sided polygon (i.e. a polygon with only two coordinate pairs).</p>
-<pre class="prettyprint source lang-js"><code>const line = new Polygon({ x: 200, y: 5 }, [{ x: -30, y: 0 }, { x: 10, y: 20 }]);
+<pre class="prettyprint source lang-js"><code>const line = new Polygon({ x: 200, y: 5 }, [
+  { x: -30, y: 0 },
+  { x: 10, y: 20 },
+]);
 </code></pre>
 <h2>Concave Polygons</h2>
 <p><strong>Detect-Collisions</strong> uses the <a href="https://en.wikipedia.org/wiki/Separating_axis_theorem">Separating Axis Theorem</a> (SAT) for its narrow-phase collision tests. One caveat to SAT is that it only works properly on convex bodies. However, concave polygons can be &quot;faked&quot; by using a series of <a href="#anchor-lines">Lines</a>. Keep in mind that a polygon drawn using <a href="#anchor-lines">Lines</a> is &quot;hollow&quot;.</p>
 <p>Handling true concave polygons requires breaking them down into their component convex polygons (Convex Decomposition) and testing them for collisions individually. There are plans to integrate this functionality into the library in the future, but for now, check out <a href="https://github.com/schteppe/poly-decomp.js">poly-decomp.js</a>.</p>
 <h2>Rendering</h2>
 <p>For debugging, it is often useful to be able to visualize the collision bodies. All of the bodies in a Collision system can be drawn to a <code>&lt;canvas&gt;</code> element by calling <code>draw()</code> and passing in the canvas' 2D context.</p>
-<pre class="prettyprint source lang-js"><code>const canvas = document.createElement('canvas');
-const context = canvas.getContext('2d');
+<pre class="prettyprint source lang-js"><code>const canvas = document.createElement(&quot;canvas&quot;);
+const context = canvas.getContext(&quot;2d&quot;);
 
-context.strokeStyle = '#FFFFFF';
+context.strokeStyle = &quot;#FFFFFF&quot;;
 context.beginPath();
 
 system.draw(context);
@@ -194,7 +227,7 @@ system.draw(context);
 context.stroke();
 </code></pre>
 <p>Bodies can be individually drawn as well.</p>
-<pre class="prettyprint source lang-js"><code>context.strokeStyle = '#FFFFFF';
+<pre class="prettyprint source lang-js"><code>context.strokeStyle = &quot;#FFFFFF&quot;;
 context.beginPath();
 
 polygon.draw(context);
@@ -203,7 +236,7 @@ circle.draw(context);
 context.stroke();
 </code></pre>
 <p>The BVH can also be drawn to help test <a href="https://en.wikipedia.org/wiki/Bounding_volume_hierarchy">Bounding Volume Hierarchy</a>.</p>
-<pre class="prettyprint source lang-js"><code>context.strokeStyle = '#FFFFFF';
+<pre class="prettyprint source lang-js"><code>context.strokeStyle = &quot;#FFFFFF&quot;;
 context.beginPath();
 
 system.drawBVH(context);
@@ -213,7 +246,11 @@ context.stroke();
 <h2>Only using SAT</h2>
 <p>Some projects may only have a need to perform SAT collision tests without broad-phase searching. This can be achieved by avoiding collision systems altogether and only using the <code>checkCollision()</code> function.</p>
 <pre class="prettyprint source lang-js"><code>const circle = new Circle({ x: 45, y: 45 }, 20);
-const polygon = new Polygon({ x: 50, y: 50 }, [{ x: 0, y: 0 }, { x: 20, y: 20 }, { x: -10, y: 10 }]);
+const polygon = new Polygon({ x: 50, y: 50 }, [
+  { x: 0, y: 0 },
+  { x: 20, y: 20 },
+  { x: -10, y: 10 },
+]);
 
 if (system.checkCollision(polygon, circle)) {
   console.log(system.result);
@@ -240,7 +277,7 @@ if (system.checkCollision(polygon, circle)) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Fri Dec 24 2021 07:18:59 GMT+0100 (Central European Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.7</a> on Sat Jan 01 2022 12:32:29 GMT+0100 (Central European Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

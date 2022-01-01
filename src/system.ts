@@ -56,11 +56,40 @@ export class System extends RBush<ICollider> {
    * @param {object} body
    */
   updateBody(body: ICollider): void {
+    // old aabb needs to be removed
     this.remove(body);
 
+    // then we update aabb
     body.updateAABB();
 
+    // then we reinsert body to collision tree
     this.insert(body);
+  }
+
+  /**
+   * remove body aabb from collision tree
+   * @param body
+   * @param equals
+   * @returns System
+   */
+  remove(
+    body: ICollider,
+    equals?: (a: ICollider, b: ICollider) => boolean
+  ): RBush<ICollider> {
+    body.system = null;
+
+    return super.remove(body, equals);
+  }
+
+  /**
+   * add body aabb to collision tree
+   * @param body
+   * @returns System
+   */
+  insert(body: ICollider): RBush<ICollider> {
+    body.system = this;
+
+    return super.insert(body);
   }
 
   /**

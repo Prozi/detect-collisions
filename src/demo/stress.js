@@ -91,11 +91,12 @@ module.exports.Stress = class Stress {
     }
 
     this.bodies.forEach((body) => {
-      body.pos.x += body.direction_x * speed;
-      body.pos.y += body.direction_y * speed;
+      body.setPosition(
+        body.pos.x + body.direction_x * speed,
+        body.pos.y + body.direction_y * speed
+      );
     });
 
-    this.collisions.update();
     this.collisions.checkAll(({ a, overlapV }) => {
       if (this.bounds.includes(a)) {
         return;
@@ -103,8 +104,7 @@ module.exports.Stress = class Stress {
 
       const direction = (random(0, 360) * Math.PI) / 180;
 
-      a.pos.x -= overlapV.x;
-      a.pos.y -= overlapV.y;
+      a.setPosition(a.pos.x - overlapV.x, a.pos.y - overlapV.y);
 
       a.direction_x = Math.cos(direction);
       a.direction_y = Math.sin(direction);

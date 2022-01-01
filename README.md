@@ -31,23 +31,30 @@ To start, create a unique collisions system:
 const system = new System();
 ```
 
-### 2. Creating, Inserting, Removing Bodies
+### 2. Creating, Inserting, Moving, Removing Bodies
 
-`Circle`, `Polygon`, `Box` extend their respective `SAT` counterparts so they have [all of its functionalities](https://github.com/jriecken/sat-js).
+`Circle`, `Polygon`, `Box`, `Point` extend their respective `SAT` counterparts so they have [all of its functionalities](https://github.com/jriecken/sat-js).
 
 - [Circle](https://github.com/jriecken/sat-js#satcircle): A shape with infinite sides equidistant from a single point
 - [Polygon](https://github.com/jriecken/sat-js#satpolygon): A shape made up of line segments
-- [Box](https://github.com/jriecken/sat-js#satbox) A shape like a rectangle
+- Box: A shape like a rectangle (implemented as polygon)
 - Point: A single coordinate (implemented as tiny box)
 
-All bodies have `pos` property `{ x, y }`.
+all bodies have `pos` property which is a `Vector` `{ x, y }` containing its position
 
 Create bodies:
 
 ```js
 const circle = new Circle({ x: 100, y: 100 }, 10);
-const polygon = new Polygon({ x: 50, y: 50 }, [{ x: 0, y: 0 }, { x: 20, y: 20 }, { x: -10, y: 10 }]);
-const line = new Polygon({ x: 200, y: 5 }, [{ x: -30, y: 0 }, { x: 10, y: 20 }]);
+const polygon = new Polygon({ x: 50, y: 50 }, [
+  { x: 0, y: 0 },
+  { x: 20, y: 20 },
+  { x: -10, y: 10 },
+]);
+const line = new Polygon({ x: 200, y: 5 }, [
+  { x: -30, y: 0 },
+  { x: 10, y: 20 },
+]);
 const point = new Point({ x: 10, y: 10 });
 ```
 
@@ -64,9 +71,27 @@ Create and insert to system:
 
 ```js
 const circle = system.createCircle({ x: 100, y: 100 }, 10);
-const polygon = system.createPolygon({ x: 50, y: 50 }, [{ x: 0, y: 0 }, { x: 20, y: 20 }, { x: -10, y: 10 }]);
-const line = system.createPolygon({ x: 200, y: 5 }, [{ x: -30, y: 0 }, { x: 10, y: 20 }]);
+const polygon = system.createPolygon({ x: 50, y: 50 }, [
+  { x: 0, y: 0 },
+  { x: 20, y: 20 },
+  { x: -10, y: 10 },
+]);
+const line = system.createPolygon({ x: 200, y: 5 }, [
+  { x: -30, y: 0 },
+  { x: 10, y: 20 },
+]);
 const point = system.createPoint({ x: 10, y: 10 });
+```
+
+Moving bodies:
+
+`setPosition`: this modifies the `element.pos.x` and `element.pos.y` and updates its bounding box in collision system.
+
+```js
+circle.setPosition(x, y);
+polygon.setPosition(x, y);
+line.setPosition(x, y);
+point.setPosition(x, y);
 ```
 
 Remove bodies from system:
@@ -80,9 +105,11 @@ system.remove(point);
 
 ### 3. Updating the Collisions System
 
-Collisions systems need to be updated when the bodies within them change. This includes when bodies are inserted, removed, or when their properties change (e.g. position, angle, scaling, etc.). Updating a collision system can be done by calling `update()` which should typically occur once per frame. Updating the `System` by after each position change is **required** for `System` to detect `BVH` correctly.
+- After body moves, its bounding box in collision tree needs to be updated.
 
-After body moves, update its AABB (bounding box):
+- **This is done under-the-hood automatically when you use setPosition()**.
+
+Collisions systems need to be updated when the bodies within them change. This includes when bodies are inserted, removed, or when their properties change (e.g. position, angle, scaling, etc.). Updating a collision system can be done by calling `update()` which should typically occur once per frame. Updating the `System` by after each position change is **required** for `System` to detect `BVH` correctly.
 
 ```js
 system.updateBody(body);
@@ -128,7 +155,7 @@ It is also possible to skip the broad-phase search entirely and call `checkColli
 
 ```js
 if (system.checkCollision(polygon, line)) {
-  console.log('Collision detected!', system.response);
+  console.log("Collision detected!", system.response);
 }
 ```
 
@@ -166,8 +193,10 @@ if (system.checkCollision(player, wall)) {
 ```js
 const collider = system.createCircle({ x: 100, y: 100 }, 10);
 const potentials = system.getPotentials(collider);
-const obj = { name: 'coin', collider };
-const collided = potentials.some((body) => system.checkCollision(collider, body));
+const obj = { name: "coin", collider };
+const collided = potentials.some((body) =>
+  system.checkCollision(collider, body)
+);
 
 if (collided) {
   system.remove(obj.collider);
@@ -180,7 +209,10 @@ if (collided) {
 Creating a line is simply a matter of creating a single-sided polygon (i.e. a polygon with only two coordinate pairs).
 
 ```js
-const line = new Polygon({ x: 200, y: 5 }, [{ x: -30, y: 0 }, { x: 10, y: 20 }]);
+const line = new Polygon({ x: 200, y: 5 }, [
+  { x: -30, y: 0 },
+  { x: 10, y: 20 },
+]);
 ```
 
 ## Concave Polygons
@@ -194,10 +226,10 @@ Handling true concave polygons requires breaking them down into their component 
 For debugging, it is often useful to be able to visualize the collision bodies. All of the bodies in a Collision system can be drawn to a `<canvas>` element by calling `draw()` and passing in the canvas' 2D context.
 
 ```js
-const canvas = document.createElement('canvas');
-const context = canvas.getContext('2d');
+const canvas = document.createElement("canvas");
+const context = canvas.getContext("2d");
 
-context.strokeStyle = '#FFFFFF';
+context.strokeStyle = "#FFFFFF";
 context.beginPath();
 
 system.draw(context);
@@ -208,7 +240,7 @@ context.stroke();
 Bodies can be individually drawn as well.
 
 ```js
-context.strokeStyle = '#FFFFFF';
+context.strokeStyle = "#FFFFFF";
 context.beginPath();
 
 polygon.draw(context);
@@ -220,7 +252,7 @@ context.stroke();
 The BVH can also be drawn to help test [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy).
 
 ```js
-context.strokeStyle = '#FFFFFF';
+context.strokeStyle = "#FFFFFF";
 context.beginPath();
 
 system.drawBVH(context);
@@ -234,7 +266,11 @@ Some projects may only have a need to perform SAT collision tests without broad-
 
 ```js
 const circle = new Circle({ x: 45, y: 45 }, 20);
-const polygon = new Polygon({ x: 50, y: 50 }, [{ x: 0, y: 0 }, { x: 20, y: 20 }, { x: -10, y: 10 }]);
+const polygon = new Polygon({ x: 50, y: 50 }, [
+  { x: 0, y: 0 },
+  { x: 20, y: 20 },
+  { x: -10, y: 10 },
+]);
 
 if (system.checkCollision(polygon, circle)) {
   console.log(system.result);

@@ -26,6 +26,19 @@ export declare class System extends RBush<ICollider> {
      */
     updateBody(body: ICollider): void;
     /**
+     * remove body aabb from collision tree
+     * @param body
+     * @param equals
+     * @returns System
+     */
+    remove(body: ICollider, equals?: (a: ICollider, b: ICollider) => boolean): RBush<ICollider>;
+    /**
+     * add body aabb to collision tree
+     * @param body
+     * @returns System
+     */
+    insert(body: ICollider): RBush<ICollider>;
+    /**
      * update all bodies aabb
      */
     update(): void;

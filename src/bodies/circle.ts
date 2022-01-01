@@ -1,4 +1,5 @@
 import SAT from "sat";
+import { System } from "../system";
 import { ICollider, Types, Vector } from "../model";
 import { dashLineTo, ensureVectorPoint } from "../utils";
 
@@ -12,6 +13,7 @@ export class Circle extends SAT.Circle implements ICollider {
   maxY: number;
   isStatic?: boolean;
   isTrigger?: boolean;
+  system?: System;
 
   readonly type: Types = Types.Circle;
 
@@ -24,6 +26,18 @@ export class Circle extends SAT.Circle implements ICollider {
     super(ensureVectorPoint(position), radius);
 
     this.updateAABB();
+  }
+
+  /**
+   * update position
+   * @param {number} x
+   * @param {number} y
+   */
+  setPosition(x: number, y: number): void {
+    this.pos.x = x;
+    this.pos.y = y;
+
+    this.system?.updateBody(this);
   }
 
   /**

@@ -1,4 +1,5 @@
 import SAT from "sat";
+import { System } from "../system";
 import { ICollider, Types, Vector } from "../model";
 /**
  * collider - polygon
@@ -10,6 +11,7 @@ export declare class Polygon extends SAT.Polygon implements ICollider {
     maxY: number;
     isStatic?: boolean;
     isTrigger?: boolean;
+    system?: System;
     readonly type: Types;
     /**
      * collider - polygon
@@ -17,6 +19,12 @@ export declare class Polygon extends SAT.Polygon implements ICollider {
      * @param {Vector[]} points
      */
     constructor(position: Vector, points: Vector[]);
+    /**
+     * update position
+     * @param {number} x
+     * @param {number} y
+     */
+    setPosition(x: number, y: number): void;
     /**
      * Updates Bounding Box of collider
      */

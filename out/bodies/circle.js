@@ -16,6 +16,17 @@ export class Circle extends SAT.Circle {
         this.updateAABB();
     }
     /**
+     * update position
+     * @param {number} x
+     * @param {number} y
+     */
+    setPosition(x, y) {
+        var _a;
+        this.pos.x = x;
+        this.pos.y = y;
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+    }
+    /**
      * Updates Bounding Box of collider
      */
     updateAABB() {
