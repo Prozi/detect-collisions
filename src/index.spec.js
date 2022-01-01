@@ -31,6 +31,12 @@ describe("GIVEN System", () => {
 
     expect(circle.x).toBe(undefined);
     expect(circle.y).toBe(undefined);
+
     expect(circle.system).toBe(system);
+
+    circle.setPosition(1, -1);
+
+    expect(circle.pos.x).toBe(1);
+    expect(circle.pos.y).toBe(-1);
   });
 });
