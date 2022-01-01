@@ -4,7 +4,7 @@ const width = document.body.offsetWidth;
 const height = document.body.offsetHeight;
 const count = 500;
 const speed = 1;
-const size = 5;
+const size = Math.hypot(width, height) * 0.004;
 
 let frame = 0;
 let fps_total = 0;
