@@ -1,77 +1,18 @@
 "use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true,
-});
-
-var _model = require("./model");
-
-Object.keys(_model).forEach(function (key) {
-  if (key === "default" || key === "__esModule") return;
-  Object.defineProperty(exports, key, {
-    enumerable: true,
-    get: function get() {
-      return _model[key];
-    },
-  });
-});
-
-var _circle = require("./bodies/circle");
-
-Object.keys(_circle).forEach(function (key) {
-  if (key === "default" || key === "__esModule") return;
-  Object.defineProperty(exports, key, {
-    enumerable: true,
-    get: function get() {
-      return _circle[key];
-    },
-  });
-});
-
-var _polygon = require("./bodies/polygon");
-
-Object.keys(_polygon).forEach(function (key) {
-  if (key === "default" || key === "__esModule") return;
-  Object.defineProperty(exports, key, {
-    enumerable: true,
-    get: function get() {
-      return _polygon[key];
-    },
-  });
-});
-
-var _box = require("./bodies/box");
-
-Object.keys(_box).forEach(function (key) {
-  if (key === "default" || key === "__esModule") return;
-  Object.defineProperty(exports, key, {
-    enumerable: true,
-    get: function get() {
-      return _box[key];
-    },
-  });
-});
-
-var _point = require("./bodies/point");
-
-Object.keys(_point).forEach(function (key) {
-  if (key === "default" || key === "__esModule") return;
-  Object.defineProperty(exports, key, {
-    enumerable: true,
-    get: function get() {
-      return _point[key];
-    },
-  });
-});
-
-var _system = require("./system");
-
-Object.keys(_system).forEach(function (key) {
-  if (key === "default" || key === "__esModule") return;
-  Object.defineProperty(exports, key, {
-    enumerable: true,
-    get: function get() {
-      return _system[key];
-    },
-  });
-});
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+__exportStar(require("./model"), exports);
+__exportStar(require("./bodies/circle"), exports);
+__exportStar(require("./bodies/polygon"), exports);
+__exportStar(require("./bodies/box"), exports);
+__exportStar(require("./bodies/point"), exports);
+__exportStar(require("./system"), exports);

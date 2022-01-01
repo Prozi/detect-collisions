@@ -1,4 +1,5 @@
 import SAT from "sat";
+import { BBox } from "rbush";
 import { System } from "../system";
 import { ICollider, Types, Vector } from "../model";
 import { ensureVectorPoint, createBox } from "../utils";
@@ -7,7 +8,7 @@ import { Polygon } from "./polygon";
 /**
  * collider - box
  */
-export class Box extends SAT.Polygon implements ICollider {
+export class Box extends SAT.Polygon implements BBox, ICollider {
   minX: number;
   maxX: number;
   minY: number;

@@ -5,11 +5,10 @@
     "allowJs": true,
     "declaration": true,
     "declarationMap": true,
-    "resolveJsonModule": true,
     "moduleResolution": "node",
-    "target": "es2017",
-    "module": "esnext",
-    "outDir": "out",
+    "target": "es2015",
+    "module": "none",
+    "outDir": "dist",
     "paths": {
       "mini-signals": ["./node_modules/mini-signals/index.js"]
     }

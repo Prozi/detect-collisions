@@ -1,22 +1,10 @@
 "use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true,
-});
-exports.createBox = createBox;
-exports.ensureVectorPoint = ensureVectorPoint;
-exports.ensurePolygonPoints = ensurePolygonPoints;
-exports.clockwise = clockwise;
-exports.dashLineTo = dashLineTo;
-
-var _sat = require("sat");
-
-var _sat2 = _interopRequireDefault(_sat);
-
-function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : { default: obj };
-}
-
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.dashLineTo = exports.clockwise = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = void 0;
+const sat_1 = __importDefault(require("sat"));
 /**
  * creates box polygon points
  * @param {number} width
@@ -24,42 +12,44 @@ function _interopRequireDefault(obj) {
  * @returns SAT.Vector
  */
 function createBox(width, height) {
-  return [
-    new _sat2.default.Vector(),
-    new _sat2.default.Vector(width, 0),
-    new _sat2.default.Vector(width, height),
-    new _sat2.default.Vector(0, height),
-  ];
+    return [
+        new sat_1.default.Vector(),
+        new sat_1.default.Vector(width, 0),
+        new sat_1.default.Vector(width, height),
+        new sat_1.default.Vector(0, height),
+    ];
 }
+exports.createBox = createBox;
 /**
  * ensure returns a SAT.Vector
  * @param {SAT.Vector} point
  */
 function ensureVectorPoint(point) {
-  return point instanceof _sat2.default.Vector
-    ? point
-    : new _sat2.default.Vector(point.x, point.y);
+    return point instanceof sat_1.default.Vector ? point : new sat_1.default.Vector(point.x, point.y);
 }
+exports.ensureVectorPoint = ensureVectorPoint;
 /**
  * ensure correct counterclockwise points
  * @param {SAT.Vector[]} points
  */
 function ensurePolygonPoints(points) {
-  return (clockwise(points) ? points.reverse() : points).map(ensureVectorPoint);
+    return (clockwise(points) ? points.reverse() : points).map(ensureVectorPoint);
 }
+exports.ensurePolygonPoints = ensurePolygonPoints;
 /**
  * check direction of polygon
  * @param {SAT.Vector[]} points
  */
 function clockwise(points) {
-  var sum = 0;
-  for (var i = 0; i < points.length; i++) {
-    var v1 = points[i];
-    var v2 = points[(i + 1) % points.length];
-    sum += (v2.x - v1.x) * (v2.y + v1.y);
-  }
-  return sum > 0;
+    let sum = 0;
+    for (let i = 0; i < points.length; i++) {
+        const v1 = points[i];
+        const v2 = points[(i + 1) % points.length];
+        sum += (v2.x - v1.x) * (v2.y + v1.y);
+    }
+    return sum > 0;
 }
+exports.clockwise = clockwise;
 /**
  * draws dashed line on canvas context
  * @param {CanvasRenderingContext2D} context
@@ -70,26 +60,22 @@ function clockwise(points) {
  * @param {number?} dash
  * @param {number?} gap
  */
-function dashLineTo(context, fromX, fromY, toX, toY) {
-  var dash =
-    arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 2;
-  var gap =
-    arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : 4;
-
-  var xDiff = toX - fromX;
-  var yDiff = toY - fromY;
-  var arc = Math.atan2(yDiff, xDiff);
-  var offsetX = Math.cos(arc);
-  var offsetY = Math.sin(arc);
-  var posX = fromX;
-  var posY = fromY;
-  var distance = Math.hypot(xDiff, yDiff);
-  while (distance > 0) {
-    var step = Math.min(distance, dash);
-    context.moveTo(posX, posY);
-    context.lineTo(posX + offsetX * step, posY + offsetY * step);
-    posX += offsetX * (dash + gap);
-    posY += offsetY * (dash + gap);
-    distance -= dash + gap;
-  }
+function dashLineTo(context, fromX, fromY, toX, toY, dash = 2, gap = 4) {
+    const xDiff = toX - fromX;
+    const yDiff = toY - fromY;
+    const arc = Math.atan2(yDiff, xDiff);
+    const offsetX = Math.cos(arc);
+    const offsetY = Math.sin(arc);
+    let posX = fromX;
+    let posY = fromY;
+    let distance = Math.hypot(xDiff, yDiff);
+    while (distance > 0) {
+        const step = Math.min(distance, dash);
+        context.moveTo(posX, posY);
+        context.lineTo(posX + offsetX * step, posY + offsetY * step);
+        posX += offsetX * (dash + gap);
+        posY += offsetY * (dash + gap);
+        distance -= dash + gap;
+    }
 }
+exports.dashLineTo = dashLineTo;

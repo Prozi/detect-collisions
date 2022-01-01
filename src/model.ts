@@ -1,8 +1,5 @@
-import { BBox } from "rbush";
-import SAT from "sat";
-import { System } from ".";
-
 export { Response } from "sat";
+import { Point, Circle, Box, Polygon, System } from ".";
 
 /**
  * types
@@ -17,12 +14,17 @@ export enum Types {
 /**
  * potential vector
  */
-export type Vector = SAT.Vector | { x?: number; y?: number };
+export type Vector = { x?: number; y?: number };
+
+/**
+ * generic body union type
+ */
+export type TBody = Point | Circle | Box | Polygon;
 
 /**
  * commonly used
  */
-export interface ICollider extends BBox {
+export interface ICollider {
   /**
    * type of collider
    */

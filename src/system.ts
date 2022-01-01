@@ -1,16 +1,13 @@
 import SAT from "sat";
 import RBush from "rbush";
-import { ICollider, Types, Vector } from "./model";
-import { Box } from "./bodies/box";
-import { Circle } from "./bodies/circle";
-import { Polygon } from "./bodies/polygon";
-import { Point } from "./bodies/point";
+import { TBody, Types, Vector } from "./model";
 import { createBox } from "./utils";
+import { Box, Circle, Point, Polygon } from ".";
 
 /**
  * collision system
  */
-export class System extends RBush<ICollider> {
+export class System extends RBush<TBody> {
   public response: SAT.Response = new SAT.Response();
 
   /**
@@ -18,7 +15,7 @@ export class System extends RBush<ICollider> {
    * @param {CanvasRenderingContext2D} context
    */
   draw(context: CanvasRenderingContext2D): void {
-    this.all().forEach((body: ICollider) => {
+    this.all().forEach((body: TBody) => {
       body.draw(context);
     });
   }
@@ -55,7 +52,7 @@ export class System extends RBush<ICollider> {
    * update body aabb and in tree
    * @param {object} body
    */
-  updateBody(body: ICollider): void {
+  updateBody(body: TBody): void {
     // old aabb needs to be removed
     this.remove(body);
 
@@ -72,10 +69,7 @@ export class System extends RBush<ICollider> {
    * @param equals
    * @returns System
    */
-  remove(
-    body: ICollider,
-    equals?: (a: ICollider, b: ICollider) => boolean
-  ): RBush<ICollider> {
+  remove(body: TBody, equals?: (a: TBody, b: TBody) => boolean): RBush<TBody> {
     body.system = null;
 
     return super.remove(body, equals);
@@ -86,7 +80,7 @@ export class System extends RBush<ICollider> {
    * @param body
    * @returns System
    */
-  insert(body: ICollider): RBush<ICollider> {
+  insert(body: TBody): RBush<TBody> {
     body.system = this;
 
     return super.insert(body);
@@ -96,7 +90,7 @@ export class System extends RBush<ICollider> {
    * update all bodies aabb
    */
   update() {
-    this.all().forEach((body: ICollider) => {
+    this.all().forEach((body: TBody) => {
       // no need to every cycle update static body aabb
       if (!body.isStatic) {
         this.updateBody(body);
@@ -125,13 +119,13 @@ export class System extends RBush<ICollider> {
    * check one collider collisions with callback
    * @param {function} callback
    */
-  checkOne(body: ICollider, callback: (response: SAT.Response) => void): void {
+  checkOne(body: TBody, callback: (response: SAT.Response) => void): void {
     // no need to check static body collision
     if (body.isStatic) {
       return;
     }
 
-    this.getPotentials(body).forEach((candidate: ICollider) => {
+    this.getPotentials(body).forEach((candidate: TBody) => {
       if (this.checkCollision(body, candidate)) {
         callback(this.response);
       }
@@ -143,7 +137,7 @@ export class System extends RBush<ICollider> {
    * @param {function} callback
    */
   checkAll(callback: (response: SAT.Response) => void): void {
-    this.all().forEach((body: ICollider) => {
+    this.all().forEach((body: TBody) => {
       this.checkOne(body, callback);
     });
   }
@@ -152,7 +146,7 @@ export class System extends RBush<ICollider> {
    * get object potential colliders
    * @param {object} collider
    */
-  getPotentials(body: ICollider): ICollider[] {
+  getPotentials(body: TBody): TBody[] {
     // filter here is required as collides with self
     return this.search(body).filter((candidate) => candidate !== body);
   }
@@ -162,7 +156,7 @@ export class System extends RBush<ICollider> {
    * @param {object} collider
    * @param {object} candidate
    */
-  checkCollision(body: ICollider, candidate: ICollider): boolean {
+  checkCollision(body: TBody, candidate: TBody): boolean {
     this.response.clear();
 
     if (body.type === Types.Circle && candidate.type === Types.Circle) {

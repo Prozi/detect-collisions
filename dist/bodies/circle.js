@@ -1,160 +1,68 @@
 "use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true,
-});
-exports.Circle = undefined;
-
-var _createClass = (function () {
-  function defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-  return function (Constructor, protoProps, staticProps) {
-    if (protoProps) defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) defineProperties(Constructor, staticProps);
-    return Constructor;
-  };
-})();
-
-var _sat = require("sat");
-
-var _sat2 = _interopRequireDefault(_sat);
-
-var _model = require("../model");
-
-var _utils = require("../utils");
-
-function _interopRequireDefault(obj) {
-  return obj && obj.__esModule ? obj : { default: obj };
-}
-
-function _classCallCheck(instance, Constructor) {
-  if (!(instance instanceof Constructor)) {
-    throw new TypeError("Cannot call a class as a function");
-  }
-}
-
-function _possibleConstructorReturn(self, call) {
-  if (!self) {
-    throw new ReferenceError(
-      "this hasn't been initialised - super() hasn't been called"
-    );
-  }
-  return call && (typeof call === "object" || typeof call === "function")
-    ? call
-    : self;
-}
-
-function _inherits(subClass, superClass) {
-  if (typeof superClass !== "function" && superClass !== null) {
-    throw new TypeError(
-      "Super expression must either be null or a function, not " +
-        typeof superClass
-    );
-  }
-  subClass.prototype = Object.create(superClass && superClass.prototype, {
-    constructor: {
-      value: subClass,
-      enumerable: false,
-      writable: true,
-      configurable: true,
-    },
-  });
-  if (superClass)
-    Object.setPrototypeOf
-      ? Object.setPrototypeOf(subClass, superClass)
-      : (subClass.__proto__ = superClass);
-}
-
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Circle = void 0;
+const sat_1 = __importDefault(require("sat"));
+const model_1 = require("../model");
+const utils_1 = require("../utils");
 /**
  * collider - circle
  */
-var Circle = (exports.Circle = (function (_SAT$Circle) {
-  _inherits(Circle, _SAT$Circle);
-
-  /**
-   * collider - circle
-   * @param {Vector} position {x, y}
-   * @param {number} radius
-   */
-  function Circle(position, radius) {
-    _classCallCheck(this, Circle);
-
-    var _this = _possibleConstructorReturn(
-      this,
-      (Circle.__proto__ || Object.getPrototypeOf(Circle)).call(
-        this,
-        (0, _utils.ensureVectorPoint)(position),
-        radius
-      )
-    );
-
-    _this.type = _model.Types.Circle;
-    _this.updateAABB();
-    return _this;
-  }
-  /**
-   * update position
-   * @param {number} x
-   * @param {number} y
-   */
-
-  _createClass(Circle, [
-    {
-      key: "setPosition",
-      value: function setPosition(x, y) {
+class Circle extends sat_1.default.Circle {
+    /**
+     * collider - circle
+     * @param {Vector} position {x, y}
+     * @param {number} radius
+     */
+    constructor(position, radius) {
+        super((0, utils_1.ensureVectorPoint)(position), radius);
+        this.type = model_1.Types.Circle;
+        this.updateAABB();
+    }
+    /**
+     * update position
+     * @param {number} x
+     * @param {number} y
+     */
+    setPosition(x, y) {
         var _a;
         this.pos.x = x;
         this.pos.y = y;
-        (_a = this.system) === null || _a === void 0
-          ? void 0
-          : _a.updateBody(this);
-      },
-      /**
-       * Updates Bounding Box of collider
-       */
-    },
-    {
-      key: "updateAABB",
-      value: function updateAABB() {
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+    }
+    /**
+     * Updates Bounding Box of collider
+     */
+    updateAABB() {
         this.minX = this.pos.x - this.r;
         this.minY = this.pos.y - this.r;
         this.maxX = this.pos.x + this.r;
         this.maxY = this.pos.y + this.r;
-      },
-      /**
-       * Draws collider on a CanvasRenderingContext2D's current path
-       * @param {CanvasRenderingContext2D} context The canvas context to draw on
-       */
-    },
-    {
-      key: "draw",
-      value: function draw(context) {
-        var radius = this.r;
+    }
+    /**
+     * Draws collider on a CanvasRenderingContext2D's current path
+     * @param {CanvasRenderingContext2D} context The canvas context to draw on
+     */
+    draw(context) {
+        const radius = this.r;
         if (this.isTrigger) {
-          var max = Math.max(8, radius);
-          for (var i = 0; i < max; i++) {
-            var arc = (i / max) * 2 * Math.PI;
-            var arcPrev = ((i - 1) / max) * 2 * Math.PI;
-            var fromX = this.pos.x + Math.cos(arcPrev) * radius;
-            var fromY = this.pos.y + Math.sin(arcPrev) * radius;
-            var toX = this.pos.x + Math.cos(arc) * radius;
-            var toY = this.pos.y + Math.sin(arc) * radius;
-            (0, _utils.dashLineTo)(context, fromX, fromY, toX, toY);
-          }
-        } else {
-          context.moveTo(this.pos.x + radius, this.pos.y);
-          context.arc(this.pos.x, this.pos.y, radius, 0, Math.PI * 2);
+            const max = Math.max(8, radius);
+            for (let i = 0; i < max; i++) {
+                const arc = (i / max) * 2 * Math.PI;
+                const arcPrev = ((i - 1) / max) * 2 * Math.PI;
+                const fromX = this.pos.x + Math.cos(arcPrev) * radius;
+                const fromY = this.pos.y + Math.sin(arcPrev) * radius;
+                const toX = this.pos.x + Math.cos(arc) * radius;
+                const toY = this.pos.y + Math.sin(arc) * radius;
+                (0, utils_1.dashLineTo)(context, fromX, fromY, toX, toY);
+            }
         }
-      },
-    },
-  ]);
-
-  return Circle;
-})(_sat2.default.Circle));
+        else {
+            context.moveTo(this.pos.x + radius, this.pos.y);
+            context.arc(this.pos.x, this.pos.y, radius, 0, Math.PI * 2);
+        }
+    }
+}
+exports.Circle = Circle;
