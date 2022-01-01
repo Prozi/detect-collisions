@@ -1,7 +1,7 @@
 {
   "name": "detect-collisions",
   "version": "3.2.1",
-  "description": "2d collision detection for circles, polygons, and points (with SAT and BVH)",
+  "description": "2d collision detection for circles and polygons (with SAT and BVH)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -44,7 +44,7 @@
   "bugs": {
     "url": "https://github.com/Prozi/detect-collisions/issues"
   },
-  "homepage": "https://github.com/Prozi/detect-collisions#readme",
+  "homepage": "https://prozi.github.io/detect-collisions/",
   "dependencies": {
     "@types/rbush": "^3.0.0",
     "@types/sat": "^0.0.31",
