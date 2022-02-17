@@ -42,11 +42,11 @@ describe("GIVEN System", () => {
 
       circle.r = 20;
 
-      expect(collisions).toBe(0);
-
       system.checkAll(() => {
         collisions++;
       });
+
+      expect(collisions).toBe(0);
 
       circle.updateAABB();
 
