@@ -23,6 +23,41 @@ describe("GIVEN System", () => {
     });
   });
 
+  describe("AND you adjust radius of circle collider", () => {
+    it("THEN it gives collision results", () => {
+      const { System } = require("../dist/");
+
+      const system = new System();
+      const circle = system.createCircle({ x: 0, y: 0 }, 10);
+
+      system.createCircle({ x: 25, y: 0 }, 10);
+
+      let collisions = 0;
+
+      system.checkAll(() => {
+        collisions++;
+      });
+
+      expect(collisions).toBe(0);
+
+      circle.r = 20;
+
+      expect(collisions).toBe(0);
+
+      system.checkAll(() => {
+        collisions++;
+      });
+
+      circle.updateAABB();
+
+      system.checkAll(() => {
+        collisions++;
+      });
+
+      expect(collisions).toBe(2);
+    });
+  });
+
   it("THEN you can change position within tree", () => {
     const { System } = require("../dist/");
 
