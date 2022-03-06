@@ -6,7 +6,7 @@ import { ensureVectorPoint } from "../utils";
  * collider - point (very tiny box)
  */
 export class Point extends Box {
-  readonly type: Types = Types.Point;
+  readonly type: Types.Point = Types.Point;
 
   /**
    * collider - point (very tiny box)
