@@ -13,7 +13,7 @@ export declare class Polygon extends SAT.Polygon implements BBox, ICollider {
     isStatic?: boolean;
     isTrigger?: boolean;
     system?: System;
-    readonly type: Types;
+    readonly type: Types.Polygon;
     /**
      * collider - polygon
      * @param {Vector} position {x, y}

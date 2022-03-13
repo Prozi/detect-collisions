@@ -13,7 +13,7 @@ export declare class Circle extends SAT.Circle implements BBox, ICollider {
     isStatic?: boolean;
     isTrigger?: boolean;
     system?: System;
-    readonly type: Types;
+    readonly type: Types.Circle;
     /**
      * collider - circle
      * @param {Vector} position {x, y}
