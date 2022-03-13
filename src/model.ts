@@ -28,7 +28,7 @@ export interface ICollider {
   /**
    * type of collider
    */
-  type: Types;
+  readonly type: Types;
 
   /**
    * is the collider non moving

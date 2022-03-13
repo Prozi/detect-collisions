@@ -16,7 +16,7 @@ export class Circle extends SAT.Circle implements BBox, ICollider {
   isTrigger?: boolean;
   system?: System;
 
-  readonly type: Types = Types.Circle;
+  readonly type: Types.Circle = Types.Circle;
 
   /**
    * collider - circle
