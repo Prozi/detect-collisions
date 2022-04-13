@@ -58,7 +58,9 @@ export class Polygon extends SAT.Polygon implements BBox, ICollider {
    * @param {CanvasRenderingContext2D} context The canvas context to draw on
    */
   draw(context: CanvasRenderingContext2D): void {
-    [...this.calcPoints, this.calcPoints[0]].forEach((point, index: number) => {
+    const points: Vector[] = [...this.calcPoints, this.calcPoints[0]];
+
+    points.forEach((point: Vector, index: number) => {
       const toX = this.pos.x + point.x;
       const toY = this.pos.y + point.y;
       const prev =

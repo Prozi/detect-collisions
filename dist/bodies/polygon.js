@@ -47,7 +47,8 @@ class Polygon extends sat_1.default.Polygon {
      * @param {CanvasRenderingContext2D} context The canvas context to draw on
      */
     draw(context) {
-        [...this.calcPoints, this.calcPoints[0]].forEach((point, index) => {
+        const points = [...this.calcPoints, this.calcPoints[0]];
+        points.forEach((point, index) => {
             const toX = this.pos.x + point.x;
             const toY = this.pos.y + point.y;
             const prev = this.calcPoints[index - 1] ||

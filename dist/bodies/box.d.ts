@@ -4,6 +4,8 @@ import { Polygon } from "./polygon";
  * collider - box
  */
 export declare class Box extends Polygon {
+    width: number;
+    height: number;
     readonly type: Types.Box | Types.Point;
     /**
      * collider - box

@@ -164,6 +164,8 @@ module.exports.Stress = class Stress {
         random(min_size, max_size)
       );
 
+      body.setOffset(body.getCentroid().scale(-1, -1));
+
       ++this.boxes;
     } else {
       body = this.collisions.createPolygon(
@@ -179,13 +181,14 @@ module.exports.Stress = class Stress {
         ]
       );
 
-      if (body.type !== "Circle") {
-        // set initial rotation angle direction
-        body.rotationAngle = (random(0, 360) * Math.PI) / 180;
-        body.rotationSpeed = (Math.random() - Math.random()) * 0.1;
-      }
-
       ++this.polygons;
+    }
+
+    if (body.type !== "Circle") {
+      // set initial rotation angle direction
+      body.rotationSpeed = (Math.random() - Math.random()) * 0.1;
+      body.rotationAngle = (random(0, 360) * Math.PI) / 180;
+      body.setAngle(body.rotationAngle);
     }
 
     body.direction_x = Math.cos(direction);

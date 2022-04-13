@@ -6,6 +6,9 @@ import { Polygon } from "./polygon";
  * collider - box
  */
 export class Box extends Polygon {
+  width: number;
+  height: number;
+
   readonly type: Types.Box | Types.Point = Types.Box;
 
   /**
@@ -17,6 +20,8 @@ export class Box extends Polygon {
   constructor(position: Vector, width: number, height: number) {
     super(ensureVectorPoint(position), createBox(width, height));
 
+    this.width = width;
+    this.height = height;
     this.updateAABB();
   }
 }
