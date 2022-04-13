@@ -135,7 +135,7 @@
 <a href="#concave-polygons" id="concave-polygons" style="color: inherit; text-decoration: none;">
   <h2>Concave Polygons</h2>
 </a>
-<p><strong>Detect-Collisions</strong> uses the <a href="https://en.wikipedia.org/wiki/Separating_axis_theorem">Separating Axis Theorem</a> (SAT) for its narrow-phase collision tests. One caveat to SAT is that it only works properly on convex bodies. However, concave polygons can be &quot;faked&quot; by using a series of <a href="#anchor-lines">Lines</a>. Keep in mind that a polygon drawn using <a href="#anchor-lines">Lines</a> is &quot;hollow&quot;.</p>
+<p><strong>Detect-Collisions</strong> uses the <a href="https://en.wikipedia.org/wiki/Separating_axis_theorem">Separating Axis Theorem</a> (SAT) for its narrow-phase collision tests. One caveat to SAT is that it only works properly on convex bodies. However, concave polygons can be &quot;faked&quot; by using a series of <a href="#lines">Lines</a>. Keep in mind that a polygon drawn using <a href="#lines">Lines</a> is &quot;hollow&quot;.</p>
 <p>Handling true concave polygons requires breaking them down into their component convex polygons (Convex Decomposition) and testing them for collisions individually. There are plans to integrate this functionality into the library in the future, but for now, check out <a href="https://github.com/schteppe/poly-decomp.js">poly-decomp.js</a>.</p>
 
 <a href="#rendering" id="rendering" style="color: inherit; text-decoration: none;">
