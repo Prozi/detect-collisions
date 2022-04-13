@@ -16,7 +16,7 @@ export class Polygon extends SAT.Polygon implements BBox, ICollider {
   isTrigger?: boolean;
   system?: System;
 
-  readonly type: Types.Polygon = Types.Polygon;
+  readonly type: Types.Polygon | Types.Box | Types.Point = Types.Polygon;
 
   /**
    * collider - polygon

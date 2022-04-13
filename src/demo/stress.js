@@ -17,6 +17,7 @@ module.exports.Stress = class Stress {
     this.collisions = new System();
     this.bodies = [];
     this.polygons = 0;
+    this.boxes = 0;
     this.circles = 0;
 
     this.canvas.width = width;
@@ -44,14 +45,15 @@ module.exports.Stress = class Stress {
     ];
 
     for (let i = 0; i < count; ++i) {
-      this.createShape(!random(0, 49));
+      this.createShape(!random(0, 20));
     }
 
     this.element.innerHTML = `
       <div><b>Total:</b> ${count}</div>
       <div><b>Polygons:</b> ${this.polygons}</div>
+      <div><b>Boxes:</b> ${this.boxes}</div>
       <div><b>Circles:</b> ${this.circles}</div>
-      <div><label><input id="bvh" type="checkbox"> Show Bounding Volume Hierarchy</label></div>
+      <div><label><input id="bvh" type="checkbox">Show Bounding Volume Hierarchy</label></div>
     `;
 
     this.bvh_checkbox = this.element.querySelector("#bvh");
@@ -91,6 +93,11 @@ module.exports.Stress = class Stress {
     }
 
     this.bodies.forEach((body) => {
+      if (body.type !== "Circle") {
+        body.rotationAngle += body.rotationSpeed;
+        body.setAngle(body.rotationAngle);
+      }
+
       body.setPosition(
         body.pos.x + body.direction_x * speed,
         body.pos.y + body.direction_y * speed
@@ -108,6 +115,10 @@ module.exports.Stress = class Stress {
 
       a.direction_x = Math.cos(direction);
       a.direction_y = Math.sin(direction);
+
+      if (a.type !== "Circle") {
+        a.rotationSpeed = (Math.random() - Math.random()) * 0.1;
+      }
     });
 
     // Clear the canvas
@@ -134,8 +145,8 @@ module.exports.Stress = class Stress {
   }
 
   createShape(large) {
-    const min_size = size * 0.75 * (large ? 3 : 1);
-    const max_size = size * 1.25 * (large ? 5 : 1);
+    const min_size = size * 1.0 * (large ? 2 : 1);
+    const max_size = size * 1.25 * (large ? 3 : 1);
     const x = random(0, width);
     const y = random(0, height);
     const direction = (random(0, 360) * Math.PI) / 180;
@@ -146,6 +157,14 @@ module.exports.Stress = class Stress {
       body = this.collisions.createCircle({ x, y }, random(min_size, max_size));
 
       ++this.circles;
+    } else if (random(0, 2)) {
+      body = this.collisions.createBox(
+        { x, y },
+        random(min_size, max_size),
+        random(min_size, max_size)
+      );
+
+      ++this.boxes;
     } else {
       body = this.collisions.createPolygon(
         {
@@ -156,10 +175,15 @@ module.exports.Stress = class Stress {
           { x: -random(min_size, max_size), y: -random(min_size, max_size) },
           { x: random(min_size, max_size), y: -random(min_size, max_size) },
           { x: random(min_size, max_size), y: random(min_size, max_size) },
-          { x: -random(min_size, max_size), y: random(3, size) },
-        ],
-        (random(0, 360) * Math.PI) / 180
+          { x: -random(min_size, max_size), y: random(min_size, max_size) },
+        ]
       );
+
+      if (body.type !== "Circle") {
+        // set initial rotation angle direction
+        body.rotationAngle = (random(0, 360) * Math.PI) / 180;
+        body.rotationSpeed = (Math.random() - Math.random()) * 0.1;
+      }
 
       ++this.polygons;
     }

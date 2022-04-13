@@ -1,22 +1,11 @@
-import SAT from "sat";
-import { BBox } from "rbush";
-import { System } from "../system";
-import { ICollider, Types, Vector } from "../model";
+import { Types, Vector } from "../model";
 import { ensureVectorPoint, createBox } from "../utils";
 import { Polygon } from "./polygon";
 
 /**
  * collider - box
  */
-export class Box extends SAT.Polygon implements BBox, ICollider {
-  minX: number;
-  maxX: number;
-  minY: number;
-  maxY: number;
-  isStatic?: boolean;
-  isTrigger?: boolean;
-  system?: System;
-
+export class Box extends Polygon {
   readonly type: Types.Box | Types.Point = Types.Box;
 
   /**
@@ -29,37 +18,5 @@ export class Box extends SAT.Polygon implements BBox, ICollider {
     super(ensureVectorPoint(position), createBox(width, height));
 
     this.updateAABB();
-  }
-
-  /**
-   * update position
-   * @param {number} x
-   * @param {number} y
-   */
-  setPosition(x: number, y: number): void {
-    this.pos.x = x;
-    this.pos.y = y;
-
-    this.system?.updateBody(this);
-  }
-
-  /**
-   * Updates Bounding Box of collider
-   */
-  updateAABB(): void {
-    const [topLeft, _, topRight] = this.calcPoints;
-
-    this.minX = this.pos.x + topLeft.x;
-    this.minY = this.pos.y + topLeft.y;
-    this.maxX = this.pos.x + topRight.x;
-    this.maxY = this.pos.y + topRight.y;
-  }
-
-  /**
-   * Draws collider on a CanvasRenderingContext2D's current path
-   * @param {CanvasRenderingContext2D} context The canvas context to draw on
-   */
-  draw(context: CanvasRenderingContext2D): void {
-    Polygon.prototype.draw.call(this, context);
   }
 }

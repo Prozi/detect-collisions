@@ -1,18 +1,9 @@
-import SAT from "sat";
-import { BBox } from "rbush";
-import { System } from "../system";
-import { ICollider, Types, Vector } from "../model";
+import { Types, Vector } from "../model";
+import { Polygon } from "./polygon";
 /**
  * collider - box
  */
-export declare class Box extends SAT.Polygon implements BBox, ICollider {
-    minX: number;
-    maxX: number;
-    minY: number;
-    maxY: number;
-    isStatic?: boolean;
-    isTrigger?: boolean;
-    system?: System;
+export declare class Box extends Polygon {
     readonly type: Types.Box | Types.Point;
     /**
      * collider - box
@@ -21,20 +12,5 @@ export declare class Box extends SAT.Polygon implements BBox, ICollider {
      * @param {number} height
      */
     constructor(position: Vector, width: number, height: number);
-    /**
-     * update position
-     * @param {number} x
-     * @param {number} y
-     */
-    setPosition(x: number, y: number): void;
-    /**
-     * Updates Bounding Box of collider
-     */
-    updateAABB(): void;
-    /**
-     * Draws collider on a CanvasRenderingContext2D's current path
-     * @param {CanvasRenderingContext2D} context The canvas context to draw on
-     */
-    draw(context: CanvasRenderingContext2D): void;
 }
 //# sourceMappingURL=box.d.ts.map
