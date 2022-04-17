@@ -31,14 +31,24 @@ const system = new System();
 
 ### 2. Creating, Inserting, Moving, Removing Bodies
 
-`Circle`, `Polygon`, `Box`, `Point` extend their respective `SAT` counterparts so they have [all of its functionalities](https://github.com/jriecken/sat-js).
+- `Circle & Polygon` extend their respective `SAT` counterparts so they have [all of its functionalities](https://github.com/jriecken/sat-js).
+- all bodies have `x & y` properties, setting those will update AABB (bounding box)
+- all bodies (without `Circle`) have `setAngle()` methods to rotate
+- `Box` has `center()` method for centering anchor, and `width & height` properties
 
-- [Circle](https://github.com/jriecken/sat-js#satcircle): A shape with infinite sides equidistant from a single point
-- [Polygon](https://github.com/jriecken/sat-js#satpolygon): A shape made up of line segments
-- Box: A shape like a rectangle (implemented as polygon)
-- Point: A single coordinate (implemented as tiny box)
+---
 
-all bodies have `pos` property which is a `Vector` `{ x, y }` containing its position
+**[Circle](https://github.com/jriecken/sat-js#satcircle)** - Shape with infinite sides equidistant of radius from its center position
+
+**[Polygon](https://github.com/jriecken/sat-js#satpolygon)** - Shape made up of finite number of line segments
+
+**[Box](https://prozi.github.io/detect-collisions/classes/Box.html)** - Rectangle (implemented as polygon)
+
+**[Oval](https://prozi.github.io/detect-collisions/classes/Oval.html)** - Flattened circle (implemented as polygon)
+
+**[Point](https://prozi.github.io/detect-collisions/classes/Point.html)** - A single coordinate (implemented as tiny box)
+
+---
 
 Create bodies:
 
@@ -49,11 +59,6 @@ const polygon = new Polygon({ x: 50, y: 50 }, [
   { x: 20, y: 20 },
   { x: -10, y: 10 },
 ]);
-const line = new Polygon({ x: 200, y: 5 }, [
-  { x: -30, y: 0 },
-  { x: 10, y: 20 },
-]);
-const point = new Point({ x: 10, y: 10 });
 ```
 
 Insert bodies to system:
@@ -61,11 +66,9 @@ Insert bodies to system:
 ```js
 system.insert(circle);
 system.insert(polygon);
-system.insert(line);
-system.insert(point);
 ```
 
-Create and insert to system:
+Create and insert to system in one step:
 
 ```js
 const circle = system.createCircle({ x: 100, y: 100 }, 10);
@@ -74,11 +77,6 @@ const polygon = system.createPolygon({ x: 50, y: 50 }, [
   { x: 20, y: 20 },
   { x: -10, y: 10 },
 ]);
-const line = system.createPolygon({ x: 200, y: 5 }, [
-  { x: -30, y: 0 },
-  { x: 10, y: 20 },
-]);
-const point = system.createPoint({ x: 10, y: 10 });
 ```
 
 Moving bodies:
@@ -88,8 +86,6 @@ Moving bodies:
 ```js
 circle.setPosition(x, y);
 polygon.setPosition(x, y);
-line.setPosition(x, y);
-point.setPosition(x, y);
 ```
 
 Remove bodies from system:
@@ -97,15 +93,13 @@ Remove bodies from system:
 ```js
 system.remove(circle);
 system.remove(polygon);
-system.remove(line);
-system.remove(point);
 ```
 
 ### 3. Updating the Collisions System
 
 - After body moves, its bounding box in collision tree needs to be updated.
 
-- **This is done under-the-hood automatically when you use setPosition()**.
+- This is done under-the-hood automatically when you use setPosition().
 
 Collisions systems need to be updated when the bodies within them change. This includes when bodies are inserted, removed, or when their properties change (e.g. position, angle, scaling, etc.). Updating a collision system can be done by calling `update()` which should typically occur once per frame. Updating the `System` by after each position change is **required** for `System` to detect `BVH` correctly.
 

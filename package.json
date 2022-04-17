@@ -1,6 +1,6 @@
 {
   "name": "detect-collisions",
-  "version": "3.2.7",
+  "version": "3.3.0",
   "description": "2d collision detection for circles and polygons (with SAT and BVH)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
