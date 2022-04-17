@@ -16,6 +16,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./model"), exports);
 __exportStar(require("./bodies/circle"), exports);
+__exportStar(require("./bodies/oval"), exports);
 __exportStar(require("./bodies/polygon"), exports);
 __exportStar(require("./bodies/box"), exports);
 __exportStar(require("./bodies/point"), exports);

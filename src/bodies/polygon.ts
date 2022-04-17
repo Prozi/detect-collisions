@@ -1,7 +1,7 @@
 import SAT from "sat";
 import { BBox } from "rbush";
 import { System } from "../system";
-import { ICollider, Types, Vector } from "../model";
+import { ICollider, IGetAABBAsBox, Types, Vector } from "../model";
 import { ensureVectorPoint, ensurePolygonPoints, dashLineTo } from "../utils";
 
 /**
@@ -28,7 +28,8 @@ export class Polygon extends SAT.Polygon implements BBox, ICollider {
    */
   system?: System;
 
-  readonly type: Types.Polygon | Types.Box | Types.Point = Types.Polygon;
+  readonly type: Types.Polygon | Types.Box | Types.Point | Types.Oval =
+    Types.Polygon;
 
   /**
    * collider - polygon
@@ -37,6 +38,10 @@ export class Polygon extends SAT.Polygon implements BBox, ICollider {
    */
   constructor(position: Vector, points: Vector[]) {
     super(ensureVectorPoint(position), ensurePolygonPoints(points));
+
+    if (!points.length) {
+      throw new Error("Polygon with 0 points");
+    }
 
     this.updateAABB();
   }
@@ -83,7 +88,7 @@ export class Polygon extends SAT.Polygon implements BBox, ICollider {
    * Updates Bounding Box of collider
    */
   updateAABB(): void {
-    const { pos, w, h } = (this as any).getAABBAsBox();
+    const { pos, w, h } = (this as unknown as IGetAABBAsBox).getAABBAsBox();
 
     this.minX = pos.x;
     this.minY = pos.y;

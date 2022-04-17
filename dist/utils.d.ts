@@ -1,5 +1,6 @@
 import SAT from "sat";
 import { Vector } from "./model";
+export declare function createOval(radiusX: number, radiusY?: number, step?: number): SAT.Vector[];
 /**
  * creates box polygon points
  * @param {number} width

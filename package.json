@@ -11,9 +11,10 @@
     "docs:postbuild": "cp dist/demo -r docs",
     "docs": "yarn build:docs && chef-express docs --debug",
     "demo": "yarn build:demo && chef-express dist/demo --debug",
-    "test": "yarn build && jest --silent --verbose",
+    "test": "yarn build && jest --silent --verbose --forceExit",
     "format": "prettier --write ./src",
-    "precommit": "yarn test && yarn format && yarn build:demo && yarn build:docs"
+    "lint": "yarn tslint 'src/**/*.ts' --fix",
+    "precommit": "yarn lint && yarn test && yarn format && yarn build:demo && yarn build:docs"
   },
   "repository": "git://github.com/Prozi/detect-collisions.git",
   "files": [
@@ -55,6 +56,7 @@
     "prettier": "^2.6.2",
     "ts-jest": "^27.1.4",
     "ts-loader": "^9.2.8",
+    "tslint": "^6.1.3",
     "typedoc": "^0.22.15",
     "typescript": "^4.6.3",
     "webpack": "^5.72.0",

@@ -3,8 +3,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.dashLineTo = exports.clockwise = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = void 0;
+exports.dashLineTo = exports.clockwise = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createOval = void 0;
 const sat_1 = __importDefault(require("sat"));
+function createOval(radiusX, radiusY = radiusX, step = 1) {
+    const steps = 2 * Math.PI * Math.hypot(radiusX, radiusY);
+    const length = Math.max(8, Math.ceil(steps / step));
+    return Array.from({ length }, (_, index) => {
+        const value = (index / length) * 2 * Math.PI;
+        const x = Math.cos(value) * radiusX;
+        const y = Math.sin(value) * radiusY;
+        return new sat_1.default.Vector(x, y);
+    });
+}
+exports.createOval = createOval;
 /**
  * creates box polygon points
  * @param {number} width
@@ -25,7 +36,9 @@ exports.createBox = createBox;
  * @param {SAT.Vector} point
  */
 function ensureVectorPoint(point) {
-    return point instanceof sat_1.default.Vector ? point : new sat_1.default.Vector(point.x, point.y);
+    return point instanceof sat_1.default.Vector
+        ? point
+        : new sat_1.default.Vector(point.x || 0, point.y || 0);
 }
 exports.ensureVectorPoint = ensureVectorPoint;
 /**

@@ -1,6 +1,23 @@
 import SAT from "sat";
 import { Vector } from "./model";
 
+export function createOval(
+  radiusX: number,
+  radiusY: number = radiusX,
+  step = 1
+): SAT.Vector[] {
+  const steps: number = 2 * Math.PI * Math.hypot(radiusX, radiusY);
+  const length: number = Math.max(8, Math.ceil(steps / step));
+
+  return Array.from({ length }, (_: unknown, index: number) => {
+    const value: number = (index / length) * 2 * Math.PI;
+    const x: number = Math.cos(value) * radiusX;
+    const y: number = Math.sin(value) * radiusY;
+
+    return new SAT.Vector(x, y);
+  });
+}
+
 /**
  * creates box polygon points
  * @param {number} width
@@ -21,7 +38,9 @@ export function createBox(width: number, height: number): SAT.Vector[] {
  * @param {SAT.Vector} point
  */
 export function ensureVectorPoint(point: Vector): SAT.Vector {
-  return point instanceof SAT.Vector ? point : new SAT.Vector(point.x, point.y);
+  return point instanceof SAT.Vector
+    ? point
+    : new SAT.Vector(point.x || 0, point.y || 0);
 }
 
 /**

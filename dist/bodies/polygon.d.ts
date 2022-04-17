@@ -22,7 +22,7 @@ export declare class Polygon extends SAT.Polygon implements BBox, ICollider {
      * reference to collision system
      */
     system?: System;
-    readonly type: Types.Polygon | Types.Box | Types.Point;
+    readonly type: Types.Polygon | Types.Box | Types.Point | Types.Oval;
     /**
      * collider - polygon
      * @param {Vector} position {x, y}

@@ -46,6 +46,15 @@ class Box extends polygon_1.Polygon {
         this._height = height;
         this.setPoints((0, utils_1.createBox)(this._width, this._height));
     }
+    getCentroidWithoutRotation() {
+        // reset angle for get centroid
+        const angle = this.angle;
+        this.setAngle(0);
+        const centroid = this.getCentroid();
+        // revert angle change
+        this.setAngle(angle);
+        return centroid;
+    }
     /**
      * reCenters the box anchor
      */
@@ -55,7 +64,7 @@ class Box extends polygon_1.Polygon {
         if (firstPoint.x !== 0 || firstPoint.y !== 0) {
             return;
         }
-        const { x, y } = this.getCentroid();
+        const { x, y } = this.getCentroidWithoutRotation();
         this.translate(-x, -y);
         this.setPosition(this.pos.x + x, this.pos.y + y);
     }

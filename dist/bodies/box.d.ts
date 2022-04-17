@@ -30,6 +30,7 @@ export declare class Box extends Polygon {
      * set box height, update points
      */
     set height(height: number);
+    getCentroidWithoutRotation(): Vector;
     /**
      * reCenters the box anchor
      */

@@ -9,6 +9,7 @@ const rbush_1 = __importDefault(require("rbush"));
 const model_1 = require("./model");
 const utils_1 = require("./utils");
 const _1 = require(".");
+const oval_1 = require("./bodies/oval");
 /**
  * collision system
  */
@@ -184,6 +185,20 @@ class System extends rbush_1.default {
         box.setAngle(angle);
         this.insert(box);
         return box;
+    }
+    /**
+     * create oval
+     * @param {Vector} position {x, y}
+     * @param {number} radiusX
+     * @param {number} radiusY
+     * @param {number} step
+     * @param {number} angle
+     */
+    createOval(position, radiusX, radiusY, step = 1, angle = 0) {
+        const oval = new oval_1.Oval(position, radiusX, radiusY, step);
+        oval.setAngle(angle);
+        this.insert(oval);
+        return oval;
     }
     /**
      * create polygon

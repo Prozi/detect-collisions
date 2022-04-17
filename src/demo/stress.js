@@ -4,7 +4,7 @@ const width = document.body.offsetWidth;
 const height = document.body.offsetHeight;
 const count = 500;
 const speed = 1;
-const size = Math.hypot(width, height) * 0.004;
+const size = (Math.hypot(width, height) || 500) * 0.004;
 
 let frame = 0;
 let fps_total = 0;
@@ -19,6 +19,7 @@ module.exports.Stress = class Stress {
     this.polygons = 0;
     this.boxes = 0;
     this.circles = 0;
+    this.ovals = 0;
 
     this.canvas.width = width;
     this.canvas.height = height;
@@ -53,6 +54,7 @@ module.exports.Stress = class Stress {
       <div><b>Polygons:</b> ${this.polygons}</div>
       <div><b>Boxes:</b> ${this.boxes}</div>
       <div><b>Circles:</b> ${this.circles}</div>
+      <div><b>Ovals:</b> ${this.ovals}</div>
       <div><label><input id="bvh" type="checkbox">Show Bounding Volume Hierarchy</label></div>
     `;
 
@@ -152,36 +154,57 @@ module.exports.Stress = class Stress {
     const direction = (random(0, 360) * Math.PI) / 180;
 
     let body;
+    let variant = random(0, 4);
 
-    if (random(0, 2)) {
-      body = this.collisions.createCircle({ x, y }, random(min_size, max_size));
+    switch (variant) {
+      case 0:
+        body = this.collisions.createCircle(
+          { x, y },
+          random(min_size, max_size)
+        );
 
-      ++this.circles;
-    } else if (random(0, 2)) {
-      body = this.collisions.createBox(
-        { x, y },
-        random(min_size, max_size),
-        random(min_size, max_size)
-      );
+        ++this.circles;
+        break;
 
-      body.center();
+      case 1:
+        body = this.collisions.createOval(
+          { x, y },
+          random(min_size, max_size),
+          random(min_size, max_size),
+          min_size
+        );
 
-      ++this.boxes;
-    } else {
-      body = this.collisions.createPolygon(
-        {
-          x,
-          y,
-        },
-        [
-          { x: -random(min_size, max_size), y: -random(min_size, max_size) },
-          { x: random(min_size, max_size), y: -random(min_size, max_size) },
-          { x: random(min_size, max_size), y: random(min_size, max_size) },
-          { x: -random(min_size, max_size), y: random(min_size, max_size) },
-        ]
-      );
+        ++this.ovals;
+        break;
 
-      ++this.polygons;
+      case 2:
+        body = this.collisions.createBox(
+          { x, y },
+          random(min_size, max_size),
+          random(min_size, max_size)
+        );
+
+        body.center();
+
+        ++this.boxes;
+        break;
+
+      default:
+        body = this.collisions.createPolygon(
+          {
+            x,
+            y,
+          },
+          [
+            { x: -random(min_size, max_size), y: -random(min_size, max_size) },
+            { x: random(min_size, max_size), y: -random(min_size, max_size) },
+            { x: random(min_size, max_size), y: random(min_size, max_size) },
+            { x: -random(min_size, max_size), y: random(min_size, max_size) },
+          ]
+        );
+
+        ++this.polygons;
+        break;
     }
 
     if (body.type !== "Circle") {

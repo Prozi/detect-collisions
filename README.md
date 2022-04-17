@@ -181,8 +181,10 @@ These values can be used to "push" one body out of another using the minimum dis
 if (system.checkCollision(player, wall)) {
   const { overlapV } = system.response;
 
-  player.x -= overlapV.x;
-  player.y -= overlapV.y;
+  player.pos.x -= overlapV.x;
+  player.pos.y -= overlapV.y;
+
+  system.updateBody(player);
 }
 ```
 

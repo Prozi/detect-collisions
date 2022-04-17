@@ -1,8 +1,9 @@
 import SAT from "sat";
 import RBush from "rbush";
-import { TBody, Types, Vector } from "./model";
+import { IData, TBody, Types, Vector } from "./model";
 import { createBox } from "./utils";
-import { Box, Circle, Point, Polygon } from ".";
+import { Box, Circle, IGetAABBAsBox, Point, Polygon } from ".";
+import { Oval } from "./bodies/oval";
 
 /**
  * collision system
@@ -25,18 +26,20 @@ export class System extends RBush<TBody> {
    * @param {CanvasRenderingContext2D} context
    */
   drawBVH(context: CanvasRenderingContext2D) {
-    (this as any).data.children.forEach(({ minX, maxX, minY, maxY }: any) => {
-      Polygon.prototype.draw.call(
-        {
-          pos: { x: minX, y: minY },
-          calcPoints: createBox(maxX - minX, maxY - minY),
-        },
-        context
-      );
-    });
+    (this as unknown as IData).data.children.forEach(
+      ({ minX, maxX, minY, maxY }: TBody) => {
+        Polygon.prototype.draw.call(
+          {
+            pos: { x: minX, y: minY },
+            calcPoints: createBox(maxX - minX, maxY - minY),
+          },
+          context
+        );
+      }
+    );
 
-    this.all().forEach((body: any) => {
-      const { pos, w, h } = body.getAABBAsBox();
+    this.all().forEach((body: TBody) => {
+      const { pos, w, h } = (body as unknown as IGetAABBAsBox).getAABBAsBox();
 
       Polygon.prototype.draw.call(
         {
@@ -224,12 +227,7 @@ export class System extends RBush<TBody> {
    * @param {number} height
    * @param {number} angle
    */
-  createBox(
-    position: Vector,
-    width: number,
-    height: number,
-    angle: number = 0
-  ): Box {
+  createBox(position: Vector, width: number, height: number, angle = 0): Box {
     const box = new Box(position, width, height);
 
     box.setAngle(angle);
@@ -240,16 +238,36 @@ export class System extends RBush<TBody> {
   }
 
   /**
+   * create oval
+   * @param {Vector} position {x, y}
+   * @param {number} radiusX
+   * @param {number} radiusY
+   * @param {number} step
+   * @param {number} angle
+   */
+  createOval(
+    position: Vector,
+    radiusX: number,
+    radiusY: number,
+    step = 1,
+    angle = 0
+  ): Oval {
+    const oval = new Oval(position, radiusX, radiusY, step);
+
+    oval.setAngle(angle);
+
+    this.insert(oval);
+
+    return oval;
+  }
+
+  /**
    * create polygon
    * @param {Vector} position {x, y}
    * @param {Vector[]} points
    * @param {number} angle
    */
-  createPolygon(
-    position: Vector,
-    points: Vector[],
-    angle: number = 0
-  ): Polygon {
+  createPolygon(position: Vector, points: Vector[], angle = 0): Polygon {
     const polygon = new Polygon(position, points);
 
     polygon.setAngle(angle);

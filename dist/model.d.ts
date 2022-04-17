@@ -1,13 +1,27 @@
+/// <reference types="sat" />
 export { Response } from "sat";
 import { Point, Circle, Box, Polygon, System } from ".";
 /**
  * types
  */
 export declare enum Types {
+    Oval = "Oval",
     Circle = "Circle",
     Box = "Box",
     Point = "Point",
     Polygon = "Polygon"
+}
+export interface IGetAABBAsBox {
+    getAABBAsBox: () => {
+        pos: SAT.Vector;
+        w: number;
+        h: number;
+    };
+}
+export interface IData {
+    data: {
+        children: TBody[];
+    };
 }
 /**
  * potential vector

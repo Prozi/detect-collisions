@@ -110,10 +110,18 @@ module.exports.Tank = class Tank {
 
   handleCollisions() {
     this.collisions.update();
-    this.collisions.checkOne(this.player, (result) => {
-      this.player.pos.x -= result.overlapV.x;
-      this.player.pos.y -= result.overlapV.y;
-      this.player.velocity *= 0.9;
+    this.collisions.checkAll(({ a, b, overlapV }) => {
+      if (a.type === "Circle" || a === this.player) {
+        a.setPosition(a.pos.x - overlapV.x, a.pos.y - overlapV.y);
+      }
+
+      if (b.type === "Circle" || b === this.player) {
+        b.setPosition(b.pos.x + overlapV.x, b.pos.y + overlapV.y);
+      }
+
+      if (a === this.player) {
+        a.velocity *= 0.9;
+      }
     });
   }
 
@@ -135,14 +143,15 @@ module.exports.Tank = class Tank {
   }
 
   createPlayer(x, y, size = 13) {
-    this.player = this.createPolygon(x, y, [
-      [-size * 1.3, -size],
-      [size * 1.3, -size],
-      [size * 1.3, size],
-      [-size * 1.3, size],
-    ]);
+    this.player = this.collisions.createBox(
+      { x: this.scaleX(x), y: this.scaleY(y) },
+      this.scaleX(2.6 * size),
+      this.scaleX(1.3 * size),
+      0.2
+    );
 
-    this.player.setAngle(0.2);
+    this.player.center();
+
     this.player.velocity = 0;
   }
 
@@ -157,7 +166,17 @@ module.exports.Tank = class Tank {
   createCircle(x, y, radius) {
     this.collisions.createCircle(
       { x: this.scaleX(x), y: this.scaleY(y) },
-      radius
+      this.scaleX(radius)
+    );
+  }
+
+  createOval(x, y, radiusX, radiusY, step, angle) {
+    this.collisions.createOval(
+      { x: this.scaleX(x), y: this.scaleY(y) },
+      this.scaleX(radiusX),
+      this.scaleY(radiusY),
+      step,
+      angle
     );
   }
 
@@ -216,10 +235,10 @@ module.exports.Tank = class Tank {
       ],
       0.4
     );
-    this.createCircle(170, 140, 8);
-    this.createCircle(185, 155, 8);
-    this.createCircle(165, 165, 8);
-    this.createCircle(145, 165, 8);
+    this.createCircle(170, 140, 6);
+    this.createCircle(185, 155, 6);
+    this.createCircle(165, 165, 6);
+    this.createCircle(145, 165, 6);
 
     // Airstrip
     this.createPolygon(
@@ -246,8 +265,8 @@ module.exports.Tank = class Tank {
       ],
       0.2
     );
-    this.createCircle(180, 490, 20);
-    this.createCircle(175, 540, 20);
+    this.createCircle(180, 490, 12);
+    this.createCircle(175, 540, 12);
 
     // Barracks
     this.createPolygon(
@@ -300,17 +319,6 @@ module.exports.Tank = class Tank {
     ]);
 
     // Lake
-    this.createPolygon(550, 100, [
-      [-60, -20],
-      [-20, -40],
-      [30, -30],
-      [60, 20],
-      [40, 70],
-      [10, 100],
-      [-30, 110],
-      [-80, 90],
-      [-110, 50],
-      [-100, 20],
-    ]);
+    this.createOval(530, 130, 80, 70, 10, -0.2);
   }
 };
