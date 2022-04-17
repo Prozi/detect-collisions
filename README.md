@@ -1,6 +1,6 @@
 # Introduction
 
-**Detect-Collisions** is JavaScript library for quickly and accurately detecting collisions between Polygons, Circles, Boxes, and Points. It combines the efficiency of a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and the accuracy of the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
+**Detect-Collisions** is JavaScript library for quickly and accurately detecting collisions between Points, Lines, Boxes, Polygons, Ovals and Circles. It combines the efficiency of a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and the accuracy of the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
 
 [<img src="https://badge.fury.io/js/detect-collisions.svg" alt="https://badge.fury.io/js/detect-collisions" />](https://www.npmjs.com/package/detect-collisions)
 [<img src="https://snyk.io/test/github/Prozi/detect-collisions/badge.svg" alt="https://snyk.io/test/github/Prozi/detect-collisions" />](https://snyk.io/test/github/Prozi/detect-collisions)
@@ -40,11 +40,13 @@ const system = new System();
 
 **[Circle](https://github.com/jriecken/sat-js#satcircle)** - Shape with infinite sides equidistant of radius from its center position
 
+**[Oval](https://prozi.github.io/detect-collisions/classes/Oval.html)** - Flattened circle (implemented as polygon)
+
 **[Polygon](https://github.com/jriecken/sat-js#satpolygon)** - Shape made up of finite number of line segments
 
 **[Box](https://prozi.github.io/detect-collisions/classes/Box.html)** - Rectangle (implemented as polygon)
 
-**[Oval](https://prozi.github.io/detect-collisions/classes/Oval.html)** - Flattened circle (implemented as polygon)
+**[Line](https://prozi.github.io/detect-collisions/classes/Line.html)** - Line (implemented as 2-point polygon)
 
 **[Point](https://prozi.github.io/detect-collisions/classes/Point.html)** - A single coordinate (implemented as tiny box)
 
@@ -198,20 +200,9 @@ if (collided) {
 }
 ```
 
-## Lines
-
-Creating a line is simply a matter of creating a single-sided polygon (i.e. a polygon with only two coordinate pairs).
-
-```js
-const line = new Polygon({ x: 200, y: 5 }, [
-  { x: -30, y: 0 },
-  { x: 10, y: 20 },
-]);
-```
-
 ## Concave Polygons
 
-**Detect-Collisions** uses the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for its narrow-phase collision tests. One caveat to SAT is that it only works properly on convex bodies. However, concave polygons can be "faked" by using a series of [Lines](#lines). Keep in mind that a polygon drawn using [Lines](#lines) is "hollow".
+**Detect-Collisions** uses the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for its narrow-phase collision tests. One caveat to SAT is that it only works properly on convex bodies. However, concave polygons can be "faked" by using a series of lines. Keep in mind that a polygon drawn using lines is "hollow".
 
 Handling true concave polygons requires breaking them down into their component convex polygons (Convex Decomposition) and testing them for collisions individually. There are plans to integrate this functionality into the library in the future, but for now, check out [poly-decomp.js](https://github.com/schteppe/poly-decomp.js).
 

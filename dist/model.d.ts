@@ -6,6 +6,7 @@ import { Point, Circle, Box, Polygon, System } from ".";
  */
 export declare enum Types {
     Oval = "Oval",
+    Line = "Line",
     Circle = "Circle",
     Box = "Box",
     Point = "Point",

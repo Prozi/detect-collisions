@@ -1,5 +1,5 @@
 import { Types, Vector } from "../model";
-import { ensureVectorPoint, createOval } from "../utils";
+import { createOval } from "../utils";
 import { Polygon } from "./polygon";
 
 /**
@@ -24,7 +24,7 @@ export class Oval extends Polygon {
     radiusY: number = radiusX,
     step = 1
   ) {
-    super(ensureVectorPoint(position), createOval(radiusX, radiusY, step));
+    super(position, createOval(radiusX, radiusY, step));
 
     this._radiusX = radiusX;
     this._radiusY = radiusY;

@@ -164,6 +164,17 @@ class System extends rbush_1.default {
         return point;
     }
     /**
+     * create line
+     * @param {Vector} start {x, y}
+     * @param {Vector} end {x, y}
+     */
+    createLine(start, end, angle = 0) {
+        const line = new _1.Line(start, end);
+        line.setAngle(angle);
+        this.insert(line);
+        return line;
+    }
+    /**
      * create circle
      * @param {Vector} position {x, y}
      * @param {number} radius

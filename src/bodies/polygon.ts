@@ -28,8 +28,12 @@ export class Polygon extends SAT.Polygon implements BBox, ICollider {
    */
   system?: System;
 
-  readonly type: Types.Polygon | Types.Box | Types.Point | Types.Oval =
-    Types.Polygon;
+  readonly type:
+    | Types.Polygon
+    | Types.Box
+    | Types.Point
+    | Types.Oval
+    | Types.Line = Types.Polygon;
 
   /**
    * collider - polygon
@@ -39,8 +43,8 @@ export class Polygon extends SAT.Polygon implements BBox, ICollider {
   constructor(position: Vector, points: Vector[]) {
     super(ensureVectorPoint(position), ensurePolygonPoints(points));
 
-    if (!points.length) {
-      throw new Error("Polygon with 0 points");
+    if (!points?.length) {
+      throw new Error("No points in polygon");
     }
 
     this.updateAABB();

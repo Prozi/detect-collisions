@@ -1,5 +1,5 @@
 import { Types, Vector } from "../model";
-import { ensureVectorPoint, createBox } from "../utils";
+import { createBox } from "../utils";
 import { Polygon } from "./polygon";
 
 /**
@@ -18,7 +18,7 @@ export class Box extends Polygon {
    * @param {number} height
    */
   constructor(position: Vector, width: number, height: number) {
-    super(ensureVectorPoint(position), createBox(width, height));
+    super(position, createBox(width, height));
 
     this._width = width;
     this._height = height;

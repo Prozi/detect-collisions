@@ -1,7 +1,7 @@
 import SAT from "sat";
 import RBush from "rbush";
 import { TBody, Vector } from "./model";
-import { Box, Circle, Point, Polygon } from ".";
+import { Box, Circle, Line, Point, Polygon } from ".";
 import { Oval } from "./bodies/oval";
 /**
  * collision system
@@ -70,6 +70,12 @@ export declare class System extends RBush<TBody> {
      * @param {Vector} position {x, y}
      */
     createPoint(position: Vector): Point;
+    /**
+     * create line
+     * @param {Vector} start {x, y}
+     * @param {Vector} end {x, y}
+     */
+    createLine(start: Vector, end: Vector, angle?: number): Line;
     /**
      * create circle
      * @param {Vector} position {x, y}

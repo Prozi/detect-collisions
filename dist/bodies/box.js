@@ -15,7 +15,7 @@ class Box extends polygon_1.Polygon {
      * @param {number} height
      */
     constructor(position, width, height) {
-        super((0, utils_1.ensureVectorPoint)(position), (0, utils_1.createBox)(width, height));
+        super(position, (0, utils_1.createBox)(width, height));
         this.type = model_1.Types.Box;
         this._width = width;
         this._height = height;

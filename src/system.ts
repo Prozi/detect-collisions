@@ -2,7 +2,7 @@ import SAT from "sat";
 import RBush from "rbush";
 import { IData, TBody, Types, Vector } from "./model";
 import { createBox } from "./utils";
-import { Box, Circle, IGetAABBAsBox, Point, Polygon } from ".";
+import { Box, Circle, IGetAABBAsBox, Line, Point, Polygon } from ".";
 import { Oval } from "./bodies/oval";
 
 /**
@@ -205,6 +205,21 @@ export class System extends RBush<TBody> {
     this.insert(point);
 
     return point;
+  }
+
+  /**
+   * create line
+   * @param {Vector} start {x, y}
+   * @param {Vector} end {x, y}
+   */
+  createLine(start: Vector, end: Vector, angle = 0): Line {
+    const line = new Line(start, end);
+
+    line.setAngle(angle);
+
+    this.insert(line);
+
+    return line;
   }
 
   /**

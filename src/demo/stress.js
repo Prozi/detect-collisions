@@ -20,6 +20,7 @@ module.exports.Stress = class Stress {
     this.boxes = 0;
     this.circles = 0;
     this.ovals = 0;
+    this.lines = 0;
 
     this.canvas.width = width;
     this.canvas.height = height;
@@ -55,6 +56,7 @@ module.exports.Stress = class Stress {
       <div><b>Boxes:</b> ${this.boxes}</div>
       <div><b>Circles:</b> ${this.circles}</div>
       <div><b>Ovals:</b> ${this.ovals}</div>
+      <div><b>Lines:</b> ${this.lines}</div>
       <div><label><input id="bvh" type="checkbox">Show Bounding Volume Hierarchy</label></div>
     `;
 
@@ -154,7 +156,7 @@ module.exports.Stress = class Stress {
     const direction = (random(0, 360) * Math.PI) / 180;
 
     let body;
-    let variant = random(0, 4);
+    let variant = random(0, 5);
 
     switch (variant) {
       case 0:
@@ -187,6 +189,18 @@ module.exports.Stress = class Stress {
         body.center();
 
         ++this.boxes;
+        break;
+
+      case 3:
+        body = this.collisions.createLine(
+          { x, y },
+          {
+            x: x + random(min_size, max_size),
+            y: y + random(min_size, max_size),
+          }
+        );
+
+        ++this.lines;
         break;
 
       default:

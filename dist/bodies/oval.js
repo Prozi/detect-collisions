@@ -15,7 +15,7 @@ class Oval extends polygon_1.Polygon {
      * @param {number} radiusY
      */
     constructor(position, radiusX, radiusY = radiusX, step = 1) {
-        super((0, utils_1.ensureVectorPoint)(position), (0, utils_1.createOval)(radiusX, radiusY, step));
+        super(position, (0, utils_1.createOval)(radiusX, radiusY, step));
         this.type = model_1.Types.Oval;
         this._radiusX = radiusX;
         this._radiusY = radiusY;

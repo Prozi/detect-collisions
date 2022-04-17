@@ -52,7 +52,9 @@ export function ensurePolygonPoints(points: Vector[]): SAT.Vector[] {
     throw new Error("No points array provided");
   }
 
-  return (clockwise(points) ? points.reverse() : points).map(ensureVectorPoint);
+  const vectorPoints: SAT.Vector[] = points.map(ensureVectorPoint);
+
+  return clockwise(vectorPoints) ? vectorPoints.reverse() : vectorPoints;
 }
 
 /**

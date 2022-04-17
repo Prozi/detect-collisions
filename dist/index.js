@@ -20,4 +20,5 @@ __exportStar(require("./bodies/oval"), exports);
 __exportStar(require("./bodies/polygon"), exports);
 __exportStar(require("./bodies/box"), exports);
 __exportStar(require("./bodies/point"), exports);
+__exportStar(require("./bodies/line"), exports);
 __exportStar(require("./system"), exports);

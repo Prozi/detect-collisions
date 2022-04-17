@@ -49,7 +49,8 @@ function ensurePolygonPoints(points) {
     if (!points) {
         throw new Error("No points array provided");
     }
-    return (clockwise(points) ? points.reverse() : points).map(ensureVectorPoint);
+    const vectorPoints = points.map(ensureVectorPoint);
+    return clockwise(vectorPoints) ? vectorPoints.reverse() : vectorPoints;
 }
 exports.ensurePolygonPoints = ensurePolygonPoints;
 /**

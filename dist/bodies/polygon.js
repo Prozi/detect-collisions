@@ -19,8 +19,8 @@ class Polygon extends sat_1.default.Polygon {
     constructor(position, points) {
         super((0, utils_1.ensureVectorPoint)(position), (0, utils_1.ensurePolygonPoints)(points));
         this.type = model_1.Types.Polygon;
-        if (!points.length) {
-            throw new Error("Polygon with 0 points");
+        if (!(points === null || points === void 0 ? void 0 : points.length)) {
+            throw new Error("No points in polygon");
         }
         this.updateAABB();
     }
