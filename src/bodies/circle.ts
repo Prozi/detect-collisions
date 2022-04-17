@@ -12,8 +12,20 @@ export class Circle extends SAT.Circle implements BBox, ICollider {
   maxX: number;
   minY: number;
   maxY: number;
+
+  /**
+   * static bodies don't move but they collide
+   */
   isStatic?: boolean;
+
+  /**
+   * trigger bodies move but are like ghosts
+   */
   isTrigger?: boolean;
+
+  /**
+   * reference to collision system
+   */
   system?: System;
 
   readonly type: Types.Circle = Types.Circle;

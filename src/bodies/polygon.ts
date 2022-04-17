@@ -12,8 +12,20 @@ export class Polygon extends SAT.Polygon implements BBox, ICollider {
   maxX: number;
   minY: number;
   maxY: number;
+
+  /**
+   * static bodies don't move but they collide
+   */
   isStatic?: boolean;
+
+  /**
+   * trigger bodies move but are like ghosts
+   */
   isTrigger?: boolean;
+
+  /**
+   * reference to collision system
+   */
   system?: System;
 
   readonly type: Types.Polygon | Types.Box | Types.Point = Types.Polygon;
@@ -27,6 +39,32 @@ export class Polygon extends SAT.Polygon implements BBox, ICollider {
     super(ensureVectorPoint(position), ensurePolygonPoints(points));
 
     this.updateAABB();
+  }
+
+  get x(): number {
+    return this.pos.x;
+  }
+
+  /**
+   * updating this.pos.x by this.x = x updates AABB
+   */
+  set x(x: number) {
+    this.pos.x = x;
+
+    this.system?.updateBody(this);
+  }
+
+  get y(): number {
+    return this.pos.y;
+  }
+
+  /**
+   * updating this.pos.y by this.y = y updates AABB
+   */
+  set y(y: number) {
+    this.pos.y = y;
+
+    this.system?.updateBody(this);
   }
 
   /**

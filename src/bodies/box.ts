@@ -6,10 +6,10 @@ import { Polygon } from "./polygon";
  * collider - box
  */
 export class Box extends Polygon {
-  width: number;
-  height: number;
-
   readonly type: Types.Box | Types.Point = Types.Box;
+
+  private _width: number;
+  private _height: number;
 
   /**
    * collider - box
@@ -20,8 +20,56 @@ export class Box extends Polygon {
   constructor(position: Vector, width: number, height: number) {
     super(ensureVectorPoint(position), createBox(width, height));
 
-    this.width = width;
-    this.height = height;
-    this.updateAABB();
+    this._width = width;
+    this._height = height;
+  }
+
+  /**
+   * get box width
+   */
+  get width(): number {
+    return this._width;
+  }
+
+  /**
+   * set box width, update points
+   */
+  set width(width: number) {
+    this._width = width;
+
+    this.setPoints(createBox(this._width, this._height));
+  }
+
+  /**
+   * get box height
+   */
+  get height(): number {
+    return this._height;
+  }
+
+  /**
+   * set box height, update points
+   */
+  set height(height: number) {
+    this._height = height;
+
+    this.setPoints(createBox(this._width, this._height));
+  }
+
+  /**
+   * reCenters the box anchor
+   */
+  center(): void {
+    const firstPoint: Vector = this.points[0];
+
+    // skip if has original points translated already
+    if (firstPoint.x !== 0 || firstPoint.y !== 0) {
+      return;
+    }
+
+    const { x, y } = this.getCentroid();
+
+    this.translate(-x, -y);
+    this.setPosition(this.pos.x + x, this.pos.y + y);
   }
 }

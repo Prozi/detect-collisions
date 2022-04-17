@@ -21,6 +21,28 @@ class Polygon extends sat_1.default.Polygon {
         this.type = model_1.Types.Polygon;
         this.updateAABB();
     }
+    get x() {
+        return this.pos.x;
+    }
+    /**
+     * updating this.pos.x by this.x = x updates AABB
+     */
+    set x(x) {
+        var _a;
+        this.pos.x = x;
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+    }
+    get y() {
+        return this.pos.y;
+    }
+    /**
+     * updating this.pos.y by this.y = y updates AABB
+     */
+    set y(y) {
+        var _a;
+        this.pos.y = y;
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+    }
     /**
      * update position
      * @param {number} x

@@ -164,7 +164,7 @@ module.exports.Stress = class Stress {
         random(min_size, max_size)
       );
 
-      body.setOffset(body.getCentroid().scale(-1, -1));
+      body.center();
 
       ++this.boxes;
     } else {
