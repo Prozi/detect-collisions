@@ -12,7 +12,7 @@ export declare function createBox(width: number, height: number): SAT.Vector[];
  * ensure returns a SAT.Vector
  * @param {SAT.Vector} point
  */
-export declare function ensureVectorPoint(point: Vector): SAT.Vector;
+export declare function ensureVectorPoint(point?: Vector): SAT.Vector;
 /**
  * ensure correct counterclockwise points
  * @param {SAT.Vector[]} points

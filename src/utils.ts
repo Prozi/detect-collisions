@@ -37,7 +37,7 @@ export function createBox(width: number, height: number): SAT.Vector[] {
  * ensure returns a SAT.Vector
  * @param {SAT.Vector} point
  */
-export function ensureVectorPoint(point: Vector): SAT.Vector {
+export function ensureVectorPoint(point: Vector = {}): SAT.Vector {
   return point instanceof SAT.Vector
     ? point
     : new SAT.Vector(point.x || 0, point.y || 0);
@@ -48,6 +48,10 @@ export function ensureVectorPoint(point: Vector): SAT.Vector {
  * @param {SAT.Vector[]} points
  */
 export function ensurePolygonPoints(points: Vector[]): SAT.Vector[] {
+  if (!points) {
+    throw new Error("No points array provided");
+  }
+
   return (clockwise(points) ? points.reverse() : points).map(ensureVectorPoint);
 }
 
