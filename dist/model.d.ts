@@ -12,6 +12,9 @@ export declare enum Types {
     Point = "Point",
     Polygon = "Polygon"
 }
+/**
+ * for use of private function of sat.js
+ */
 export interface IGetAABBAsBox {
     getAABBAsBox: () => {
         pos: SAT.Vector;
@@ -19,11 +22,21 @@ export interface IGetAABBAsBox {
         h: number;
     };
 }
+/**
+ * for use of private function of sat.js
+ */
 export interface IData {
     data: {
         children: TBody[];
     };
 }
+/**
+ * system.raycast(from, to) result
+ */
+export declare type RaycastResult = {
+    point: Vector;
+    collider: TBody;
+} | null;
 /**
  * potential vector
  */

@@ -1,7 +1,7 @@
 import SAT from "sat";
 import RBush from "rbush";
 import { TBody, Vector } from "./model";
-import { Box, Circle, Line, Point, Polygon } from ".";
+import { Box, Circle, Line, Point, Polygon, RaycastResult } from ".";
 import { Oval } from "./bodies/oval";
 /**
  * collision system
@@ -73,10 +73,7 @@ export declare class System extends RBush<TBody> {
      * @param {Vector} end {x, y}
      * @returns {TBody}
      */
-    raycast(start: Vector, end: Vector, allowCollider?: (testCollider: TBody) => boolean): {
-        point: Vector;
-        collider: TBody;
-    };
+    raycast(start: Vector, end: Vector, allowCollider?: (testCollider: TBody) => boolean): RaycastResult;
     /**
      * create point
      * @param {Vector} position {x, y}

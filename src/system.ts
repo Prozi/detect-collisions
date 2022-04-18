@@ -1,8 +1,16 @@
-import SAT, { Response } from "sat";
+import SAT from "sat";
 import RBush from "rbush";
 import { IData, TBody, Types, Vector } from "./model";
-import { closest, createBox, distance } from "./utils";
-import { Box, Circle, IGetAABBAsBox, Line, Point, Polygon } from ".";
+import { closest, createBox } from "./utils";
+import {
+  Box,
+  Circle,
+  IGetAABBAsBox,
+  Line,
+  Point,
+  Polygon,
+  RaycastResult,
+} from ".";
 import { Oval } from "./bodies/oval";
 
 /**
@@ -279,7 +287,7 @@ export class System extends RBush<TBody> {
     start: Vector,
     end: Vector,
     allowCollider: (testCollider: TBody) => boolean = () => true
-  ): { point: Vector; collider: TBody } {
+  ): RaycastResult {
     const ray: Line = this.createLine(start, end);
     const colliders: TBody[] = this.getPotentials(ray).filter(
       (potential: TBody) =>
