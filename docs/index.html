@@ -157,6 +157,17 @@
 <pre><code class="language-js"><span class="hl-1">const</span><span class="hl-0"> </span><span class="hl-2">circle</span><span class="hl-0"> = </span><span class="hl-1">new</span><span class="hl-0"> </span><span class="hl-3">Circle</span><span class="hl-0">({ </span><span class="hl-4">x:</span><span class="hl-0"> </span><span class="hl-5">45</span><span class="hl-0">, </span><span class="hl-4">y:</span><span class="hl-0"> </span><span class="hl-5">45</span><span class="hl-0"> }, </span><span class="hl-5">20</span><span class="hl-0">);</span><br/><span class="hl-1">const</span><span class="hl-0"> </span><span class="hl-2">polygon</span><span class="hl-0"> = </span><span class="hl-1">new</span><span class="hl-0"> </span><span class="hl-3">Polygon</span><span class="hl-0">({ </span><span class="hl-4">x:</span><span class="hl-0"> </span><span class="hl-5">50</span><span class="hl-0">, </span><span class="hl-4">y:</span><span class="hl-0"> </span><span class="hl-5">50</span><span class="hl-0"> }, [</span><br/><span class="hl-0">  { </span><span class="hl-4">x:</span><span class="hl-0"> </span><span class="hl-5">0</span><span class="hl-0">, </span><span class="hl-4">y:</span><span class="hl-0"> </span><span class="hl-5">0</span><span class="hl-0"> },</span><br/><span class="hl-0">  { </span><span class="hl-4">x:</span><span class="hl-0"> </span><span class="hl-5">20</span><span class="hl-0">, </span><span class="hl-4">y:</span><span class="hl-0"> </span><span class="hl-5">20</span><span class="hl-0"> },</span><br/><span class="hl-0">  { </span><span class="hl-4">x:</span><span class="hl-0"> -</span><span class="hl-5">10</span><span class="hl-0">, </span><span class="hl-4">y:</span><span class="hl-0"> </span><span class="hl-5">10</span><span class="hl-0"> },</span><br/><span class="hl-0">]);</span><br/><br/><span class="hl-6">if</span><span class="hl-0"> (</span><span class="hl-4">system</span><span class="hl-0">.</span><span class="hl-3">checkCollision</span><span class="hl-0">(</span><span class="hl-4">polygon</span><span class="hl-0">, </span><span class="hl-4">circle</span><span class="hl-0">)) {</span><br/><span class="hl-0">  </span><span class="hl-4">console</span><span class="hl-0">.</span><span class="hl-3">log</span><span class="hl-0">(</span><span class="hl-4">system</span><span class="hl-0">.</span><span class="hl-4">result</span><span class="hl-0">);</span><br/><span class="hl-0">}</span>
 </code></pre>
 
+<a href="#raycast" id="raycast" style="color: inherit; text-decoration: none;">
+  <h2>Raycast</h2>
+</a>
+<p>To get raycast information use</p>
+<pre><code class="language-ts"><span class="hl-4">system</span><span class="hl-0">.</span><span class="hl-3">raycast</span><span class="hl-0">(</span><span class="hl-4">start</span><span class="hl-0">: </span><span class="hl-4">Vector</span><span class="hl-0">, </span><span class="hl-4">end</span><span class="hl-0">: </span><span class="hl-4">Vector</span><span class="hl-0">): { </span><span class="hl-4">point:</span><span class="hl-0"> </span><span class="hl-4">Vector</span><span class="hl-0">; </span><span class="hl-4">collider</span><span class="hl-0">: </span><span class="hl-4">TBody</span><span class="hl-0"> } | </span><span class="hl-1">null</span>
+</code></pre>
+<ul>
+<li>point is the <code>Vector { x, y }</code> with coordinates of (closest) intersection</li>
+<li>collider is the reference to body of the (closest) collider</li>
+</ul>
+
 <a href="#faq" id="faq" style="color: inherit; text-decoration: none;">
   <h2>FAQ</h2>
 </a>

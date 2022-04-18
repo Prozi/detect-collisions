@@ -262,6 +262,17 @@ if (system.checkCollision(polygon, circle)) {
 }
 ```
 
+## Raycast
+
+To get raycast information use
+
+```ts
+system.raycast(start: Vector, end: Vector): { point: Vector; collider: TBody } | null
+```
+
+- point is the `Vector { x, y }` with coordinates of (closest) intersection
+- collider is the reference to body of the (closest) collider
+
 ## FAQ
 
 ### Why shouldn't I just use a physics engine?
