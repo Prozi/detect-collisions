@@ -218,10 +218,10 @@ class System extends rbush_1.default {
      */
     raycast(start, end, allowCollider = () => true) {
         const ray = this.createLine(start, end);
-        const colliders = this.getPotentials(ray).filter((potential) => this.checkCollision(ray, potential) && allowCollider(potential));
+        const colliders = this.getPotentials(ray).filter((potential) => allowCollider(potential) && this.checkCollision(ray, potential));
         this.remove(ray);
-        const sort = (0, utils_1.closest)(start);
         const results = [];
+        const sort = (0, utils_1.closest)(start);
         colliders.forEach((collider) => {
             switch (collider.type) {
                 case model_1.Types.Circle: {

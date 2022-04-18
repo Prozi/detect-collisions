@@ -291,13 +291,14 @@ export class System extends RBush<TBody> {
     const ray: Line = this.createLine(start, end);
     const colliders: TBody[] = this.getPotentials(ray).filter(
       (potential: TBody) =>
-        this.checkCollision(ray, potential) && allowCollider(potential)
+        allowCollider(potential) && this.checkCollision(ray, potential)
     );
 
     this.remove(ray);
 
-    const sort = closest(start);
-    const results: { point: Vector; collider: TBody }[] = [];
+    const results: RaycastResult[] = [];
+    const sort: (a: { point: Vector }, b: { point: Vector }) => number =
+      closest(start);
 
     colliders.forEach((collider: TBody) => {
       switch (collider.type) {
