@@ -19,6 +19,23 @@ export declare function ensureVectorPoint(point?: Vector): SAT.Vector;
  */
 export declare function ensurePolygonPoints(points: Vector[]): SAT.Vector[];
 /**
+ * get distance between two {x, y} points
+ * @param {Vector} a
+ * @param {Vector} b
+ * @returns {number}
+ */
+export declare function distance(a: Vector, b: Vector): number;
+/**
+ * returns function to sort raycast results
+ * @param {Vector} from
+ * @returns {function}
+ */
+export declare function closest(from: Vector): (a: {
+    point: Vector;
+}, b: {
+    point: Vector;
+}) => number;
+/**
  * check direction of polygon
  * @param {SAT.Vector[]} points
  */

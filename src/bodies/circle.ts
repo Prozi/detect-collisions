@@ -41,6 +41,32 @@ export class Circle extends SAT.Circle implements BBox, ICollider {
     this.updateAABB();
   }
 
+  get x(): number {
+    return this.pos.x;
+  }
+
+  /**
+   * updating this.pos.x by this.x = x updates AABB
+   */
+  set x(x: number) {
+    this.pos.x = x;
+
+    this.system?.updateBody(this);
+  }
+
+  get y(): number {
+    return this.pos.y;
+  }
+
+  /**
+   * updating this.pos.y by this.y = y updates AABB
+   */
+  set y(y: number) {
+    this.pos.y = y;
+
+    this.system?.updateBody(this);
+  }
+
   /**
    * update position
    * @param {number} x

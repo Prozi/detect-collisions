@@ -12,7 +12,8 @@ class Oval extends polygon_1.Polygon {
      * collider - oval
      * @param {Vector} position {x, y}
      * @param {number} radiusX
-     * @param {number} radiusY
+     * @param {number} radiusY defaults to radiusX
+     * @param {number} step precision division >= 1px
      */
     constructor(position, radiusX, radiusY = radiusX, step = 1) {
         super(position, (0, utils_1.createOval)(radiusX, radiusY, step));

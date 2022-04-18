@@ -13,8 +13,8 @@ describe("GIVEN System", () => {
     const system = new System();
     const circle = system.createCircle({ x: 0, y: 0 }, 10);
 
-    expect(circle.x).toBe(undefined);
-    expect(circle.y).toBe(undefined);
+    expect(circle.x).toBe(0);
+    expect(circle.y).toBe(0);
 
     expect(circle.system).toBe(system);
 

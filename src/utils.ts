@@ -58,6 +58,27 @@ export function ensurePolygonPoints(points: Vector[]): SAT.Vector[] {
 }
 
 /**
+ * get distance between two {x, y} points
+ * @param {Vector} a
+ * @param {Vector} b
+ * @returns {number}
+ */
+export function distance(a: Vector, b: Vector): number {
+  return Math.hypot(a.x - b.x, a.y - b.y);
+}
+
+/**
+ * returns function to sort raycast results
+ * @param {Vector} from
+ * @returns {function}
+ */
+export function closest(
+  from: Vector
+): (a: { point: Vector }, b: { point: Vector }) => number {
+  return ({ point: a }, { point: b }) => distance(from, a) - distance(from, b);
+}
+
+/**
  * check direction of polygon
  * @param {SAT.Vector[]} points
  */
@@ -101,10 +122,10 @@ export function dashLineTo(
 
   let posX = fromX;
   let posY = fromY;
-  let distance = Math.hypot(xDiff, yDiff);
+  let dist = Math.hypot(xDiff, yDiff);
 
-  while (distance > 0) {
-    const step = Math.min(distance, dash);
+  while (dist > 0) {
+    const step = Math.min(dist, dash);
 
     context.moveTo(posX, posY);
     context.lineTo(posX + offsetX * step, posY + offsetY * step);
@@ -112,6 +133,6 @@ export function dashLineTo(
     posX += offsetX * (dash + gap);
     posY += offsetY * (dash + gap);
 
-    distance -= dash + gap;
+    dist -= dash + gap;
   }
 }

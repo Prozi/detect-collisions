@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.dashLineTo = exports.clockwise = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createOval = void 0;
+exports.dashLineTo = exports.clockwise = exports.closest = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createOval = void 0;
 const sat_1 = __importDefault(require("sat"));
 function createOval(radiusX, radiusY = radiusX, step = 1) {
     const steps = 2 * Math.PI * Math.hypot(radiusX, radiusY);
@@ -54,6 +54,25 @@ function ensurePolygonPoints(points) {
 }
 exports.ensurePolygonPoints = ensurePolygonPoints;
 /**
+ * get distance between two {x, y} points
+ * @param {Vector} a
+ * @param {Vector} b
+ * @returns {number}
+ */
+function distance(a, b) {
+    return Math.hypot(a.x - b.x, a.y - b.y);
+}
+exports.distance = distance;
+/**
+ * returns function to sort raycast results
+ * @param {Vector} from
+ * @returns {function}
+ */
+function closest(from) {
+    return ({ point: a }, { point: b }) => distance(from, a) - distance(from, b);
+}
+exports.closest = closest;
+/**
  * check direction of polygon
  * @param {SAT.Vector[]} points
  */
@@ -85,14 +104,14 @@ function dashLineTo(context, fromX, fromY, toX, toY, dash = 2, gap = 4) {
     const offsetY = Math.sin(arc);
     let posX = fromX;
     let posY = fromY;
-    let distance = Math.hypot(xDiff, yDiff);
-    while (distance > 0) {
-        const step = Math.min(distance, dash);
+    let dist = Math.hypot(xDiff, yDiff);
+    while (dist > 0) {
+        const step = Math.min(dist, dash);
         context.moveTo(posX, posY);
         context.lineTo(posX + offsetX * step, posY + offsetY * step);
         posX += offsetX * (dash + gap);
         posY += offsetY * (dash + gap);
-        distance -= dash + gap;
+        dist -= dash + gap;
     }
 }
 exports.dashLineTo = dashLineTo;

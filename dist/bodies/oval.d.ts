@@ -12,7 +12,8 @@ export declare class Oval extends Polygon {
      * collider - oval
      * @param {Vector} position {x, y}
      * @param {number} radiusX
-     * @param {number} radiusY
+     * @param {number} radiusY defaults to radiusX
+     * @param {number} step precision division >= 1px
      */
     constructor(position: Vector, radiusX: number, radiusY?: number, step?: number);
     /**

@@ -1,4 +1,4 @@
-const { System } = require("../../dist");
+const { System, Line } = require("../../dist");
 
 module.exports.Tank = class Tank {
   constructor() {
@@ -50,11 +50,8 @@ module.exports.Tank = class Tank {
     this.createMap(800, 600);
 
     const frame = () => {
-      try {
-        this.update();
-      } catch (err) {
-        console.warn(err.message || err);
-      }
+      this.update();
+
       requestAnimationFrame(frame);
     };
 
@@ -75,6 +72,7 @@ module.exports.Tank = class Tank {
     if (this.left) {
       this.player.setAngle(this.player.angle - 0.04);
     }
+
     if (this.right) {
       this.player.setAngle(this.player.angle + 0.04);
     }
@@ -111,6 +109,10 @@ module.exports.Tank = class Tank {
   handleCollisions() {
     this.collisions.update();
     this.collisions.checkAll(({ a, b, overlapV }) => {
+      if (a === this.playerTurret || b === this.playerTurret) {
+        return;
+      }
+
       if (a.type === "Circle" || a === this.player) {
         a.setPosition(a.pos.x - overlapV.x, a.pos.y - overlapV.y);
       }
@@ -140,6 +142,23 @@ module.exports.Tank = class Tank {
       this.collisions.drawBVH(this.context);
       this.context.stroke();
     }
+
+    this.playerTurret.setPosition(this.player.x, this.player.y);
+    this.playerTurret.setAngle(this.player.angle);
+    this.playerTurret.updateAABB();
+
+    const hit = this.collisions.raycast(
+      this.playerTurret.start,
+      this.playerTurret.end,
+      (test) => test !== this.player
+    );
+
+    if (hit) {
+      this.context.strokeStyle = "#FF0000";
+      this.context.beginPath();
+      this.context.arc(hit.point.x, hit.point.y, 5, 0, 2 * Math.PI);
+      this.context.stroke();
+    }
   }
 
   createPlayer(x, y, size = 13) {
@@ -151,8 +170,16 @@ module.exports.Tank = class Tank {
     );
 
     this.player.center();
-
     this.player.velocity = 0;
+
+    this.playerTurret = this.collisions.createLine(
+      this.player.pos,
+      { x: this.player.pos.x + 140, y: this.player.pos.y },
+      0.2
+    );
+
+    this.playerTurret.translate(100, 0);
+    this.playerTurret.isTrigger = true;
   }
 
   scaleX(x) {

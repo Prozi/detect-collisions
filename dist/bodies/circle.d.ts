@@ -29,6 +29,16 @@ export declare class Circle extends SAT.Circle implements BBox, ICollider {
      * @param {number} radius
      */
     constructor(position: Vector, radius: number);
+    get x(): number;
+    /**
+     * updating this.pos.x by this.x = x updates AABB
+     */
+    set x(x: number);
+    get y(): number;
+    /**
+     * updating this.pos.y by this.y = y updates AABB
+     */
+    set y(y: number);
     /**
      * update position
      * @param {number} x

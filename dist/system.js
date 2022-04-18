@@ -18,6 +18,62 @@ class System extends rbush_1.default {
         super(...arguments);
         this.response = new sat_1.default.Response();
     }
+    // https://stackoverflow.com/questions/37224912/circle-line-segment-collision
+    static intersectLineCircle(line, circle) {
+        const v1 = { x: line.end.x - line.start.x, y: line.end.y - line.start.y };
+        const v2 = {
+            x: line.start.x - circle.pos.x,
+            y: line.start.y - circle.pos.y,
+        };
+        const b = (v1.x * v2.x + v1.y * v2.y) * -2;
+        const c = 2 * (v1.x * v1.x + v1.y * v1.y);
+        const d = Math.sqrt(b * b - 2 * c * (v2.x * v2.x + v2.y * v2.y - circle.r * circle.r));
+        if (isNaN(d)) {
+            // no intercept
+            return [];
+        }
+        const u1 = (b - d) / c; // these represent the unit distance of point one and two on the line
+        const u2 = (b + d) / c;
+        const results = []; // return array
+        if (u1 <= 1 && u1 >= 0) {
+            // add point if on the line segment
+            results.push({
+                x: line.start.x + v1.x * u1,
+                y: line.start.y + v1.y * u1,
+            });
+        }
+        if (u2 <= 1 && u2 >= 0) {
+            // second add point if on the line segment
+            results.push({
+                x: line.start.x + v1.x * u2,
+                y: line.start.y + v1.y * u2,
+            });
+        }
+        return results;
+    }
+    // https://stackoverflow.com/questions/9043805/test-if-two-lines-intersect-javascript-function
+    static intersectLineLine(line1, line2) {
+        const dX = line1.end.x - line1.start.x;
+        const dY = line1.end.y - line1.start.y;
+        const determinant = dX * (line2.end.y - line2.start.y) - (line2.end.x - line2.start.x) * dY;
+        if (determinant === 0) {
+            return null;
+        }
+        const lambda = ((line2.end.y - line2.start.y) * (line2.end.x - line1.start.x) +
+            (line2.start.x - line2.end.x) * (line2.end.y - line1.start.y)) /
+            determinant;
+        const gamma = ((line1.start.y - line1.end.y) * (line2.end.x - line1.start.x) +
+            dX * (line2.end.y - line1.start.y)) /
+            determinant;
+        // check if there is an intersection
+        if (!(0 <= lambda && lambda <= 1) || !(0 <= gamma && gamma <= 1)) {
+            return null;
+        }
+        return {
+            x: line1.start.x + lambda * dX,
+            y: line1.start.y + lambda * dY,
+        };
+    }
     /**
      * draw bodies
      * @param {CanvasRenderingContext2D} context
@@ -153,6 +209,42 @@ class System extends rbush_1.default {
         if (body.type !== model_1.Types.Circle && candidate.type !== model_1.Types.Circle) {
             return sat_1.default.testPolygonPolygon(body, candidate, this.response);
         }
+    }
+    /**
+     * raycast to get collider of ray from start to end
+     * @param {Vector} start {x, y}
+     * @param {Vector} end {x, y}
+     * @returns {TBody}
+     */
+    raycast(start, end, allowCollider = () => true) {
+        const ray = this.createLine(start, end);
+        const colliders = this.getPotentials(ray).filter((potential) => this.checkCollision(ray, potential) && allowCollider(potential));
+        this.remove(ray);
+        const sort = (0, utils_1.closest)(start);
+        const results = [];
+        colliders.forEach((collider) => {
+            switch (collider.type) {
+                case model_1.Types.Circle: {
+                    const points = System.intersectLineCircle(ray, collider);
+                    results.push(...points.map((point) => ({ point, collider })));
+                    break;
+                }
+                default: {
+                    const points = collider.calcPoints
+                        .map((to, index) => {
+                        const from = index
+                            ? collider.calcPoints[index - 1]
+                            : collider.calcPoints[collider.calcPoints.length - 1];
+                        const line = new _1.Line({ x: from.x + collider.pos.x, y: from.y + collider.pos.y }, { x: to.x + collider.pos.x, y: to.y + collider.pos.y });
+                        return System.intersectLineLine(ray, line);
+                    })
+                        .filter((test) => !!test);
+                    results.push(...points.map((point) => ({ point, collider })));
+                    break;
+                }
+            }
+        });
+        return results.sort(sort)[0];
     }
     /**
      * create point

@@ -11,5 +11,7 @@ export declare class Line extends Polygon {
      * @param {Vector} end {x, y}
      */
     constructor(start: Vector, end: Vector);
+    get start(): Vector;
+    get end(): Vector;
 }
 //# sourceMappingURL=line.d.ts.map

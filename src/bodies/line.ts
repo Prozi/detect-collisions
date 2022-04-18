@@ -21,8 +21,24 @@ export class Line extends Polygon {
       { x: (end.x - start.x) / 2, y: (end.y - start.y) / 2 },
     ]);
 
-    if (!end) {
+    if (this.calcPoints.length === 1 || !end) {
+      console.error({ start, end });
+
       throw new Error("No end point for line provided");
     }
+  }
+
+  get start(): Vector {
+    return {
+      x: this.x + this.calcPoints[0].x,
+      y: this.y + this.calcPoints[0].y,
+    };
+  }
+
+  get end(): Vector {
+    return {
+      x: this.x + this.calcPoints[1].x,
+      y: this.y + this.calcPoints[1].y,
+    };
   }
 }

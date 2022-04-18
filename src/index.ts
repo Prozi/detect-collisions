@@ -6,3 +6,4 @@ export * from "./bodies/box";
 export * from "./bodies/point";
 export * from "./bodies/line";
 export * from "./system";
+export * from "./utils";

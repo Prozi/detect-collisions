@@ -21,9 +21,22 @@ class Line extends polygon_1.Polygon {
             { x: (end.x - start.x) / 2, y: (end.y - start.y) / 2 },
         ]);
         this.type = model_1.Types.Line;
-        if (!end) {
+        if (this.calcPoints.length === 1 || !end) {
+            console.error({ start, end });
             throw new Error("No end point for line provided");
         }
+    }
+    get start() {
+        return {
+            x: this.x + this.calcPoints[0].x,
+            y: this.y + this.calcPoints[0].y,
+        };
+    }
+    get end() {
+        return {
+            x: this.x + this.calcPoints[1].x,
+            y: this.y + this.calcPoints[1].y,
+        };
     }
 }
 exports.Line = Line;

@@ -8,6 +8,8 @@ import { Oval } from "./bodies/oval";
  */
 export declare class System extends RBush<TBody> {
     response: SAT.Response;
+    static intersectLineCircle(line: Line, circle: Circle): Vector[];
+    static intersectLineLine(line1: Line, line2: Line): Vector | null;
     /**
      * draw bodies
      * @param {CanvasRenderingContext2D} context
@@ -65,6 +67,16 @@ export declare class System extends RBush<TBody> {
      * @param {object} candidate
      */
     checkCollision(body: TBody, candidate: TBody): boolean;
+    /**
+     * raycast to get collider of ray from start to end
+     * @param {Vector} start {x, y}
+     * @param {Vector} end {x, y}
+     * @returns {TBody}
+     */
+    raycast(start: Vector, end: Vector, allowCollider?: (testCollider: TBody) => boolean): {
+        point: Vector;
+        collider: TBody;
+    };
     /**
      * create point
      * @param {Vector} position {x, y}
