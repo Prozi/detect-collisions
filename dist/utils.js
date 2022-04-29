@@ -69,7 +69,18 @@ exports.distance = distance;
  * @returns {function}
  */
 function closest(from) {
-    return ({ point: a }, { point: b }) => distance(from, a) - distance(from, b);
+    return (a, b) => {
+        if (!a && !b) {
+            return 0;
+        }
+        if (!a) {
+            return -Infinity;
+        }
+        if (!b) {
+            return Infinity;
+        }
+        return distance(from, a.point) - distance(from, b.point);
+    };
 }
 exports.closest = closest;
 /**
@@ -115,3 +126,4 @@ function dashLineTo(context, fromX, fromY, toX, toY, dash = 2, gap = 4) {
     }
 }
 exports.dashLineTo = dashLineTo;
+//# sourceMappingURL=utils.js.map

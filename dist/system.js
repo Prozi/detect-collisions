@@ -8,7 +8,11 @@ const sat_1 = __importDefault(require("sat"));
 const rbush_1 = __importDefault(require("rbush"));
 const model_1 = require("./model");
 const utils_1 = require("./utils");
-const _1 = require(".");
+const point_1 = require("./bodies/point");
+const circle_1 = require("./bodies/circle");
+const box_1 = require("./bodies/box");
+const polygon_1 = require("./bodies/polygon");
+const line_1 = require("./bodies/line");
 const oval_1 = require("./bodies/oval");
 /**
  * collision system
@@ -89,14 +93,14 @@ class System extends rbush_1.default {
      */
     drawBVH(context) {
         this.data.children.forEach(({ minX, maxX, minY, maxY }) => {
-            _1.Polygon.prototype.draw.call({
+            polygon_1.Polygon.prototype.draw.call({
                 pos: { x: minX, y: minY },
                 calcPoints: (0, utils_1.createBox)(maxX - minX, maxY - minY),
             }, context);
         });
         this.all().forEach((body) => {
             const { pos, w, h } = body.getAABBAsBox();
-            _1.Polygon.prototype.draw.call({
+            polygon_1.Polygon.prototype.draw.call({
                 pos,
                 calcPoints: (0, utils_1.createBox)(w, h),
             }, context);
@@ -121,7 +125,7 @@ class System extends rbush_1.default {
      * @returns System
      */
     remove(body, equals) {
-        body.system = null;
+        body.system = undefined;
         return super.remove(body, equals);
     }
     /**
@@ -209,6 +213,7 @@ class System extends rbush_1.default {
         if (body.type !== model_1.Types.Circle && candidate.type !== model_1.Types.Circle) {
             return sat_1.default.testPolygonPolygon(body, candidate, this.response);
         }
+        throw Error("Not implemented");
     }
     /**
      * raycast to get collider of ray from start to end
@@ -235,7 +240,7 @@ class System extends rbush_1.default {
                         const from = index
                             ? collider.calcPoints[index - 1]
                             : collider.calcPoints[collider.calcPoints.length - 1];
-                        const line = new _1.Line({ x: from.x + collider.pos.x, y: from.y + collider.pos.y }, { x: to.x + collider.pos.x, y: to.y + collider.pos.y });
+                        const line = new line_1.Line({ x: from.x + collider.pos.x, y: from.y + collider.pos.y }, { x: to.x + collider.pos.x, y: to.y + collider.pos.y });
                         return System.intersectLineLine(ray, line);
                     })
                         .filter((test) => !!test);
@@ -251,7 +256,7 @@ class System extends rbush_1.default {
      * @param {Vector} position {x, y}
      */
     createPoint(position) {
-        const point = new _1.Point(position);
+        const point = new point_1.Point(position);
         this.insert(point);
         return point;
     }
@@ -261,7 +266,7 @@ class System extends rbush_1.default {
      * @param {Vector} end {x, y}
      */
     createLine(start, end, angle = 0) {
-        const line = new _1.Line(start, end);
+        const line = new line_1.Line(start, end);
         line.setAngle(angle);
         this.insert(line);
         return line;
@@ -272,7 +277,7 @@ class System extends rbush_1.default {
      * @param {number} radius
      */
     createCircle(position, radius) {
-        const circle = new _1.Circle(position, radius);
+        const circle = new circle_1.Circle(position, radius);
         this.insert(circle);
         return circle;
     }
@@ -284,7 +289,7 @@ class System extends rbush_1.default {
      * @param {number} angle
      */
     createBox(position, width, height, angle = 0) {
-        const box = new _1.Box(position, width, height);
+        const box = new box_1.Box(position, width, height);
         box.setAngle(angle);
         this.insert(box);
         return box;
@@ -310,10 +315,11 @@ class System extends rbush_1.default {
      * @param {number} angle
      */
     createPolygon(position, points, angle = 0) {
-        const polygon = new _1.Polygon(position, points);
+        const polygon = new polygon_1.Polygon(position, points);
         polygon.setAngle(angle);
         this.insert(polygon);
         return polygon;
     }
 }
 exports.System = System;
+//# sourceMappingURL=system.js.map

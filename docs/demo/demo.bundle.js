@@ -1,11 +1,3 @@
-/*
- * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
- * This devtool is neither made for production nor for readable output files.
- * It uses "eval()" calls to create a separate source file in the browser devtools.
- * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
- * or disable the default devtool with "devtool: false".
- * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
- */
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
@@ -16,7 +8,79 @@
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
-eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.Box = void 0;\nconst model_1 = __webpack_require__(/*! ../model */ \"./dist/model.js\");\nconst utils_1 = __webpack_require__(/*! ../utils */ \"./dist/utils.js\");\nconst polygon_1 = __webpack_require__(/*! ./polygon */ \"./dist/bodies/polygon.js\");\n/**\n * collider - box\n */\nclass Box extends polygon_1.Polygon {\n    /**\n     * collider - box\n     * @param {Vector} position {x, y}\n     * @param {number} width\n     * @param {number} height\n     */\n    constructor(position, width, height) {\n        super(position, (0, utils_1.createBox)(width, height));\n        this.type = model_1.Types.Box;\n        this._width = width;\n        this._height = height;\n    }\n    /**\n     * get box width\n     */\n    get width() {\n        return this._width;\n    }\n    /**\n     * set box width, update points\n     */\n    set width(width) {\n        this._width = width;\n        this.setPoints((0, utils_1.createBox)(this._width, this._height));\n    }\n    /**\n     * get box height\n     */\n    get height() {\n        return this._height;\n    }\n    /**\n     * set box height, update points\n     */\n    set height(height) {\n        this._height = height;\n        this.setPoints((0, utils_1.createBox)(this._width, this._height));\n    }\n    getCentroidWithoutRotation() {\n        // reset angle for get centroid\n        const angle = this.angle;\n        this.setAngle(0);\n        const centroid = this.getCentroid();\n        // revert angle change\n        this.setAngle(angle);\n        return centroid;\n    }\n    /**\n     * reCenters the box anchor\n     */\n    center() {\n        const firstPoint = this.points[0];\n        // skip if has original points translated already\n        if (firstPoint.x !== 0 || firstPoint.y !== 0) {\n            return;\n        }\n        const { x, y } = this.getCentroidWithoutRotation();\n        this.translate(-x, -y);\n        this.setPosition(this.pos.x + x, this.pos.y + y);\n    }\n}\nexports.Box = Box;\n\n\n//# sourceURL=webpack://detect-collisions/./dist/bodies/box.js?");
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Box = void 0;
+const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils.js");
+const polygon_1 = __webpack_require__(/*! ./polygon */ "./dist/bodies/polygon.js");
+/**
+ * collider - box
+ */
+class Box extends polygon_1.Polygon {
+    /**
+     * collider - box
+     * @param {Vector} position {x, y}
+     * @param {number} width
+     * @param {number} height
+     */
+    constructor(position, width, height) {
+        super(position, (0, utils_1.createBox)(width, height));
+        this.type = model_1.Types.Box;
+        this._width = width;
+        this._height = height;
+    }
+    /**
+     * get box width
+     */
+    get width() {
+        return this._width;
+    }
+    /**
+     * set box width, update points
+     */
+    set width(width) {
+        this._width = width;
+        this.setPoints((0, utils_1.createBox)(this._width, this._height));
+    }
+    /**
+     * get box height
+     */
+    get height() {
+        return this._height;
+    }
+    /**
+     * set box height, update points
+     */
+    set height(height) {
+        this._height = height;
+        this.setPoints((0, utils_1.createBox)(this._width, this._height));
+    }
+    getCentroidWithoutRotation() {
+        // reset angle for get centroid
+        const angle = this.angle;
+        this.setAngle(0);
+        const centroid = this.getCentroid();
+        // revert angle change
+        this.setAngle(angle);
+        return centroid;
+    }
+    /**
+     * reCenters the box anchor
+     */
+    center() {
+        const firstPoint = this.points[0];
+        // skip if has original points translated already
+        if (firstPoint.x !== 0 || firstPoint.y !== 0) {
+            return;
+        }
+        const { x, y } = this.getCentroidWithoutRotation();
+        this.translate(-x, -y);
+        this.setPosition(this.pos.x + x, this.pos.y + y);
+    }
+}
+exports.Box = Box;
+//# sourceMappingURL=box.js.map
 
 /***/ }),
 
@@ -27,7 +91,97 @@ eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexpo
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
-eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.Circle = void 0;\nconst sat_1 = __importDefault(__webpack_require__(/*! sat */ \"./node_modules/sat/SAT.js\"));\nconst model_1 = __webpack_require__(/*! ../model */ \"./dist/model.js\");\nconst utils_1 = __webpack_require__(/*! ../utils */ \"./dist/utils.js\");\n/**\n * collider - circle\n */\nclass Circle extends sat_1.default.Circle {\n    /**\n     * collider - circle\n     * @param {Vector} position {x, y}\n     * @param {number} radius\n     */\n    constructor(position, radius) {\n        super((0, utils_1.ensureVectorPoint)(position), radius);\n        this.type = model_1.Types.Circle;\n        this.updateAABB();\n    }\n    get x() {\n        return this.pos.x;\n    }\n    /**\n     * updating this.pos.x by this.x = x updates AABB\n     */\n    set x(x) {\n        var _a;\n        this.pos.x = x;\n        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);\n    }\n    get y() {\n        return this.pos.y;\n    }\n    /**\n     * updating this.pos.y by this.y = y updates AABB\n     */\n    set y(y) {\n        var _a;\n        this.pos.y = y;\n        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);\n    }\n    /**\n     * update position\n     * @param {number} x\n     * @param {number} y\n     */\n    setPosition(x, y) {\n        var _a;\n        this.pos.x = x;\n        this.pos.y = y;\n        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);\n    }\n    /**\n     * Updates Bounding Box of collider\n     */\n    updateAABB() {\n        this.minX = this.pos.x - this.r;\n        this.minY = this.pos.y - this.r;\n        this.maxX = this.pos.x + this.r;\n        this.maxY = this.pos.y + this.r;\n    }\n    /**\n     * Draws collider on a CanvasRenderingContext2D's current path\n     * @param {CanvasRenderingContext2D} context The canvas context to draw on\n     */\n    draw(context) {\n        const radius = this.r;\n        if (this.isTrigger) {\n            const max = Math.max(8, radius);\n            for (let i = 0; i < max; i++) {\n                const arc = (i / max) * 2 * Math.PI;\n                const arcPrev = ((i - 1) / max) * 2 * Math.PI;\n                const fromX = this.pos.x + Math.cos(arcPrev) * radius;\n                const fromY = this.pos.y + Math.sin(arcPrev) * radius;\n                const toX = this.pos.x + Math.cos(arc) * radius;\n                const toY = this.pos.y + Math.sin(arc) * radius;\n                (0, utils_1.dashLineTo)(context, fromX, fromY, toX, toY);\n            }\n        }\n        else {\n            context.moveTo(this.pos.x + radius, this.pos.y);\n            context.arc(this.pos.x, this.pos.y, radius, 0, Math.PI * 2);\n        }\n    }\n}\nexports.Circle = Circle;\n\n\n//# sourceURL=webpack://detect-collisions/./dist/bodies/circle.js?");
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Circle = void 0;
+const sat_1 = __importDefault(__webpack_require__(/*! sat */ "./node_modules/sat/SAT.js"));
+const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils.js");
+/**
+ * collider - circle
+ */
+class Circle extends sat_1.default.Circle {
+    /**
+     * collider - circle
+     * @param {Vector} position {x, y}
+     * @param {number} radius
+     */
+    constructor(position, radius) {
+        super((0, utils_1.ensureVectorPoint)(position), radius);
+        this.type = model_1.Types.Circle;
+        this.updateAABB();
+    }
+    get x() {
+        return this.pos.x;
+    }
+    /**
+     * updating this.pos.x by this.x = x updates AABB
+     */
+    set x(x) {
+        var _a;
+        this.pos.x = x;
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+    }
+    get y() {
+        return this.pos.y;
+    }
+    /**
+     * updating this.pos.y by this.y = y updates AABB
+     */
+    set y(y) {
+        var _a;
+        this.pos.y = y;
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+    }
+    /**
+     * update position
+     * @param {number} x
+     * @param {number} y
+     */
+    setPosition(x, y) {
+        var _a;
+        this.pos.x = x;
+        this.pos.y = y;
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+    }
+    /**
+     * Updates Bounding Box of collider
+     */
+    updateAABB() {
+        this.minX = this.pos.x - this.r;
+        this.minY = this.pos.y - this.r;
+        this.maxX = this.pos.x + this.r;
+        this.maxY = this.pos.y + this.r;
+    }
+    /**
+     * Draws collider on a CanvasRenderingContext2D's current path
+     * @param {CanvasRenderingContext2D} context The canvas context to draw on
+     */
+    draw(context) {
+        const radius = this.r;
+        if (this.isTrigger) {
+            const max = Math.max(8, radius);
+            for (let i = 0; i < max; i++) {
+                const arc = (i / max) * 2 * Math.PI;
+                const arcPrev = ((i - 1) / max) * 2 * Math.PI;
+                const fromX = this.pos.x + Math.cos(arcPrev) * radius;
+                const fromY = this.pos.y + Math.sin(arcPrev) * radius;
+                const toX = this.pos.x + Math.cos(arc) * radius;
+                const toY = this.pos.y + Math.sin(arc) * radius;
+                (0, utils_1.dashLineTo)(context, fromX, fromY, toX, toY);
+            }
+        }
+        else {
+            context.moveTo(this.pos.x + radius, this.pos.y);
+            context.arc(this.pos.x, this.pos.y, radius, 0, Math.PI * 2);
+        }
+    }
+}
+exports.Circle = Circle;
+//# sourceMappingURL=circle.js.map
 
 /***/ }),
 
@@ -38,7 +192,49 @@ eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
-eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.Line = void 0;\nconst model_1 = __webpack_require__(/*! ../model */ \"./dist/model.js\");\nconst polygon_1 = __webpack_require__(/*! ./polygon */ \"./dist/bodies/polygon.js\");\n/**\n * collider - line\n */\nclass Line extends polygon_1.Polygon {\n    /**\n     * collider - line from start to end\n     * @param {Vector} start {x, y}\n     * @param {Vector} end {x, y}\n     */\n    constructor(start, end) {\n        // position at middle of (start, end)\n        super({ x: (start.x + end.x) / 2, y: (start.y + end.y) / 2 }, [\n            // first point at minus half length\n            { x: -(end.x - start.x) / 2, y: -(end.y - start.y) / 2 },\n            // second point at plus half length\n            { x: (end.x - start.x) / 2, y: (end.y - start.y) / 2 },\n        ]);\n        this.type = model_1.Types.Line;\n        if (this.calcPoints.length === 1 || !end) {\n            console.error({ start, end });\n            throw new Error(\"No end point for line provided\");\n        }\n    }\n    get start() {\n        return {\n            x: this.x + this.calcPoints[0].x,\n            y: this.y + this.calcPoints[0].y,\n        };\n    }\n    get end() {\n        return {\n            x: this.x + this.calcPoints[1].x,\n            y: this.y + this.calcPoints[1].y,\n        };\n    }\n}\nexports.Line = Line;\n\n\n//# sourceURL=webpack://detect-collisions/./dist/bodies/line.js?");
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Line = void 0;
+const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
+const polygon_1 = __webpack_require__(/*! ./polygon */ "./dist/bodies/polygon.js");
+/**
+ * collider - line
+ */
+class Line extends polygon_1.Polygon {
+    /**
+     * collider - line from start to end
+     * @param {Vector} start {x, y}
+     * @param {Vector} end {x, y}
+     */
+    constructor(start, end) {
+        // position at middle of (start, end)
+        super({ x: (start.x + end.x) / 2, y: (start.y + end.y) / 2 }, [
+            // first point at minus half length
+            { x: -(end.x - start.x) / 2, y: -(end.y - start.y) / 2 },
+            // second point at plus half length
+            { x: (end.x - start.x) / 2, y: (end.y - start.y) / 2 },
+        ]);
+        this.type = model_1.Types.Line;
+        if (this.calcPoints.length === 1 || !end) {
+            console.error({ start, end });
+            throw new Error("No end point for line provided");
+        }
+    }
+    get start() {
+        return {
+            x: this.x + this.calcPoints[0].x,
+            y: this.y + this.calcPoints[0].y,
+        };
+    }
+    get end() {
+        return {
+            x: this.x + this.calcPoints[1].x,
+            y: this.y + this.calcPoints[1].y,
+        };
+    }
+}
+exports.Line = Line;
+//# sourceMappingURL=line.js.map
 
 /***/ }),
 
@@ -49,7 +245,72 @@ eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexpo
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
-eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.Oval = void 0;\nconst model_1 = __webpack_require__(/*! ../model */ \"./dist/model.js\");\nconst utils_1 = __webpack_require__(/*! ../utils */ \"./dist/utils.js\");\nconst polygon_1 = __webpack_require__(/*! ./polygon */ \"./dist/bodies/polygon.js\");\n/**\n * collider - oval\n */\nclass Oval extends polygon_1.Polygon {\n    /**\n     * collider - oval\n     * @param {Vector} position {x, y}\n     * @param {number} radiusX\n     * @param {number} radiusY defaults to radiusX\n     * @param {number} step precision division >= 1px\n     */\n    constructor(position, radiusX, radiusY = radiusX, step = 1) {\n        super(position, (0, utils_1.createOval)(radiusX, radiusY, step));\n        this.type = model_1.Types.Oval;\n        this._radiusX = radiusX;\n        this._radiusY = radiusY;\n        this._step = step;\n    }\n    /**\n     * get oval step number\n     */\n    get step() {\n        return this._step;\n    }\n    /**\n     * set oval step number\n     */\n    set step(step) {\n        this._step = step;\n        this.setPoints((0, utils_1.createOval)(this._radiusX, this._radiusY, this._step));\n    }\n    /**\n     * get oval radiusX\n     */\n    get radiusX() {\n        return this._radiusX;\n    }\n    /**\n     * set oval radiusX, update points\n     */\n    set radiusX(radiusX) {\n        this._radiusX = radiusX;\n        this.setPoints((0, utils_1.createOval)(this._radiusX, this._radiusY, this._step));\n    }\n    /**\n     * get oval radiusY\n     */\n    get radiusY() {\n        return this._radiusY;\n    }\n    /**\n     * set oval radiusY, update points\n     */\n    set radiusY(radiusY) {\n        this._radiusY = radiusY;\n        this.setPoints((0, utils_1.createOval)(this._radiusX, this._radiusY, this._step));\n    }\n}\nexports.Oval = Oval;\n\n\n//# sourceURL=webpack://detect-collisions/./dist/bodies/oval.js?");
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Oval = void 0;
+const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils.js");
+const polygon_1 = __webpack_require__(/*! ./polygon */ "./dist/bodies/polygon.js");
+/**
+ * collider - oval
+ */
+class Oval extends polygon_1.Polygon {
+    /**
+     * collider - oval
+     * @param {Vector} position {x, y}
+     * @param {number} radiusX
+     * @param {number} radiusY defaults to radiusX
+     * @param {number} step precision division >= 1px
+     */
+    constructor(position, radiusX, radiusY = radiusX, step = 1) {
+        super(position, (0, utils_1.createOval)(radiusX, radiusY, step));
+        this.type = model_1.Types.Oval;
+        this._radiusX = radiusX;
+        this._radiusY = radiusY;
+        this._step = step;
+    }
+    /**
+     * get oval step number
+     */
+    get step() {
+        return this._step;
+    }
+    /**
+     * set oval step number
+     */
+    set step(step) {
+        this._step = step;
+        this.setPoints((0, utils_1.createOval)(this._radiusX, this._radiusY, this._step));
+    }
+    /**
+     * get oval radiusX
+     */
+    get radiusX() {
+        return this._radiusX;
+    }
+    /**
+     * set oval radiusX, update points
+     */
+    set radiusX(radiusX) {
+        this._radiusX = radiusX;
+        this.setPoints((0, utils_1.createOval)(this._radiusX, this._radiusY, this._step));
+    }
+    /**
+     * get oval radiusY
+     */
+    get radiusY() {
+        return this._radiusY;
+    }
+    /**
+     * set oval radiusY, update points
+     */
+    set radiusY(radiusY) {
+        this._radiusY = radiusY;
+        this.setPoints((0, utils_1.createOval)(this._radiusX, this._radiusY, this._step));
+    }
+}
+exports.Oval = Oval;
+//# sourceMappingURL=oval.js.map
 
 /***/ }),
 
@@ -60,7 +321,27 @@ eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexpo
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
-eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.Point = void 0;\nconst box_1 = __webpack_require__(/*! ./box */ \"./dist/bodies/box.js\");\nconst model_1 = __webpack_require__(/*! ../model */ \"./dist/model.js\");\nconst utils_1 = __webpack_require__(/*! ../utils */ \"./dist/utils.js\");\n/**\n * collider - point (very tiny box)\n */\nclass Point extends box_1.Box {\n    /**\n     * collider - point (very tiny box)\n     * @param {Vector} position {x, y}\n     */\n    constructor(position) {\n        super((0, utils_1.ensureVectorPoint)(position), 0.1, 0.1);\n        this.type = model_1.Types.Point;\n    }\n}\nexports.Point = Point;\n\n\n//# sourceURL=webpack://detect-collisions/./dist/bodies/point.js?");
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Point = void 0;
+const box_1 = __webpack_require__(/*! ./box */ "./dist/bodies/box.js");
+const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils.js");
+/**
+ * collider - point (very tiny box)
+ */
+class Point extends box_1.Box {
+    /**
+     * collider - point (very tiny box)
+     * @param {Vector} position {x, y}
+     */
+    constructor(position) {
+        super((0, utils_1.ensureVectorPoint)(position), 0.1, 0.1);
+        this.type = model_1.Types.Point;
+    }
+}
+exports.Point = Point;
+//# sourceMappingURL=point.js.map
 
 /***/ }),
 
@@ -71,7 +352,109 @@ eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexpo
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
-eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.Polygon = void 0;\nconst sat_1 = __importDefault(__webpack_require__(/*! sat */ \"./node_modules/sat/SAT.js\"));\nconst model_1 = __webpack_require__(/*! ../model */ \"./dist/model.js\");\nconst utils_1 = __webpack_require__(/*! ../utils */ \"./dist/utils.js\");\n/**\n * collider - polygon\n */\nclass Polygon extends sat_1.default.Polygon {\n    /**\n     * collider - polygon\n     * @param {Vector} position {x, y}\n     * @param {Vector[]} points\n     */\n    constructor(position, points) {\n        super((0, utils_1.ensureVectorPoint)(position), (0, utils_1.ensurePolygonPoints)(points));\n        this.type = model_1.Types.Polygon;\n        if (!(points === null || points === void 0 ? void 0 : points.length)) {\n            throw new Error(\"No points in polygon\");\n        }\n        this.updateAABB();\n    }\n    get x() {\n        return this.pos.x;\n    }\n    /**\n     * updating this.pos.x by this.x = x updates AABB\n     */\n    set x(x) {\n        var _a;\n        this.pos.x = x;\n        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);\n    }\n    get y() {\n        return this.pos.y;\n    }\n    /**\n     * updating this.pos.y by this.y = y updates AABB\n     */\n    set y(y) {\n        var _a;\n        this.pos.y = y;\n        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);\n    }\n    /**\n     * update position\n     * @param {number} x\n     * @param {number} y\n     */\n    setPosition(x, y) {\n        var _a;\n        this.pos.x = x;\n        this.pos.y = y;\n        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);\n    }\n    /**\n     * Updates Bounding Box of collider\n     */\n    updateAABB() {\n        const { pos, w, h } = this.getAABBAsBox();\n        this.minX = pos.x;\n        this.minY = pos.y;\n        this.maxX = pos.x + w;\n        this.maxY = pos.y + h;\n    }\n    /**\n     * Draws collider on a CanvasRenderingContext2D's current path\n     * @param {CanvasRenderingContext2D} context The canvas context to draw on\n     */\n    draw(context) {\n        const points = [...this.calcPoints, this.calcPoints[0]];\n        points.forEach((point, index) => {\n            const toX = this.pos.x + point.x;\n            const toY = this.pos.y + point.y;\n            const prev = this.calcPoints[index - 1] ||\n                this.calcPoints[this.calcPoints.length - 1];\n            if (!index) {\n                if (this.calcPoints.length === 1) {\n                    context.arc(toX, toY, 1, 0, Math.PI * 2);\n                }\n                else {\n                    context.moveTo(toX, toY);\n                }\n            }\n            else if (this.calcPoints.length > 1) {\n                if (this.isTrigger) {\n                    const fromX = this.pos.x + prev.x;\n                    const fromY = this.pos.y + prev.y;\n                    (0, utils_1.dashLineTo)(context, fromX, fromY, toX, toY);\n                }\n                else {\n                    context.lineTo(toX, toY);\n                }\n            }\n        });\n    }\n}\nexports.Polygon = Polygon;\n\n\n//# sourceURL=webpack://detect-collisions/./dist/bodies/polygon.js?");
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Polygon = void 0;
+const sat_1 = __importDefault(__webpack_require__(/*! sat */ "./node_modules/sat/SAT.js"));
+const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils.js");
+/**
+ * collider - polygon
+ */
+class Polygon extends sat_1.default.Polygon {
+    /**
+     * collider - polygon
+     * @param {Vector} position {x, y}
+     * @param {Vector[]} points
+     */
+    constructor(position, points) {
+        super((0, utils_1.ensureVectorPoint)(position), (0, utils_1.ensurePolygonPoints)(points));
+        this.type = model_1.Types.Polygon;
+        if (!(points === null || points === void 0 ? void 0 : points.length)) {
+            throw new Error("No points in polygon");
+        }
+        this.updateAABB();
+    }
+    get x() {
+        return this.pos.x;
+    }
+    /**
+     * updating this.pos.x by this.x = x updates AABB
+     */
+    set x(x) {
+        var _a;
+        this.pos.x = x;
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+    }
+    get y() {
+        return this.pos.y;
+    }
+    /**
+     * updating this.pos.y by this.y = y updates AABB
+     */
+    set y(y) {
+        var _a;
+        this.pos.y = y;
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+    }
+    /**
+     * update position
+     * @param {number} x
+     * @param {number} y
+     */
+    setPosition(x, y) {
+        var _a;
+        this.pos.x = x;
+        this.pos.y = y;
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+    }
+    /**
+     * Updates Bounding Box of collider
+     */
+    updateAABB() {
+        const { pos, w, h } = this.getAABBAsBox();
+        this.minX = pos.x;
+        this.minY = pos.y;
+        this.maxX = pos.x + w;
+        this.maxY = pos.y + h;
+    }
+    /**
+     * Draws collider on a CanvasRenderingContext2D's current path
+     * @param {CanvasRenderingContext2D} context The canvas context to draw on
+     */
+    draw(context) {
+        const points = [...this.calcPoints, this.calcPoints[0]];
+        points.forEach((point, index) => {
+            const toX = this.pos.x + point.x;
+            const toY = this.pos.y + point.y;
+            const prev = this.calcPoints[index - 1] ||
+                this.calcPoints[this.calcPoints.length - 1];
+            if (!index) {
+                if (this.calcPoints.length === 1) {
+                    context.arc(toX, toY, 1, 0, Math.PI * 2);
+                }
+                else {
+                    context.moveTo(toX, toY);
+                }
+            }
+            else if (this.calcPoints.length > 1) {
+                if (this.isTrigger) {
+                    const fromX = this.pos.x + prev.x;
+                    const fromY = this.pos.y + prev.y;
+                    (0, utils_1.dashLineTo)(context, fromX, fromY, toX, toY);
+                }
+                else {
+                    context.lineTo(toX, toY);
+                }
+            }
+        });
+    }
+}
+exports.Polygon = Polygon;
+//# sourceMappingURL=polygon.js.map
 
 /***/ }),
 
@@ -82,7 +465,32 @@ eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
-eval("\nvar __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {\n    if (k2 === undefined) k2 = k;\n    var desc = Object.getOwnPropertyDescriptor(m, k);\n    if (!desc || (\"get\" in desc ? !m.__esModule : desc.writable || desc.configurable)) {\n      desc = { enumerable: true, get: function() { return m[k]; } };\n    }\n    Object.defineProperty(o, k2, desc);\n}) : (function(o, m, k, k2) {\n    if (k2 === undefined) k2 = k;\n    o[k2] = m[k];\n}));\nvar __exportStar = (this && this.__exportStar) || function(m, exports) {\n    for (var p in m) if (p !== \"default\" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\n__exportStar(__webpack_require__(/*! ./model */ \"./dist/model.js\"), exports);\n__exportStar(__webpack_require__(/*! ./bodies/circle */ \"./dist/bodies/circle.js\"), exports);\n__exportStar(__webpack_require__(/*! ./bodies/oval */ \"./dist/bodies/oval.js\"), exports);\n__exportStar(__webpack_require__(/*! ./bodies/polygon */ \"./dist/bodies/polygon.js\"), exports);\n__exportStar(__webpack_require__(/*! ./bodies/box */ \"./dist/bodies/box.js\"), exports);\n__exportStar(__webpack_require__(/*! ./bodies/point */ \"./dist/bodies/point.js\"), exports);\n__exportStar(__webpack_require__(/*! ./bodies/line */ \"./dist/bodies/line.js\"), exports);\n__exportStar(__webpack_require__(/*! ./system */ \"./dist/system.js\"), exports);\n__exportStar(__webpack_require__(/*! ./utils */ \"./dist/utils.js\"), exports);\n\n\n//# sourceURL=webpack://detect-collisions/./dist/index.js?");
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(/*! ./model */ "./dist/model.js"), exports);
+__exportStar(__webpack_require__(/*! ./bodies/circle */ "./dist/bodies/circle.js"), exports);
+__exportStar(__webpack_require__(/*! ./bodies/oval */ "./dist/bodies/oval.js"), exports);
+__exportStar(__webpack_require__(/*! ./bodies/polygon */ "./dist/bodies/polygon.js"), exports);
+__exportStar(__webpack_require__(/*! ./bodies/box */ "./dist/bodies/box.js"), exports);
+__exportStar(__webpack_require__(/*! ./bodies/point */ "./dist/bodies/point.js"), exports);
+__exportStar(__webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js"), exports);
+__exportStar(__webpack_require__(/*! ./system */ "./dist/system.js"), exports);
+__exportStar(__webpack_require__(/*! ./utils */ "./dist/utils.js"), exports);
+//# sourceMappingURL=index.js.map
 
 /***/ }),
 
@@ -93,7 +501,24 @@ eval("\nvar __createBinding = (this && this.__createBinding) || (Object.create ?
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
-eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.Types = exports.Response = void 0;\nvar sat_1 = __webpack_require__(/*! sat */ \"./node_modules/sat/SAT.js\");\nObject.defineProperty(exports, \"Response\", ({ enumerable: true, get: function () { return sat_1.Response; } }));\n/**\n * types\n */\nvar Types;\n(function (Types) {\n    Types[\"Oval\"] = \"Oval\";\n    Types[\"Line\"] = \"Line\";\n    Types[\"Circle\"] = \"Circle\";\n    Types[\"Box\"] = \"Box\";\n    Types[\"Point\"] = \"Point\";\n    Types[\"Polygon\"] = \"Polygon\";\n})(Types = exports.Types || (exports.Types = {}));\n\n\n//# sourceURL=webpack://detect-collisions/./dist/model.js?");
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Types = exports.Response = void 0;
+var sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
+Object.defineProperty(exports, "Response", ({ enumerable: true, get: function () { return sat_1.Response; } }));
+/**
+ * types
+ */
+var Types;
+(function (Types) {
+    Types["Oval"] = "Oval";
+    Types["Line"] = "Line";
+    Types["Circle"] = "Circle";
+    Types["Box"] = "Box";
+    Types["Point"] = "Point";
+    Types["Polygon"] = "Polygon";
+})(Types = exports.Types || (exports.Types = {}));
+//# sourceMappingURL=model.js.map
 
 /***/ }),
 
@@ -104,7 +529,331 @@ eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexpo
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
-eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.System = void 0;\nconst sat_1 = __importDefault(__webpack_require__(/*! sat */ \"./node_modules/sat/SAT.js\"));\nconst rbush_1 = __importDefault(__webpack_require__(/*! rbush */ \"./node_modules/rbush/rbush.min.js\"));\nconst model_1 = __webpack_require__(/*! ./model */ \"./dist/model.js\");\nconst utils_1 = __webpack_require__(/*! ./utils */ \"./dist/utils.js\");\nconst _1 = __webpack_require__(/*! . */ \"./dist/index.js\");\nconst oval_1 = __webpack_require__(/*! ./bodies/oval */ \"./dist/bodies/oval.js\");\n/**\n * collision system\n */\nclass System extends rbush_1.default {\n    constructor() {\n        super(...arguments);\n        this.response = new sat_1.default.Response();\n    }\n    // https://stackoverflow.com/questions/37224912/circle-line-segment-collision\n    static intersectLineCircle(line, circle) {\n        const v1 = { x: line.end.x - line.start.x, y: line.end.y - line.start.y };\n        const v2 = {\n            x: line.start.x - circle.pos.x,\n            y: line.start.y - circle.pos.y,\n        };\n        const b = (v1.x * v2.x + v1.y * v2.y) * -2;\n        const c = 2 * (v1.x * v1.x + v1.y * v1.y);\n        const d = Math.sqrt(b * b - 2 * c * (v2.x * v2.x + v2.y * v2.y - circle.r * circle.r));\n        if (isNaN(d)) {\n            // no intercept\n            return [];\n        }\n        const u1 = (b - d) / c; // these represent the unit distance of point one and two on the line\n        const u2 = (b + d) / c;\n        const results = []; // return array\n        if (u1 <= 1 && u1 >= 0) {\n            // add point if on the line segment\n            results.push({\n                x: line.start.x + v1.x * u1,\n                y: line.start.y + v1.y * u1,\n            });\n        }\n        if (u2 <= 1 && u2 >= 0) {\n            // second add point if on the line segment\n            results.push({\n                x: line.start.x + v1.x * u2,\n                y: line.start.y + v1.y * u2,\n            });\n        }\n        return results;\n    }\n    // https://stackoverflow.com/questions/9043805/test-if-two-lines-intersect-javascript-function\n    static intersectLineLine(line1, line2) {\n        const dX = line1.end.x - line1.start.x;\n        const dY = line1.end.y - line1.start.y;\n        const determinant = dX * (line2.end.y - line2.start.y) - (line2.end.x - line2.start.x) * dY;\n        if (determinant === 0) {\n            return null;\n        }\n        const lambda = ((line2.end.y - line2.start.y) * (line2.end.x - line1.start.x) +\n            (line2.start.x - line2.end.x) * (line2.end.y - line1.start.y)) /\n            determinant;\n        const gamma = ((line1.start.y - line1.end.y) * (line2.end.x - line1.start.x) +\n            dX * (line2.end.y - line1.start.y)) /\n            determinant;\n        // check if there is an intersection\n        if (!(0 <= lambda && lambda <= 1) || !(0 <= gamma && gamma <= 1)) {\n            return null;\n        }\n        return {\n            x: line1.start.x + lambda * dX,\n            y: line1.start.y + lambda * dY,\n        };\n    }\n    /**\n     * draw bodies\n     * @param {CanvasRenderingContext2D} context\n     */\n    draw(context) {\n        this.all().forEach((body) => {\n            body.draw(context);\n        });\n    }\n    /**\n     * draw hierarchy\n     * @param {CanvasRenderingContext2D} context\n     */\n    drawBVH(context) {\n        this.data.children.forEach(({ minX, maxX, minY, maxY }) => {\n            _1.Polygon.prototype.draw.call({\n                pos: { x: minX, y: minY },\n                calcPoints: (0, utils_1.createBox)(maxX - minX, maxY - minY),\n            }, context);\n        });\n        this.all().forEach((body) => {\n            const { pos, w, h } = body.getAABBAsBox();\n            _1.Polygon.prototype.draw.call({\n                pos,\n                calcPoints: (0, utils_1.createBox)(w, h),\n            }, context);\n        });\n    }\n    /**\n     * update body aabb and in tree\n     * @param {object} body\n     */\n    updateBody(body) {\n        // old aabb needs to be removed\n        this.remove(body);\n        // then we update aabb\n        body.updateAABB();\n        // then we reinsert body to collision tree\n        this.insert(body);\n    }\n    /**\n     * remove body aabb from collision tree\n     * @param body\n     * @param equals\n     * @returns System\n     */\n    remove(body, equals) {\n        body.system = null;\n        return super.remove(body, equals);\n    }\n    /**\n     * add body aabb to collision tree\n     * @param body\n     * @returns System\n     */\n    insert(body) {\n        body.system = this;\n        return super.insert(body);\n    }\n    /**\n     * update all bodies aabb\n     */\n    update() {\n        this.all().forEach((body) => {\n            // no need to every cycle update static body aabb\n            if (!body.isStatic) {\n                this.updateBody(body);\n            }\n        });\n    }\n    /**\n     * separate (move away) colliders\n     */\n    separate() {\n        this.checkAll((response) => {\n            // static bodies and triggers do not move back / separate\n            if (response.a.isTrigger) {\n                return;\n            }\n            response.a.pos.x -= response.overlapV.x;\n            response.a.pos.y -= response.overlapV.y;\n            this.updateBody(response.a);\n        });\n    }\n    /**\n     * check one collider collisions with callback\n     * @param {function} callback\n     */\n    checkOne(body, callback) {\n        // no need to check static body collision\n        if (body.isStatic) {\n            return;\n        }\n        this.getPotentials(body).forEach((candidate) => {\n            if (this.checkCollision(body, candidate)) {\n                callback(this.response);\n            }\n        });\n    }\n    /**\n     * check all colliders collisions with callback\n     * @param {function} callback\n     */\n    checkAll(callback) {\n        this.all().forEach((body) => {\n            this.checkOne(body, callback);\n        });\n    }\n    /**\n     * get object potential colliders\n     * @param {object} collider\n     */\n    getPotentials(body) {\n        // filter here is required as collides with self\n        return this.search(body).filter((candidate) => candidate !== body);\n    }\n    /**\n     * check do 2 objects collide\n     * @param {object} collider\n     * @param {object} candidate\n     */\n    checkCollision(body, candidate) {\n        this.response.clear();\n        if (body.type === model_1.Types.Circle && candidate.type === model_1.Types.Circle) {\n            return sat_1.default.testCircleCircle(body, candidate, this.response);\n        }\n        if (body.type === model_1.Types.Circle && candidate.type !== model_1.Types.Circle) {\n            return sat_1.default.testCirclePolygon(body, candidate, this.response);\n        }\n        if (body.type !== model_1.Types.Circle && candidate.type === model_1.Types.Circle) {\n            return sat_1.default.testPolygonCircle(body, candidate, this.response);\n        }\n        if (body.type !== model_1.Types.Circle && candidate.type !== model_1.Types.Circle) {\n            return sat_1.default.testPolygonPolygon(body, candidate, this.response);\n        }\n    }\n    /**\n     * raycast to get collider of ray from start to end\n     * @param {Vector} start {x, y}\n     * @param {Vector} end {x, y}\n     * @returns {TBody}\n     */\n    raycast(start, end, allowCollider = () => true) {\n        const ray = this.createLine(start, end);\n        const colliders = this.getPotentials(ray).filter((potential) => allowCollider(potential) && this.checkCollision(ray, potential));\n        this.remove(ray);\n        const results = [];\n        const sort = (0, utils_1.closest)(start);\n        colliders.forEach((collider) => {\n            switch (collider.type) {\n                case model_1.Types.Circle: {\n                    const points = System.intersectLineCircle(ray, collider);\n                    results.push(...points.map((point) => ({ point, collider })));\n                    break;\n                }\n                default: {\n                    const points = collider.calcPoints\n                        .map((to, index) => {\n                        const from = index\n                            ? collider.calcPoints[index - 1]\n                            : collider.calcPoints[collider.calcPoints.length - 1];\n                        const line = new _1.Line({ x: from.x + collider.pos.x, y: from.y + collider.pos.y }, { x: to.x + collider.pos.x, y: to.y + collider.pos.y });\n                        return System.intersectLineLine(ray, line);\n                    })\n                        .filter((test) => !!test);\n                    results.push(...points.map((point) => ({ point, collider })));\n                    break;\n                }\n            }\n        });\n        return results.sort(sort)[0];\n    }\n    /**\n     * create point\n     * @param {Vector} position {x, y}\n     */\n    createPoint(position) {\n        const point = new _1.Point(position);\n        this.insert(point);\n        return point;\n    }\n    /**\n     * create line\n     * @param {Vector} start {x, y}\n     * @param {Vector} end {x, y}\n     */\n    createLine(start, end, angle = 0) {\n        const line = new _1.Line(start, end);\n        line.setAngle(angle);\n        this.insert(line);\n        return line;\n    }\n    /**\n     * create circle\n     * @param {Vector} position {x, y}\n     * @param {number} radius\n     */\n    createCircle(position, radius) {\n        const circle = new _1.Circle(position, radius);\n        this.insert(circle);\n        return circle;\n    }\n    /**\n     * create box\n     * @param {Vector} position {x, y}\n     * @param {number} width\n     * @param {number} height\n     * @param {number} angle\n     */\n    createBox(position, width, height, angle = 0) {\n        const box = new _1.Box(position, width, height);\n        box.setAngle(angle);\n        this.insert(box);\n        return box;\n    }\n    /**\n     * create oval\n     * @param {Vector} position {x, y}\n     * @param {number} radiusX\n     * @param {number} radiusY\n     * @param {number} step\n     * @param {number} angle\n     */\n    createOval(position, radiusX, radiusY, step = 1, angle = 0) {\n        const oval = new oval_1.Oval(position, radiusX, radiusY, step);\n        oval.setAngle(angle);\n        this.insert(oval);\n        return oval;\n    }\n    /**\n     * create polygon\n     * @param {Vector} position {x, y}\n     * @param {Vector[]} points\n     * @param {number} angle\n     */\n    createPolygon(position, points, angle = 0) {\n        const polygon = new _1.Polygon(position, points);\n        polygon.setAngle(angle);\n        this.insert(polygon);\n        return polygon;\n    }\n}\nexports.System = System;\n\n\n//# sourceURL=webpack://detect-collisions/./dist/system.js?");
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.System = void 0;
+const sat_1 = __importDefault(__webpack_require__(/*! sat */ "./node_modules/sat/SAT.js"));
+const rbush_1 = __importDefault(__webpack_require__(/*! rbush */ "./node_modules/rbush/rbush.min.js"));
+const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
+const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils.js");
+const point_1 = __webpack_require__(/*! ./bodies/point */ "./dist/bodies/point.js");
+const circle_1 = __webpack_require__(/*! ./bodies/circle */ "./dist/bodies/circle.js");
+const box_1 = __webpack_require__(/*! ./bodies/box */ "./dist/bodies/box.js");
+const polygon_1 = __webpack_require__(/*! ./bodies/polygon */ "./dist/bodies/polygon.js");
+const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js");
+const oval_1 = __webpack_require__(/*! ./bodies/oval */ "./dist/bodies/oval.js");
+/**
+ * collision system
+ */
+class System extends rbush_1.default {
+    constructor() {
+        super(...arguments);
+        this.response = new sat_1.default.Response();
+    }
+    // https://stackoverflow.com/questions/37224912/circle-line-segment-collision
+    static intersectLineCircle(line, circle) {
+        const v1 = { x: line.end.x - line.start.x, y: line.end.y - line.start.y };
+        const v2 = {
+            x: line.start.x - circle.pos.x,
+            y: line.start.y - circle.pos.y,
+        };
+        const b = (v1.x * v2.x + v1.y * v2.y) * -2;
+        const c = 2 * (v1.x * v1.x + v1.y * v1.y);
+        const d = Math.sqrt(b * b - 2 * c * (v2.x * v2.x + v2.y * v2.y - circle.r * circle.r));
+        if (isNaN(d)) {
+            // no intercept
+            return [];
+        }
+        const u1 = (b - d) / c; // these represent the unit distance of point one and two on the line
+        const u2 = (b + d) / c;
+        const results = []; // return array
+        if (u1 <= 1 && u1 >= 0) {
+            // add point if on the line segment
+            results.push({
+                x: line.start.x + v1.x * u1,
+                y: line.start.y + v1.y * u1,
+            });
+        }
+        if (u2 <= 1 && u2 >= 0) {
+            // second add point if on the line segment
+            results.push({
+                x: line.start.x + v1.x * u2,
+                y: line.start.y + v1.y * u2,
+            });
+        }
+        return results;
+    }
+    // https://stackoverflow.com/questions/9043805/test-if-two-lines-intersect-javascript-function
+    static intersectLineLine(line1, line2) {
+        const dX = line1.end.x - line1.start.x;
+        const dY = line1.end.y - line1.start.y;
+        const determinant = dX * (line2.end.y - line2.start.y) - (line2.end.x - line2.start.x) * dY;
+        if (determinant === 0) {
+            return null;
+        }
+        const lambda = ((line2.end.y - line2.start.y) * (line2.end.x - line1.start.x) +
+            (line2.start.x - line2.end.x) * (line2.end.y - line1.start.y)) /
+            determinant;
+        const gamma = ((line1.start.y - line1.end.y) * (line2.end.x - line1.start.x) +
+            dX * (line2.end.y - line1.start.y)) /
+            determinant;
+        // check if there is an intersection
+        if (!(0 <= lambda && lambda <= 1) || !(0 <= gamma && gamma <= 1)) {
+            return null;
+        }
+        return {
+            x: line1.start.x + lambda * dX,
+            y: line1.start.y + lambda * dY,
+        };
+    }
+    /**
+     * draw bodies
+     * @param {CanvasRenderingContext2D} context
+     */
+    draw(context) {
+        this.all().forEach((body) => {
+            body.draw(context);
+        });
+    }
+    /**
+     * draw hierarchy
+     * @param {CanvasRenderingContext2D} context
+     */
+    drawBVH(context) {
+        this.data.children.forEach(({ minX, maxX, minY, maxY }) => {
+            polygon_1.Polygon.prototype.draw.call({
+                pos: { x: minX, y: minY },
+                calcPoints: (0, utils_1.createBox)(maxX - minX, maxY - minY),
+            }, context);
+        });
+        this.all().forEach((body) => {
+            const { pos, w, h } = body.getAABBAsBox();
+            polygon_1.Polygon.prototype.draw.call({
+                pos,
+                calcPoints: (0, utils_1.createBox)(w, h),
+            }, context);
+        });
+    }
+    /**
+     * update body aabb and in tree
+     * @param {object} body
+     */
+    updateBody(body) {
+        // old aabb needs to be removed
+        this.remove(body);
+        // then we update aabb
+        body.updateAABB();
+        // then we reinsert body to collision tree
+        this.insert(body);
+    }
+    /**
+     * remove body aabb from collision tree
+     * @param body
+     * @param equals
+     * @returns System
+     */
+    remove(body, equals) {
+        body.system = undefined;
+        return super.remove(body, equals);
+    }
+    /**
+     * add body aabb to collision tree
+     * @param body
+     * @returns System
+     */
+    insert(body) {
+        body.system = this;
+        return super.insert(body);
+    }
+    /**
+     * update all bodies aabb
+     */
+    update() {
+        this.all().forEach((body) => {
+            // no need to every cycle update static body aabb
+            if (!body.isStatic) {
+                this.updateBody(body);
+            }
+        });
+    }
+    /**
+     * separate (move away) colliders
+     */
+    separate() {
+        this.checkAll((response) => {
+            // static bodies and triggers do not move back / separate
+            if (response.a.isTrigger) {
+                return;
+            }
+            response.a.pos.x -= response.overlapV.x;
+            response.a.pos.y -= response.overlapV.y;
+            this.updateBody(response.a);
+        });
+    }
+    /**
+     * check one collider collisions with callback
+     * @param {function} callback
+     */
+    checkOne(body, callback) {
+        // no need to check static body collision
+        if (body.isStatic) {
+            return;
+        }
+        this.getPotentials(body).forEach((candidate) => {
+            if (this.checkCollision(body, candidate)) {
+                callback(this.response);
+            }
+        });
+    }
+    /**
+     * check all colliders collisions with callback
+     * @param {function} callback
+     */
+    checkAll(callback) {
+        this.all().forEach((body) => {
+            this.checkOne(body, callback);
+        });
+    }
+    /**
+     * get object potential colliders
+     * @param {object} collider
+     */
+    getPotentials(body) {
+        // filter here is required as collides with self
+        return this.search(body).filter((candidate) => candidate !== body);
+    }
+    /**
+     * check do 2 objects collide
+     * @param {object} collider
+     * @param {object} candidate
+     */
+    checkCollision(body, candidate) {
+        this.response.clear();
+        if (body.type === model_1.Types.Circle && candidate.type === model_1.Types.Circle) {
+            return sat_1.default.testCircleCircle(body, candidate, this.response);
+        }
+        if (body.type === model_1.Types.Circle && candidate.type !== model_1.Types.Circle) {
+            return sat_1.default.testCirclePolygon(body, candidate, this.response);
+        }
+        if (body.type !== model_1.Types.Circle && candidate.type === model_1.Types.Circle) {
+            return sat_1.default.testPolygonCircle(body, candidate, this.response);
+        }
+        if (body.type !== model_1.Types.Circle && candidate.type !== model_1.Types.Circle) {
+            return sat_1.default.testPolygonPolygon(body, candidate, this.response);
+        }
+        throw Error("Not implemented");
+    }
+    /**
+     * raycast to get collider of ray from start to end
+     * @param {Vector} start {x, y}
+     * @param {Vector} end {x, y}
+     * @returns {TBody}
+     */
+    raycast(start, end, allowCollider = () => true) {
+        const ray = this.createLine(start, end);
+        const colliders = this.getPotentials(ray).filter((potential) => allowCollider(potential) && this.checkCollision(ray, potential));
+        this.remove(ray);
+        const results = [];
+        const sort = (0, utils_1.closest)(start);
+        colliders.forEach((collider) => {
+            switch (collider.type) {
+                case model_1.Types.Circle: {
+                    const points = System.intersectLineCircle(ray, collider);
+                    results.push(...points.map((point) => ({ point, collider })));
+                    break;
+                }
+                default: {
+                    const points = collider.calcPoints
+                        .map((to, index) => {
+                        const from = index
+                            ? collider.calcPoints[index - 1]
+                            : collider.calcPoints[collider.calcPoints.length - 1];
+                        const line = new line_1.Line({ x: from.x + collider.pos.x, y: from.y + collider.pos.y }, { x: to.x + collider.pos.x, y: to.y + collider.pos.y });
+                        return System.intersectLineLine(ray, line);
+                    })
+                        .filter((test) => !!test);
+                    results.push(...points.map((point) => ({ point, collider })));
+                    break;
+                }
+            }
+        });
+        return results.sort(sort)[0];
+    }
+    /**
+     * create point
+     * @param {Vector} position {x, y}
+     */
+    createPoint(position) {
+        const point = new point_1.Point(position);
+        this.insert(point);
+        return point;
+    }
+    /**
+     * create line
+     * @param {Vector} start {x, y}
+     * @param {Vector} end {x, y}
+     */
+    createLine(start, end, angle = 0) {
+        const line = new line_1.Line(start, end);
+        line.setAngle(angle);
+        this.insert(line);
+        return line;
+    }
+    /**
+     * create circle
+     * @param {Vector} position {x, y}
+     * @param {number} radius
+     */
+    createCircle(position, radius) {
+        const circle = new circle_1.Circle(position, radius);
+        this.insert(circle);
+        return circle;
+    }
+    /**
+     * create box
+     * @param {Vector} position {x, y}
+     * @param {number} width
+     * @param {number} height
+     * @param {number} angle
+     */
+    createBox(position, width, height, angle = 0) {
+        const box = new box_1.Box(position, width, height);
+        box.setAngle(angle);
+        this.insert(box);
+        return box;
+    }
+    /**
+     * create oval
+     * @param {Vector} position {x, y}
+     * @param {number} radiusX
+     * @param {number} radiusY
+     * @param {number} step
+     * @param {number} angle
+     */
+    createOval(position, radiusX, radiusY, step = 1, angle = 0) {
+        const oval = new oval_1.Oval(position, radiusX, radiusY, step);
+        oval.setAngle(angle);
+        this.insert(oval);
+        return oval;
+    }
+    /**
+     * create polygon
+     * @param {Vector} position {x, y}
+     * @param {Vector[]} points
+     * @param {number} angle
+     */
+    createPolygon(position, points, angle = 0) {
+        const polygon = new polygon_1.Polygon(position, points);
+        polygon.setAngle(angle);
+        this.insert(polygon);
+        return polygon;
+    }
+}
+exports.System = System;
+//# sourceMappingURL=system.js.map
 
 /***/ }),
 
@@ -115,7 +864,135 @@ eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
-eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {\n    return (mod && mod.__esModule) ? mod : { \"default\": mod };\n};\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.dashLineTo = exports.clockwise = exports.closest = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createOval = void 0;\nconst sat_1 = __importDefault(__webpack_require__(/*! sat */ \"./node_modules/sat/SAT.js\"));\nfunction createOval(radiusX, radiusY = radiusX, step = 1) {\n    const steps = 2 * Math.PI * Math.hypot(radiusX, radiusY);\n    const length = Math.max(8, Math.ceil(steps / step));\n    return Array.from({ length }, (_, index) => {\n        const value = (index / length) * 2 * Math.PI;\n        const x = Math.cos(value) * radiusX;\n        const y = Math.sin(value) * radiusY;\n        return new sat_1.default.Vector(x, y);\n    });\n}\nexports.createOval = createOval;\n/**\n * creates box polygon points\n * @param {number} width\n * @param {number} height\n * @returns SAT.Vector\n */\nfunction createBox(width, height) {\n    return [\n        new sat_1.default.Vector(),\n        new sat_1.default.Vector(width, 0),\n        new sat_1.default.Vector(width, height),\n        new sat_1.default.Vector(0, height),\n    ];\n}\nexports.createBox = createBox;\n/**\n * ensure returns a SAT.Vector\n * @param {SAT.Vector} point\n */\nfunction ensureVectorPoint(point = {}) {\n    return point instanceof sat_1.default.Vector\n        ? point\n        : new sat_1.default.Vector(point.x || 0, point.y || 0);\n}\nexports.ensureVectorPoint = ensureVectorPoint;\n/**\n * ensure correct counterclockwise points\n * @param {SAT.Vector[]} points\n */\nfunction ensurePolygonPoints(points) {\n    if (!points) {\n        throw new Error(\"No points array provided\");\n    }\n    const vectorPoints = points.map(ensureVectorPoint);\n    return clockwise(vectorPoints) ? vectorPoints.reverse() : vectorPoints;\n}\nexports.ensurePolygonPoints = ensurePolygonPoints;\n/**\n * get distance between two {x, y} points\n * @param {Vector} a\n * @param {Vector} b\n * @returns {number}\n */\nfunction distance(a, b) {\n    return Math.hypot(a.x - b.x, a.y - b.y);\n}\nexports.distance = distance;\n/**\n * returns function to sort raycast results\n * @param {Vector} from\n * @returns {function}\n */\nfunction closest(from) {\n    return ({ point: a }, { point: b }) => distance(from, a) - distance(from, b);\n}\nexports.closest = closest;\n/**\n * check direction of polygon\n * @param {SAT.Vector[]} points\n */\nfunction clockwise(points) {\n    let sum = 0;\n    for (let i = 0; i < points.length; i++) {\n        const v1 = points[i];\n        const v2 = points[(i + 1) % points.length];\n        sum += (v2.x - v1.x) * (v2.y + v1.y);\n    }\n    return sum > 0;\n}\nexports.clockwise = clockwise;\n/**\n * draws dashed line on canvas context\n * @param {CanvasRenderingContext2D} context\n * @param {number} fromX\n * @param {number} fromY\n * @param {number} toX\n * @param {number} toY\n * @param {number?} dash\n * @param {number?} gap\n */\nfunction dashLineTo(context, fromX, fromY, toX, toY, dash = 2, gap = 4) {\n    const xDiff = toX - fromX;\n    const yDiff = toY - fromY;\n    const arc = Math.atan2(yDiff, xDiff);\n    const offsetX = Math.cos(arc);\n    const offsetY = Math.sin(arc);\n    let posX = fromX;\n    let posY = fromY;\n    let dist = Math.hypot(xDiff, yDiff);\n    while (dist > 0) {\n        const step = Math.min(dist, dash);\n        context.moveTo(posX, posY);\n        context.lineTo(posX + offsetX * step, posY + offsetY * step);\n        posX += offsetX * (dash + gap);\n        posY += offsetY * (dash + gap);\n        dist -= dash + gap;\n    }\n}\nexports.dashLineTo = dashLineTo;\n\n\n//# sourceURL=webpack://detect-collisions/./dist/utils.js?");
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.dashLineTo = exports.clockwise = exports.closest = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createOval = void 0;
+const sat_1 = __importDefault(__webpack_require__(/*! sat */ "./node_modules/sat/SAT.js"));
+function createOval(radiusX, radiusY = radiusX, step = 1) {
+    const steps = 2 * Math.PI * Math.hypot(radiusX, radiusY);
+    const length = Math.max(8, Math.ceil(steps / step));
+    return Array.from({ length }, (_, index) => {
+        const value = (index / length) * 2 * Math.PI;
+        const x = Math.cos(value) * radiusX;
+        const y = Math.sin(value) * radiusY;
+        return new sat_1.default.Vector(x, y);
+    });
+}
+exports.createOval = createOval;
+/**
+ * creates box polygon points
+ * @param {number} width
+ * @param {number} height
+ * @returns SAT.Vector
+ */
+function createBox(width, height) {
+    return [
+        new sat_1.default.Vector(),
+        new sat_1.default.Vector(width, 0),
+        new sat_1.default.Vector(width, height),
+        new sat_1.default.Vector(0, height),
+    ];
+}
+exports.createBox = createBox;
+/**
+ * ensure returns a SAT.Vector
+ * @param {SAT.Vector} point
+ */
+function ensureVectorPoint(point = {}) {
+    return point instanceof sat_1.default.Vector
+        ? point
+        : new sat_1.default.Vector(point.x || 0, point.y || 0);
+}
+exports.ensureVectorPoint = ensureVectorPoint;
+/**
+ * ensure correct counterclockwise points
+ * @param {SAT.Vector[]} points
+ */
+function ensurePolygonPoints(points) {
+    if (!points) {
+        throw new Error("No points array provided");
+    }
+    const vectorPoints = points.map(ensureVectorPoint);
+    return clockwise(vectorPoints) ? vectorPoints.reverse() : vectorPoints;
+}
+exports.ensurePolygonPoints = ensurePolygonPoints;
+/**
+ * get distance between two {x, y} points
+ * @param {Vector} a
+ * @param {Vector} b
+ * @returns {number}
+ */
+function distance(a, b) {
+    return Math.hypot(a.x - b.x, a.y - b.y);
+}
+exports.distance = distance;
+/**
+ * returns function to sort raycast results
+ * @param {Vector} from
+ * @returns {function}
+ */
+function closest(from) {
+    return (a, b) => {
+        if (!a && !b) {
+            return 0;
+        }
+        if (!a) {
+            return -Infinity;
+        }
+        if (!b) {
+            return Infinity;
+        }
+        return distance(from, a.point) - distance(from, b.point);
+    };
+}
+exports.closest = closest;
+/**
+ * check direction of polygon
+ * @param {SAT.Vector[]} points
+ */
+function clockwise(points) {
+    let sum = 0;
+    for (let i = 0; i < points.length; i++) {
+        const v1 = points[i];
+        const v2 = points[(i + 1) % points.length];
+        sum += (v2.x - v1.x) * (v2.y + v1.y);
+    }
+    return sum > 0;
+}
+exports.clockwise = clockwise;
+/**
+ * draws dashed line on canvas context
+ * @param {CanvasRenderingContext2D} context
+ * @param {number} fromX
+ * @param {number} fromY
+ * @param {number} toX
+ * @param {number} toY
+ * @param {number?} dash
+ * @param {number?} gap
+ */
+function dashLineTo(context, fromX, fromY, toX, toY, dash = 2, gap = 4) {
+    const xDiff = toX - fromX;
+    const yDiff = toY - fromY;
+    const arc = Math.atan2(yDiff, xDiff);
+    const offsetX = Math.cos(arc);
+    const offsetY = Math.sin(arc);
+    let posX = fromX;
+    let posY = fromY;
+    let dist = Math.hypot(xDiff, yDiff);
+    while (dist > 0) {
+        const step = Math.min(dist, dash);
+        context.moveTo(posX, posY);
+        context.lineTo(posX + offsetX * step, posY + offsetY * step);
+        posX += offsetX * (dash + gap);
+        posY += offsetY * (dash + gap);
+        dist -= dash + gap;
+    }
+}
+exports.dashLineTo = dashLineTo;
+//# sourceMappingURL=utils.js.map
 
 /***/ }),
 
@@ -125,7 +1002,8 @@ eval("\nvar __importDefault = (this && this.__importDefault) || function (mod) {
   \*****************************************/
 /***/ (function(module) {
 
-eval("!function(t,i){ true?module.exports=i():0}(this,function(){\"use strict\";function t(t,r,e,a,h){!function t(n,r,e,a,h){for(;a>e;){if(a-e>600){var o=a-e+1,s=r-e+1,l=Math.log(o),f=.5*Math.exp(2*l/3),u=.5*Math.sqrt(l*f*(o-f)/o)*(s-o/2<0?-1:1),m=Math.max(e,Math.floor(r-s*f/o+u)),c=Math.min(a,Math.floor(r+(o-s)*f/o+u));t(n,r,m,c,h)}var p=n[r],d=e,x=a;for(i(n,e,r),h(n[a],p)>0&&i(n,e,a);d<x;){for(i(n,d,x),d++,x--;h(n[d],p)<0;)d++;for(;h(n[x],p)>0;)x--}0===h(n[e],p)?i(n,e,x):i(n,++x,a),x<=r&&(e=x+1),r<=x&&(a=x-1)}}(t,r,e||0,a||t.length-1,h||n)}function i(t,i,n){var r=t[i];t[i]=t[n],t[n]=r}function n(t,i){return t<i?-1:t>i?1:0}var r=function(t){void 0===t&&(t=9),this._maxEntries=Math.max(4,t),this._minEntries=Math.max(2,Math.ceil(.4*this._maxEntries)),this.clear()};function e(t,i,n){if(!n)return i.indexOf(t);for(var r=0;r<i.length;r++)if(n(t,i[r]))return r;return-1}function a(t,i){h(t,0,t.children.length,i,t)}function h(t,i,n,r,e){e||(e=p(null)),e.minX=1/0,e.minY=1/0,e.maxX=-1/0,e.maxY=-1/0;for(var a=i;a<n;a++){var h=t.children[a];o(e,t.leaf?r(h):h)}return e}function o(t,i){return t.minX=Math.min(t.minX,i.minX),t.minY=Math.min(t.minY,i.minY),t.maxX=Math.max(t.maxX,i.maxX),t.maxY=Math.max(t.maxY,i.maxY),t}function s(t,i){return t.minX-i.minX}function l(t,i){return t.minY-i.minY}function f(t){return(t.maxX-t.minX)*(t.maxY-t.minY)}function u(t){return t.maxX-t.minX+(t.maxY-t.minY)}function m(t,i){return t.minX<=i.minX&&t.minY<=i.minY&&i.maxX<=t.maxX&&i.maxY<=t.maxY}function c(t,i){return i.minX<=t.maxX&&i.minY<=t.maxY&&i.maxX>=t.minX&&i.maxY>=t.minY}function p(t){return{children:t,height:1,leaf:!0,minX:1/0,minY:1/0,maxX:-1/0,maxY:-1/0}}function d(i,n,r,e,a){for(var h=[n,r];h.length;)if(!((r=h.pop())-(n=h.pop())<=e)){var o=n+Math.ceil((r-n)/e/2)*e;t(i,o,n,r,a),h.push(n,o,o,r)}}return r.prototype.all=function(){return this._all(this.data,[])},r.prototype.search=function(t){var i=this.data,n=[];if(!c(t,i))return n;for(var r=this.toBBox,e=[];i;){for(var a=0;a<i.children.length;a++){var h=i.children[a],o=i.leaf?r(h):h;c(t,o)&&(i.leaf?n.push(h):m(t,o)?this._all(h,n):e.push(h))}i=e.pop()}return n},r.prototype.collides=function(t){var i=this.data;if(!c(t,i))return!1;for(var n=[];i;){for(var r=0;r<i.children.length;r++){var e=i.children[r],a=i.leaf?this.toBBox(e):e;if(c(t,a)){if(i.leaf||m(t,a))return!0;n.push(e)}}i=n.pop()}return!1},r.prototype.load=function(t){if(!t||!t.length)return this;if(t.length<this._minEntries){for(var i=0;i<t.length;i++)this.insert(t[i]);return this}var n=this._build(t.slice(),0,t.length-1,0);if(this.data.children.length)if(this.data.height===n.height)this._splitRoot(this.data,n);else{if(this.data.height<n.height){var r=this.data;this.data=n,n=r}this._insert(n,this.data.height-n.height-1,!0)}else this.data=n;return this},r.prototype.insert=function(t){return t&&this._insert(t,this.data.height-1),this},r.prototype.clear=function(){return this.data=p([]),this},r.prototype.remove=function(t,i){if(!t)return this;for(var n,r,a,h=this.data,o=this.toBBox(t),s=[],l=[];h||s.length;){if(h||(h=s.pop(),r=s[s.length-1],n=l.pop(),a=!0),h.leaf){var f=e(t,h.children,i);if(-1!==f)return h.children.splice(f,1),s.push(h),this._condense(s),this}a||h.leaf||!m(h,o)?r?(n++,h=r.children[n],a=!1):h=null:(s.push(h),l.push(n),n=0,r=h,h=h.children[0])}return this},r.prototype.toBBox=function(t){return t},r.prototype.compareMinX=function(t,i){return t.minX-i.minX},r.prototype.compareMinY=function(t,i){return t.minY-i.minY},r.prototype.toJSON=function(){return this.data},r.prototype.fromJSON=function(t){return this.data=t,this},r.prototype._all=function(t,i){for(var n=[];t;)t.leaf?i.push.apply(i,t.children):n.push.apply(n,t.children),t=n.pop();return i},r.prototype._build=function(t,i,n,r){var e,h=n-i+1,o=this._maxEntries;if(h<=o)return a(e=p(t.slice(i,n+1)),this.toBBox),e;r||(r=Math.ceil(Math.log(h)/Math.log(o)),o=Math.ceil(h/Math.pow(o,r-1))),(e=p([])).leaf=!1,e.height=r;var s=Math.ceil(h/o),l=s*Math.ceil(Math.sqrt(o));d(t,i,n,l,this.compareMinX);for(var f=i;f<=n;f+=l){var u=Math.min(f+l-1,n);d(t,f,u,s,this.compareMinY);for(var m=f;m<=u;m+=s){var c=Math.min(m+s-1,u);e.children.push(this._build(t,m,c,r-1))}}return a(e,this.toBBox),e},r.prototype._chooseSubtree=function(t,i,n,r){for(;r.push(i),!i.leaf&&r.length-1!==n;){for(var e=1/0,a=1/0,h=void 0,o=0;o<i.children.length;o++){var s=i.children[o],l=f(s),u=(m=t,c=s,(Math.max(c.maxX,m.maxX)-Math.min(c.minX,m.minX))*(Math.max(c.maxY,m.maxY)-Math.min(c.minY,m.minY))-l);u<a?(a=u,e=l<e?l:e,h=s):u===a&&l<e&&(e=l,h=s)}i=h||i.children[0]}var m,c;return i},r.prototype._insert=function(t,i,n){var r=n?t:this.toBBox(t),e=[],a=this._chooseSubtree(r,this.data,i,e);for(a.children.push(t),o(a,r);i>=0&&e[i].children.length>this._maxEntries;)this._split(e,i),i--;this._adjustParentBBoxes(r,e,i)},r.prototype._split=function(t,i){var n=t[i],r=n.children.length,e=this._minEntries;this._chooseSplitAxis(n,e,r);var h=this._chooseSplitIndex(n,e,r),o=p(n.children.splice(h,n.children.length-h));o.height=n.height,o.leaf=n.leaf,a(n,this.toBBox),a(o,this.toBBox),i?t[i-1].children.push(o):this._splitRoot(n,o)},r.prototype._splitRoot=function(t,i){this.data=p([t,i]),this.data.height=t.height+1,this.data.leaf=!1,a(this.data,this.toBBox)},r.prototype._chooseSplitIndex=function(t,i,n){for(var r,e,a,o,s,l,u,m=1/0,c=1/0,p=i;p<=n-i;p++){var d=h(t,0,p,this.toBBox),x=h(t,p,n,this.toBBox),v=(e=d,a=x,o=void 0,s=void 0,l=void 0,u=void 0,o=Math.max(e.minX,a.minX),s=Math.max(e.minY,a.minY),l=Math.min(e.maxX,a.maxX),u=Math.min(e.maxY,a.maxY),Math.max(0,l-o)*Math.max(0,u-s)),M=f(d)+f(x);v<m?(m=v,r=p,c=M<c?M:c):v===m&&M<c&&(c=M,r=p)}return r||n-i},r.prototype._chooseSplitAxis=function(t,i,n){var r=t.leaf?this.compareMinX:s,e=t.leaf?this.compareMinY:l;this._allDistMargin(t,i,n,r)<this._allDistMargin(t,i,n,e)&&t.children.sort(r)},r.prototype._allDistMargin=function(t,i,n,r){t.children.sort(r);for(var e=this.toBBox,a=h(t,0,i,e),s=h(t,n-i,n,e),l=u(a)+u(s),f=i;f<n-i;f++){var m=t.children[f];o(a,t.leaf?e(m):m),l+=u(a)}for(var c=n-i-1;c>=i;c--){var p=t.children[c];o(s,t.leaf?e(p):p),l+=u(s)}return l},r.prototype._adjustParentBBoxes=function(t,i,n){for(var r=n;r>=0;r--)o(i[r],t)},r.prototype._condense=function(t){for(var i=t.length-1,n=void 0;i>=0;i--)0===t[i].children.length?i>0?(n=t[i-1].children).splice(n.indexOf(t[i]),1):this.clear():a(t[i],this.toBBox)},r});\n\n\n//# sourceURL=webpack://detect-collisions/./node_modules/rbush/rbush.min.js?");
+!function(t,i){ true?module.exports=i():0}(this,function(){"use strict";function t(t,r,e,a,h){!function t(n,r,e,a,h){for(;a>e;){if(a-e>600){var o=a-e+1,s=r-e+1,l=Math.log(o),f=.5*Math.exp(2*l/3),u=.5*Math.sqrt(l*f*(o-f)/o)*(s-o/2<0?-1:1),m=Math.max(e,Math.floor(r-s*f/o+u)),c=Math.min(a,Math.floor(r+(o-s)*f/o+u));t(n,r,m,c,h)}var p=n[r],d=e,x=a;for(i(n,e,r),h(n[a],p)>0&&i(n,e,a);d<x;){for(i(n,d,x),d++,x--;h(n[d],p)<0;)d++;for(;h(n[x],p)>0;)x--}0===h(n[e],p)?i(n,e,x):i(n,++x,a),x<=r&&(e=x+1),r<=x&&(a=x-1)}}(t,r,e||0,a||t.length-1,h||n)}function i(t,i,n){var r=t[i];t[i]=t[n],t[n]=r}function n(t,i){return t<i?-1:t>i?1:0}var r=function(t){void 0===t&&(t=9),this._maxEntries=Math.max(4,t),this._minEntries=Math.max(2,Math.ceil(.4*this._maxEntries)),this.clear()};function e(t,i,n){if(!n)return i.indexOf(t);for(var r=0;r<i.length;r++)if(n(t,i[r]))return r;return-1}function a(t,i){h(t,0,t.children.length,i,t)}function h(t,i,n,r,e){e||(e=p(null)),e.minX=1/0,e.minY=1/0,e.maxX=-1/0,e.maxY=-1/0;for(var a=i;a<n;a++){var h=t.children[a];o(e,t.leaf?r(h):h)}return e}function o(t,i){return t.minX=Math.min(t.minX,i.minX),t.minY=Math.min(t.minY,i.minY),t.maxX=Math.max(t.maxX,i.maxX),t.maxY=Math.max(t.maxY,i.maxY),t}function s(t,i){return t.minX-i.minX}function l(t,i){return t.minY-i.minY}function f(t){return(t.maxX-t.minX)*(t.maxY-t.minY)}function u(t){return t.maxX-t.minX+(t.maxY-t.minY)}function m(t,i){return t.minX<=i.minX&&t.minY<=i.minY&&i.maxX<=t.maxX&&i.maxY<=t.maxY}function c(t,i){return i.minX<=t.maxX&&i.minY<=t.maxY&&i.maxX>=t.minX&&i.maxY>=t.minY}function p(t){return{children:t,height:1,leaf:!0,minX:1/0,minY:1/0,maxX:-1/0,maxY:-1/0}}function d(i,n,r,e,a){for(var h=[n,r];h.length;)if(!((r=h.pop())-(n=h.pop())<=e)){var o=n+Math.ceil((r-n)/e/2)*e;t(i,o,n,r,a),h.push(n,o,o,r)}}return r.prototype.all=function(){return this._all(this.data,[])},r.prototype.search=function(t){var i=this.data,n=[];if(!c(t,i))return n;for(var r=this.toBBox,e=[];i;){for(var a=0;a<i.children.length;a++){var h=i.children[a],o=i.leaf?r(h):h;c(t,o)&&(i.leaf?n.push(h):m(t,o)?this._all(h,n):e.push(h))}i=e.pop()}return n},r.prototype.collides=function(t){var i=this.data;if(!c(t,i))return!1;for(var n=[];i;){for(var r=0;r<i.children.length;r++){var e=i.children[r],a=i.leaf?this.toBBox(e):e;if(c(t,a)){if(i.leaf||m(t,a))return!0;n.push(e)}}i=n.pop()}return!1},r.prototype.load=function(t){if(!t||!t.length)return this;if(t.length<this._minEntries){for(var i=0;i<t.length;i++)this.insert(t[i]);return this}var n=this._build(t.slice(),0,t.length-1,0);if(this.data.children.length)if(this.data.height===n.height)this._splitRoot(this.data,n);else{if(this.data.height<n.height){var r=this.data;this.data=n,n=r}this._insert(n,this.data.height-n.height-1,!0)}else this.data=n;return this},r.prototype.insert=function(t){return t&&this._insert(t,this.data.height-1),this},r.prototype.clear=function(){return this.data=p([]),this},r.prototype.remove=function(t,i){if(!t)return this;for(var n,r,a,h=this.data,o=this.toBBox(t),s=[],l=[];h||s.length;){if(h||(h=s.pop(),r=s[s.length-1],n=l.pop(),a=!0),h.leaf){var f=e(t,h.children,i);if(-1!==f)return h.children.splice(f,1),s.push(h),this._condense(s),this}a||h.leaf||!m(h,o)?r?(n++,h=r.children[n],a=!1):h=null:(s.push(h),l.push(n),n=0,r=h,h=h.children[0])}return this},r.prototype.toBBox=function(t){return t},r.prototype.compareMinX=function(t,i){return t.minX-i.minX},r.prototype.compareMinY=function(t,i){return t.minY-i.minY},r.prototype.toJSON=function(){return this.data},r.prototype.fromJSON=function(t){return this.data=t,this},r.prototype._all=function(t,i){for(var n=[];t;)t.leaf?i.push.apply(i,t.children):n.push.apply(n,t.children),t=n.pop();return i},r.prototype._build=function(t,i,n,r){var e,h=n-i+1,o=this._maxEntries;if(h<=o)return a(e=p(t.slice(i,n+1)),this.toBBox),e;r||(r=Math.ceil(Math.log(h)/Math.log(o)),o=Math.ceil(h/Math.pow(o,r-1))),(e=p([])).leaf=!1,e.height=r;var s=Math.ceil(h/o),l=s*Math.ceil(Math.sqrt(o));d(t,i,n,l,this.compareMinX);for(var f=i;f<=n;f+=l){var u=Math.min(f+l-1,n);d(t,f,u,s,this.compareMinY);for(var m=f;m<=u;m+=s){var c=Math.min(m+s-1,u);e.children.push(this._build(t,m,c,r-1))}}return a(e,this.toBBox),e},r.prototype._chooseSubtree=function(t,i,n,r){for(;r.push(i),!i.leaf&&r.length-1!==n;){for(var e=1/0,a=1/0,h=void 0,o=0;o<i.children.length;o++){var s=i.children[o],l=f(s),u=(m=t,c=s,(Math.max(c.maxX,m.maxX)-Math.min(c.minX,m.minX))*(Math.max(c.maxY,m.maxY)-Math.min(c.minY,m.minY))-l);u<a?(a=u,e=l<e?l:e,h=s):u===a&&l<e&&(e=l,h=s)}i=h||i.children[0]}var m,c;return i},r.prototype._insert=function(t,i,n){var r=n?t:this.toBBox(t),e=[],a=this._chooseSubtree(r,this.data,i,e);for(a.children.push(t),o(a,r);i>=0&&e[i].children.length>this._maxEntries;)this._split(e,i),i--;this._adjustParentBBoxes(r,e,i)},r.prototype._split=function(t,i){var n=t[i],r=n.children.length,e=this._minEntries;this._chooseSplitAxis(n,e,r);var h=this._chooseSplitIndex(n,e,r),o=p(n.children.splice(h,n.children.length-h));o.height=n.height,o.leaf=n.leaf,a(n,this.toBBox),a(o,this.toBBox),i?t[i-1].children.push(o):this._splitRoot(n,o)},r.prototype._splitRoot=function(t,i){this.data=p([t,i]),this.data.height=t.height+1,this.data.leaf=!1,a(this.data,this.toBBox)},r.prototype._chooseSplitIndex=function(t,i,n){for(var r,e,a,o,s,l,u,m=1/0,c=1/0,p=i;p<=n-i;p++){var d=h(t,0,p,this.toBBox),x=h(t,p,n,this.toBBox),v=(e=d,a=x,o=void 0,s=void 0,l=void 0,u=void 0,o=Math.max(e.minX,a.minX),s=Math.max(e.minY,a.minY),l=Math.min(e.maxX,a.maxX),u=Math.min(e.maxY,a.maxY),Math.max(0,l-o)*Math.max(0,u-s)),M=f(d)+f(x);v<m?(m=v,r=p,c=M<c?M:c):v===m&&M<c&&(c=M,r=p)}return r||n-i},r.prototype._chooseSplitAxis=function(t,i,n){var r=t.leaf?this.compareMinX:s,e=t.leaf?this.compareMinY:l;this._allDistMargin(t,i,n,r)<this._allDistMargin(t,i,n,e)&&t.children.sort(r)},r.prototype._allDistMargin=function(t,i,n,r){t.children.sort(r);for(var e=this.toBBox,a=h(t,0,i,e),s=h(t,n-i,n,e),l=u(a)+u(s),f=i;f<n-i;f++){var m=t.children[f];o(a,t.leaf?e(m):m),l+=u(a)}for(var c=n-i-1;c>=i;c--){var p=t.children[c];o(s,t.leaf?e(p):p),l+=u(s)}return l},r.prototype._adjustParentBBoxes=function(t,i,n){for(var r=n;r>=0;r--)o(i[r],t)},r.prototype._condense=function(t){for(var i=t.length-1,n=void 0;i>=0;i--)0===t[i].children.length?i>0?(n=t[i-1].children).splice(n.indexOf(t[i]),1):this.clear():a(t[i],this.toBBox)},r});
+
 
 /***/ }),
 
@@ -135,17 +1013,1065 @@ eval("!function(t,i){ true?module.exports=i():0}(this,function(){\"use strict\";
   \*********************************/
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;// Version 0.9.0 - Copyright 2012 - 2021 -  Jim Riecken <jimr@jimr.ca>\n//\n// Released under the MIT License - https://github.com/jriecken/sat-js\n//\n// A simple library for determining intersections of circles and\n// polygons using the Separating Axis Theorem.\n/** @preserve SAT.js - Version 0.9.0 - Copyright 2012 - 2021 - Jim Riecken <jimr@jimr.ca> - released under the MIT License. https://github.com/jriecken/sat-js */\n\n/*global define: false, module: false*/\n/*jshint shadow:true, sub:true, forin:true, noarg:true, noempty:true,\n  eqeqeq:true, bitwise:true, strict:true, undef:true,\n  curly:true, browser:true */\n\n// Create a UMD wrapper for SAT. Works in:\n//\n//  - Plain browser via global SAT variable\n//  - AMD loader (like require.js)\n//  - Node.js\n//\n// The quoted properties all over the place are used so that the Closure Compiler\n// does not mangle the exposed API in advanced mode.\n/**\n * @param {*} root - The global scope\n * @param {Function} factory - Factory that creates SAT module\n */\n(function (root, factory) {\n  \"use strict\";\n  if (true) {\n    !(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),\n\t\t__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?\n\t\t(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :\n\t\t__WEBPACK_AMD_DEFINE_FACTORY__),\n\t\t__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));\n  } else {}\n}(this, function () {\n  \"use strict\";\n\n  var SAT = {};\n\n  //\n  // ## Vector\n  //\n  // Represents a vector in two dimensions with `x` and `y` properties.\n\n\n  // Create a new Vector, optionally passing in the `x` and `y` coordinates. If\n  // a coordinate is not specified, it will be set to `0`\n  /**\n   * @param {?number=} x The x position.\n   * @param {?number=} y The y position.\n   * @constructor\n   */\n  function Vector(x, y) {\n    this['x'] = x || 0;\n    this['y'] = y || 0;\n  }\n  SAT['Vector'] = Vector;\n  // Alias `Vector` as `V`\n  SAT['V'] = Vector;\n\n\n  // Copy the values of another Vector into this one.\n  /**\n   * @param {Vector} other The other Vector.\n   * @return {Vector} This for chaining.\n   */\n  Vector.prototype['copy'] = Vector.prototype.copy = function (other) {\n    this['x'] = other['x'];\n    this['y'] = other['y'];\n    return this;\n  };\n\n  // Create a new vector with the same coordinates as this on.\n  /**\n   * @return {Vector} The new cloned vector\n   */\n  Vector.prototype['clone'] = Vector.prototype.clone = function () {\n    return new Vector(this['x'], this['y']);\n  };\n\n  // Change this vector to be perpendicular to what it was before. (Effectively\n  // roatates it 90 degrees in a clockwise direction)\n  /**\n   * @return {Vector} This for chaining.\n   */\n  Vector.prototype['perp'] = Vector.prototype.perp = function () {\n    var x = this['x'];\n    this['x'] = this['y'];\n    this['y'] = -x;\n    return this;\n  };\n\n  // Rotate this vector (counter-clockwise) by the specified angle (in radians).\n  /**\n   * @param {number} angle The angle to rotate (in radians)\n   * @return {Vector} This for chaining.\n   */\n  Vector.prototype['rotate'] = Vector.prototype.rotate = function (angle) {\n    var x = this['x'];\n    var y = this['y'];\n    this['x'] = x * Math.cos(angle) - y * Math.sin(angle);\n    this['y'] = x * Math.sin(angle) + y * Math.cos(angle);\n    return this;\n  };\n\n  // Reverse this vector.\n  /**\n   * @return {Vector} This for chaining.\n   */\n  Vector.prototype['reverse'] = Vector.prototype.reverse = function () {\n    this['x'] = -this['x'];\n    this['y'] = -this['y'];\n    return this;\n  };\n\n\n  // Normalize this vector.  (make it have length of `1`)\n  /**\n   * @return {Vector} This for chaining.\n   */\n  Vector.prototype['normalize'] = Vector.prototype.normalize = function () {\n    var d = this.len();\n    if (d > 0) {\n      this['x'] = this['x'] / d;\n      this['y'] = this['y'] / d;\n    }\n    return this;\n  };\n\n  // Add another vector to this one.\n  /**\n   * @param {Vector} other The other Vector.\n   * @return {Vector} This for chaining.\n   */\n  Vector.prototype['add'] = Vector.prototype.add = function (other) {\n    this['x'] += other['x'];\n    this['y'] += other['y'];\n    return this;\n  };\n\n  // Subtract another vector from this one.\n  /**\n   * @param {Vector} other The other Vector.\n   * @return {Vector} This for chaiing.\n   */\n  Vector.prototype['sub'] = Vector.prototype.sub = function (other) {\n    this['x'] -= other['x'];\n    this['y'] -= other['y'];\n    return this;\n  };\n\n  // Scale this vector. An independent scaling factor can be provided\n  // for each axis, or a single scaling factor that will scale both `x` and `y`.\n  /**\n   * @param {number} x The scaling factor in the x direction.\n   * @param {?number=} y The scaling factor in the y direction.  If this\n   *   is not specified, the x scaling factor will be used.\n   * @return {Vector} This for chaining.\n   */\n  Vector.prototype['scale'] = Vector.prototype.scale = function (x, y) {\n    this['x'] *= x;\n    this['y'] *= typeof y != 'undefined' ? y : x;\n    return this;\n  };\n\n  // Project this vector on to another vector.\n  /**\n   * @param {Vector} other The vector to project onto.\n   * @return {Vector} This for chaining.\n   */\n  Vector.prototype['project'] = Vector.prototype.project = function (other) {\n    var amt = this.dot(other) / other.len2();\n    this['x'] = amt * other['x'];\n    this['y'] = amt * other['y'];\n    return this;\n  };\n\n  // Project this vector onto a vector of unit length. This is slightly more efficient\n  // than `project` when dealing with unit vectors.\n  /**\n   * @param {Vector} other The unit vector to project onto.\n   * @return {Vector} This for chaining.\n   */\n  Vector.prototype['projectN'] = Vector.prototype.projectN = function (other) {\n    var amt = this.dot(other);\n    this['x'] = amt * other['x'];\n    this['y'] = amt * other['y'];\n    return this;\n  };\n\n  // Reflect this vector on an arbitrary axis.\n  /**\n   * @param {Vector} axis The vector representing the axis.\n   * @return {Vector} This for chaining.\n   */\n  Vector.prototype['reflect'] = Vector.prototype.reflect = function (axis) {\n    var x = this['x'];\n    var y = this['y'];\n    this.project(axis).scale(2);\n    this['x'] -= x;\n    this['y'] -= y;\n    return this;\n  };\n\n  // Reflect this vector on an arbitrary axis (represented by a unit vector). This is\n  // slightly more efficient than `reflect` when dealing with an axis that is a unit vector.\n  /**\n   * @param {Vector} axis The unit vector representing the axis.\n   * @return {Vector} This for chaining.\n   */\n  Vector.prototype['reflectN'] = Vector.prototype.reflectN = function (axis) {\n    var x = this['x'];\n    var y = this['y'];\n    this.projectN(axis).scale(2);\n    this['x'] -= x;\n    this['y'] -= y;\n    return this;\n  };\n\n  // Get the dot product of this vector and another.\n  /**\n   * @param {Vector}  other The vector to dot this one against.\n   * @return {number} The dot product.\n   */\n  Vector.prototype['dot'] = Vector.prototype.dot = function (other) {\n    return this['x'] * other['x'] + this['y'] * other['y'];\n  };\n\n  // Get the squared length of this vector.\n  /**\n   * @return {number} The length^2 of this vector.\n   */\n  Vector.prototype['len2'] = Vector.prototype.len2 = function () {\n    return this.dot(this);\n  };\n\n  // Get the length of this vector.\n  /**\n   * @return {number} The length of this vector.\n   */\n  Vector.prototype['len'] = Vector.prototype.len = function () {\n    return Math.sqrt(this.len2());\n  };\n\n  // ## Circle\n  //\n  // Represents a circle with a position and a radius.\n\n  // Create a new circle, optionally passing in a position and/or radius. If no position\n  // is given, the circle will be at `(0,0)`. If no radius is provided, the circle will\n  // have a radius of `0`.\n  /**\n   * @param {Vector=} pos A vector representing the position of the center of the circle\n   * @param {?number=} r The radius of the circle\n   * @constructor\n   */\n  function Circle(pos, r) {\n    this['pos'] = pos || new Vector();\n    this['r'] = r || 0;\n    this['offset'] = new Vector();\n  }\n  SAT['Circle'] = Circle;\n\n  // Compute the axis-aligned bounding box (AABB) of this Circle.\n  //\n  // Note: Returns a _new_ `Box` each time you call this.\n  /**\n   * @return {Polygon} The AABB\n   */\n  Circle.prototype['getAABBAsBox'] = Circle.prototype.getAABBAsBox = function () {\n    var r = this['r'];\n    var corner = this['pos'].clone().add(this['offset']).sub(new Vector(r, r));\n    return new Box(corner, r * 2, r * 2);\n  };\n\n  // Compute the axis-aligned bounding box (AABB) of this Circle.\n  //\n  // Note: Returns a _new_ `Polygon` each time you call this.\n  /**\n   * @return {Polygon} The AABB\n   */\n  Circle.prototype['getAABB'] = Circle.prototype.getAABB = function () {\n    return this.getAABBAsBox().toPolygon();\n  };\n\n  // Set the current offset to apply to the radius.\n  /**\n   * @param {Vector} offset The new offset vector.\n   * @return {Circle} This for chaining.\n   */\n  Circle.prototype['setOffset'] = Circle.prototype.setOffset = function (offset) {\n    this['offset'] = offset;\n    return this;\n  };\n\n  // ## Polygon\n  //\n  // Represents a *convex* polygon with any number of points (specified in counter-clockwise order)\n  //\n  // Note: Do _not_ manually change the `points`, `angle`, or `offset` properties. Use the\n  // provided setters. Otherwise the calculated properties will not be updated correctly.\n  //\n  // `pos` can be changed directly.\n\n  // Create a new polygon, passing in a position vector, and an array of points (represented\n  // by vectors relative to the position vector). If no position is passed in, the position\n  // of the polygon will be `(0,0)`.\n  /**\n   * @param {Vector=} pos A vector representing the origin of the polygon. (all other\n   *   points are relative to this one)\n   * @param {Array<Vector>=} points An array of vectors representing the points in the polygon,\n   *   in counter-clockwise order.\n   * @constructor\n   */\n  function Polygon(pos, points) {\n    this['pos'] = pos || new Vector();\n    this['angle'] = 0;\n    this['offset'] = new Vector();\n    this.setPoints(points || []);\n  }\n  SAT['Polygon'] = Polygon;\n\n  // Set the points of the polygon. Any consecutive duplicate points will be combined.\n  //\n  // Note: The points are counter-clockwise *with respect to the coordinate system*.\n  // If you directly draw the points on a screen that has the origin at the top-left corner\n  // it will _appear_ visually that the points are being specified clockwise. This is just\n  // because of the inversion of the Y-axis when being displayed.\n  /**\n   * @param {Array<Vector>=} points An array of vectors representing the points in the polygon,\n   *   in counter-clockwise order.\n   * @return {Polygon} This for chaining.\n   */\n  Polygon.prototype['setPoints'] = Polygon.prototype.setPoints = function (points) {\n    // Only re-allocate if this is a new polygon or the number of points has changed.\n    var lengthChanged = !this['points'] || this['points'].length !== points.length;\n    if (lengthChanged) {\n      var i;\n      var calcPoints = this['calcPoints'] = [];\n      var edges = this['edges'] = [];\n      var normals = this['normals'] = [];\n      // Allocate the vector arrays for the calculated properties\n      for (i = 0; i < points.length; i++) {\n        // Remove consecutive duplicate points\n        var p1 = points[i];\n        var p2 = i < points.length - 1 ? points[i + 1] : points[0];\n        if (p1 !== p2 && p1.x === p2.x && p1.y === p2.y) {\n          points.splice(i, 1);\n          i -= 1;\n          continue;\n        }\n        calcPoints.push(new Vector());\n        edges.push(new Vector());\n        normals.push(new Vector());\n      }\n    }\n    this['points'] = points;\n    this._recalc();\n    return this;\n  };\n\n  // Set the current rotation angle of the polygon.\n  /**\n   * @param {number} angle The current rotation angle (in radians).\n   * @return {Polygon} This for chaining.\n   */\n  Polygon.prototype['setAngle'] = Polygon.prototype.setAngle = function (angle) {\n    this['angle'] = angle;\n    this._recalc();\n    return this;\n  };\n\n  // Set the current offset to apply to the `points` before applying the `angle` rotation.\n  /**\n   * @param {Vector} offset The new offset vector.\n   * @return {Polygon} This for chaining.\n   */\n  Polygon.prototype['setOffset'] = Polygon.prototype.setOffset = function (offset) {\n    this['offset'] = offset;\n    this._recalc();\n    return this;\n  };\n\n  // Rotates this polygon counter-clockwise around the origin of *its local coordinate system* (i.e. `pos`).\n  //\n  // Note: This changes the **original** points (so any `angle` will be applied on top of this rotation).\n  /**\n   * @param {number} angle The angle to rotate (in radians)\n   * @return {Polygon} This for chaining.\n   */\n  Polygon.prototype['rotate'] = Polygon.prototype.rotate = function (angle) {\n    var points = this['points'];\n    var len = points.length;\n    for (var i = 0; i < len; i++) {\n      points[i].rotate(angle);\n    }\n    this._recalc();\n    return this;\n  };\n\n  // Translates the points of this polygon by a specified amount relative to the origin of *its own coordinate\n  // system* (i.e. `pos`).\n  //\n  // This is most useful to change the \"center point\" of a polygon. If you just want to move the whole polygon, change\n  // the coordinates of `pos`.\n  //\n  // Note: This changes the **original** points (so any `offset` will be applied on top of this translation)\n  /**\n   * @param {number} x The horizontal amount to translate.\n   * @param {number} y The vertical amount to translate.\n   * @return {Polygon} This for chaining.\n   */\n  Polygon.prototype['translate'] = Polygon.prototype.translate = function (x, y) {\n    var points = this['points'];\n    var len = points.length;\n    for (var i = 0; i < len; i++) {\n      points[i]['x'] += x;\n      points[i]['y'] += y;\n    }\n    this._recalc();\n    return this;\n  };\n\n\n  // Computes the calculated collision polygon. Applies the `angle` and `offset` to the original points then recalculates the\n  // edges and normals of the collision polygon.\n  /**\n   * @return {Polygon} This for chaining.\n   */\n  Polygon.prototype._recalc = function () {\n    // Calculated points - this is what is used for underlying collisions and takes into account\n    // the angle/offset set on the polygon.\n    var calcPoints = this['calcPoints'];\n    // The edges here are the direction of the `n`th edge of the polygon, relative to\n    // the `n`th point. If you want to draw a given edge from the edge value, you must\n    // first translate to the position of the starting point.\n    var edges = this['edges'];\n    // The normals here are the direction of the normal for the `n`th edge of the polygon, relative\n    // to the position of the `n`th point. If you want to draw an edge normal, you must first\n    // translate to the position of the starting point.\n    var normals = this['normals'];\n    // Copy the original points array and apply the offset/angle\n    var points = this['points'];\n    var offset = this['offset'];\n    var angle = this['angle'];\n    var len = points.length;\n    var i;\n    for (i = 0; i < len; i++) {\n      var calcPoint = calcPoints[i].copy(points[i]);\n      calcPoint['x'] += offset['x'];\n      calcPoint['y'] += offset['y'];\n      if (angle !== 0) {\n        calcPoint.rotate(angle);\n      }\n    }\n    // Calculate the edges/normals\n    for (i = 0; i < len; i++) {\n      var p1 = calcPoints[i];\n      var p2 = i < len - 1 ? calcPoints[i + 1] : calcPoints[0];\n      var e = edges[i].copy(p2).sub(p1);\n      normals[i].copy(e).perp().normalize();\n    }\n    return this;\n  };\n\n\n  // Compute the axis-aligned bounding box. Any current state\n  // (translations/rotations) will be applied before constructing the AABB.\n  //\n  // Note: Returns a _new_ `Box` each time you call this.\n  /**\n   * @return {Polygon} The AABB\n   */\n  Polygon.prototype['getAABBAsBox'] = Polygon.prototype.getAABBAsBox = function () {\n    var points = this['calcPoints'];\n    var len = points.length;\n    var xMin = points[0]['x'];\n    var yMin = points[0]['y'];\n    var xMax = points[0]['x'];\n    var yMax = points[0]['y'];\n    for (var i = 1; i < len; i++) {\n      var point = points[i];\n      if (point['x'] < xMin) {\n        xMin = point['x'];\n      }\n      else if (point['x'] > xMax) {\n        xMax = point['x'];\n      }\n      if (point['y'] < yMin) {\n        yMin = point['y'];\n      }\n      else if (point['y'] > yMax) {\n        yMax = point['y'];\n      }\n    }\n    return new Box(this['pos'].clone().add(new Vector(xMin, yMin)), xMax - xMin, yMax - yMin);\n  };\n\n\n  // Compute the axis-aligned bounding box. Any current state\n  // (translations/rotations) will be applied before constructing the AABB.\n  //\n  // Note: Returns a _new_ `Polygon` each time you call this.\n  /**\n   * @return {Polygon} The AABB\n   */\n  Polygon.prototype['getAABB'] = Polygon.prototype.getAABB = function () {\n    return this.getAABBAsBox().toPolygon();\n  };\n\n  // Compute the centroid (geometric center) of the polygon. Any current state\n  // (translations/rotations) will be applied before computing the centroid.\n  //\n  // See https://en.wikipedia.org/wiki/Centroid#Centroid_of_a_polygon\n  //\n  // Note: Returns a _new_ `Vector` each time you call this.\n  /**\n   * @return {Vector} A Vector that contains the coordinates of the Centroid.\n   */\n  Polygon.prototype['getCentroid'] = Polygon.prototype.getCentroid = function () {\n    var points = this['calcPoints'];\n    var len = points.length;\n    var cx = 0;\n    var cy = 0;\n    var ar = 0;\n    for (var i = 0; i < len; i++) {\n      var p1 = points[i];\n      var p2 = i === len - 1 ? points[0] : points[i + 1]; // Loop around if last point\n      var a = p1['x'] * p2['y'] - p2['x'] * p1['y'];\n      cx += (p1['x'] + p2['x']) * a;\n      cy += (p1['y'] + p2['y']) * a;\n      ar += a;\n    }\n    ar = ar * 3; // we want 1 / 6 the area and we currently have 2*area\n    cx = cx / ar;\n    cy = cy / ar;\n    return new Vector(cx, cy);\n  };\n\n\n  // ## Box\n  //\n  // Represents an axis-aligned box, with a width and height.\n\n\n  // Create a new box, with the specified position, width, and height. If no position\n  // is given, the position will be `(0,0)`. If no width or height are given, they will\n  // be set to `0`.\n  /**\n   * @param {Vector=} pos A vector representing the bottom-left of the box (i.e. the smallest x and smallest y value).\n   * @param {?number=} w The width of the box.\n   * @param {?number=} h The height of the box.\n   * @constructor\n   */\n  function Box(pos, w, h) {\n    this['pos'] = pos || new Vector();\n    this['w'] = w || 0;\n    this['h'] = h || 0;\n  }\n  SAT['Box'] = Box;\n\n  // Returns a polygon whose edges are the same as this box.\n  /**\n   * @return {Polygon} A new Polygon that represents this box.\n   */\n  Box.prototype['toPolygon'] = Box.prototype.toPolygon = function () {\n    var pos = this['pos'];\n    var w = this['w'];\n    var h = this['h'];\n    return new Polygon(new Vector(pos['x'], pos['y']), [\n      new Vector(), new Vector(w, 0),\n      new Vector(w, h), new Vector(0, h)\n    ]);\n  };\n\n  // ## Response\n  //\n  // An object representing the result of an intersection. Contains:\n  //  - The two objects participating in the intersection\n  //  - The vector representing the minimum change necessary to extract the first object\n  //    from the second one (as well as a unit vector in that direction and the magnitude\n  //    of the overlap)\n  //  - Whether the first object is entirely inside the second, and vice versa.\n  /**\n   * @constructor\n   */\n  function Response() {\n    this['a'] = null;\n    this['b'] = null;\n    this['overlapN'] = new Vector();\n    this['overlapV'] = new Vector();\n    this.clear();\n  }\n  SAT['Response'] = Response;\n\n  // Set some values of the response back to their defaults.  Call this between tests if\n  // you are going to reuse a single Response object for multiple intersection tests (recommented\n  // as it will avoid allcating extra memory)\n  /**\n   * @return {Response} This for chaining\n   */\n  Response.prototype['clear'] = Response.prototype.clear = function () {\n    this['aInB'] = true;\n    this['bInA'] = true;\n    this['overlap'] = Number.MAX_VALUE;\n    return this;\n  };\n\n  // ## Object Pools\n\n  // A pool of `Vector` objects that are used in calculations to avoid\n  // allocating memory.\n  /**\n   * @type {Array<Vector>}\n   */\n  var T_VECTORS = [];\n  for (var i = 0; i < 10; i++) { T_VECTORS.push(new Vector()); }\n\n  // A pool of arrays of numbers used in calculations to avoid allocating\n  // memory.\n  /**\n   * @type {Array<Array<number>>}\n   */\n  var T_ARRAYS = [];\n  for (var i = 0; i < 5; i++) { T_ARRAYS.push([]); }\n\n  // Temporary response used for polygon hit detection.\n  /**\n   * @type {Response}\n   */\n  var T_RESPONSE = new Response();\n\n  // Tiny \"point\" polygon used for polygon hit detection.\n  /**\n   * @type {Polygon}\n   */\n  var TEST_POINT = new Box(new Vector(), 0.000001, 0.000001).toPolygon();\n\n  // ## Helper Functions\n\n  // Flattens the specified array of points onto a unit vector axis,\n  // resulting in a one dimensional range of the minimum and\n  // maximum value on that axis.\n  /**\n   * @param {Array<Vector>} points The points to flatten.\n   * @param {Vector} normal The unit vector axis to flatten on.\n   * @param {Array<number>} result An array.  After calling this function,\n   *   result[0] will be the minimum value,\n   *   result[1] will be the maximum value.\n   */\n  function flattenPointsOn(points, normal, result) {\n    var min = Number.MAX_VALUE;\n    var max = -Number.MAX_VALUE;\n    var len = points.length;\n    for (var i = 0; i < len; i++) {\n      // The magnitude of the projection of the point onto the normal\n      var dot = points[i].dot(normal);\n      if (dot < min) { min = dot; }\n      if (dot > max) { max = dot; }\n    }\n    result[0] = min; result[1] = max;\n  }\n\n  // Check whether two convex polygons are separated by the specified\n  // axis (must be a unit vector).\n  /**\n   * @param {Vector} aPos The position of the first polygon.\n   * @param {Vector} bPos The position of the second polygon.\n   * @param {Array<Vector>} aPoints The points in the first polygon.\n   * @param {Array<Vector>} bPoints The points in the second polygon.\n   * @param {Vector} axis The axis (unit sized) to test against.  The points of both polygons\n   *   will be projected onto this axis.\n   * @param {Response=} response A Response object (optional) which will be populated\n   *   if the axis is not a separating axis.\n   * @return {boolean} true if it is a separating axis, false otherwise.  If false,\n   *   and a response is passed in, information about how much overlap and\n   *   the direction of the overlap will be populated.\n   */\n  function isSeparatingAxis(aPos, bPos, aPoints, bPoints, axis, response) {\n    var rangeA = T_ARRAYS.pop();\n    var rangeB = T_ARRAYS.pop();\n    // The magnitude of the offset between the two polygons\n    var offsetV = T_VECTORS.pop().copy(bPos).sub(aPos);\n    var projectedOffset = offsetV.dot(axis);\n    // Project the polygons onto the axis.\n    flattenPointsOn(aPoints, axis, rangeA);\n    flattenPointsOn(bPoints, axis, rangeB);\n    // Move B's range to its position relative to A.\n    rangeB[0] += projectedOffset;\n    rangeB[1] += projectedOffset;\n    // Check if there is a gap. If there is, this is a separating axis and we can stop\n    if (rangeA[0] > rangeB[1] || rangeB[0] > rangeA[1]) {\n      T_VECTORS.push(offsetV);\n      T_ARRAYS.push(rangeA);\n      T_ARRAYS.push(rangeB);\n      return true;\n    }\n    // This is not a separating axis. If we're calculating a response, calculate the overlap.\n    if (response) {\n      var overlap = 0;\n      // A starts further left than B\n      if (rangeA[0] < rangeB[0]) {\n        response['aInB'] = false;\n        // A ends before B does. We have to pull A out of B\n        if (rangeA[1] < rangeB[1]) {\n          overlap = rangeA[1] - rangeB[0];\n          response['bInA'] = false;\n          // B is fully inside A.  Pick the shortest way out.\n        } else {\n          var option1 = rangeA[1] - rangeB[0];\n          var option2 = rangeB[1] - rangeA[0];\n          overlap = option1 < option2 ? option1 : -option2;\n        }\n        // B starts further left than A\n      } else {\n        response['bInA'] = false;\n        // B ends before A ends. We have to push A out of B\n        if (rangeA[1] > rangeB[1]) {\n          overlap = rangeA[0] - rangeB[1];\n          response['aInB'] = false;\n          // A is fully inside B.  Pick the shortest way out.\n        } else {\n          var option1 = rangeA[1] - rangeB[0];\n          var option2 = rangeB[1] - rangeA[0];\n          overlap = option1 < option2 ? option1 : -option2;\n        }\n      }\n      // If this is the smallest amount of overlap we've seen so far, set it as the minimum overlap.\n      var absOverlap = Math.abs(overlap);\n      if (absOverlap < response['overlap']) {\n        response['overlap'] = absOverlap;\n        response['overlapN'].copy(axis);\n        if (overlap < 0) {\n          response['overlapN'].reverse();\n        }\n      }\n    }\n    T_VECTORS.push(offsetV);\n    T_ARRAYS.push(rangeA);\n    T_ARRAYS.push(rangeB);\n    return false;\n  }\n  SAT['isSeparatingAxis'] = isSeparatingAxis;\n\n  // Calculates which Voronoi region a point is on a line segment.\n  // It is assumed that both the line and the point are relative to `(0,0)`\n  //\n  //            |       (0)      |\n  //     (-1)  [S]--------------[E]  (1)\n  //            |       (0)      |\n  /**\n   * @param {Vector} line The line segment.\n   * @param {Vector} point The point.\n   * @return  {number} LEFT_VORONOI_REGION (-1) if it is the left region,\n   *          MIDDLE_VORONOI_REGION (0) if it is the middle region,\n   *          RIGHT_VORONOI_REGION (1) if it is the right region.\n   */\n  function voronoiRegion(line, point) {\n    var len2 = line.len2();\n    var dp = point.dot(line);\n    // If the point is beyond the start of the line, it is in the\n    // left voronoi region.\n    if (dp < 0) { return LEFT_VORONOI_REGION; }\n    // If the point is beyond the end of the line, it is in the\n    // right voronoi region.\n    else if (dp > len2) { return RIGHT_VORONOI_REGION; }\n    // Otherwise, it's in the middle one.\n    else { return MIDDLE_VORONOI_REGION; }\n  }\n  // Constants for Voronoi regions\n  /**\n   * @const\n   */\n  var LEFT_VORONOI_REGION = -1;\n  /**\n   * @const\n   */\n  var MIDDLE_VORONOI_REGION = 0;\n  /**\n   * @const\n   */\n  var RIGHT_VORONOI_REGION = 1;\n\n  // ## Collision Tests\n\n  // Check if a point is inside a circle.\n  /**\n   * @param {Vector} p The point to test.\n   * @param {Circle} c The circle to test.\n   * @return {boolean} true if the point is inside the circle, false if it is not.\n   */\n  function pointInCircle(p, c) {\n    var differenceV = T_VECTORS.pop().copy(p).sub(c['pos']).sub(c['offset']);\n    var radiusSq = c['r'] * c['r'];\n    var distanceSq = differenceV.len2();\n    T_VECTORS.push(differenceV);\n    // If the distance between is smaller than the radius then the point is inside the circle.\n    return distanceSq <= radiusSq;\n  }\n  SAT['pointInCircle'] = pointInCircle;\n\n  // Check if a point is inside a convex polygon.\n  /**\n   * @param {Vector} p The point to test.\n   * @param {Polygon} poly The polygon to test.\n   * @return {boolean} true if the point is inside the polygon, false if it is not.\n   */\n  function pointInPolygon(p, poly) {\n    TEST_POINT['pos'].copy(p);\n    T_RESPONSE.clear();\n    var result = testPolygonPolygon(TEST_POINT, poly, T_RESPONSE);\n    if (result) {\n      result = T_RESPONSE['aInB'];\n    }\n    return result;\n  }\n  SAT['pointInPolygon'] = pointInPolygon;\n\n  // Check if two circles collide.\n  /**\n   * @param {Circle} a The first circle.\n   * @param {Circle} b The second circle.\n   * @param {Response=} response Response object (optional) that will be populated if\n   *   the circles intersect.\n   * @return {boolean} true if the circles intersect, false if they don't.\n   */\n  function testCircleCircle(a, b, response) {\n    // Check if the distance between the centers of the two\n    // circles is greater than their combined radius.\n    var differenceV = T_VECTORS.pop().copy(b['pos']).add(b['offset']).sub(a['pos']).sub(a['offset']);\n    var totalRadius = a['r'] + b['r'];\n    var totalRadiusSq = totalRadius * totalRadius;\n    var distanceSq = differenceV.len2();\n    // If the distance is bigger than the combined radius, they don't intersect.\n    if (distanceSq > totalRadiusSq) {\n      T_VECTORS.push(differenceV);\n      return false;\n    }\n    // They intersect.  If we're calculating a response, calculate the overlap.\n    if (response) {\n      var dist = Math.sqrt(distanceSq);\n      response['a'] = a;\n      response['b'] = b;\n      response['overlap'] = totalRadius - dist;\n      response['overlapN'].copy(differenceV.normalize());\n      response['overlapV'].copy(differenceV).scale(response['overlap']);\n      response['aInB'] = a['r'] <= b['r'] && dist <= b['r'] - a['r'];\n      response['bInA'] = b['r'] <= a['r'] && dist <= a['r'] - b['r'];\n    }\n    T_VECTORS.push(differenceV);\n    return true;\n  }\n  SAT['testCircleCircle'] = testCircleCircle;\n\n  // Check if a polygon and a circle collide.\n  /**\n   * @param {Polygon} polygon The polygon.\n   * @param {Circle} circle The circle.\n   * @param {Response=} response Response object (optional) that will be populated if\n   *   they interset.\n   * @return {boolean} true if they intersect, false if they don't.\n   */\n  function testPolygonCircle(polygon, circle, response) {\n    // Get the position of the circle relative to the polygon.\n    var circlePos = T_VECTORS.pop().copy(circle['pos']).add(circle['offset']).sub(polygon['pos']);\n    var radius = circle['r'];\n    var radius2 = radius * radius;\n    var points = polygon['calcPoints'];\n    var len = points.length;\n    var edge = T_VECTORS.pop();\n    var point = T_VECTORS.pop();\n\n    // For each edge in the polygon:\n    for (var i = 0; i < len; i++) {\n      var next = i === len - 1 ? 0 : i + 1;\n      var prev = i === 0 ? len - 1 : i - 1;\n      var overlap = 0;\n      var overlapN = null;\n\n      // Get the edge.\n      edge.copy(polygon['edges'][i]);\n      // Calculate the center of the circle relative to the starting point of the edge.\n      point.copy(circlePos).sub(points[i]);\n\n      // If the distance between the center of the circle and the point\n      // is bigger than the radius, the polygon is definitely not fully in\n      // the circle.\n      if (response && point.len2() > radius2) {\n        response['aInB'] = false;\n      }\n\n      // Calculate which Voronoi region the center of the circle is in.\n      var region = voronoiRegion(edge, point);\n      // If it's the left region:\n      if (region === LEFT_VORONOI_REGION) {\n        // We need to make sure we're in the RIGHT_VORONOI_REGION of the previous edge.\n        edge.copy(polygon['edges'][prev]);\n        // Calculate the center of the circle relative the starting point of the previous edge\n        var point2 = T_VECTORS.pop().copy(circlePos).sub(points[prev]);\n        region = voronoiRegion(edge, point2);\n        if (region === RIGHT_VORONOI_REGION) {\n          // It's in the region we want.  Check if the circle intersects the point.\n          var dist = point.len();\n          if (dist > radius) {\n            // No intersection\n            T_VECTORS.push(circlePos);\n            T_VECTORS.push(edge);\n            T_VECTORS.push(point);\n            T_VECTORS.push(point2);\n            return false;\n          } else if (response) {\n            // It intersects, calculate the overlap.\n            response['bInA'] = false;\n            overlapN = point.normalize();\n            overlap = radius - dist;\n          }\n        }\n        T_VECTORS.push(point2);\n        // If it's the right region:\n      } else if (region === RIGHT_VORONOI_REGION) {\n        // We need to make sure we're in the left region on the next edge\n        edge.copy(polygon['edges'][next]);\n        // Calculate the center of the circle relative to the starting point of the next edge.\n        point.copy(circlePos).sub(points[next]);\n        region = voronoiRegion(edge, point);\n        if (region === LEFT_VORONOI_REGION) {\n          // It's in the region we want.  Check if the circle intersects the point.\n          var dist = point.len();\n          if (dist > radius) {\n            // No intersection\n            T_VECTORS.push(circlePos);\n            T_VECTORS.push(edge);\n            T_VECTORS.push(point);\n            return false;\n          } else if (response) {\n            // It intersects, calculate the overlap.\n            response['bInA'] = false;\n            overlapN = point.normalize();\n            overlap = radius - dist;\n          }\n        }\n        // Otherwise, it's the middle region:\n      } else {\n        // Need to check if the circle is intersecting the edge,\n        // Change the edge into its \"edge normal\".\n        var normal = edge.perp().normalize();\n        // Find the perpendicular distance between the center of the\n        // circle and the edge.\n        var dist = point.dot(normal);\n        var distAbs = Math.abs(dist);\n        // If the circle is on the outside of the edge, there is no intersection.\n        if (dist > 0 && distAbs > radius) {\n          // No intersection\n          T_VECTORS.push(circlePos);\n          T_VECTORS.push(normal);\n          T_VECTORS.push(point);\n          return false;\n        } else if (response) {\n          // It intersects, calculate the overlap.\n          overlapN = normal;\n          overlap = radius - dist;\n          // If the center of the circle is on the outside of the edge, or part of the\n          // circle is on the outside, the circle is not fully inside the polygon.\n          if (dist >= 0 || overlap < 2 * radius) {\n            response['bInA'] = false;\n          }\n        }\n      }\n\n      // If this is the smallest overlap we've seen, keep it.\n      // (overlapN may be null if the circle was in the wrong Voronoi region).\n      if (overlapN && response && Math.abs(overlap) < Math.abs(response['overlap'])) {\n        response['overlap'] = overlap;\n        response['overlapN'].copy(overlapN);\n      }\n    }\n\n    // Calculate the final overlap vector - based on the smallest overlap.\n    if (response) {\n      response['a'] = polygon;\n      response['b'] = circle;\n      response['overlapV'].copy(response['overlapN']).scale(response['overlap']);\n    }\n    T_VECTORS.push(circlePos);\n    T_VECTORS.push(edge);\n    T_VECTORS.push(point);\n    return true;\n  }\n  SAT['testPolygonCircle'] = testPolygonCircle;\n\n  // Check if a circle and a polygon collide.\n  //\n  // **NOTE:** This is slightly less efficient than polygonCircle as it just\n  // runs polygonCircle and reverses everything at the end.\n  /**\n   * @param {Circle} circle The circle.\n   * @param {Polygon} polygon The polygon.\n   * @param {Response=} response Response object (optional) that will be populated if\n   *   they interset.\n   * @return {boolean} true if they intersect, false if they don't.\n   */\n  function testCirclePolygon(circle, polygon, response) {\n    // Test the polygon against the circle.\n    var result = testPolygonCircle(polygon, circle, response);\n    if (result && response) {\n      // Swap A and B in the response.\n      var a = response['a'];\n      var aInB = response['aInB'];\n      response['overlapN'].reverse();\n      response['overlapV'].reverse();\n      response['a'] = response['b'];\n      response['b'] = a;\n      response['aInB'] = response['bInA'];\n      response['bInA'] = aInB;\n    }\n    return result;\n  }\n  SAT['testCirclePolygon'] = testCirclePolygon;\n\n  // Checks whether polygons collide.\n  /**\n   * @param {Polygon} a The first polygon.\n   * @param {Polygon} b The second polygon.\n   * @param {Response=} response Response object (optional) that will be populated if\n   *   they interset.\n   * @return {boolean} true if they intersect, false if they don't.\n   */\n  function testPolygonPolygon(a, b, response) {\n    var aPoints = a['calcPoints'];\n    var aLen = aPoints.length;\n    var bPoints = b['calcPoints'];\n    var bLen = bPoints.length;\n    // If any of the edge normals of A is a separating axis, no intersection.\n    for (var i = 0; i < aLen; i++) {\n      if (isSeparatingAxis(a['pos'], b['pos'], aPoints, bPoints, a['normals'][i], response)) {\n        return false;\n      }\n    }\n    // If any of the edge normals of B is a separating axis, no intersection.\n    for (var i = 0; i < bLen; i++) {\n      if (isSeparatingAxis(a['pos'], b['pos'], aPoints, bPoints, b['normals'][i], response)) {\n        return false;\n      }\n    }\n    // Since none of the edge normals of A or B are a separating axis, there is an intersection\n    // and we've already calculated the smallest overlap (in isSeparatingAxis).  Calculate the\n    // final overlap vector.\n    if (response) {\n      response['a'] = a;\n      response['b'] = b;\n      response['overlapV'].copy(response['overlapN']).scale(response['overlap']);\n    }\n    return true;\n  }\n  SAT['testPolygonPolygon'] = testPolygonPolygon;\n\n  return SAT;\n}));\n\n\n//# sourceURL=webpack://detect-collisions/./node_modules/sat/SAT.js?");
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;// Version 0.9.0 - Copyright 2012 - 2021 -  Jim Riecken <jimr@jimr.ca>
+//
+// Released under the MIT License - https://github.com/jriecken/sat-js
+//
+// A simple library for determining intersections of circles and
+// polygons using the Separating Axis Theorem.
+/** @preserve SAT.js - Version 0.9.0 - Copyright 2012 - 2021 - Jim Riecken <jimr@jimr.ca> - released under the MIT License. https://github.com/jriecken/sat-js */
 
-/***/ }),
+/*global define: false, module: false*/
+/*jshint shadow:true, sub:true, forin:true, noarg:true, noempty:true,
+  eqeqeq:true, bitwise:true, strict:true, undef:true,
+  curly:true, browser:true */
 
-/***/ "./src/demo/index.js":
-/*!***************************!*\
-  !*** ./src/demo/index.js ***!
-  \***************************/
-/***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
+// Create a UMD wrapper for SAT. Works in:
+//
+//  - Plain browser via global SAT variable
+//  - AMD loader (like require.js)
+//  - Node.js
+//
+// The quoted properties all over the place are used so that the Closure Compiler
+// does not mangle the exposed API in advanced mode.
+/**
+ * @param {*} root - The global scope
+ * @param {Function} factory - Factory that creates SAT module
+ */
+(function (root, factory) {
+  "use strict";
+  if (true) {
+    !(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+		__WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else {}
+}(this, function () {
+  "use strict";
 
-eval("if (window.location.search.indexOf(\"?stress\") !== -1) {\n  const { Stress } = __webpack_require__(/*! ./stress */ \"./src/demo/stress.js\");\n\n  document.body.appendChild(new Stress().element);\n} else {\n  const { Tank } = __webpack_require__(/*! ./tank */ \"./src/demo/tank.js\");\n\n  document.body.appendChild(new Tank().element);\n}\n\n\n//# sourceURL=webpack://detect-collisions/./src/demo/index.js?");
+  var SAT = {};
+
+  //
+  // ## Vector
+  //
+  // Represents a vector in two dimensions with `x` and `y` properties.
+
+
+  // Create a new Vector, optionally passing in the `x` and `y` coordinates. If
+  // a coordinate is not specified, it will be set to `0`
+  /**
+   * @param {?number=} x The x position.
+   * @param {?number=} y The y position.
+   * @constructor
+   */
+  function Vector(x, y) {
+    this['x'] = x || 0;
+    this['y'] = y || 0;
+  }
+  SAT['Vector'] = Vector;
+  // Alias `Vector` as `V`
+  SAT['V'] = Vector;
+
+
+  // Copy the values of another Vector into this one.
+  /**
+   * @param {Vector} other The other Vector.
+   * @return {Vector} This for chaining.
+   */
+  Vector.prototype['copy'] = Vector.prototype.copy = function (other) {
+    this['x'] = other['x'];
+    this['y'] = other['y'];
+    return this;
+  };
+
+  // Create a new vector with the same coordinates as this on.
+  /**
+   * @return {Vector} The new cloned vector
+   */
+  Vector.prototype['clone'] = Vector.prototype.clone = function () {
+    return new Vector(this['x'], this['y']);
+  };
+
+  // Change this vector to be perpendicular to what it was before. (Effectively
+  // roatates it 90 degrees in a clockwise direction)
+  /**
+   * @return {Vector} This for chaining.
+   */
+  Vector.prototype['perp'] = Vector.prototype.perp = function () {
+    var x = this['x'];
+    this['x'] = this['y'];
+    this['y'] = -x;
+    return this;
+  };
+
+  // Rotate this vector (counter-clockwise) by the specified angle (in radians).
+  /**
+   * @param {number} angle The angle to rotate (in radians)
+   * @return {Vector} This for chaining.
+   */
+  Vector.prototype['rotate'] = Vector.prototype.rotate = function (angle) {
+    var x = this['x'];
+    var y = this['y'];
+    this['x'] = x * Math.cos(angle) - y * Math.sin(angle);
+    this['y'] = x * Math.sin(angle) + y * Math.cos(angle);
+    return this;
+  };
+
+  // Reverse this vector.
+  /**
+   * @return {Vector} This for chaining.
+   */
+  Vector.prototype['reverse'] = Vector.prototype.reverse = function () {
+    this['x'] = -this['x'];
+    this['y'] = -this['y'];
+    return this;
+  };
+
+
+  // Normalize this vector.  (make it have length of `1`)
+  /**
+   * @return {Vector} This for chaining.
+   */
+  Vector.prototype['normalize'] = Vector.prototype.normalize = function () {
+    var d = this.len();
+    if (d > 0) {
+      this['x'] = this['x'] / d;
+      this['y'] = this['y'] / d;
+    }
+    return this;
+  };
+
+  // Add another vector to this one.
+  /**
+   * @param {Vector} other The other Vector.
+   * @return {Vector} This for chaining.
+   */
+  Vector.prototype['add'] = Vector.prototype.add = function (other) {
+    this['x'] += other['x'];
+    this['y'] += other['y'];
+    return this;
+  };
+
+  // Subtract another vector from this one.
+  /**
+   * @param {Vector} other The other Vector.
+   * @return {Vector} This for chaiing.
+   */
+  Vector.prototype['sub'] = Vector.prototype.sub = function (other) {
+    this['x'] -= other['x'];
+    this['y'] -= other['y'];
+    return this;
+  };
+
+  // Scale this vector. An independent scaling factor can be provided
+  // for each axis, or a single scaling factor that will scale both `x` and `y`.
+  /**
+   * @param {number} x The scaling factor in the x direction.
+   * @param {?number=} y The scaling factor in the y direction.  If this
+   *   is not specified, the x scaling factor will be used.
+   * @return {Vector} This for chaining.
+   */
+  Vector.prototype['scale'] = Vector.prototype.scale = function (x, y) {
+    this['x'] *= x;
+    this['y'] *= typeof y != 'undefined' ? y : x;
+    return this;
+  };
+
+  // Project this vector on to another vector.
+  /**
+   * @param {Vector} other The vector to project onto.
+   * @return {Vector} This for chaining.
+   */
+  Vector.prototype['project'] = Vector.prototype.project = function (other) {
+    var amt = this.dot(other) / other.len2();
+    this['x'] = amt * other['x'];
+    this['y'] = amt * other['y'];
+    return this;
+  };
+
+  // Project this vector onto a vector of unit length. This is slightly more efficient
+  // than `project` when dealing with unit vectors.
+  /**
+   * @param {Vector} other The unit vector to project onto.
+   * @return {Vector} This for chaining.
+   */
+  Vector.prototype['projectN'] = Vector.prototype.projectN = function (other) {
+    var amt = this.dot(other);
+    this['x'] = amt * other['x'];
+    this['y'] = amt * other['y'];
+    return this;
+  };
+
+  // Reflect this vector on an arbitrary axis.
+  /**
+   * @param {Vector} axis The vector representing the axis.
+   * @return {Vector} This for chaining.
+   */
+  Vector.prototype['reflect'] = Vector.prototype.reflect = function (axis) {
+    var x = this['x'];
+    var y = this['y'];
+    this.project(axis).scale(2);
+    this['x'] -= x;
+    this['y'] -= y;
+    return this;
+  };
+
+  // Reflect this vector on an arbitrary axis (represented by a unit vector). This is
+  // slightly more efficient than `reflect` when dealing with an axis that is a unit vector.
+  /**
+   * @param {Vector} axis The unit vector representing the axis.
+   * @return {Vector} This for chaining.
+   */
+  Vector.prototype['reflectN'] = Vector.prototype.reflectN = function (axis) {
+    var x = this['x'];
+    var y = this['y'];
+    this.projectN(axis).scale(2);
+    this['x'] -= x;
+    this['y'] -= y;
+    return this;
+  };
+
+  // Get the dot product of this vector and another.
+  /**
+   * @param {Vector}  other The vector to dot this one against.
+   * @return {number} The dot product.
+   */
+  Vector.prototype['dot'] = Vector.prototype.dot = function (other) {
+    return this['x'] * other['x'] + this['y'] * other['y'];
+  };
+
+  // Get the squared length of this vector.
+  /**
+   * @return {number} The length^2 of this vector.
+   */
+  Vector.prototype['len2'] = Vector.prototype.len2 = function () {
+    return this.dot(this);
+  };
+
+  // Get the length of this vector.
+  /**
+   * @return {number} The length of this vector.
+   */
+  Vector.prototype['len'] = Vector.prototype.len = function () {
+    return Math.sqrt(this.len2());
+  };
+
+  // ## Circle
+  //
+  // Represents a circle with a position and a radius.
+
+  // Create a new circle, optionally passing in a position and/or radius. If no position
+  // is given, the circle will be at `(0,0)`. If no radius is provided, the circle will
+  // have a radius of `0`.
+  /**
+   * @param {Vector=} pos A vector representing the position of the center of the circle
+   * @param {?number=} r The radius of the circle
+   * @constructor
+   */
+  function Circle(pos, r) {
+    this['pos'] = pos || new Vector();
+    this['r'] = r || 0;
+    this['offset'] = new Vector();
+  }
+  SAT['Circle'] = Circle;
+
+  // Compute the axis-aligned bounding box (AABB) of this Circle.
+  //
+  // Note: Returns a _new_ `Box` each time you call this.
+  /**
+   * @return {Polygon} The AABB
+   */
+  Circle.prototype['getAABBAsBox'] = Circle.prototype.getAABBAsBox = function () {
+    var r = this['r'];
+    var corner = this['pos'].clone().add(this['offset']).sub(new Vector(r, r));
+    return new Box(corner, r * 2, r * 2);
+  };
+
+  // Compute the axis-aligned bounding box (AABB) of this Circle.
+  //
+  // Note: Returns a _new_ `Polygon` each time you call this.
+  /**
+   * @return {Polygon} The AABB
+   */
+  Circle.prototype['getAABB'] = Circle.prototype.getAABB = function () {
+    return this.getAABBAsBox().toPolygon();
+  };
+
+  // Set the current offset to apply to the radius.
+  /**
+   * @param {Vector} offset The new offset vector.
+   * @return {Circle} This for chaining.
+   */
+  Circle.prototype['setOffset'] = Circle.prototype.setOffset = function (offset) {
+    this['offset'] = offset;
+    return this;
+  };
+
+  // ## Polygon
+  //
+  // Represents a *convex* polygon with any number of points (specified in counter-clockwise order)
+  //
+  // Note: Do _not_ manually change the `points`, `angle`, or `offset` properties. Use the
+  // provided setters. Otherwise the calculated properties will not be updated correctly.
+  //
+  // `pos` can be changed directly.
+
+  // Create a new polygon, passing in a position vector, and an array of points (represented
+  // by vectors relative to the position vector). If no position is passed in, the position
+  // of the polygon will be `(0,0)`.
+  /**
+   * @param {Vector=} pos A vector representing the origin of the polygon. (all other
+   *   points are relative to this one)
+   * @param {Array<Vector>=} points An array of vectors representing the points in the polygon,
+   *   in counter-clockwise order.
+   * @constructor
+   */
+  function Polygon(pos, points) {
+    this['pos'] = pos || new Vector();
+    this['angle'] = 0;
+    this['offset'] = new Vector();
+    this.setPoints(points || []);
+  }
+  SAT['Polygon'] = Polygon;
+
+  // Set the points of the polygon. Any consecutive duplicate points will be combined.
+  //
+  // Note: The points are counter-clockwise *with respect to the coordinate system*.
+  // If you directly draw the points on a screen that has the origin at the top-left corner
+  // it will _appear_ visually that the points are being specified clockwise. This is just
+  // because of the inversion of the Y-axis when being displayed.
+  /**
+   * @param {Array<Vector>=} points An array of vectors representing the points in the polygon,
+   *   in counter-clockwise order.
+   * @return {Polygon} This for chaining.
+   */
+  Polygon.prototype['setPoints'] = Polygon.prototype.setPoints = function (points) {
+    // Only re-allocate if this is a new polygon or the number of points has changed.
+    var lengthChanged = !this['points'] || this['points'].length !== points.length;
+    if (lengthChanged) {
+      var i;
+      var calcPoints = this['calcPoints'] = [];
+      var edges = this['edges'] = [];
+      var normals = this['normals'] = [];
+      // Allocate the vector arrays for the calculated properties
+      for (i = 0; i < points.length; i++) {
+        // Remove consecutive duplicate points
+        var p1 = points[i];
+        var p2 = i < points.length - 1 ? points[i + 1] : points[0];
+        if (p1 !== p2 && p1.x === p2.x && p1.y === p2.y) {
+          points.splice(i, 1);
+          i -= 1;
+          continue;
+        }
+        calcPoints.push(new Vector());
+        edges.push(new Vector());
+        normals.push(new Vector());
+      }
+    }
+    this['points'] = points;
+    this._recalc();
+    return this;
+  };
+
+  // Set the current rotation angle of the polygon.
+  /**
+   * @param {number} angle The current rotation angle (in radians).
+   * @return {Polygon} This for chaining.
+   */
+  Polygon.prototype['setAngle'] = Polygon.prototype.setAngle = function (angle) {
+    this['angle'] = angle;
+    this._recalc();
+    return this;
+  };
+
+  // Set the current offset to apply to the `points` before applying the `angle` rotation.
+  /**
+   * @param {Vector} offset The new offset vector.
+   * @return {Polygon} This for chaining.
+   */
+  Polygon.prototype['setOffset'] = Polygon.prototype.setOffset = function (offset) {
+    this['offset'] = offset;
+    this._recalc();
+    return this;
+  };
+
+  // Rotates this polygon counter-clockwise around the origin of *its local coordinate system* (i.e. `pos`).
+  //
+  // Note: This changes the **original** points (so any `angle` will be applied on top of this rotation).
+  /**
+   * @param {number} angle The angle to rotate (in radians)
+   * @return {Polygon} This for chaining.
+   */
+  Polygon.prototype['rotate'] = Polygon.prototype.rotate = function (angle) {
+    var points = this['points'];
+    var len = points.length;
+    for (var i = 0; i < len; i++) {
+      points[i].rotate(angle);
+    }
+    this._recalc();
+    return this;
+  };
+
+  // Translates the points of this polygon by a specified amount relative to the origin of *its own coordinate
+  // system* (i.e. `pos`).
+  //
+  // This is most useful to change the "center point" of a polygon. If you just want to move the whole polygon, change
+  // the coordinates of `pos`.
+  //
+  // Note: This changes the **original** points (so any `offset` will be applied on top of this translation)
+  /**
+   * @param {number} x The horizontal amount to translate.
+   * @param {number} y The vertical amount to translate.
+   * @return {Polygon} This for chaining.
+   */
+  Polygon.prototype['translate'] = Polygon.prototype.translate = function (x, y) {
+    var points = this['points'];
+    var len = points.length;
+    for (var i = 0; i < len; i++) {
+      points[i]['x'] += x;
+      points[i]['y'] += y;
+    }
+    this._recalc();
+    return this;
+  };
+
+
+  // Computes the calculated collision polygon. Applies the `angle` and `offset` to the original points then recalculates the
+  // edges and normals of the collision polygon.
+  /**
+   * @return {Polygon} This for chaining.
+   */
+  Polygon.prototype._recalc = function () {
+    // Calculated points - this is what is used for underlying collisions and takes into account
+    // the angle/offset set on the polygon.
+    var calcPoints = this['calcPoints'];
+    // The edges here are the direction of the `n`th edge of the polygon, relative to
+    // the `n`th point. If you want to draw a given edge from the edge value, you must
+    // first translate to the position of the starting point.
+    var edges = this['edges'];
+    // The normals here are the direction of the normal for the `n`th edge of the polygon, relative
+    // to the position of the `n`th point. If you want to draw an edge normal, you must first
+    // translate to the position of the starting point.
+    var normals = this['normals'];
+    // Copy the original points array and apply the offset/angle
+    var points = this['points'];
+    var offset = this['offset'];
+    var angle = this['angle'];
+    var len = points.length;
+    var i;
+    for (i = 0; i < len; i++) {
+      var calcPoint = calcPoints[i].copy(points[i]);
+      calcPoint['x'] += offset['x'];
+      calcPoint['y'] += offset['y'];
+      if (angle !== 0) {
+        calcPoint.rotate(angle);
+      }
+    }
+    // Calculate the edges/normals
+    for (i = 0; i < len; i++) {
+      var p1 = calcPoints[i];
+      var p2 = i < len - 1 ? calcPoints[i + 1] : calcPoints[0];
+      var e = edges[i].copy(p2).sub(p1);
+      normals[i].copy(e).perp().normalize();
+    }
+    return this;
+  };
+
+
+  // Compute the axis-aligned bounding box. Any current state
+  // (translations/rotations) will be applied before constructing the AABB.
+  //
+  // Note: Returns a _new_ `Box` each time you call this.
+  /**
+   * @return {Polygon} The AABB
+   */
+  Polygon.prototype['getAABBAsBox'] = Polygon.prototype.getAABBAsBox = function () {
+    var points = this['calcPoints'];
+    var len = points.length;
+    var xMin = points[0]['x'];
+    var yMin = points[0]['y'];
+    var xMax = points[0]['x'];
+    var yMax = points[0]['y'];
+    for (var i = 1; i < len; i++) {
+      var point = points[i];
+      if (point['x'] < xMin) {
+        xMin = point['x'];
+      }
+      else if (point['x'] > xMax) {
+        xMax = point['x'];
+      }
+      if (point['y'] < yMin) {
+        yMin = point['y'];
+      }
+      else if (point['y'] > yMax) {
+        yMax = point['y'];
+      }
+    }
+    return new Box(this['pos'].clone().add(new Vector(xMin, yMin)), xMax - xMin, yMax - yMin);
+  };
+
+
+  // Compute the axis-aligned bounding box. Any current state
+  // (translations/rotations) will be applied before constructing the AABB.
+  //
+  // Note: Returns a _new_ `Polygon` each time you call this.
+  /**
+   * @return {Polygon} The AABB
+   */
+  Polygon.prototype['getAABB'] = Polygon.prototype.getAABB = function () {
+    return this.getAABBAsBox().toPolygon();
+  };
+
+  // Compute the centroid (geometric center) of the polygon. Any current state
+  // (translations/rotations) will be applied before computing the centroid.
+  //
+  // See https://en.wikipedia.org/wiki/Centroid#Centroid_of_a_polygon
+  //
+  // Note: Returns a _new_ `Vector` each time you call this.
+  /**
+   * @return {Vector} A Vector that contains the coordinates of the Centroid.
+   */
+  Polygon.prototype['getCentroid'] = Polygon.prototype.getCentroid = function () {
+    var points = this['calcPoints'];
+    var len = points.length;
+    var cx = 0;
+    var cy = 0;
+    var ar = 0;
+    for (var i = 0; i < len; i++) {
+      var p1 = points[i];
+      var p2 = i === len - 1 ? points[0] : points[i + 1]; // Loop around if last point
+      var a = p1['x'] * p2['y'] - p2['x'] * p1['y'];
+      cx += (p1['x'] + p2['x']) * a;
+      cy += (p1['y'] + p2['y']) * a;
+      ar += a;
+    }
+    ar = ar * 3; // we want 1 / 6 the area and we currently have 2*area
+    cx = cx / ar;
+    cy = cy / ar;
+    return new Vector(cx, cy);
+  };
+
+
+  // ## Box
+  //
+  // Represents an axis-aligned box, with a width and height.
+
+
+  // Create a new box, with the specified position, width, and height. If no position
+  // is given, the position will be `(0,0)`. If no width or height are given, they will
+  // be set to `0`.
+  /**
+   * @param {Vector=} pos A vector representing the bottom-left of the box (i.e. the smallest x and smallest y value).
+   * @param {?number=} w The width of the box.
+   * @param {?number=} h The height of the box.
+   * @constructor
+   */
+  function Box(pos, w, h) {
+    this['pos'] = pos || new Vector();
+    this['w'] = w || 0;
+    this['h'] = h || 0;
+  }
+  SAT['Box'] = Box;
+
+  // Returns a polygon whose edges are the same as this box.
+  /**
+   * @return {Polygon} A new Polygon that represents this box.
+   */
+  Box.prototype['toPolygon'] = Box.prototype.toPolygon = function () {
+    var pos = this['pos'];
+    var w = this['w'];
+    var h = this['h'];
+    return new Polygon(new Vector(pos['x'], pos['y']), [
+      new Vector(), new Vector(w, 0),
+      new Vector(w, h), new Vector(0, h)
+    ]);
+  };
+
+  // ## Response
+  //
+  // An object representing the result of an intersection. Contains:
+  //  - The two objects participating in the intersection
+  //  - The vector representing the minimum change necessary to extract the first object
+  //    from the second one (as well as a unit vector in that direction and the magnitude
+  //    of the overlap)
+  //  - Whether the first object is entirely inside the second, and vice versa.
+  /**
+   * @constructor
+   */
+  function Response() {
+    this['a'] = null;
+    this['b'] = null;
+    this['overlapN'] = new Vector();
+    this['overlapV'] = new Vector();
+    this.clear();
+  }
+  SAT['Response'] = Response;
+
+  // Set some values of the response back to their defaults.  Call this between tests if
+  // you are going to reuse a single Response object for multiple intersection tests (recommented
+  // as it will avoid allcating extra memory)
+  /**
+   * @return {Response} This for chaining
+   */
+  Response.prototype['clear'] = Response.prototype.clear = function () {
+    this['aInB'] = true;
+    this['bInA'] = true;
+    this['overlap'] = Number.MAX_VALUE;
+    return this;
+  };
+
+  // ## Object Pools
+
+  // A pool of `Vector` objects that are used in calculations to avoid
+  // allocating memory.
+  /**
+   * @type {Array<Vector>}
+   */
+  var T_VECTORS = [];
+  for (var i = 0; i < 10; i++) { T_VECTORS.push(new Vector()); }
+
+  // A pool of arrays of numbers used in calculations to avoid allocating
+  // memory.
+  /**
+   * @type {Array<Array<number>>}
+   */
+  var T_ARRAYS = [];
+  for (var i = 0; i < 5; i++) { T_ARRAYS.push([]); }
+
+  // Temporary response used for polygon hit detection.
+  /**
+   * @type {Response}
+   */
+  var T_RESPONSE = new Response();
+
+  // Tiny "point" polygon used for polygon hit detection.
+  /**
+   * @type {Polygon}
+   */
+  var TEST_POINT = new Box(new Vector(), 0.000001, 0.000001).toPolygon();
+
+  // ## Helper Functions
+
+  // Flattens the specified array of points onto a unit vector axis,
+  // resulting in a one dimensional range of the minimum and
+  // maximum value on that axis.
+  /**
+   * @param {Array<Vector>} points The points to flatten.
+   * @param {Vector} normal The unit vector axis to flatten on.
+   * @param {Array<number>} result An array.  After calling this function,
+   *   result[0] will be the minimum value,
+   *   result[1] will be the maximum value.
+   */
+  function flattenPointsOn(points, normal, result) {
+    var min = Number.MAX_VALUE;
+    var max = -Number.MAX_VALUE;
+    var len = points.length;
+    for (var i = 0; i < len; i++) {
+      // The magnitude of the projection of the point onto the normal
+      var dot = points[i].dot(normal);
+      if (dot < min) { min = dot; }
+      if (dot > max) { max = dot; }
+    }
+    result[0] = min; result[1] = max;
+  }
+
+  // Check whether two convex polygons are separated by the specified
+  // axis (must be a unit vector).
+  /**
+   * @param {Vector} aPos The position of the first polygon.
+   * @param {Vector} bPos The position of the second polygon.
+   * @param {Array<Vector>} aPoints The points in the first polygon.
+   * @param {Array<Vector>} bPoints The points in the second polygon.
+   * @param {Vector} axis The axis (unit sized) to test against.  The points of both polygons
+   *   will be projected onto this axis.
+   * @param {Response=} response A Response object (optional) which will be populated
+   *   if the axis is not a separating axis.
+   * @return {boolean} true if it is a separating axis, false otherwise.  If false,
+   *   and a response is passed in, information about how much overlap and
+   *   the direction of the overlap will be populated.
+   */
+  function isSeparatingAxis(aPos, bPos, aPoints, bPoints, axis, response) {
+    var rangeA = T_ARRAYS.pop();
+    var rangeB = T_ARRAYS.pop();
+    // The magnitude of the offset between the two polygons
+    var offsetV = T_VECTORS.pop().copy(bPos).sub(aPos);
+    var projectedOffset = offsetV.dot(axis);
+    // Project the polygons onto the axis.
+    flattenPointsOn(aPoints, axis, rangeA);
+    flattenPointsOn(bPoints, axis, rangeB);
+    // Move B's range to its position relative to A.
+    rangeB[0] += projectedOffset;
+    rangeB[1] += projectedOffset;
+    // Check if there is a gap. If there is, this is a separating axis and we can stop
+    if (rangeA[0] > rangeB[1] || rangeB[0] > rangeA[1]) {
+      T_VECTORS.push(offsetV);
+      T_ARRAYS.push(rangeA);
+      T_ARRAYS.push(rangeB);
+      return true;
+    }
+    // This is not a separating axis. If we're calculating a response, calculate the overlap.
+    if (response) {
+      var overlap = 0;
+      // A starts further left than B
+      if (rangeA[0] < rangeB[0]) {
+        response['aInB'] = false;
+        // A ends before B does. We have to pull A out of B
+        if (rangeA[1] < rangeB[1]) {
+          overlap = rangeA[1] - rangeB[0];
+          response['bInA'] = false;
+          // B is fully inside A.  Pick the shortest way out.
+        } else {
+          var option1 = rangeA[1] - rangeB[0];
+          var option2 = rangeB[1] - rangeA[0];
+          overlap = option1 < option2 ? option1 : -option2;
+        }
+        // B starts further left than A
+      } else {
+        response['bInA'] = false;
+        // B ends before A ends. We have to push A out of B
+        if (rangeA[1] > rangeB[1]) {
+          overlap = rangeA[0] - rangeB[1];
+          response['aInB'] = false;
+          // A is fully inside B.  Pick the shortest way out.
+        } else {
+          var option1 = rangeA[1] - rangeB[0];
+          var option2 = rangeB[1] - rangeA[0];
+          overlap = option1 < option2 ? option1 : -option2;
+        }
+      }
+      // If this is the smallest amount of overlap we've seen so far, set it as the minimum overlap.
+      var absOverlap = Math.abs(overlap);
+      if (absOverlap < response['overlap']) {
+        response['overlap'] = absOverlap;
+        response['overlapN'].copy(axis);
+        if (overlap < 0) {
+          response['overlapN'].reverse();
+        }
+      }
+    }
+    T_VECTORS.push(offsetV);
+    T_ARRAYS.push(rangeA);
+    T_ARRAYS.push(rangeB);
+    return false;
+  }
+  SAT['isSeparatingAxis'] = isSeparatingAxis;
+
+  // Calculates which Voronoi region a point is on a line segment.
+  // It is assumed that both the line and the point are relative to `(0,0)`
+  //
+  //            |       (0)      |
+  //     (-1)  [S]--------------[E]  (1)
+  //            |       (0)      |
+  /**
+   * @param {Vector} line The line segment.
+   * @param {Vector} point The point.
+   * @return  {number} LEFT_VORONOI_REGION (-1) if it is the left region,
+   *          MIDDLE_VORONOI_REGION (0) if it is the middle region,
+   *          RIGHT_VORONOI_REGION (1) if it is the right region.
+   */
+  function voronoiRegion(line, point) {
+    var len2 = line.len2();
+    var dp = point.dot(line);
+    // If the point is beyond the start of the line, it is in the
+    // left voronoi region.
+    if (dp < 0) { return LEFT_VORONOI_REGION; }
+    // If the point is beyond the end of the line, it is in the
+    // right voronoi region.
+    else if (dp > len2) { return RIGHT_VORONOI_REGION; }
+    // Otherwise, it's in the middle one.
+    else { return MIDDLE_VORONOI_REGION; }
+  }
+  // Constants for Voronoi regions
+  /**
+   * @const
+   */
+  var LEFT_VORONOI_REGION = -1;
+  /**
+   * @const
+   */
+  var MIDDLE_VORONOI_REGION = 0;
+  /**
+   * @const
+   */
+  var RIGHT_VORONOI_REGION = 1;
+
+  // ## Collision Tests
+
+  // Check if a point is inside a circle.
+  /**
+   * @param {Vector} p The point to test.
+   * @param {Circle} c The circle to test.
+   * @return {boolean} true if the point is inside the circle, false if it is not.
+   */
+  function pointInCircle(p, c) {
+    var differenceV = T_VECTORS.pop().copy(p).sub(c['pos']).sub(c['offset']);
+    var radiusSq = c['r'] * c['r'];
+    var distanceSq = differenceV.len2();
+    T_VECTORS.push(differenceV);
+    // If the distance between is smaller than the radius then the point is inside the circle.
+    return distanceSq <= radiusSq;
+  }
+  SAT['pointInCircle'] = pointInCircle;
+
+  // Check if a point is inside a convex polygon.
+  /**
+   * @param {Vector} p The point to test.
+   * @param {Polygon} poly The polygon to test.
+   * @return {boolean} true if the point is inside the polygon, false if it is not.
+   */
+  function pointInPolygon(p, poly) {
+    TEST_POINT['pos'].copy(p);
+    T_RESPONSE.clear();
+    var result = testPolygonPolygon(TEST_POINT, poly, T_RESPONSE);
+    if (result) {
+      result = T_RESPONSE['aInB'];
+    }
+    return result;
+  }
+  SAT['pointInPolygon'] = pointInPolygon;
+
+  // Check if two circles collide.
+  /**
+   * @param {Circle} a The first circle.
+   * @param {Circle} b The second circle.
+   * @param {Response=} response Response object (optional) that will be populated if
+   *   the circles intersect.
+   * @return {boolean} true if the circles intersect, false if they don't.
+   */
+  function testCircleCircle(a, b, response) {
+    // Check if the distance between the centers of the two
+    // circles is greater than their combined radius.
+    var differenceV = T_VECTORS.pop().copy(b['pos']).add(b['offset']).sub(a['pos']).sub(a['offset']);
+    var totalRadius = a['r'] + b['r'];
+    var totalRadiusSq = totalRadius * totalRadius;
+    var distanceSq = differenceV.len2();
+    // If the distance is bigger than the combined radius, they don't intersect.
+    if (distanceSq > totalRadiusSq) {
+      T_VECTORS.push(differenceV);
+      return false;
+    }
+    // They intersect.  If we're calculating a response, calculate the overlap.
+    if (response) {
+      var dist = Math.sqrt(distanceSq);
+      response['a'] = a;
+      response['b'] = b;
+      response['overlap'] = totalRadius - dist;
+      response['overlapN'].copy(differenceV.normalize());
+      response['overlapV'].copy(differenceV).scale(response['overlap']);
+      response['aInB'] = a['r'] <= b['r'] && dist <= b['r'] - a['r'];
+      response['bInA'] = b['r'] <= a['r'] && dist <= a['r'] - b['r'];
+    }
+    T_VECTORS.push(differenceV);
+    return true;
+  }
+  SAT['testCircleCircle'] = testCircleCircle;
+
+  // Check if a polygon and a circle collide.
+  /**
+   * @param {Polygon} polygon The polygon.
+   * @param {Circle} circle The circle.
+   * @param {Response=} response Response object (optional) that will be populated if
+   *   they interset.
+   * @return {boolean} true if they intersect, false if they don't.
+   */
+  function testPolygonCircle(polygon, circle, response) {
+    // Get the position of the circle relative to the polygon.
+    var circlePos = T_VECTORS.pop().copy(circle['pos']).add(circle['offset']).sub(polygon['pos']);
+    var radius = circle['r'];
+    var radius2 = radius * radius;
+    var points = polygon['calcPoints'];
+    var len = points.length;
+    var edge = T_VECTORS.pop();
+    var point = T_VECTORS.pop();
+
+    // For each edge in the polygon:
+    for (var i = 0; i < len; i++) {
+      var next = i === len - 1 ? 0 : i + 1;
+      var prev = i === 0 ? len - 1 : i - 1;
+      var overlap = 0;
+      var overlapN = null;
+
+      // Get the edge.
+      edge.copy(polygon['edges'][i]);
+      // Calculate the center of the circle relative to the starting point of the edge.
+      point.copy(circlePos).sub(points[i]);
+
+      // If the distance between the center of the circle and the point
+      // is bigger than the radius, the polygon is definitely not fully in
+      // the circle.
+      if (response && point.len2() > radius2) {
+        response['aInB'] = false;
+      }
+
+      // Calculate which Voronoi region the center of the circle is in.
+      var region = voronoiRegion(edge, point);
+      // If it's the left region:
+      if (region === LEFT_VORONOI_REGION) {
+        // We need to make sure we're in the RIGHT_VORONOI_REGION of the previous edge.
+        edge.copy(polygon['edges'][prev]);
+        // Calculate the center of the circle relative the starting point of the previous edge
+        var point2 = T_VECTORS.pop().copy(circlePos).sub(points[prev]);
+        region = voronoiRegion(edge, point2);
+        if (region === RIGHT_VORONOI_REGION) {
+          // It's in the region we want.  Check if the circle intersects the point.
+          var dist = point.len();
+          if (dist > radius) {
+            // No intersection
+            T_VECTORS.push(circlePos);
+            T_VECTORS.push(edge);
+            T_VECTORS.push(point);
+            T_VECTORS.push(point2);
+            return false;
+          } else if (response) {
+            // It intersects, calculate the overlap.
+            response['bInA'] = false;
+            overlapN = point.normalize();
+            overlap = radius - dist;
+          }
+        }
+        T_VECTORS.push(point2);
+        // If it's the right region:
+      } else if (region === RIGHT_VORONOI_REGION) {
+        // We need to make sure we're in the left region on the next edge
+        edge.copy(polygon['edges'][next]);
+        // Calculate the center of the circle relative to the starting point of the next edge.
+        point.copy(circlePos).sub(points[next]);
+        region = voronoiRegion(edge, point);
+        if (region === LEFT_VORONOI_REGION) {
+          // It's in the region we want.  Check if the circle intersects the point.
+          var dist = point.len();
+          if (dist > radius) {
+            // No intersection
+            T_VECTORS.push(circlePos);
+            T_VECTORS.push(edge);
+            T_VECTORS.push(point);
+            return false;
+          } else if (response) {
+            // It intersects, calculate the overlap.
+            response['bInA'] = false;
+            overlapN = point.normalize();
+            overlap = radius - dist;
+          }
+        }
+        // Otherwise, it's the middle region:
+      } else {
+        // Need to check if the circle is intersecting the edge,
+        // Change the edge into its "edge normal".
+        var normal = edge.perp().normalize();
+        // Find the perpendicular distance between the center of the
+        // circle and the edge.
+        var dist = point.dot(normal);
+        var distAbs = Math.abs(dist);
+        // If the circle is on the outside of the edge, there is no intersection.
+        if (dist > 0 && distAbs > radius) {
+          // No intersection
+          T_VECTORS.push(circlePos);
+          T_VECTORS.push(normal);
+          T_VECTORS.push(point);
+          return false;
+        } else if (response) {
+          // It intersects, calculate the overlap.
+          overlapN = normal;
+          overlap = radius - dist;
+          // If the center of the circle is on the outside of the edge, or part of the
+          // circle is on the outside, the circle is not fully inside the polygon.
+          if (dist >= 0 || overlap < 2 * radius) {
+            response['bInA'] = false;
+          }
+        }
+      }
+
+      // If this is the smallest overlap we've seen, keep it.
+      // (overlapN may be null if the circle was in the wrong Voronoi region).
+      if (overlapN && response && Math.abs(overlap) < Math.abs(response['overlap'])) {
+        response['overlap'] = overlap;
+        response['overlapN'].copy(overlapN);
+      }
+    }
+
+    // Calculate the final overlap vector - based on the smallest overlap.
+    if (response) {
+      response['a'] = polygon;
+      response['b'] = circle;
+      response['overlapV'].copy(response['overlapN']).scale(response['overlap']);
+    }
+    T_VECTORS.push(circlePos);
+    T_VECTORS.push(edge);
+    T_VECTORS.push(point);
+    return true;
+  }
+  SAT['testPolygonCircle'] = testPolygonCircle;
+
+  // Check if a circle and a polygon collide.
+  //
+  // **NOTE:** This is slightly less efficient than polygonCircle as it just
+  // runs polygonCircle and reverses everything at the end.
+  /**
+   * @param {Circle} circle The circle.
+   * @param {Polygon} polygon The polygon.
+   * @param {Response=} response Response object (optional) that will be populated if
+   *   they interset.
+   * @return {boolean} true if they intersect, false if they don't.
+   */
+  function testCirclePolygon(circle, polygon, response) {
+    // Test the polygon against the circle.
+    var result = testPolygonCircle(polygon, circle, response);
+    if (result && response) {
+      // Swap A and B in the response.
+      var a = response['a'];
+      var aInB = response['aInB'];
+      response['overlapN'].reverse();
+      response['overlapV'].reverse();
+      response['a'] = response['b'];
+      response['b'] = a;
+      response['aInB'] = response['bInA'];
+      response['bInA'] = aInB;
+    }
+    return result;
+  }
+  SAT['testCirclePolygon'] = testCirclePolygon;
+
+  // Checks whether polygons collide.
+  /**
+   * @param {Polygon} a The first polygon.
+   * @param {Polygon} b The second polygon.
+   * @param {Response=} response Response object (optional) that will be populated if
+   *   they interset.
+   * @return {boolean} true if they intersect, false if they don't.
+   */
+  function testPolygonPolygon(a, b, response) {
+    var aPoints = a['calcPoints'];
+    var aLen = aPoints.length;
+    var bPoints = b['calcPoints'];
+    var bLen = bPoints.length;
+    // If any of the edge normals of A is a separating axis, no intersection.
+    for (var i = 0; i < aLen; i++) {
+      if (isSeparatingAxis(a['pos'], b['pos'], aPoints, bPoints, a['normals'][i], response)) {
+        return false;
+      }
+    }
+    // If any of the edge normals of B is a separating axis, no intersection.
+    for (var i = 0; i < bLen; i++) {
+      if (isSeparatingAxis(a['pos'], b['pos'], aPoints, bPoints, b['normals'][i], response)) {
+        return false;
+      }
+    }
+    // Since none of the edge normals of A or B are a separating axis, there is an intersection
+    // and we've already calculated the smallest overlap (in isSeparatingAxis).  Calculate the
+    // final overlap vector.
+    if (response) {
+      response['a'] = a;
+      response['b'] = b;
+      response['overlapV'].copy(response['overlapN']).scale(response['overlap']);
+    }
+    return true;
+  }
+  SAT['testPolygonPolygon'] = testPolygonPolygon;
+
+  return SAT;
+}));
+
 
 /***/ }),
 
@@ -155,7 +2081,247 @@ eval("if (window.location.search.indexOf(\"?stress\") !== -1) {\n  const { Stres
   \****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-eval("const { System } = __webpack_require__(/*! ../../dist */ \"./dist/index.js\");\n\nconst width = document.body.offsetWidth;\nconst height = document.body.offsetHeight;\nconst count = 500;\nconst speed = 1;\nconst size = (Math.hypot(width, height) || 500) * 0.004;\n\nlet frame = 0;\nlet fps_total = 0;\n\nmodule.exports.Stress = class Stress {\n  constructor() {\n    this.element = document.createElement(\"div\");\n    this.canvas = document.createElement(\"canvas\");\n    this.context = this.canvas.getContext(\"2d\");\n    this.collisions = new System();\n    this.bodies = [];\n    this.polygons = 0;\n    this.boxes = 0;\n    this.circles = 0;\n    this.ovals = 0;\n    this.lines = 0;\n\n    this.canvas.width = width;\n    this.canvas.height = height;\n    this.context.font = \"24px Arial\";\n\n    // World bounds\n    this.bounds = [\n      this.collisions.createPolygon({ x: 0, y: 0 }, [\n        { x: 0, y: 0 },\n        { x: width, y: 0 },\n      ]),\n      this.collisions.createPolygon({ x: 0, y: 0 }, [\n        { x: width, y: 0 },\n        { x: width, y: height },\n      ]),\n      this.collisions.createPolygon({ x: 0, y: 0 }, [\n        { x: width, y: height },\n        { x: 0, y: height },\n      ]),\n      this.collisions.createPolygon({ x: 0, y: 0 }, [\n        { x: 0, y: height },\n        { x: 0, y: 0 },\n      ]),\n    ];\n\n    for (let i = 0; i < count; ++i) {\n      this.createShape(!random(0, 20));\n    }\n\n    this.element.innerHTML = `\n      <div><b>Total:</b> ${count}</div>\n      <div><b>Polygons:</b> ${this.polygons}</div>\n      <div><b>Boxes:</b> ${this.boxes}</div>\n      <div><b>Circles:</b> ${this.circles}</div>\n      <div><b>Ovals:</b> ${this.ovals}</div>\n      <div><b>Lines:</b> ${this.lines}</div>\n      <div><label><input id=\"bvh\" type=\"checkbox\">Show Bounding Volume Hierarchy</label></div>\n    `;\n\n    this.bvh_checkbox = this.element.querySelector(\"#bvh\");\n\n    if (this.canvas instanceof Node) {\n      this.element.appendChild(this.canvas);\n    }\n\n    const self = this;\n\n    let time = performance.now();\n\n    this.frame = requestAnimationFrame(function frame() {\n      const current_time = performance.now();\n\n      try {\n        self.update(1000 / (current_time - time));\n      } catch (err) {\n        console.warn(err.message || err);\n      }\n\n      self.frame = requestAnimationFrame(frame);\n\n      time = current_time;\n    });\n  }\n\n  update(fps) {\n    ++frame;\n    fps_total += fps;\n\n    const average_fps = Math.round(fps_total / frame);\n\n    if (frame > 100) {\n      frame = 1;\n      fps_total = average_fps;\n    }\n\n    this.bodies.forEach((body) => {\n      if (body.type !== \"Circle\") {\n        body.rotationAngle += body.rotationSpeed;\n        body.setAngle(body.rotationAngle);\n      }\n\n      body.setPosition(\n        body.pos.x + body.direction_x * speed,\n        body.pos.y + body.direction_y * speed\n      );\n    });\n\n    this.collisions.checkAll(({ a, overlapV }) => {\n      if (this.bounds.includes(a)) {\n        return;\n      }\n\n      const direction = (random(0, 360) * Math.PI) / 180;\n\n      a.setPosition(a.pos.x - overlapV.x, a.pos.y - overlapV.y);\n\n      a.direction_x = Math.cos(direction);\n      a.direction_y = Math.sin(direction);\n\n      if (a.type !== \"Circle\") {\n        a.rotationSpeed = (Math.random() - Math.random()) * 0.1;\n      }\n    });\n\n    // Clear the canvas\n    this.context.fillStyle = \"#000000\";\n    this.context.fillRect(0, 0, width, height);\n\n    // Render the bodies\n    this.context.strokeStyle = \"#FFFFFF\";\n    this.context.beginPath();\n    this.collisions.draw(this.context);\n    this.context.stroke();\n\n    // Render the BVH\n    if (this.bvh_checkbox.checked) {\n      this.context.strokeStyle = \"#00FF00\";\n      this.context.beginPath();\n      this.collisions.drawBVH(this.context);\n      this.context.stroke();\n    }\n\n    // Render the FPS\n    this.context.fillStyle = \"#FFCC00\";\n    this.context.fillText(average_fps, 10, 30);\n  }\n\n  createShape(large) {\n    const min_size = size * 1.0 * (large ? 2 : 1);\n    const max_size = size * 1.25 * (large ? 3 : 1);\n    const x = random(0, width);\n    const y = random(0, height);\n    const direction = (random(0, 360) * Math.PI) / 180;\n\n    let body;\n    let variant = random(0, 5);\n\n    switch (variant) {\n      case 0:\n        body = this.collisions.createCircle(\n          { x, y },\n          random(min_size, max_size)\n        );\n\n        ++this.circles;\n        break;\n\n      case 1:\n        body = this.collisions.createOval(\n          { x, y },\n          random(min_size, max_size),\n          random(min_size, max_size),\n          min_size\n        );\n\n        ++this.ovals;\n        break;\n\n      case 2:\n        body = this.collisions.createBox(\n          { x, y },\n          random(min_size, max_size),\n          random(min_size, max_size)\n        );\n\n        body.center();\n\n        ++this.boxes;\n        break;\n\n      case 3:\n        body = this.collisions.createLine(\n          { x, y },\n          {\n            x: x + random(min_size, max_size),\n            y: y + random(min_size, max_size),\n          }\n        );\n\n        ++this.lines;\n        break;\n\n      default:\n        body = this.collisions.createPolygon(\n          {\n            x,\n            y,\n          },\n          [\n            { x: -random(min_size, max_size), y: -random(min_size, max_size) },\n            { x: random(min_size, max_size), y: -random(min_size, max_size) },\n            { x: random(min_size, max_size), y: random(min_size, max_size) },\n            { x: -random(min_size, max_size), y: random(min_size, max_size) },\n          ]\n        );\n\n        ++this.polygons;\n        break;\n    }\n\n    if (body.type !== \"Circle\") {\n      // set initial rotation angle direction\n      body.rotationSpeed = (Math.random() - Math.random()) * 0.1;\n      body.rotationAngle = (random(0, 360) * Math.PI) / 180;\n      body.setAngle(body.rotationAngle);\n    }\n\n    body.direction_x = Math.cos(direction);\n    body.direction_y = Math.sin(direction);\n\n    this.bodies.push(body);\n  }\n};\n\nfunction random(min, max) {\n  return Math.floor(Math.random() * max) + min;\n}\n\n\n//# sourceURL=webpack://detect-collisions/./src/demo/stress.js?");
+const { System } = __webpack_require__(/*! ../../dist */ "./dist/index.js");
+
+const width = document.body.offsetWidth;
+const height = document.body.offsetHeight;
+const count = 500;
+const speed = 1;
+const size = (Math.hypot(width, height) || 500) * 0.004;
+
+let frame = 0;
+let fps_total = 0;
+
+module.exports.Stress = class Stress {
+  constructor() {
+    this.element = document.createElement("div");
+    this.canvas = document.createElement("canvas");
+    this.context = this.canvas.getContext("2d");
+    this.collisions = new System();
+    this.bodies = [];
+    this.polygons = 0;
+    this.boxes = 0;
+    this.circles = 0;
+    this.ovals = 0;
+    this.lines = 0;
+
+    this.canvas.width = width;
+    this.canvas.height = height;
+    this.context.font = "24px Arial";
+
+    // World bounds
+    this.bounds = [
+      this.collisions.createPolygon({ x: 0, y: 0 }, [
+        { x: 0, y: 0 },
+        { x: width, y: 0 },
+      ]),
+      this.collisions.createPolygon({ x: 0, y: 0 }, [
+        { x: width, y: 0 },
+        { x: width, y: height },
+      ]),
+      this.collisions.createPolygon({ x: 0, y: 0 }, [
+        { x: width, y: height },
+        { x: 0, y: height },
+      ]),
+      this.collisions.createPolygon({ x: 0, y: 0 }, [
+        { x: 0, y: height },
+        { x: 0, y: 0 },
+      ]),
+    ];
+
+    for (let i = 0; i < count; ++i) {
+      this.createShape(!random(0, 20));
+    }
+
+    this.element.innerHTML = `
+      <div><b>Total:</b> ${count}</div>
+      <div><b>Polygons:</b> ${this.polygons}</div>
+      <div><b>Boxes:</b> ${this.boxes}</div>
+      <div><b>Circles:</b> ${this.circles}</div>
+      <div><b>Ovals:</b> ${this.ovals}</div>
+      <div><b>Lines:</b> ${this.lines}</div>
+      <div><label><input id="bvh" type="checkbox">Show Bounding Volume Hierarchy</label></div>
+    `;
+
+    this.bvh_checkbox = this.element.querySelector("#bvh");
+
+    if (this.canvas instanceof Node) {
+      this.element.appendChild(this.canvas);
+    }
+
+    const self = this;
+
+    let time = performance.now();
+
+    this.frame = requestAnimationFrame(function frame() {
+      const current_time = performance.now();
+
+      try {
+        self.update(1000 / (current_time - time));
+      } catch (err) {
+        console.warn(err.message || err);
+      }
+
+      self.frame = requestAnimationFrame(frame);
+
+      time = current_time;
+    });
+  }
+
+  update(fps) {
+    ++frame;
+    fps_total += fps;
+
+    const average_fps = Math.round(fps_total / frame);
+
+    if (frame > 100) {
+      frame = 1;
+      fps_total = average_fps;
+    }
+
+    this.bodies.forEach((body) => {
+      if (body.type !== "Circle") {
+        body.rotationAngle += body.rotationSpeed;
+        body.setAngle(body.rotationAngle);
+      }
+
+      body.setPosition(
+        body.pos.x + body.direction_x * speed,
+        body.pos.y + body.direction_y * speed
+      );
+    });
+
+    this.collisions.checkAll(({ a, overlapV }) => {
+      if (this.bounds.includes(a)) {
+        return;
+      }
+
+      const direction = (random(0, 360) * Math.PI) / 180;
+
+      a.setPosition(a.pos.x - overlapV.x, a.pos.y - overlapV.y);
+
+      a.direction_x = Math.cos(direction);
+      a.direction_y = Math.sin(direction);
+
+      if (a.type !== "Circle") {
+        a.rotationSpeed = (Math.random() - Math.random()) * 0.1;
+      }
+    });
+
+    // Clear the canvas
+    this.context.fillStyle = "#000000";
+    this.context.fillRect(0, 0, width, height);
+
+    // Render the bodies
+    this.context.strokeStyle = "#FFFFFF";
+    this.context.beginPath();
+    this.collisions.draw(this.context);
+    this.context.stroke();
+
+    // Render the BVH
+    if (this.bvh_checkbox.checked) {
+      this.context.strokeStyle = "#00FF00";
+      this.context.beginPath();
+      this.collisions.drawBVH(this.context);
+      this.context.stroke();
+    }
+
+    // Render the FPS
+    this.context.fillStyle = "#FFCC00";
+    this.context.fillText(average_fps, 10, 30);
+  }
+
+  createShape(large) {
+    const min_size = size * 1.0 * (large ? 2 : 1);
+    const max_size = size * 1.25 * (large ? 3 : 1);
+    const x = random(0, width);
+    const y = random(0, height);
+    const direction = (random(0, 360) * Math.PI) / 180;
+
+    let body;
+    let variant = random(0, 5);
+
+    switch (variant) {
+      case 0:
+        body = this.collisions.createCircle(
+          { x, y },
+          random(min_size, max_size)
+        );
+
+        ++this.circles;
+        break;
+
+      case 1:
+        body = this.collisions.createOval(
+          { x, y },
+          random(min_size, max_size),
+          random(min_size, max_size),
+          min_size
+        );
+
+        ++this.ovals;
+        break;
+
+      case 2:
+        body = this.collisions.createBox(
+          { x, y },
+          random(min_size, max_size),
+          random(min_size, max_size)
+        );
+
+        body.center();
+
+        ++this.boxes;
+        break;
+
+      case 3:
+        body = this.collisions.createLine(
+          { x, y },
+          {
+            x: x + random(min_size, max_size),
+            y: y + random(min_size, max_size),
+          }
+        );
+
+        ++this.lines;
+        break;
+
+      default:
+        body = this.collisions.createPolygon(
+          {
+            x,
+            y,
+          },
+          [
+            { x: -random(min_size, max_size), y: -random(min_size, max_size) },
+            { x: random(min_size, max_size), y: -random(min_size, max_size) },
+            { x: random(min_size, max_size), y: random(min_size, max_size) },
+            { x: -random(min_size, max_size), y: random(min_size, max_size) },
+          ]
+        );
+
+        ++this.polygons;
+        break;
+    }
+
+    if (body.type !== "Circle") {
+      // set initial rotation angle direction
+      body.rotationSpeed = (Math.random() - Math.random()) * 0.1;
+      body.rotationAngle = (random(0, 360) * Math.PI) / 180;
+      body.setAngle(body.rotationAngle);
+    }
+
+    body.direction_x = Math.cos(direction);
+    body.direction_y = Math.sin(direction);
+
+    this.bodies.push(body);
+  }
+};
+
+function random(min, max) {
+  return Math.floor(Math.random() * max) + min;
+}
+
 
 /***/ }),
 
@@ -165,7 +2331,358 @@ eval("const { System } = __webpack_require__(/*! ../../dist */ \"./dist/index.js
   \**************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-eval("const { System, Line } = __webpack_require__(/*! ../../dist */ \"./dist/index.js\");\n\nmodule.exports.Tank = class Tank {\n  constructor() {\n    const width = document.body.offsetWidth;\n    const height = document.body.offsetHeight;\n    const collisions = new System();\n\n    this.element = document.createElement(\"div\");\n    this.canvas = document.createElement(\"canvas\");\n    this.context = this.canvas.getContext(\"2d\");\n    this.collisions = collisions;\n    this.bodies = [];\n\n    this.canvas.width = width;\n    this.canvas.height = height;\n    this.player = null;\n\n    this.up = false;\n    this.down = false;\n    this.left = false;\n    this.right = false;\n\n    this.element.innerHTML = `\n      <div><b>W, S</b> - Accelerate/Decelerate</div>\n      <div><b>A, D</b> - Turn</div>\n      <div><label><input id=\"bvh\" type=\"checkbox\"> Show Bounding Volume Hierarchy</label></div>\n    `;\n\n    const updateKeys = (e) => {\n      const keydown = e.type === \"keydown\";\n      const key = e.key.toLowerCase();\n\n      key === \"w\" && (this.up = keydown);\n      key === \"s\" && (this.down = keydown);\n      key === \"a\" && (this.left = keydown);\n      key === \"d\" && (this.right = keydown);\n    };\n\n    document.addEventListener(\"keydown\", updateKeys);\n    document.addEventListener(\"keyup\", updateKeys);\n\n    this.bvh_checkbox = this.element.querySelector(\"#bvh\");\n\n    if (this.canvas instanceof Node) {\n      this.element.appendChild(this.canvas);\n    }\n\n    this.createPlayer(400, 300);\n    this.createMap(800, 600);\n\n    const frame = () => {\n      this.update();\n\n      requestAnimationFrame(frame);\n    };\n\n    frame();\n  }\n\n  update() {\n    this.handleInput();\n    this.processGameLogic();\n    this.handleCollisions();\n    this.render();\n  }\n\n  handleInput() {\n    this.up && (this.player.velocity += 0.1);\n    this.down && (this.player.velocity -= 0.1);\n\n    if (this.left) {\n      this.player.setAngle(this.player.angle - 0.04);\n    }\n\n    if (this.right) {\n      this.player.setAngle(this.player.angle + 0.04);\n    }\n  }\n\n  processGameLogic() {\n    const x = Math.cos(this.player.angle);\n    const y = Math.sin(this.player.angle);\n\n    if (this.player.velocity > 0) {\n      this.player.velocity -= 0.05;\n\n      if (this.player.velocity > 3) {\n        this.player.velocity = 3;\n      }\n    } else if (this.player.velocity < 0) {\n      this.player.velocity += 0.05;\n\n      if (this.player.velocity < -2) {\n        this.player.velocity = -2;\n      }\n    }\n\n    if (!Math.round(this.player.velocity * 100)) {\n      this.player.velocity = 0;\n    }\n\n    if (this.player.velocity) {\n      this.player.pos.x += x * this.player.velocity;\n      this.player.pos.y += y * this.player.velocity;\n    }\n  }\n\n  handleCollisions() {\n    this.collisions.update();\n    this.collisions.checkAll(({ a, b, overlapV }) => {\n      if (a === this.playerTurret || b === this.playerTurret) {\n        return;\n      }\n\n      if (a.type === \"Circle\" || a === this.player) {\n        a.setPosition(a.pos.x - overlapV.x, a.pos.y - overlapV.y);\n      }\n\n      if (b.type === \"Circle\" || b === this.player) {\n        b.setPosition(b.pos.x + overlapV.x, b.pos.y + overlapV.y);\n      }\n\n      if (a === this.player) {\n        a.velocity *= 0.9;\n      }\n    });\n  }\n\n  render() {\n    this.context.fillStyle = \"#000000\";\n    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);\n\n    this.context.strokeStyle = \"#FFFFFF\";\n    this.context.beginPath();\n    this.collisions.draw(this.context);\n    this.context.stroke();\n\n    if (this.bvh_checkbox.checked) {\n      this.context.strokeStyle = \"#00FF00\";\n      this.context.beginPath();\n      this.collisions.drawBVH(this.context);\n      this.context.stroke();\n    }\n\n    this.playerTurret.setPosition(this.player.x, this.player.y);\n    this.playerTurret.setAngle(this.player.angle);\n    this.playerTurret.updateAABB();\n\n    const hit = this.collisions.raycast(\n      this.playerTurret.start,\n      this.playerTurret.end,\n      (test) => test !== this.player\n    );\n\n    if (hit) {\n      this.context.strokeStyle = \"#FF0000\";\n      this.context.beginPath();\n      this.context.arc(hit.point.x, hit.point.y, 5, 0, 2 * Math.PI);\n      this.context.stroke();\n    }\n  }\n\n  createPlayer(x, y, size = 13) {\n    this.player = this.collisions.createBox(\n      { x: this.scaleX(x), y: this.scaleY(y) },\n      this.scaleX(2.6 * size),\n      this.scaleX(1.3 * size),\n      0.2\n    );\n\n    this.player.center();\n    this.player.velocity = 0;\n\n    this.playerTurret = this.collisions.createLine(\n      this.player.pos,\n      { x: this.player.pos.x + 140, y: this.player.pos.y },\n      0.2\n    );\n\n    this.playerTurret.translate(100, 0);\n    this.playerTurret.isTrigger = true;\n  }\n\n  scaleX(x) {\n    return (x / 800) * this.canvas.width;\n  }\n\n  scaleY(y) {\n    return (y / 600) * this.canvas.height;\n  }\n\n  createCircle(x, y, radius) {\n    this.collisions.createCircle(\n      { x: this.scaleX(x), y: this.scaleY(y) },\n      this.scaleX(radius)\n    );\n  }\n\n  createOval(x, y, radiusX, radiusY, step, angle) {\n    this.collisions.createOval(\n      { x: this.scaleX(x), y: this.scaleY(y) },\n      this.scaleX(radiusX),\n      this.scaleY(radiusY),\n      step,\n      angle\n    );\n  }\n\n  createPolygon(x, y, points, angle) {\n    const scaledPoints = points.map(([pointX, pointY]) => ({\n      x: this.scaleX(pointX),\n      y: this.scaleY(pointY),\n    }));\n\n    return this.collisions.createPolygon(\n      { x: this.scaleX(x), y: this.scaleY(y) },\n      scaledPoints,\n      angle\n    );\n  }\n\n  createMap(width, height) {\n    // World bounds\n    this.createPolygon(0, 0, [\n      [0, 0],\n      [width, 0],\n    ]);\n    this.createPolygon(0, 0, [\n      [width, 0],\n      [width, height],\n    ]);\n    this.createPolygon(0, 0, [\n      [width, height],\n      [0, height],\n    ]);\n    this.createPolygon(0, 0, [\n      [0, height],\n      [0, 0],\n    ]);\n\n    // Factory\n    this.createPolygon(\n      100,\n      100,\n      [\n        [-50, -50],\n        [50, -50],\n        [50, 50],\n        [-50, 50],\n      ],\n      0.4\n    );\n    this.createPolygon(\n      190,\n      105,\n      [\n        [-20, -20],\n        [20, -20],\n        [20, 20],\n        [-20, 20],\n      ],\n      0.4\n    );\n    this.createCircle(170, 140, 6);\n    this.createCircle(185, 155, 6);\n    this.createCircle(165, 165, 6);\n    this.createCircle(145, 165, 6);\n\n    // Airstrip\n    this.createPolygon(\n      230,\n      50,\n      [\n        [-150, -30],\n        [150, -30],\n        [150, 30],\n        [-150, 30],\n      ],\n      0.4\n    );\n\n    // HQ\n    this.createPolygon(\n      100,\n      500,\n      [\n        [-40, -50],\n        [40, -50],\n        [50, 50],\n        [-50, 50],\n      ],\n      0.2\n    );\n    this.createCircle(180, 490, 12);\n    this.createCircle(175, 540, 12);\n\n    // Barracks\n    this.createPolygon(\n      400,\n      500,\n      [\n        [-60, -20],\n        [60, -20],\n        [60, 20],\n        [-60, 20],\n      ],\n      1.7\n    );\n    this.createPolygon(\n      350,\n      494,\n      [\n        [-60, -20],\n        [60, -20],\n        [60, 20],\n        [-60, 20],\n      ],\n      1.7\n    );\n\n    // Mountains\n    this.createPolygon(750, 0, [\n      [0, 0],\n      [-20, 100],\n    ]);\n    this.createPolygon(750, 0, [\n      [-20, 100],\n      [30, 250],\n    ]);\n    this.createPolygon(750, 0, [\n      [30, 250],\n      [20, 300],\n    ]);\n    this.createPolygon(750, 0, [\n      [20, 300],\n      [-50, 320],\n    ]);\n    this.createPolygon(750, 0, [\n      [-50, 320],\n      [-90, 500],\n    ]);\n    this.createPolygon(750, 0, [\n      [-90, 500],\n      [-200, 600],\n    ]);\n\n    // Lake\n    this.createOval(530, 130, 80, 70, 10, -0.2);\n  }\n};\n\n\n//# sourceURL=webpack://detect-collisions/./src/demo/tank.js?");
+const { System, Line } = __webpack_require__(/*! ../../dist */ "./dist/index.js");
+
+module.exports.Tank = class Tank {
+  constructor() {
+    const width = document.body.offsetWidth;
+    const height = document.body.offsetHeight;
+    const collisions = new System();
+
+    this.element = document.createElement("div");
+    this.canvas = document.createElement("canvas");
+    this.context = this.canvas.getContext("2d");
+    this.collisions = collisions;
+    this.bodies = [];
+
+    this.canvas.width = width;
+    this.canvas.height = height;
+    this.player = null;
+
+    this.up = false;
+    this.down = false;
+    this.left = false;
+    this.right = false;
+
+    this.element.innerHTML = `
+      <div><b>W, S</b> - Accelerate/Decelerate</div>
+      <div><b>A, D</b> - Turn</div>
+      <div><label><input id="bvh" type="checkbox"> Show Bounding Volume Hierarchy</label></div>
+    `;
+
+    const updateKeys = (e) => {
+      const keydown = e.type === "keydown";
+      const key = e.key.toLowerCase();
+
+      key === "w" && (this.up = keydown);
+      key === "s" && (this.down = keydown);
+      key === "a" && (this.left = keydown);
+      key === "d" && (this.right = keydown);
+    };
+
+    document.addEventListener("keydown", updateKeys);
+    document.addEventListener("keyup", updateKeys);
+
+    this.bvh_checkbox = this.element.querySelector("#bvh");
+
+    if (this.canvas instanceof Node) {
+      this.element.appendChild(this.canvas);
+    }
+
+    this.createPlayer(400, 300);
+    this.createMap(800, 600);
+
+    const frame = () => {
+      this.update();
+
+      requestAnimationFrame(frame);
+    };
+
+    frame();
+  }
+
+  update() {
+    this.handleInput();
+    this.processGameLogic();
+    this.handleCollisions();
+    this.render();
+  }
+
+  handleInput() {
+    this.up && (this.player.velocity += 0.1);
+    this.down && (this.player.velocity -= 0.1);
+
+    if (this.left) {
+      this.player.setAngle(this.player.angle - 0.04);
+    }
+
+    if (this.right) {
+      this.player.setAngle(this.player.angle + 0.04);
+    }
+  }
+
+  processGameLogic() {
+    const x = Math.cos(this.player.angle);
+    const y = Math.sin(this.player.angle);
+
+    if (this.player.velocity > 0) {
+      this.player.velocity -= 0.05;
+
+      if (this.player.velocity > 3) {
+        this.player.velocity = 3;
+      }
+    } else if (this.player.velocity < 0) {
+      this.player.velocity += 0.05;
+
+      if (this.player.velocity < -2) {
+        this.player.velocity = -2;
+      }
+    }
+
+    if (!Math.round(this.player.velocity * 100)) {
+      this.player.velocity = 0;
+    }
+
+    if (this.player.velocity) {
+      this.player.pos.x += x * this.player.velocity;
+      this.player.pos.y += y * this.player.velocity;
+    }
+  }
+
+  handleCollisions() {
+    this.collisions.update();
+    this.collisions.checkAll(({ a, b, overlapV }) => {
+      if (a === this.playerTurret || b === this.playerTurret) {
+        return;
+      }
+
+      if (a.type === "Circle" || a === this.player) {
+        a.setPosition(a.pos.x - overlapV.x, a.pos.y - overlapV.y);
+      }
+
+      if (b.type === "Circle" || b === this.player) {
+        b.setPosition(b.pos.x + overlapV.x, b.pos.y + overlapV.y);
+      }
+
+      if (a === this.player) {
+        a.velocity *= 0.9;
+      }
+    });
+  }
+
+  render() {
+    this.context.fillStyle = "#000000";
+    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.context.strokeStyle = "#FFFFFF";
+    this.context.beginPath();
+    this.collisions.draw(this.context);
+    this.context.stroke();
+
+    if (this.bvh_checkbox.checked) {
+      this.context.strokeStyle = "#00FF00";
+      this.context.beginPath();
+      this.collisions.drawBVH(this.context);
+      this.context.stroke();
+    }
+
+    this.playerTurret.setPosition(this.player.x, this.player.y);
+    this.playerTurret.setAngle(this.player.angle);
+    this.playerTurret.updateAABB();
+
+    const hit = this.collisions.raycast(
+      this.playerTurret.start,
+      this.playerTurret.end,
+      (test) => test !== this.player
+    );
+
+    if (hit) {
+      this.context.strokeStyle = "#FF0000";
+      this.context.beginPath();
+      this.context.arc(hit.point.x, hit.point.y, 5, 0, 2 * Math.PI);
+      this.context.stroke();
+    }
+  }
+
+  createPlayer(x, y, size = 13) {
+    this.player = this.collisions.createBox(
+      { x: this.scaleX(x), y: this.scaleY(y) },
+      this.scaleX(2.6 * size),
+      this.scaleX(1.3 * size),
+      0.2
+    );
+
+    this.player.center();
+    this.player.velocity = 0;
+
+    this.playerTurret = this.collisions.createLine(
+      this.player.pos,
+      { x: this.player.pos.x + 140, y: this.player.pos.y },
+      0.2
+    );
+
+    this.playerTurret.translate(100, 0);
+    this.playerTurret.isTrigger = true;
+  }
+
+  scaleX(x) {
+    return (x / 800) * this.canvas.width;
+  }
+
+  scaleY(y) {
+    return (y / 600) * this.canvas.height;
+  }
+
+  createCircle(x, y, radius) {
+    this.collisions.createCircle(
+      { x: this.scaleX(x), y: this.scaleY(y) },
+      this.scaleX(radius)
+    );
+  }
+
+  createOval(x, y, radiusX, radiusY, step, angle) {
+    this.collisions.createOval(
+      { x: this.scaleX(x), y: this.scaleY(y) },
+      this.scaleX(radiusX),
+      this.scaleY(radiusY),
+      step,
+      angle
+    );
+  }
+
+  createPolygon(x, y, points, angle) {
+    const scaledPoints = points.map(([pointX, pointY]) => ({
+      x: this.scaleX(pointX),
+      y: this.scaleY(pointY),
+    }));
+
+    return this.collisions.createPolygon(
+      { x: this.scaleX(x), y: this.scaleY(y) },
+      scaledPoints,
+      angle
+    );
+  }
+
+  createMap(width, height) {
+    // World bounds
+    this.createPolygon(0, 0, [
+      [0, 0],
+      [width, 0],
+    ]);
+    this.createPolygon(0, 0, [
+      [width, 0],
+      [width, height],
+    ]);
+    this.createPolygon(0, 0, [
+      [width, height],
+      [0, height],
+    ]);
+    this.createPolygon(0, 0, [
+      [0, height],
+      [0, 0],
+    ]);
+
+    // Factory
+    this.createPolygon(
+      100,
+      100,
+      [
+        [-50, -50],
+        [50, -50],
+        [50, 50],
+        [-50, 50],
+      ],
+      0.4
+    );
+    this.createPolygon(
+      190,
+      105,
+      [
+        [-20, -20],
+        [20, -20],
+        [20, 20],
+        [-20, 20],
+      ],
+      0.4
+    );
+    this.createCircle(170, 140, 6);
+    this.createCircle(185, 155, 6);
+    this.createCircle(165, 165, 6);
+    this.createCircle(145, 165, 6);
+
+    // Airstrip
+    this.createPolygon(
+      230,
+      50,
+      [
+        [-150, -30],
+        [150, -30],
+        [150, 30],
+        [-150, 30],
+      ],
+      0.4
+    );
+
+    // HQ
+    this.createPolygon(
+      100,
+      500,
+      [
+        [-40, -50],
+        [40, -50],
+        [50, 50],
+        [-50, 50],
+      ],
+      0.2
+    );
+    this.createCircle(180, 490, 12);
+    this.createCircle(175, 540, 12);
+
+    // Barracks
+    this.createPolygon(
+      400,
+      500,
+      [
+        [-60, -20],
+        [60, -20],
+        [60, 20],
+        [-60, 20],
+      ],
+      1.7
+    );
+    this.createPolygon(
+      350,
+      494,
+      [
+        [-60, -20],
+        [60, -20],
+        [60, 20],
+        [-60, 20],
+      ],
+      1.7
+    );
+
+    // Mountains
+    this.createPolygon(750, 0, [
+      [0, 0],
+      [-20, 100],
+    ]);
+    this.createPolygon(750, 0, [
+      [-20, 100],
+      [30, 250],
+    ]);
+    this.createPolygon(750, 0, [
+      [30, 250],
+      [20, 300],
+    ]);
+    this.createPolygon(750, 0, [
+      [20, 300],
+      [-50, 320],
+    ]);
+    this.createPolygon(750, 0, [
+      [-50, 320],
+      [-90, 500],
+    ]);
+    this.createPolygon(750, 0, [
+      [-90, 500],
+      [-200, 600],
+    ]);
+
+    // Lake
+    this.createOval(530, 130, 80, 70, 10, -0.2);
+  }
+};
+
 
 /***/ })
 
@@ -196,11 +2713,23 @@ eval("const { System, Line } = __webpack_require__(/*! ../../dist */ \"./dist/in
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module can't be inlined because the eval devtool is used.
-/******/ 	var __webpack_exports__ = __webpack_require__("./src/demo/index.js");
-/******/ 	
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+/*!***************************!*\
+  !*** ./src/demo/index.js ***!
+  \***************************/
+if (window.location.search.indexOf("?stress") !== -1) {
+  const { Stress } = __webpack_require__(/*! ./stress */ "./src/demo/stress.js");
+
+  document.body.appendChild(new Stress().element);
+} else {
+  const { Tank } = __webpack_require__(/*! ./tank */ "./src/demo/tank.js");
+
+  document.body.appendChild(new Tank().element);
+}
+
+})();
+
 /******/ })()
 ;

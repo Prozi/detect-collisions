@@ -1,7 +1,11 @@
 import SAT from "sat";
 import RBush from "rbush";
-import { TBody, Vector } from "./model";
-import { Box, Circle, Line, Point, Polygon, RaycastResult } from ".";
+import { TBody, Vector, RaycastResult } from "./model";
+import { Point } from "./bodies/point";
+import { Circle } from "./bodies/circle";
+import { Box } from "./bodies/box";
+import { Polygon } from "./bodies/polygon";
+import { Line } from "./bodies/line";
 import { Oval } from "./bodies/oval";
 /**
  * collision system

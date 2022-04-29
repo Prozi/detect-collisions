@@ -88,3 +88,4 @@ class Circle extends sat_1.default.Circle {
     }
 }
 exports.Circle = Circle;
+//# sourceMappingURL=circle.js.map

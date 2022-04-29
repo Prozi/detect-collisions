@@ -1,5 +1,5 @@
 import SAT from "sat";
-import { Vector } from "./model";
+import { PotentialVector, Vector } from "./model";
 
 export function createOval(
   radiusX: number,
@@ -37,7 +37,7 @@ export function createBox(width: number, height: number): SAT.Vector[] {
  * ensure returns a SAT.Vector
  * @param {SAT.Vector} point
  */
-export function ensureVectorPoint(point: Vector = {}): SAT.Vector {
+export function ensureVectorPoint(point: PotentialVector = {}): SAT.Vector {
   return point instanceof SAT.Vector
     ? point
     : new SAT.Vector(point.x || 0, point.y || 0);
@@ -47,7 +47,7 @@ export function ensureVectorPoint(point: Vector = {}): SAT.Vector {
  * ensure correct counterclockwise points
  * @param {SAT.Vector[]} points
  */
-export function ensurePolygonPoints(points: Vector[]): SAT.Vector[] {
+export function ensurePolygonPoints(points: PotentialVector[]): SAT.Vector[] {
   if (!points) {
     throw new Error("No points array provided");
   }
@@ -74,8 +74,22 @@ export function distance(a: Vector, b: Vector): number {
  */
 export function closest(
   from: Vector
-): (a: { point: Vector }, b: { point: Vector }) => number {
-  return ({ point: a }, { point: b }) => distance(from, a) - distance(from, b);
+): (a: { point: Vector } | null, b: { point: Vector } | null) => number {
+  return (a: { point: Vector } | null, b: { point: Vector } | null) => {
+    if (!a && !b) {
+      return 0;
+    }
+
+    if (!a) {
+      return -Infinity;
+    }
+
+    if (!b) {
+      return Infinity;
+    }
+
+    return distance(from, a.point) - distance(from, b.point);
+  };
 }
 
 /**

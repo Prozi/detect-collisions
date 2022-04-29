@@ -1,5 +1,5 @@
 import SAT from "sat";
-import { Vector } from "./model";
+import { PotentialVector, Vector } from "./model";
 export declare function createOval(radiusX: number, radiusY?: number, step?: number): SAT.Vector[];
 /**
  * creates box polygon points
@@ -12,12 +12,12 @@ export declare function createBox(width: number, height: number): SAT.Vector[];
  * ensure returns a SAT.Vector
  * @param {SAT.Vector} point
  */
-export declare function ensureVectorPoint(point?: Vector): SAT.Vector;
+export declare function ensureVectorPoint(point?: PotentialVector): SAT.Vector;
 /**
  * ensure correct counterclockwise points
  * @param {SAT.Vector[]} points
  */
-export declare function ensurePolygonPoints(points: Vector[]): SAT.Vector[];
+export declare function ensurePolygonPoints(points: PotentialVector[]): SAT.Vector[];
 /**
  * get distance between two {x, y} points
  * @param {Vector} a
@@ -32,9 +32,9 @@ export declare function distance(a: Vector, b: Vector): number;
  */
 export declare function closest(from: Vector): (a: {
     point: Vector;
-}, b: {
+} | null, b: {
     point: Vector;
-}) => number;
+} | null) => number;
 /**
  * check direction of polygon
  * @param {SAT.Vector[]} points

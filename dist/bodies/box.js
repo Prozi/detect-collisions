@@ -70,3 +70,4 @@ class Box extends polygon_1.Polygon {
     }
 }
 exports.Box = Box;
+//# sourceMappingURL=box.js.map

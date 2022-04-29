@@ -8,10 +8,10 @@ import { ensureVectorPoint, ensurePolygonPoints, dashLineTo } from "../utils";
  * collider - polygon
  */
 export class Polygon extends SAT.Polygon implements BBox, ICollider {
-  minX: number;
-  maxX: number;
-  minY: number;
-  maxY: number;
+  minX!: number;
+  maxX!: number;
+  minY!: number;
+  maxY!: number;
 
   /**
    * static bodies don't move but they collide

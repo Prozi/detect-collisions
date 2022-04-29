@@ -15,3 +15,4 @@ var Types;
     Types["Point"] = "Point";
     Types["Polygon"] = "Polygon";
 })(Types = exports.Types || (exports.Types = {}));
+//# sourceMappingURL=model.js.map

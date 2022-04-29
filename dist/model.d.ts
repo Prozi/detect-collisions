@@ -1,6 +1,10 @@
 /// <reference types="sat" />
 export { Response } from "sat";
-import { Point, Circle, Box, Polygon, System } from ".";
+import { Point } from "./bodies/point";
+import { Circle } from "./bodies/circle";
+import { Box } from "./bodies/box";
+import { Polygon } from "./bodies/polygon";
+import { System } from "./system";
 /**
  * types
  */
@@ -40,9 +44,16 @@ export declare type RaycastResult = {
 /**
  * potential vector
  */
-export declare type Vector = {
+export declare type PotentialVector = {
     x?: number;
     y?: number;
+};
+/**
+ * potential vector
+ */
+export declare type Vector = {
+    x: number;
+    y: number;
 };
 /**
  * generic body union type

@@ -100,3 +100,4 @@ class Polygon extends sat_1.default.Polygon {
     }
 }
 exports.Polygon = Polygon;
+//# sourceMappingURL=polygon.js.map

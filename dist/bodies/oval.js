@@ -63,3 +63,4 @@ class Oval extends polygon_1.Polygon {
     }
 }
 exports.Oval = Oval;
+//# sourceMappingURL=oval.js.map

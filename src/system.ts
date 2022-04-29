@@ -1,16 +1,19 @@
 import SAT from "sat";
 import RBush from "rbush";
-import { IData, TBody, Types, Vector } from "./model";
-import { closest, createBox } from "./utils";
 import {
-  Box,
-  Circle,
+  IData,
+  TBody,
+  Types,
+  Vector,
   IGetAABBAsBox,
-  Line,
-  Point,
-  Polygon,
   RaycastResult,
-} from ".";
+} from "./model";
+import { closest, createBox } from "./utils";
+import { Point } from "./bodies/point";
+import { Circle } from "./bodies/circle";
+import { Box } from "./bodies/box";
+import { Polygon } from "./bodies/polygon";
+import { Line } from "./bodies/line";
 import { Oval } from "./bodies/oval";
 
 /**
@@ -155,7 +158,7 @@ export class System extends RBush<TBody> {
    * @returns System
    */
   remove(body: TBody, equals?: (a: TBody, b: TBody) => boolean): RBush<TBody> {
-    body.system = null;
+    body.system = undefined;
 
     return super.remove(body, equals);
   }
@@ -275,6 +278,8 @@ export class System extends RBush<TBody> {
         this.response
       );
     }
+
+    throw Error("Not implemented");
   }
 
   /**
@@ -297,8 +302,7 @@ export class System extends RBush<TBody> {
     this.remove(ray);
 
     const results: RaycastResult[] = [];
-    const sort: (a: { point: Vector }, b: { point: Vector }) => number =
-      closest(start);
+    const sort: (a: RaycastResult, b: RaycastResult) => number = closest(start);
 
     colliders.forEach((collider: TBody) => {
       switch (collider.type) {
@@ -323,7 +327,7 @@ export class System extends RBush<TBody> {
 
               return System.intersectLineLine(ray, line);
             })
-            .filter((test: Vector | null) => !!test);
+            .filter((test: Vector | null) => !!test) as Vector[];
 
           results.push(...points.map((point: Vector) => ({ point, collider })));
 

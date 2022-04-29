@@ -1,5 +1,9 @@
 export { Response } from "sat";
-import { Point, Circle, Box, Polygon, System } from ".";
+import { Point } from "./bodies/point";
+import { Circle } from "./bodies/circle";
+import { Box } from "./bodies/box";
+import { Polygon } from "./bodies/polygon";
+import { System } from "./system";
 
 /**
  * types
@@ -37,7 +41,12 @@ export type RaycastResult = { point: Vector; collider: TBody } | null;
 /**
  * potential vector
  */
-export type Vector = { x?: number; y?: number };
+export type PotentialVector = { x?: number; y?: number };
+
+/**
+ * potential vector
+ */
+export type Vector = { x: number; y: number };
 
 /**
  * generic body union type

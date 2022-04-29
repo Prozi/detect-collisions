@@ -18,3 +18,4 @@ class Point extends box_1.Box {
     }
 }
 exports.Point = Point;
+//# sourceMappingURL=point.js.map
