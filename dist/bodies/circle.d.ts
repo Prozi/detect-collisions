@@ -1,11 +1,11 @@
 import SAT from "sat";
 import { BBox } from "rbush";
 import { System } from "../system";
-import { ICollider, Types, Vector } from "../model";
+import { Collider, Types, Vector } from "../model";
 /**
  * collider - circle
  */
-export declare class Circle extends SAT.Circle implements BBox, ICollider {
+export declare class Circle extends SAT.Circle implements BBox, Collider {
     minX: number;
     maxX: number;
     minY: number;

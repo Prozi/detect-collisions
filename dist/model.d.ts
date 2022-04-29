@@ -19,8 +19,8 @@ export declare enum Types {
 /**
  * for use of private function of sat.js
  */
-export interface IGetAABBAsBox {
-    getAABBAsBox: () => {
+export interface GetAABBAsBox {
+    getAABBAsBox(): {
         pos: SAT.Vector;
         w: number;
         h: number;
@@ -29,7 +29,7 @@ export interface IGetAABBAsBox {
 /**
  * for use of private function of sat.js
  */
-export interface IData {
+export interface Data {
     data: {
         children: TBody[];
     };
@@ -44,17 +44,17 @@ export declare type RaycastResult = {
 /**
  * potential vector
  */
-export declare type PotentialVector = {
+export interface PotentialVector {
     x?: number;
     y?: number;
-};
+}
 /**
  * potential vector
  */
-export declare type Vector = {
+export interface Vector {
     x: number;
     y: number;
-};
+}
 /**
  * generic body union type
  */
@@ -62,7 +62,7 @@ export declare type TBody = Point | Circle | Box | Polygon;
 /**
  * commonly used
  */
-export interface ICollider {
+export interface Collider {
     /**
      * type of collider
      */

@@ -1,13 +1,13 @@
 import SAT from "sat";
 import { BBox } from "rbush";
 import { System } from "../system";
-import { ICollider, IGetAABBAsBox, Types, Vector } from "../model";
+import { Collider, GetAABBAsBox, Types, Vector } from "../model";
 import { ensureVectorPoint, ensurePolygonPoints, dashLineTo } from "../utils";
 
 /**
  * collider - polygon
  */
-export class Polygon extends SAT.Polygon implements BBox, ICollider {
+export class Polygon extends SAT.Polygon implements BBox, Collider {
   minX!: number;
   maxX!: number;
   minY!: number;
@@ -92,7 +92,7 @@ export class Polygon extends SAT.Polygon implements BBox, ICollider {
    * Updates Bounding Box of collider
    */
   updateAABB(): void {
-    const { pos, w, h } = (this as unknown as IGetAABBAsBox).getAABBAsBox();
+    const { pos, w, h } = (this as unknown as GetAABBAsBox).getAABBAsBox();
 
     this.minX = pos.x;
     this.minY = pos.y;

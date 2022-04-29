@@ -190,9 +190,7 @@ if (system.checkCollision(player, wall)) {
 const collider = system.createCircle({ x: 100, y: 100 }, 10);
 const potentials = system.getPotentials(collider);
 const obj = { name: "coin", collider };
-const collided = potentials.some((body) =>
-  system.checkCollision(collider, body)
-);
+const collided = potentials.some((body) => system.checkCollision(collider, body));
 
 if (collided) {
   system.remove(obj.collider);

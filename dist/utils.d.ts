@@ -1,5 +1,8 @@
 import SAT from "sat";
+import { Line } from "./bodies/line";
+import { Circle } from "./bodies/circle";
 import { PotentialVector, Vector } from "./model";
+import { Polygon } from "./bodies/polygon";
 export declare function createEllipse(radiusX: number, radiusY?: number, step?: number): SAT.Vector[];
 /**
  * creates box polygon points
@@ -26,16 +29,6 @@ export declare function ensurePolygonPoints(points: PotentialVector[]): SAT.Vect
  */
 export declare function distance(a: Vector, b: Vector): number;
 /**
- * returns function to sort raycast results
- * @param {Vector} from
- * @returns {function}
- */
-export declare function closest(from: Vector): (a: {
-    point: Vector;
-} | null, b: {
-    point: Vector;
-} | null) => number;
-/**
  * check direction of polygon
  * @param {SAT.Vector[]} points
  */
@@ -51,4 +44,7 @@ export declare function clockwise(points: Vector[]): boolean;
  * @param {number?} gap
  */
 export declare function dashLineTo(context: CanvasRenderingContext2D, fromX: number, fromY: number, toX: number, toY: number, dash?: number, gap?: number): void;
+export declare function intersectLineCircle(line: Line, circle: Circle): Vector[];
+export declare function intersectLineLine(line1: Line, line2: Line): Vector | null;
+export declare function intersectLinePolygon(line: Line, polygon: Polygon): Vector[];
 //# sourceMappingURL=utils.d.ts.map

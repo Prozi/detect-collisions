@@ -204,18 +204,12 @@ module.exports.Stress = class Stress {
         break;
 
       default:
-        body = this.collisions.createPolygon(
-          {
-            x,
-            y,
-          },
-          [
-            { x: -random(min_size, max_size), y: -random(min_size, max_size) },
-            { x: random(min_size, max_size), y: -random(min_size, max_size) },
-            { x: random(min_size, max_size), y: random(min_size, max_size) },
-            { x: -random(min_size, max_size), y: random(min_size, max_size) },
-          ]
-        );
+        body = this.collisions.createPolygon({ x, y }, [
+          { x: -random(min_size, max_size), y: -random(min_size, max_size) },
+          { x: random(min_size, max_size), y: -random(min_size, max_size) },
+          { x: random(min_size, max_size), y: random(min_size, max_size) },
+          { x: -random(min_size, max_size), y: random(min_size, max_size) },
+        ]);
 
         ++this.polygons;
         break;
