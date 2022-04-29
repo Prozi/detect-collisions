@@ -1,19 +1,19 @@
 import { Types, Vector } from "../model";
-import { createOval } from "../utils";
+import { createEllipse } from "../utils";
 import { Polygon } from "./polygon";
 
 /**
- * collider - oval
+ * collider - ellipse
  */
-export class Oval extends Polygon {
-  readonly type: Types.Oval = Types.Oval;
+export class Ellipse extends Polygon {
+  readonly type: Types.Ellipse = Types.Ellipse;
 
   private _radiusX: number;
   private _radiusY: number;
   private _step: number;
 
   /**
-   * collider - oval
+   * collider - ellipse
    * @param {Vector} position {x, y}
    * @param {number} radiusX
    * @param {number} radiusY defaults to radiusX
@@ -23,9 +23,9 @@ export class Oval extends Polygon {
     position: Vector,
     radiusX: number,
     radiusY: number = radiusX,
-    step = 1
+    step = Math.hypot(radiusX, radiusY)
   ) {
-    super(position, createOval(radiusX, radiusY, step));
+    super(position, createEllipse(radiusX, radiusY, step));
 
     this._radiusX = radiusX;
     this._radiusY = radiusY;
@@ -33,50 +33,50 @@ export class Oval extends Polygon {
   }
 
   /**
-   * get oval step number
+   * get ellipse step number
    */
   get step(): number {
     return this._step;
   }
 
   /**
-   * set oval step number
+   * set ellipse step number
    */
   set step(step: number) {
     this._step = step;
 
-    this.setPoints(createOval(this._radiusX, this._radiusY, this._step));
+    this.setPoints(createEllipse(this._radiusX, this._radiusY, this._step));
   }
 
   /**
-   * get oval radiusX
+   * get ellipse radiusX
    */
   get radiusX(): number {
     return this._radiusX;
   }
 
   /**
-   * set oval radiusX, update points
+   * set ellipse radiusX, update points
    */
   set radiusX(radiusX: number) {
     this._radiusX = radiusX;
 
-    this.setPoints(createOval(this._radiusX, this._radiusY, this._step));
+    this.setPoints(createEllipse(this._radiusX, this._radiusY, this._step));
   }
 
   /**
-   * get oval radiusY
+   * get ellipse radiusY
    */
   get radiusY(): number {
     return this._radiusY;
   }
 
   /**
-   * set oval radiusY, update points
+   * set ellipse radiusY, update points
    */
   set radiusY(radiusY: number) {
     this._radiusY = radiusY;
 
-    this.setPoints(createOval(this._radiusX, this._radiusY, this._step));
+    this.setPoints(createEllipse(this._radiusX, this._radiusY, this._step));
   }
 }

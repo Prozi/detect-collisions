@@ -9,7 +9,7 @@ import { System } from "./system";
  * types
  */
 export declare enum Types {
-    Oval = "Oval",
+    Ellipse = "Ellipse",
     Line = "Line",
     Circle = "Circle",
     Box = "Box",

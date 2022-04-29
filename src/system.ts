@@ -14,7 +14,7 @@ import { Circle } from "./bodies/circle";
 import { Box } from "./bodies/box";
 import { Polygon } from "./bodies/polygon";
 import { Line } from "./bodies/line";
-import { Oval } from "./bodies/oval";
+import { Ellipse } from "./bodies/ellipse";
 
 /**
  * collision system
@@ -397,27 +397,27 @@ export class System extends RBush<TBody> {
   }
 
   /**
-   * create oval
+   * create ellipse
    * @param {Vector} position {x, y}
    * @param {number} radiusX
    * @param {number} radiusY
    * @param {number} step
    * @param {number} angle
    */
-  createOval(
+  createEllipse(
     position: Vector,
     radiusX: number,
     radiusY: number,
     step = 1,
     angle = 0
-  ): Oval {
-    const oval = new Oval(position, radiusX, radiusY, step);
+  ): Ellipse {
+    const ellipse = new Ellipse(position, radiusX, radiusY, step);
 
-    oval.setAngle(angle);
+    ellipse.setAngle(angle);
 
-    this.insert(oval);
+    this.insert(ellipse);
 
-    return oval;
+    return ellipse;
   }
 
   /**

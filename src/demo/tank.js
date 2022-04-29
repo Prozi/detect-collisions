@@ -197,8 +197,8 @@ module.exports.Tank = class Tank {
     );
   }
 
-  createOval(x, y, radiusX, radiusY, step, angle) {
-    this.collisions.createOval(
+  createEllipse(x, y, radiusX, radiusY, step, angle) {
+    this.collisions.createEllipse(
       { x: this.scaleX(x), y: this.scaleY(y) },
       this.scaleX(radiusX),
       this.scaleY(radiusY),
@@ -346,6 +346,6 @@ module.exports.Tank = class Tank {
     ]);
 
     // Lake
-    this.createOval(530, 130, 80, 70, 10, -0.2);
+    this.createEllipse(530, 130, 80, 70, 10, -0.2);
   }
 };

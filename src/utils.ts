@@ -1,7 +1,7 @@
 import SAT from "sat";
 import { PotentialVector, Vector } from "./model";
 
-export function createOval(
+export function createEllipse(
   radiusX: number,
   radiusY: number = radiusX,
   step = 1

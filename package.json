@@ -1,7 +1,7 @@
 {
   "name": "detect-collisions",
   "version": "3.5.0",
-  "description": "2d collision detection for Points, Lines, Boxes, Polygons, Ovals and Circles (with SAT and BVH)",
+  "description": "2d collision detection for Points, Lines, Boxes, Polygons, Ellipses and Circles (with SAT and BVH)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

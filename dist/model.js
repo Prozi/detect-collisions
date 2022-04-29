@@ -8,7 +8,7 @@ Object.defineProperty(exports, "Response", { enumerable: true, get: function () 
  */
 var Types;
 (function (Types) {
-    Types["Oval"] = "Oval";
+    Types["Ellipse"] = "Ellipse";
     Types["Line"] = "Line";
     Types["Circle"] = "Circle";
     Types["Box"] = "Box";

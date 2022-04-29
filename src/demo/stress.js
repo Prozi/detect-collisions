@@ -19,7 +19,7 @@ module.exports.Stress = class Stress {
     this.polygons = 0;
     this.boxes = 0;
     this.circles = 0;
-    this.ovals = 0;
+    this.ellipses = 0;
     this.lines = 0;
 
     this.canvas.width = width;
@@ -55,7 +55,7 @@ module.exports.Stress = class Stress {
       <div><b>Polygons:</b> ${this.polygons}</div>
       <div><b>Boxes:</b> ${this.boxes}</div>
       <div><b>Circles:</b> ${this.circles}</div>
-      <div><b>Ovals:</b> ${this.ovals}</div>
+      <div><b>Ellipses:</b> ${this.ellipses}</div>
       <div><b>Lines:</b> ${this.lines}</div>
       <div><label><input id="bvh" type="checkbox">Show Bounding Volume Hierarchy</label></div>
     `;
@@ -169,14 +169,14 @@ module.exports.Stress = class Stress {
         break;
 
       case 1:
-        body = this.collisions.createOval(
+        body = this.collisions.createEllipse(
           { x, y },
           random(min_size, max_size),
           random(min_size, max_size),
           min_size
         );
 
-        ++this.ovals;
+        ++this.ellipses;
         break;
 
       case 2:

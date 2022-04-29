@@ -6,7 +6,7 @@ import { Circle } from "./bodies/circle";
 import { Box } from "./bodies/box";
 import { Polygon } from "./bodies/polygon";
 import { Line } from "./bodies/line";
-import { Oval } from "./bodies/oval";
+import { Ellipse } from "./bodies/ellipse";
 /**
  * collision system
  */
@@ -104,14 +104,14 @@ export declare class System extends RBush<TBody> {
      */
     createBox(position: Vector, width: number, height: number, angle?: number): Box;
     /**
-     * create oval
+     * create ellipse
      * @param {Vector} position {x, y}
      * @param {number} radiusX
      * @param {number} radiusY
      * @param {number} step
      * @param {number} angle
      */
-    createOval(position: Vector, radiusX: number, radiusY: number, step?: number, angle?: number): Oval;
+    createEllipse(position: Vector, radiusX: number, radiusY: number, step?: number, angle?: number): Ellipse;
     /**
      * create polygon
      * @param {Vector} position {x, y}

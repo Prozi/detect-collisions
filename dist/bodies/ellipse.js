@@ -1,66 +1,66 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Oval = void 0;
+exports.Ellipse = void 0;
 const model_1 = require("../model");
 const utils_1 = require("../utils");
 const polygon_1 = require("./polygon");
 /**
- * collider - oval
+ * collider - ellipse
  */
-class Oval extends polygon_1.Polygon {
+class Ellipse extends polygon_1.Polygon {
     /**
-     * collider - oval
+     * collider - ellipse
      * @param {Vector} position {x, y}
      * @param {number} radiusX
      * @param {number} radiusY defaults to radiusX
      * @param {number} step precision division >= 1px
      */
-    constructor(position, radiusX, radiusY = radiusX, step = 1) {
-        super(position, (0, utils_1.createOval)(radiusX, radiusY, step));
-        this.type = model_1.Types.Oval;
+    constructor(position, radiusX, radiusY = radiusX, step = Math.hypot(radiusX, radiusY)) {
+        super(position, (0, utils_1.createEllipse)(radiusX, radiusY, step));
+        this.type = model_1.Types.Ellipse;
         this._radiusX = radiusX;
         this._radiusY = radiusY;
         this._step = step;
     }
     /**
-     * get oval step number
+     * get ellipse step number
      */
     get step() {
         return this._step;
     }
     /**
-     * set oval step number
+     * set ellipse step number
      */
     set step(step) {
         this._step = step;
-        this.setPoints((0, utils_1.createOval)(this._radiusX, this._radiusY, this._step));
+        this.setPoints((0, utils_1.createEllipse)(this._radiusX, this._radiusY, this._step));
     }
     /**
-     * get oval radiusX
+     * get ellipse radiusX
      */
     get radiusX() {
         return this._radiusX;
     }
     /**
-     * set oval radiusX, update points
+     * set ellipse radiusX, update points
      */
     set radiusX(radiusX) {
         this._radiusX = radiusX;
-        this.setPoints((0, utils_1.createOval)(this._radiusX, this._radiusY, this._step));
+        this.setPoints((0, utils_1.createEllipse)(this._radiusX, this._radiusY, this._step));
     }
     /**
-     * get oval radiusY
+     * get ellipse radiusY
      */
     get radiusY() {
         return this._radiusY;
     }
     /**
-     * set oval radiusY, update points
+     * set ellipse radiusY, update points
      */
     set radiusY(radiusY) {
         this._radiusY = radiusY;
-        this.setPoints((0, utils_1.createOval)(this._radiusX, this._radiusY, this._step));
+        this.setPoints((0, utils_1.createEllipse)(this._radiusX, this._radiusY, this._step));
     }
 }
-exports.Oval = Oval;
-//# sourceMappingURL=oval.js.map
+exports.Ellipse = Ellipse;
+//# sourceMappingURL=ellipse.js.map

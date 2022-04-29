@@ -1,15 +1,15 @@
 import { Types, Vector } from "../model";
 import { Polygon } from "./polygon";
 /**
- * collider - oval
+ * collider - ellipse
  */
-export declare class Oval extends Polygon {
-    readonly type: Types.Oval;
+export declare class Ellipse extends Polygon {
+    readonly type: Types.Ellipse;
     private _radiusX;
     private _radiusY;
     private _step;
     /**
-     * collider - oval
+     * collider - ellipse
      * @param {Vector} position {x, y}
      * @param {number} radiusX
      * @param {number} radiusY defaults to radiusX
@@ -17,28 +17,28 @@ export declare class Oval extends Polygon {
      */
     constructor(position: Vector, radiusX: number, radiusY?: number, step?: number);
     /**
-     * get oval step number
+     * get ellipse step number
      */
     get step(): number;
     /**
-     * set oval step number
+     * set ellipse step number
      */
     set step(step: number);
     /**
-     * get oval radiusX
+     * get ellipse radiusX
      */
     get radiusX(): number;
     /**
-     * set oval radiusX, update points
+     * set ellipse radiusX, update points
      */
     set radiusX(radiusX: number);
     /**
-     * get oval radiusY
+     * get ellipse radiusY
      */
     get radiusY(): number;
     /**
-     * set oval radiusY, update points
+     * set ellipse radiusY, update points
      */
     set radiusY(radiusY: number);
 }
-//# sourceMappingURL=oval.d.ts.map
+//# sourceMappingURL=ellipse.d.ts.map

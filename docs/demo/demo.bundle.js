@@ -185,6 +185,82 @@ exports.Circle = Circle;
 
 /***/ }),
 
+/***/ "./dist/bodies/ellipse.js":
+/*!********************************!*\
+  !*** ./dist/bodies/ellipse.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Ellipse = void 0;
+const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils.js");
+const polygon_1 = __webpack_require__(/*! ./polygon */ "./dist/bodies/polygon.js");
+/**
+ * collider - ellipse
+ */
+class Ellipse extends polygon_1.Polygon {
+    /**
+     * collider - ellipse
+     * @param {Vector} position {x, y}
+     * @param {number} radiusX
+     * @param {number} radiusY defaults to radiusX
+     * @param {number} step precision division >= 1px
+     */
+    constructor(position, radiusX, radiusY = radiusX, step = Math.hypot(radiusX, radiusY)) {
+        super(position, (0, utils_1.createEllipse)(radiusX, radiusY, step));
+        this.type = model_1.Types.Ellipse;
+        this._radiusX = radiusX;
+        this._radiusY = radiusY;
+        this._step = step;
+    }
+    /**
+     * get ellipse step number
+     */
+    get step() {
+        return this._step;
+    }
+    /**
+     * set ellipse step number
+     */
+    set step(step) {
+        this._step = step;
+        this.setPoints((0, utils_1.createEllipse)(this._radiusX, this._radiusY, this._step));
+    }
+    /**
+     * get ellipse radiusX
+     */
+    get radiusX() {
+        return this._radiusX;
+    }
+    /**
+     * set ellipse radiusX, update points
+     */
+    set radiusX(radiusX) {
+        this._radiusX = radiusX;
+        this.setPoints((0, utils_1.createEllipse)(this._radiusX, this._radiusY, this._step));
+    }
+    /**
+     * get ellipse radiusY
+     */
+    get radiusY() {
+        return this._radiusY;
+    }
+    /**
+     * set ellipse radiusY, update points
+     */
+    set radiusY(radiusY) {
+        this._radiusY = radiusY;
+        this.setPoints((0, utils_1.createEllipse)(this._radiusX, this._radiusY, this._step));
+    }
+}
+exports.Ellipse = Ellipse;
+//# sourceMappingURL=ellipse.js.map
+
+/***/ }),
+
 /***/ "./dist/bodies/line.js":
 /*!*****************************!*\
   !*** ./dist/bodies/line.js ***!
@@ -235,82 +311,6 @@ class Line extends polygon_1.Polygon {
 }
 exports.Line = Line;
 //# sourceMappingURL=line.js.map
-
-/***/ }),
-
-/***/ "./dist/bodies/oval.js":
-/*!*****************************!*\
-  !*** ./dist/bodies/oval.js ***!
-  \*****************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Oval = void 0;
-const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
-const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils.js");
-const polygon_1 = __webpack_require__(/*! ./polygon */ "./dist/bodies/polygon.js");
-/**
- * collider - oval
- */
-class Oval extends polygon_1.Polygon {
-    /**
-     * collider - oval
-     * @param {Vector} position {x, y}
-     * @param {number} radiusX
-     * @param {number} radiusY defaults to radiusX
-     * @param {number} step precision division >= 1px
-     */
-    constructor(position, radiusX, radiusY = radiusX, step = 1) {
-        super(position, (0, utils_1.createOval)(radiusX, radiusY, step));
-        this.type = model_1.Types.Oval;
-        this._radiusX = radiusX;
-        this._radiusY = radiusY;
-        this._step = step;
-    }
-    /**
-     * get oval step number
-     */
-    get step() {
-        return this._step;
-    }
-    /**
-     * set oval step number
-     */
-    set step(step) {
-        this._step = step;
-        this.setPoints((0, utils_1.createOval)(this._radiusX, this._radiusY, this._step));
-    }
-    /**
-     * get oval radiusX
-     */
-    get radiusX() {
-        return this._radiusX;
-    }
-    /**
-     * set oval radiusX, update points
-     */
-    set radiusX(radiusX) {
-        this._radiusX = radiusX;
-        this.setPoints((0, utils_1.createOval)(this._radiusX, this._radiusY, this._step));
-    }
-    /**
-     * get oval radiusY
-     */
-    get radiusY() {
-        return this._radiusY;
-    }
-    /**
-     * set oval radiusY, update points
-     */
-    set radiusY(radiusY) {
-        this._radiusY = radiusY;
-        this.setPoints((0, utils_1.createOval)(this._radiusX, this._radiusY, this._step));
-    }
-}
-exports.Oval = Oval;
-//# sourceMappingURL=oval.js.map
 
 /***/ }),
 
@@ -483,7 +483,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 __exportStar(__webpack_require__(/*! ./model */ "./dist/model.js"), exports);
 __exportStar(__webpack_require__(/*! ./bodies/circle */ "./dist/bodies/circle.js"), exports);
-__exportStar(__webpack_require__(/*! ./bodies/oval */ "./dist/bodies/oval.js"), exports);
+__exportStar(__webpack_require__(/*! ./bodies/ellipse */ "./dist/bodies/ellipse.js"), exports);
 __exportStar(__webpack_require__(/*! ./bodies/polygon */ "./dist/bodies/polygon.js"), exports);
 __exportStar(__webpack_require__(/*! ./bodies/box */ "./dist/bodies/box.js"), exports);
 __exportStar(__webpack_require__(/*! ./bodies/point */ "./dist/bodies/point.js"), exports);
@@ -511,7 +511,7 @@ Object.defineProperty(exports, "Response", ({ enumerable: true, get: function ()
  */
 var Types;
 (function (Types) {
-    Types["Oval"] = "Oval";
+    Types["Ellipse"] = "Ellipse";
     Types["Line"] = "Line";
     Types["Circle"] = "Circle";
     Types["Box"] = "Box";
@@ -544,7 +544,7 @@ const circle_1 = __webpack_require__(/*! ./bodies/circle */ "./dist/bodies/circl
 const box_1 = __webpack_require__(/*! ./bodies/box */ "./dist/bodies/box.js");
 const polygon_1 = __webpack_require__(/*! ./bodies/polygon */ "./dist/bodies/polygon.js");
 const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js");
-const oval_1 = __webpack_require__(/*! ./bodies/oval */ "./dist/bodies/oval.js");
+const ellipse_1 = __webpack_require__(/*! ./bodies/ellipse */ "./dist/bodies/ellipse.js");
 /**
  * collision system
  */
@@ -826,18 +826,18 @@ class System extends rbush_1.default {
         return box;
     }
     /**
-     * create oval
+     * create ellipse
      * @param {Vector} position {x, y}
      * @param {number} radiusX
      * @param {number} radiusY
      * @param {number} step
      * @param {number} angle
      */
-    createOval(position, radiusX, radiusY, step = 1, angle = 0) {
-        const oval = new oval_1.Oval(position, radiusX, radiusY, step);
-        oval.setAngle(angle);
-        this.insert(oval);
-        return oval;
+    createEllipse(position, radiusX, radiusY, step = 1, angle = 0) {
+        const ellipse = new ellipse_1.Ellipse(position, radiusX, radiusY, step);
+        ellipse.setAngle(angle);
+        this.insert(ellipse);
+        return ellipse;
     }
     /**
      * create polygon
@@ -869,9 +869,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.dashLineTo = exports.clockwise = exports.closest = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createOval = void 0;
+exports.dashLineTo = exports.clockwise = exports.closest = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = __importDefault(__webpack_require__(/*! sat */ "./node_modules/sat/SAT.js"));
-function createOval(radiusX, radiusY = radiusX, step = 1) {
+function createEllipse(radiusX, radiusY = radiusX, step = 1) {
     const steps = 2 * Math.PI * Math.hypot(radiusX, radiusY);
     const length = Math.max(8, Math.ceil(steps / step));
     return Array.from({ length }, (_, index) => {
@@ -881,7 +881,7 @@ function createOval(radiusX, radiusY = radiusX, step = 1) {
         return new sat_1.default.Vector(x, y);
     });
 }
-exports.createOval = createOval;
+exports.createEllipse = createEllipse;
 /**
  * creates box polygon points
  * @param {number} width
@@ -2102,7 +2102,7 @@ module.exports.Stress = class Stress {
     this.polygons = 0;
     this.boxes = 0;
     this.circles = 0;
-    this.ovals = 0;
+    this.ellipses = 0;
     this.lines = 0;
 
     this.canvas.width = width;
@@ -2138,7 +2138,7 @@ module.exports.Stress = class Stress {
       <div><b>Polygons:</b> ${this.polygons}</div>
       <div><b>Boxes:</b> ${this.boxes}</div>
       <div><b>Circles:</b> ${this.circles}</div>
-      <div><b>Ovals:</b> ${this.ovals}</div>
+      <div><b>Ellipses:</b> ${this.ellipses}</div>
       <div><b>Lines:</b> ${this.lines}</div>
       <div><label><input id="bvh" type="checkbox">Show Bounding Volume Hierarchy</label></div>
     `;
@@ -2252,14 +2252,14 @@ module.exports.Stress = class Stress {
         break;
 
       case 1:
-        body = this.collisions.createOval(
+        body = this.collisions.createEllipse(
           { x, y },
           random(min_size, max_size),
           random(min_size, max_size),
           min_size
         );
 
-        ++this.ovals;
+        ++this.ellipses;
         break;
 
       case 2:
@@ -2530,8 +2530,8 @@ module.exports.Tank = class Tank {
     );
   }
 
-  createOval(x, y, radiusX, radiusY, step, angle) {
-    this.collisions.createOval(
+  createEllipse(x, y, radiusX, radiusY, step, angle) {
+    this.collisions.createEllipse(
       { x: this.scaleX(x), y: this.scaleY(y) },
       this.scaleX(radiusX),
       this.scaleY(radiusY),
@@ -2679,7 +2679,7 @@ module.exports.Tank = class Tank {
     ]);
 
     // Lake
-    this.createOval(530, 130, 80, 70, 10, -0.2);
+    this.createEllipse(530, 130, 80, 70, 10, -0.2);
   }
 };
 

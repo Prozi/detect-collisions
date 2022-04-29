@@ -1,6 +1,6 @@
 # Introduction
 
-**Detect-Collisions** is JavaScript library for quickly and accurately detecting collisions between Points, Lines, Boxes, Polygons, Ovals and Circles. It combines the efficiency of a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and the accuracy of the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
+**Detect-Collisions** is JavaScript library for quickly and accurately detecting collisions between Points, Lines, Boxes, Polygons, Ellipses and Circles. It combines the efficiency of a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and the accuracy of the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
 
 [<img src="https://badge.fury.io/js/detect-collisions.svg" alt="https://badge.fury.io/js/detect-collisions" />](https://www.npmjs.com/package/detect-collisions)
 [<img src="https://snyk.io/test/github/Prozi/detect-collisions/badge.svg" alt="https://snyk.io/test/github/Prozi/detect-collisions" />](https://snyk.io/test/github/Prozi/detect-collisions)
@@ -40,7 +40,7 @@ const system = new System();
 
 **[Circle](https://github.com/jriecken/sat-js#satcircle)** - Shape with infinite sides equidistant of radius from its center position
 
-**[Oval](https://prozi.github.io/detect-collisions/classes/Oval.html)** - Flattened circle (implemented as polygon)
+**[Ellipse](https://prozi.github.io/detect-collisions/classes/Ellipse.html)** - Flattened circle (implemented as polygon)
 
 **[Polygon](https://github.com/jriecken/sat-js#satpolygon)** - Shape made up of finite number of line segments
 

@@ -13,7 +13,7 @@ const circle_1 = require("./bodies/circle");
 const box_1 = require("./bodies/box");
 const polygon_1 = require("./bodies/polygon");
 const line_1 = require("./bodies/line");
-const oval_1 = require("./bodies/oval");
+const ellipse_1 = require("./bodies/ellipse");
 /**
  * collision system
  */
@@ -295,18 +295,18 @@ class System extends rbush_1.default {
         return box;
     }
     /**
-     * create oval
+     * create ellipse
      * @param {Vector} position {x, y}
      * @param {number} radiusX
      * @param {number} radiusY
      * @param {number} step
      * @param {number} angle
      */
-    createOval(position, radiusX, radiusY, step = 1, angle = 0) {
-        const oval = new oval_1.Oval(position, radiusX, radiusY, step);
-        oval.setAngle(angle);
-        this.insert(oval);
-        return oval;
+    createEllipse(position, radiusX, radiusY, step = 1, angle = 0) {
+        const ellipse = new ellipse_1.Ellipse(position, radiusX, radiusY, step);
+        ellipse.setAngle(angle);
+        this.insert(ellipse);
+        return ellipse;
     }
     /**
      * create polygon

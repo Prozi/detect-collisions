@@ -6,13 +6,30 @@ const expectToBeNear = (value, check, tolerance = 1) => {
 };
 
 describe("GIVEN System", () => {
+  it("THEN you can change position within tree", () => {
+    const { System } = require("../dist/");
+
+    const system = new System();
+    const circle = system.createCircle({ x: 0, y: 0 }, 10);
+
+    expect(circle.x).toBe(0);
+    expect(circle.y).toBe(0);
+
+    expect(circle.system).toBe(system);
+
+    circle.setPosition(1, -1);
+
+    expect(circle.pos.x).toBe(1);
+    expect(circle.pos.y).toBe(-1);
+  });
+
   describe("WHEN raycast is called", () => {
-    it("THEN works correctly on Oval", () => {
+    it("THEN works correctly on Ellipse", () => {
       const { System } = require("../dist/");
 
       const system = new System();
 
-      system.createOval({ x: 100, y: 100 }, 30);
+      system.createEllipse({ x: 100, y: 100 }, 30);
 
       const hit = system.raycast({ x: 0, y: 0 }, { x: 100, y: 100 });
 

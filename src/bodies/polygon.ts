@@ -32,7 +32,7 @@ export class Polygon extends SAT.Polygon implements BBox, ICollider {
     | Types.Polygon
     | Types.Box
     | Types.Point
-    | Types.Oval
+    | Types.Ellipse
     | Types.Line = Types.Polygon;
 
   /**
