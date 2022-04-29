@@ -5,6 +5,8 @@ import { Circle } from "./bodies/circle";
 import { Box } from "./bodies/box";
 import { Polygon } from "./bodies/polygon";
 import { System } from "./system";
+import { Line } from "./bodies/line";
+import { Ellipse } from "./bodies/ellipse";
 /**
  * types
  */
@@ -58,7 +60,7 @@ export interface Vector {
 /**
  * generic body union type
  */
-export declare type TBody = Point | Circle | Box | Polygon;
+export declare type TBody = Point | Line | Ellipse | Circle | Box | Polygon;
 /**
  * commonly used
  */
