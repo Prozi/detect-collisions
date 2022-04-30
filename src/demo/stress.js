@@ -172,8 +172,7 @@ module.exports.Stress = class Stress {
         body = this.collisions.createEllipse(
           { x, y },
           random(min_size, max_size),
-          random(min_size, max_size),
-          min_size
+          random(min_size, max_size)
         );
 
         ++this.ellipses;

@@ -233,7 +233,7 @@ class System extends rbush_1.default {
      * @param {number} step
      * @param {number} angle
      */
-    createEllipse(position, radiusX, radiusY, step = 1, angle = 0) {
+    createEllipse(position, radiusX, radiusY, step, angle = 0) {
         const ellipse = new ellipse_1.Ellipse(position, radiusX, radiusY, step);
         ellipse.setAngle(angle);
         this.insert(ellipse);

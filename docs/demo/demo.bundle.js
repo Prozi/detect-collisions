@@ -764,7 +764,7 @@ class System extends rbush_1.default {
      * @param {number} step
      * @param {number} angle
      */
-    createEllipse(position, radiusX, radiusY, step = 1, angle = 0) {
+    createEllipse(position, radiusX, radiusY, step, angle = 0) {
         const ellipse = new ellipse_1.Ellipse(position, radiusX, radiusY, step);
         ellipse.setAngle(angle);
         this.insert(ellipse);
@@ -2225,8 +2225,7 @@ module.exports.Stress = class Stress {
         body = this.collisions.createEllipse(
           { x, y },
           random(min_size, max_size),
-          random(min_size, max_size),
-          min_size
+          random(min_size, max_size)
         );
 
         ++this.ellipses;

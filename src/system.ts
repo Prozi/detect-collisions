@@ -320,7 +320,7 @@ export class System extends RBush<TBody> {
     position: Vector,
     radiusX: number,
     radiusY: number,
-    step = 1,
+    step?: number,
     angle = 0
   ): Ellipse {
     const ellipse = new Ellipse(position, radiusX, radiusY, step);

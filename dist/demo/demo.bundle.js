@@ -209,7 +209,7 @@ class Ellipse extends polygon_1.Polygon {
      * @param {number} radiusY defaults to radiusX
      * @param {number} step precision division >= 1px
      */
-    constructor(position, radiusX, radiusY = radiusX, step = Math.hypot(radiusX, radiusY)) {
+    constructor(position, radiusX, radiusY = radiusX, step = Math.hypot(radiusX, radiusY) / Math.PI) {
         super(position, (0, utils_1.createEllipse)(radiusX, radiusY, step));
         this.type = model_1.Types.Ellipse;
         this._radiusX = radiusX;
@@ -764,7 +764,7 @@ class System extends rbush_1.default {
      * @param {number} step
      * @param {number} angle
      */
-    createEllipse(position, radiusX, radiusY, step = 1, angle = 0) {
+    createEllipse(position, radiusX, radiusY, step, angle = 0) {
         const ellipse = new ellipse_1.Ellipse(position, radiusX, radiusY, step);
         ellipse.setAngle(angle);
         this.insert(ellipse);
@@ -2225,8 +2225,7 @@ module.exports.Stress = class Stress {
         body = this.collisions.createEllipse(
           { x, y },
           random(min_size, max_size),
-          random(min_size, max_size),
-          min_size
+          random(min_size, max_size)
         );
 
         ++this.ellipses;
