@@ -177,8 +177,7 @@ These values can be used to "push" one body out of another using the minimum dis
 if (system.checkCollision(player, wall)) {
   const { overlapV } = system.response;
 
-  player.pos.x -= overlapV.x;
-  player.pos.y -= overlapV.y;
+  player.setPosition(player.x - overlapV.x, player.y - overlapV.y);
 
   system.updateBody(player);
 }
@@ -190,7 +189,9 @@ if (system.checkCollision(player, wall)) {
 const collider = system.createCircle({ x: 100, y: 100 }, 10);
 const potentials = system.getPotentials(collider);
 const obj = { name: "coin", collider };
-const collided = potentials.some((body) => system.checkCollision(collider, body));
+const collided = potentials.some((body) =>
+  system.checkCollision(collider, body)
+);
 
 if (collided) {
   system.remove(obj.collider);

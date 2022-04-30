@@ -24,7 +24,6 @@ class System extends rbush_1.default {
     }
     /**
      * draw bodies
-     * @param {CanvasRenderingContext2D} context
      */
     draw(context) {
         this.all().forEach((body) => {
@@ -33,7 +32,6 @@ class System extends rbush_1.default {
     }
     /**
      * draw hierarchy
-     * @param {CanvasRenderingContext2D} context
      */
     drawBVH(context) {
         this.data.children.forEach(({ minX, maxX, minY, maxY }) => {
@@ -49,7 +47,6 @@ class System extends rbush_1.default {
     }
     /**
      * update body aabb and in tree
-     * @param {object} body
      */
     updateBody(body) {
         // old aabb needs to be removed
@@ -61,9 +58,6 @@ class System extends rbush_1.default {
     }
     /**
      * remove body aabb from collision tree
-     * @param body
-     * @param equals
-     * @returns System
      */
     remove(body, equals) {
         body.system = undefined;
@@ -71,8 +65,6 @@ class System extends rbush_1.default {
     }
     /**
      * add body aabb to collision tree
-     * @param body
-     * @returns System
      */
     insert(body) {
         body.system = this;
@@ -105,7 +97,6 @@ class System extends rbush_1.default {
     }
     /**
      * check one collider collisions with callback
-     * @param {function} callback
      */
     checkOne(body, callback) {
         // no need to check static body collision
@@ -120,7 +111,6 @@ class System extends rbush_1.default {
     }
     /**
      * check all colliders collisions with callback
-     * @param {function} callback
      */
     checkAll(callback) {
         this.all().forEach((body) => {
@@ -129,7 +119,6 @@ class System extends rbush_1.default {
     }
     /**
      * get object potential colliders
-     * @param {object} collider
      */
     getPotentials(body) {
         // filter here is required as collides with self
@@ -137,8 +126,6 @@ class System extends rbush_1.default {
     }
     /**
      * check do 2 objects collide
-     * @param {object} collider
-     * @param {object} candidate
      */
     checkCollision(body, candidate) {
         this.response.clear();
@@ -158,9 +145,6 @@ class System extends rbush_1.default {
     }
     /**
      * raycast to get collider of ray from start to end
-     * @param {Vector} start {x, y}
-     * @param {Vector} end {x, y}
-     * @returns {TBody|null}
      */
     raycast(start, end, allowCollider = () => true) {
         let minDistance = Infinity;
@@ -182,69 +166,34 @@ class System extends rbush_1.default {
         });
         return result;
     }
-    /**
-     * create point
-     * @param {Vector} position {x, y}
-     */
     createPoint(position) {
         const point = new point_1.Point(position);
         this.insert(point);
         return point;
     }
-    /**
-     * create line
-     * @param {Vector} start {x, y}
-     * @param {Vector} end {x, y}
-     */
     createLine(start, end, angle = 0) {
         const line = new line_1.Line(start, end);
         line.setAngle(angle);
         this.insert(line);
         return line;
     }
-    /**
-     * create circle
-     * @param {Vector} position {x, y}
-     * @param {number} radius
-     */
     createCircle(position, radius) {
         const circle = new circle_1.Circle(position, radius);
         this.insert(circle);
         return circle;
     }
-    /**
-     * create box
-     * @param {Vector} position {x, y}
-     * @param {number} width
-     * @param {number} height
-     * @param {number} angle
-     */
     createBox(position, width, height, angle = 0) {
         const box = new box_1.Box(position, width, height);
         box.setAngle(angle);
         this.insert(box);
         return box;
     }
-    /**
-     * create ellipse
-     * @param {Vector} position {x, y}
-     * @param {number} radiusX
-     * @param {number} radiusY
-     * @param {number} step
-     * @param {number} angle
-     */
     createEllipse(position, radiusX, radiusY, step, angle = 0) {
         const ellipse = new ellipse_1.Ellipse(position, radiusX, radiusY, step);
         ellipse.setAngle(angle);
         this.insert(ellipse);
         return ellipse;
     }
-    /**
-     * create polygon
-     * @param {Vector} position {x, y}
-     * @param {Vector[]} points
-     * @param {number} angle
-     */
     createPolygon(position, points, angle = 0) {
         const polygon = new polygon_1.Polygon(position, points);
         polygon.setAngle(angle);

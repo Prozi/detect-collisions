@@ -19,9 +19,6 @@ function createEllipse(radiusX, radiusY = radiusX, step = 1) {
 exports.createEllipse = createEllipse;
 /**
  * creates box polygon points
- * @param {number} width
- * @param {number} height
- * @returns SAT.Vector
  */
 function createBox(width, height) {
     return [
@@ -34,7 +31,6 @@ function createBox(width, height) {
 exports.createBox = createBox;
 /**
  * ensure returns a SAT.Vector
- * @param {SAT.Vector} point
  */
 function ensureVectorPoint(point = {}) {
     return point instanceof sat_1.default.Vector
@@ -44,7 +40,6 @@ function ensureVectorPoint(point = {}) {
 exports.ensureVectorPoint = ensureVectorPoint;
 /**
  * ensure correct counterclockwise points
- * @param {SAT.Vector[]} points
  */
 function ensurePolygonPoints(points) {
     if (!points) {
@@ -56,9 +51,6 @@ function ensurePolygonPoints(points) {
 exports.ensurePolygonPoints = ensurePolygonPoints;
 /**
  * get distance between two {x, y} points
- * @param {Vector} a
- * @param {Vector} b
- * @returns {number}
  */
 function distance(a, b) {
     return Math.hypot(a.x - b.x, a.y - b.y);
@@ -66,7 +58,6 @@ function distance(a, b) {
 exports.distance = distance;
 /**
  * check direction of polygon
- * @param {SAT.Vector[]} points
  */
 function clockwise(points) {
     let sum = 0;
@@ -80,13 +71,6 @@ function clockwise(points) {
 exports.clockwise = clockwise;
 /**
  * draws dashed line on canvas context
- * @param {CanvasRenderingContext2D} context
- * @param {number} fromX
- * @param {number} fromY
- * @param {number} toX
- * @param {number} toY
- * @param {number?} dash
- * @param {number?} gap
  */
 function dashLineTo(context, fromX, fromY, toX, toY, dash = 2, gap = 4) {
     const xDiff = toX - fromX;
@@ -153,6 +137,9 @@ function intersectLineLine(line1, line2) {
     return { x: line1.start.x + lambda * dX, y: line1.start.y + lambda * dY };
 }
 exports.intersectLineLine = intersectLineLine;
+/**
+ * check if line (ray) intersects polygon
+ */
 function intersectLinePolygon(line, polygon) {
     return polygon.calcPoints
         .map((to, index) => {

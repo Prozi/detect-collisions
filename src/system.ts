@@ -29,7 +29,6 @@ export class System extends RBush<TBody> {
 
   /**
    * draw bodies
-   * @param {CanvasRenderingContext2D} context
    */
   draw(context: CanvasRenderingContext2D): void {
     this.all().forEach((body: TBody) => {
@@ -39,7 +38,6 @@ export class System extends RBush<TBody> {
 
   /**
    * draw hierarchy
-   * @param {CanvasRenderingContext2D} context
    */
   drawBVH(context: CanvasRenderingContext2D): void {
     (this as unknown as Data).data.children.forEach(
@@ -66,24 +64,18 @@ export class System extends RBush<TBody> {
 
   /**
    * update body aabb and in tree
-   * @param {object} body
    */
   updateBody(body: TBody): void {
     // old aabb needs to be removed
     this.remove(body);
-
     // then we update aabb
     body.updateAABB();
-
     // then we reinsert body to collision tree
     this.insert(body);
   }
 
   /**
    * remove body aabb from collision tree
-   * @param body
-   * @param equals
-   * @returns System
    */
   remove(body: TBody, equals?: (a: TBody, b: TBody) => boolean): RBush<TBody> {
     body.system = undefined;
@@ -93,8 +85,6 @@ export class System extends RBush<TBody> {
 
   /**
    * add body aabb to collision tree
-   * @param body
-   * @returns System
    */
   insert(body: TBody): RBush<TBody> {
     body.system = this;
@@ -133,7 +123,6 @@ export class System extends RBush<TBody> {
 
   /**
    * check one collider collisions with callback
-   * @param {function} callback
    */
   checkOne(body: TBody, callback: (response: SAT.Response) => void): void {
     // no need to check static body collision
@@ -150,7 +139,6 @@ export class System extends RBush<TBody> {
 
   /**
    * check all colliders collisions with callback
-   * @param {function} callback
    */
   checkAll(callback: (response: SAT.Response) => void): void {
     this.all().forEach((body: TBody) => {
@@ -160,7 +148,6 @@ export class System extends RBush<TBody> {
 
   /**
    * get object potential colliders
-   * @param {object} collider
    */
   getPotentials(body: TBody): TBody[] {
     // filter here is required as collides with self
@@ -169,34 +156,20 @@ export class System extends RBush<TBody> {
 
   /**
    * check do 2 objects collide
-   * @param {object} collider
-   * @param {object} candidate
    */
   checkCollision(body: TBody, candidate: TBody): boolean {
     this.response.clear();
 
     if (body.type === Types.Circle && candidate.type === Types.Circle) {
-      return SAT.testCircleCircle(
-        body as Circle,
-        candidate as Circle,
-        this.response
-      );
+      return SAT.testCircleCircle(body, candidate, this.response);
     }
 
     if (body.type === Types.Circle && candidate.type !== Types.Circle) {
-      return SAT.testCirclePolygon(
-        body as Circle,
-        candidate as Polygon,
-        this.response
-      );
+      return SAT.testCirclePolygon(body, candidate as Polygon, this.response);
     }
 
     if (body.type !== Types.Circle && candidate.type === Types.Circle) {
-      return SAT.testPolygonCircle(
-        body as Polygon,
-        candidate as Circle,
-        this.response
-      );
+      return SAT.testPolygonCircle(body as Polygon, candidate, this.response);
     }
 
     if (body.type !== Types.Circle && candidate.type !== Types.Circle) {
@@ -212,9 +185,6 @@ export class System extends RBush<TBody> {
 
   /**
    * raycast to get collider of ray from start to end
-   * @param {Vector} start {x, y}
-   * @param {Vector} end {x, y}
-   * @returns {TBody|null}
    */
   raycast(
     start: Vector,
@@ -251,10 +221,6 @@ export class System extends RBush<TBody> {
     return result;
   }
 
-  /**
-   * create point
-   * @param {Vector} position {x, y}
-   */
   createPoint(position: Vector): Point {
     const point = new Point(position);
 
@@ -263,26 +229,15 @@ export class System extends RBush<TBody> {
     return point;
   }
 
-  /**
-   * create line
-   * @param {Vector} start {x, y}
-   * @param {Vector} end {x, y}
-   */
   createLine(start: Vector, end: Vector, angle = 0): Line {
     const line = new Line(start, end);
 
     line.setAngle(angle);
-
     this.insert(line);
 
     return line;
   }
 
-  /**
-   * create circle
-   * @param {Vector} position {x, y}
-   * @param {number} radius
-   */
   createCircle(position: Vector, radius: number): Circle {
     const circle = new Circle(position, radius);
 
@@ -291,31 +246,15 @@ export class System extends RBush<TBody> {
     return circle;
   }
 
-  /**
-   * create box
-   * @param {Vector} position {x, y}
-   * @param {number} width
-   * @param {number} height
-   * @param {number} angle
-   */
   createBox(position: Vector, width: number, height: number, angle = 0): Box {
     const box = new Box(position, width, height);
 
     box.setAngle(angle);
-
     this.insert(box);
 
     return box;
   }
 
-  /**
-   * create ellipse
-   * @param {Vector} position {x, y}
-   * @param {number} radiusX
-   * @param {number} radiusY
-   * @param {number} step
-   * @param {number} angle
-   */
   createEllipse(
     position: Vector,
     radiusX: number,
@@ -326,23 +265,15 @@ export class System extends RBush<TBody> {
     const ellipse = new Ellipse(position, radiusX, radiusY, step);
 
     ellipse.setAngle(angle);
-
     this.insert(ellipse);
 
     return ellipse;
   }
 
-  /**
-   * create polygon
-   * @param {Vector} position {x, y}
-   * @param {Vector[]} points
-   * @param {number} angle
-   */
   createPolygon(position: Vector, points: Vector[], angle = 0): Polygon {
     const polygon = new Polygon(position, points);
 
     polygon.setAngle(angle);
-
     this.insert(polygon);
 
     return polygon;

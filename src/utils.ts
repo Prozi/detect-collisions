@@ -23,9 +23,6 @@ export function createEllipse(
 
 /**
  * creates box polygon points
- * @param {number} width
- * @param {number} height
- * @returns SAT.Vector
  */
 export function createBox(width: number, height: number): SAT.Vector[] {
   return [
@@ -38,7 +35,6 @@ export function createBox(width: number, height: number): SAT.Vector[] {
 
 /**
  * ensure returns a SAT.Vector
- * @param {SAT.Vector} point
  */
 export function ensureVectorPoint(point: PotentialVector = {}): SAT.Vector {
   return point instanceof SAT.Vector
@@ -48,7 +44,6 @@ export function ensureVectorPoint(point: PotentialVector = {}): SAT.Vector {
 
 /**
  * ensure correct counterclockwise points
- * @param {SAT.Vector[]} points
  */
 export function ensurePolygonPoints(points: PotentialVector[]): SAT.Vector[] {
   if (!points) {
@@ -62,9 +57,6 @@ export function ensurePolygonPoints(points: PotentialVector[]): SAT.Vector[] {
 
 /**
  * get distance between two {x, y} points
- * @param {Vector} a
- * @param {Vector} b
- * @returns {number}
  */
 export function distance(a: Vector, b: Vector): number {
   return Math.hypot(a.x - b.x, a.y - b.y);
@@ -72,7 +64,6 @@ export function distance(a: Vector, b: Vector): number {
 
 /**
  * check direction of polygon
- * @param {SAT.Vector[]} points
  */
 export function clockwise(points: Vector[]): boolean {
   let sum = 0;
@@ -89,13 +80,6 @@ export function clockwise(points: Vector[]): boolean {
 
 /**
  * draws dashed line on canvas context
- * @param {CanvasRenderingContext2D} context
- * @param {number} fromX
- * @param {number} fromY
- * @param {number} toX
- * @param {number} toY
- * @param {number?} dash
- * @param {number?} gap
  */
 export function dashLineTo(
   context: CanvasRenderingContext2D,
@@ -191,6 +175,9 @@ export function intersectLineLine(line1: Line, line2: Line): Vector | null {
   return { x: line1.start.x + lambda * dX, y: line1.start.y + lambda * dY };
 }
 
+/**
+ * check if line (ray) intersects polygon
+ */
 export function intersectLinePolygon(line: Line, polygon: Polygon): Vector[] {
   return polygon.calcPoints
     .map((to: Vector, index: number) => {
