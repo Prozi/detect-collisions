@@ -41,7 +41,7 @@ export class System extends RBush<TBody> {
    * draw hierarchy
    * @param {CanvasRenderingContext2D} context
    */
-  drawBVH(context: CanvasRenderingContext2D) {
+  drawBVH(context: CanvasRenderingContext2D): void {
     (this as unknown as Data).data.children.forEach(
       ({ minX, maxX, minY, maxY }: TBody) => {
         Polygon.prototype.draw.call(
@@ -105,7 +105,7 @@ export class System extends RBush<TBody> {
   /**
    * update all bodies aabb
    */
-  update() {
+  update(): void {
     this.all().forEach((body: TBody) => {
       // no need to every cycle update static body aabb
       if (!body.isStatic) {
@@ -117,7 +117,7 @@ export class System extends RBush<TBody> {
   /**
    * separate (move away) colliders
    */
-  separate() {
+  separate(): void {
     this.checkAll((response: SAT.Response) => {
       // static bodies and triggers do not move back / separate
       if (response.a.isTrigger) {
@@ -239,7 +239,7 @@ export class System extends RBush<TBody> {
           : intersectLinePolygon(ray, collider);
 
       points.forEach((point: Vector) => {
-        const pointDistance = distance(start, point);
+        const pointDistance: number = distance(start, point);
 
         if (pointDistance < minDistance) {
           minDistance = pointDistance;

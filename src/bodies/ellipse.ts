@@ -23,7 +23,7 @@ export class Ellipse extends Polygon {
     position: Vector,
     radiusX: number,
     radiusY: number = radiusX,
-    step = Math.hypot(radiusX, radiusY)
+    step: number = Math.hypot(radiusX, radiusY)
   ) {
     super(position, createEllipse(radiusX, radiusY, step));
 

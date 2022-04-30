@@ -191,7 +191,7 @@ export function intersectLineLine(line1: Line, line2: Line): Vector | null {
   return { x: line1.start.x + lambda * dX, y: line1.start.y + lambda * dY };
 }
 
-export function intersectLinePolygon(line: Line, polygon: Polygon) {
+export function intersectLinePolygon(line: Line, polygon: Polygon): Vector[] {
   return polygon.calcPoints
     .map((to: Vector, index: number) => {
       const from: Vector = index
