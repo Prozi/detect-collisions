@@ -33,7 +33,7 @@ https://prozi.github.io/detect-collisions/
 To start, create a unique collisions system:
 
 ```typescript
-const system = new System();
+const system: System = new System();
 ```
 
 ### 2. Creating, Inserting, Moving, Removing Bodies
@@ -139,7 +139,7 @@ system.checkOne(body, handleCollisions);
 When testing for collisions on a body, it is generally recommended that a broad-phase search be performed first by calling `getPotentials(body)` in order to quickly rule out bodies that are too far away to collide. **Detect-Collisions** uses a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for its broad-phase search. Calling `getPotentials(body)` on a body traverses the BVH and builds a list of potential collision candidates. Skipping the broad-phase search is not recommended. When testing for collisions against large numbers of bodies, performing a broad-phase search using a BVH is _much_ more efficient.
 
 ```typescript
-const potentials = system.getPotentials(body);
+const potentials: Body[] = system.getPotentials(body);
 ```
 
 Once a list of potential collisions is acquired, loop through them and perform a narrow-phase collision test using `checkCollision()`. **Detect-Collisions** uses the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for its narrow-phase collision tests.
@@ -162,7 +162,7 @@ if (system.checkCollision(polygon, line)) {
 
 ### 5. Getting Detailed Collision Information
 
-There is often a need for detailed information about a collision in order to react to it appropriately. This information is stored inside `system.response` object. The `SAT.Response` ([documentation](https://github.com/jriecken/sat-js#satresponse)) object has several properties set on them when a collision occurs:
+There is often a need for detailed information about a collision in order to react to it appropriately. This information is stored inside `system.response` object. The `Response` ([documentation](https://github.com/jriecken/sat-js#satresponse)) object has several properties set on them when a collision occurs:
 
 - `a` - The first object in the collision.
 - `b` - The second object in the collison.
@@ -182,7 +182,7 @@ These values can be used to "push" one body out of another using the minimum dis
 
 ```typescript
 if (system.checkCollision(player, wall)) {
-  const { overlapV }: SAT.Response = system.response;
+  const { overlapV }: Response = system.response;
 
   player.setPosition(player.x - overlapV.x, player.y - overlapV.y);
 }
@@ -191,7 +191,7 @@ if (system.checkCollision(player, wall)) {
 ### 7. Detecting collision after insertion
 
 ```typescript
-// create non-colliding collider
+// create collider self-destructing on collision
 function testCollision(): Circle | null {
   const circle: Circle = system.createCircle({ x: 100, y: 100 }, 10);
   const potentials: Vector[] = system.getPotentials(circle);
