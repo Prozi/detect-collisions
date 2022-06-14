@@ -2,19 +2,12 @@ const { System } = require("../../dist");
 
 const width = document.body.offsetWidth;
 const height = document.body.offsetHeight;
-const count = 500;
-const speed = 1;
-const size = (Math.hypot(width, height) || 500) * 0.004;
 
-let frame = 0;
-let fps_total = 0;
+class Stress {
+  constructor(count) {
+    const size = (Math.hypot(width, height) || 500) / (count / 4);
 
-module.exports.Stress = class Stress {
-  constructor() {
-    this.element = document.createElement("div");
-    this.canvas = document.createElement("canvas");
-    this.context = this.canvas.getContext("2d");
-    this.collisions = new System();
+    this.physics = new System(13);
     this.bodies = [];
     this.polygons = 0;
     this.boxes = 0;
@@ -22,78 +15,47 @@ module.exports.Stress = class Stress {
     this.ellipses = 0;
     this.lines = 0;
 
-    this.canvas.width = width;
-    this.canvas.height = height;
-    this.context.font = "24px Arial";
+    this.fps = 0;
+    this.frame = 0;
+    this.fpsTotal = 0;
 
     // World bounds
     this.bounds = [
-      this.collisions.createPolygon({ x: 0, y: 0 }, [
+      this.physics.createPolygon({ x: 0, y: 0 }, [
         { x: 0, y: 0 },
         { x: width, y: 0 },
       ]),
-      this.collisions.createPolygon({ x: 0, y: 0 }, [
+      this.physics.createPolygon({ x: 0, y: 0 }, [
         { x: width, y: 0 },
         { x: width, y: height },
       ]),
-      this.collisions.createPolygon({ x: 0, y: 0 }, [
+      this.physics.createPolygon({ x: 0, y: 0 }, [
         { x: width, y: height },
         { x: 0, y: height },
       ]),
-      this.collisions.createPolygon({ x: 0, y: 0 }, [
+      this.physics.createPolygon({ x: 0, y: 0 }, [
         { x: 0, y: height },
         { x: 0, y: 0 },
       ]),
     ];
 
     for (let i = 0; i < count; ++i) {
-      this.createShape(!random(0, 20));
+      this.createShape(!random(0, 20), size);
     }
 
-    this.element.innerHTML = `
-      <div><b>Total:</b> ${count}</div>
-      <div><b>Polygons:</b> ${this.polygons}</div>
-      <div><b>Boxes:</b> ${this.boxes}</div>
-      <div><b>Circles:</b> ${this.circles}</div>
-      <div><b>Ellipses:</b> ${this.ellipses}</div>
-      <div><b>Lines:</b> ${this.lines}</div>
-      <div><label><input id="bvh" type="checkbox">Show Bounding Volume Hierarchy</label></div>
-    `;
+    const start = loop((fps) => this.update(fps));
 
-    this.bvh_checkbox = this.element.querySelector("#bvh");
-
-    if (this.canvas instanceof Node) {
-      this.element.appendChild(this.canvas);
-    }
-
-    const self = this;
-
-    let time = performance.now();
-
-    this.frame = requestAnimationFrame(function frame() {
-      const current_time = performance.now();
-
-      try {
-        self.update(1000 / (current_time - time));
-      } catch (err) {
-        console.warn(err.message || err);
-      }
-
-      self.frame = requestAnimationFrame(frame);
-
-      time = current_time;
-    });
+    start();
   }
 
   update(fps) {
-    ++frame;
-    fps_total += fps;
+    this.frame++;
+    this.fpsTotal += fps;
+    this.fps = Math.round(this.fpsTotal / this.frame);
 
-    const average_fps = Math.round(fps_total / frame);
-
-    if (frame > 100) {
-      frame = 1;
-      fps_total = average_fps;
+    if (this.frame > 100) {
+      this.frame = 1;
+      this.fpsTotal = this.fps;
     }
 
     this.bodies.forEach((body) => {
@@ -103,12 +65,12 @@ module.exports.Stress = class Stress {
       }
 
       body.setPosition(
-        body.pos.x + body.direction_x * speed,
-        body.pos.y + body.direction_y * speed
+        body.pos.x + body.directionX,
+        body.pos.y + body.directionY
       );
     });
 
-    this.collisions.checkAll(({ a, overlapV }) => {
+    this.physics.checkAll(({ a, overlapV }) => {
       if (this.bounds.includes(a)) {
         return;
       }
@@ -117,40 +79,18 @@ module.exports.Stress = class Stress {
 
       a.setPosition(a.pos.x - overlapV.x, a.pos.y - overlapV.y);
 
-      a.direction_x = Math.cos(direction);
-      a.direction_y = Math.sin(direction);
+      a.directionX = Math.cos(direction);
+      a.directionY = Math.sin(direction);
 
       if (a.type !== "Circle") {
         a.rotationSpeed = (Math.random() - Math.random()) * 0.1;
       }
     });
-
-    // Clear the canvas
-    this.context.fillStyle = "#000000";
-    this.context.fillRect(0, 0, width, height);
-
-    // Render the bodies
-    this.context.strokeStyle = "#FFFFFF";
-    this.context.beginPath();
-    this.collisions.draw(this.context);
-    this.context.stroke();
-
-    // Render the BVH
-    if (this.bvh_checkbox.checked) {
-      this.context.strokeStyle = "#00FF00";
-      this.context.beginPath();
-      this.collisions.drawBVH(this.context);
-      this.context.stroke();
-    }
-
-    // Render the FPS
-    this.context.fillStyle = "#FFCC00";
-    this.context.fillText(average_fps, 10, 30);
   }
 
-  createShape(large) {
-    const min_size = size * 1.0 * (large ? 2 : 1);
-    const max_size = size * 1.25 * (large ? 3 : 1);
+  createShape(large, size) {
+    const minSize = size * 1.0 * (large ? 2 : 1);
+    const maxSize = size * 1.25 * (large ? 3 : 1);
     const x = random(0, width);
     const y = random(0, height);
     const direction = (random(0, 360) * Math.PI) / 180;
@@ -160,29 +100,26 @@ module.exports.Stress = class Stress {
 
     switch (variant) {
       case 0:
-        body = this.collisions.createCircle(
-          { x, y },
-          random(min_size, max_size)
-        );
+        body = this.physics.createCircle({ x, y }, random(minSize, maxSize));
 
         ++this.circles;
         break;
 
       case 1:
-        body = this.collisions.createEllipse(
+        body = this.physics.createEllipse(
           { x, y },
-          random(min_size, max_size),
-          random(min_size, max_size)
+          random(minSize, maxSize),
+          random(minSize, maxSize)
         );
 
         ++this.ellipses;
         break;
 
       case 2:
-        body = this.collisions.createBox(
+        body = this.physics.createBox(
           { x, y },
-          random(min_size, max_size),
-          random(min_size, max_size)
+          random(minSize, maxSize),
+          random(minSize, maxSize)
         );
 
         body.center();
@@ -191,11 +128,11 @@ module.exports.Stress = class Stress {
         break;
 
       case 3:
-        body = this.collisions.createLine(
+        body = this.physics.createLine(
           { x, y },
           {
-            x: x + random(min_size, max_size),
-            y: y + random(min_size, max_size),
+            x: x + random(minSize, maxSize),
+            y: y + random(minSize, maxSize),
           }
         );
 
@@ -203,11 +140,11 @@ module.exports.Stress = class Stress {
         break;
 
       default:
-        body = this.collisions.createPolygon({ x, y }, [
-          { x: -random(min_size, max_size), y: -random(min_size, max_size) },
-          { x: random(min_size, max_size), y: -random(min_size, max_size) },
-          { x: random(min_size, max_size), y: random(min_size, max_size) },
-          { x: -random(min_size, max_size), y: random(min_size, max_size) },
+        body = this.physics.createPolygon({ x, y }, [
+          { x: -random(minSize, maxSize), y: -random(minSize, maxSize) },
+          { x: random(minSize, maxSize), y: -random(minSize, maxSize) },
+          { x: random(minSize, maxSize), y: random(minSize, maxSize) },
+          { x: -random(minSize, maxSize), y: random(minSize, maxSize) },
         ]);
 
         ++this.polygons;
@@ -221,13 +158,89 @@ module.exports.Stress = class Stress {
       body.setAngle(body.rotationAngle);
     }
 
-    body.direction_x = Math.cos(direction);
-    body.direction_y = Math.sin(direction);
+    body.directionX = Math.cos(direction);
+    body.directionY = Math.sin(direction);
 
     this.bodies.push(body);
   }
-};
+}
+
+class TestCanvas {
+  constructor(count = 500) {
+    this.test = new Stress(count);
+
+    this.element = document.createElement("div");
+    this.element.innerHTML = `
+      <div><b>Total:</b> ${count}</div>
+      <div><b>Polygons:</b> ${this.test.polygons}</div>
+      <div><b>Boxes:</b> ${this.test.boxes}</div>
+      <div><b>Circles:</b> ${this.test.circles}</div>
+      <div><b>Ellipses:</b> ${this.test.ellipses}</div>
+      <div><b>Lines:</b> ${this.test.lines}</div>
+      <div><label><input id="bvh" type="checkbox">Show Bounding Volume Hierarchy</label></div>
+    `;
+
+    this.canvas = document.createElement("canvas");
+    this.canvas.width = width;
+    this.canvas.height = height;
+
+    this.context = this.canvas.getContext("2d");
+    this.context.font = "24px Arial";
+
+    this.bvhCheckbox = this.element.querySelector("#bvh");
+
+    if (this.canvas instanceof Node) {
+      this.element.appendChild(this.canvas);
+    }
+
+    const start = loop(() => this.update());
+
+    start();
+  }
+
+  update() {
+    // Clear the canvas
+    this.context.fillStyle = "#000000";
+    this.context.fillRect(0, 0, width, height);
+
+    // Render the bodies
+    this.context.strokeStyle = "#FFFFFF";
+    this.context.beginPath();
+    this.test.physics.draw(this.context);
+    this.context.stroke();
+
+    // Render the BVH
+    if (this.bvhCheckbox.checked) {
+      this.context.strokeStyle = "#00FF00";
+      this.context.beginPath();
+      this.test.physics.drawBVH(this.context);
+      this.context.stroke();
+    }
+
+    // Render the FPS
+    this.context.fillStyle = "#FFCC00";
+    this.context.fillText(this.test.fps, 10, 30);
+  }
+}
 
 function random(min, max) {
   return Math.floor(Math.random() * max) + min;
 }
+
+function loop(callback) {
+  let time = performance.now() - 1; // prevent Infinity fps
+
+  return function frame() {
+    const now = performance.now();
+    const fps = 1000 / (now - time);
+
+    callback(fps);
+    requestAnimationFrame(frame);
+
+    time = now;
+  };
+}
+
+module.exports.Stress = Stress;
+
+module.exports.TestCanvas = TestCanvas;
