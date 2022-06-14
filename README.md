@@ -194,7 +194,7 @@ if (system.checkCollision(player, wall)) {
 // create collider self-destructing on collision
 function testCollision(): Circle | null {
   const circle: Circle = system.createCircle({ x: 100, y: 100 }, 10);
-  const potentials: Vector[] = system.getPotentials(circle);
+  const potentials: Body[] = system.getPotentials(circle);
   const collided: boolean = potentials.some((body: Body) =>
     system.checkCollision(collider, body)
   );
