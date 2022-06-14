@@ -1,6 +1,6 @@
 # Introduction
 
-**Detect-Collisions** is <s>JavaScript</s> TypeScript library for quickly and accurately detecting collisions between Points, Lines, Boxes, Polygons, Ellipses and Circles. It combines the efficiency of a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and the accuracy of the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
+**Detect-Collisions** is <s>JavaScript</s> TypeScript library for quickly and accurately detecting collisions between Points, Lines, Boxes, Polygons, Ellipses and Circles, also with rotation. It combines the efficiency of a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and the accuracy of the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
 
 [<img src="https://img.shields.io/npm/v/detect-collisions?style=for-the-badge&color=success" alt="npm version" />](https://www.npmjs.com/package/detect-collisions?activeTab=versions)
 [<img src="https://img.shields.io/npm/l/detect-collisions.svg?style=for-the-badge&color=success" alt="license: MIT" />](https://github.com/Prozi/detect-collisions/blob/master/LICENSE)
@@ -19,6 +19,10 @@
 ```bash
 $ yarn add detect-collisions
 ```
+
+## API Documentation
+
+https://prozi.github.io/detect-collisions/
 
 ## Usage
 
@@ -55,7 +59,7 @@ const system = new System();
 
 ---
 
-Create bodies:
+#### Create bodies:
 
 ```typescript
 const circle: Circle = new Circle({ x: 100, y: 100 }, 10);
@@ -66,14 +70,14 @@ const polygon: Polygon = new Polygon({ x: 50, y: 50 }, [
 ]);
 ```
 
-Insert bodies to system:
+#### Insert bodies to system:
 
 ```typescript
 system.insert(circle);
 system.insert(polygon);
 ```
 
-Create and insert to system in one step:
+#### Create and insert to system in one step:
 
 ```typescript
 const circle: Circle = system.createCircle({ x: 100, y: 100 }, 10);
@@ -84,7 +88,7 @@ const polygon: Polygon = system.createPolygon({ x: 50, y: 50 }, [
 ]);
 ```
 
-Moving bodies:
+#### Moving bodies:
 
 `setPosition`: this modifies the `element.pos.x` and `element.pos.y` and updates its bounding box in collision system.
 
@@ -93,7 +97,7 @@ circle.setPosition(x, y);
 polygon.setPosition(x, y);
 ```
 
-Remove bodies from system:
+#### Remove bodies from system:
 
 ```typescript
 system.remove(circle);

@@ -22,6 +22,8 @@
     "dist"
   ],
   "keywords": [
+    "Physics",
+    "Collision-Detection",
     "Collisions",
     "Separating Axis Theorem",
     "Bounding Volume Hierarchy",
@@ -29,14 +31,10 @@
     "BVH",
     "Circle",
     "Polygon",
+    "Box",
+    "Ellipse",
     "Line",
-    "Shape",
-    "Separating",
-    "Axis",
-    "Theorem",
-    "Bounding",
-    "Volume",
-    "Hierarchy"
+    "rotation"
   ],
   "author": "Jacek Pietal",
   "license": "MIT",
