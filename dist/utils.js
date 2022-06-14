@@ -1,10 +1,7 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
-const sat_1 = __importDefault(require("sat"));
+const sat_1 = require("sat");
 const line_1 = require("./bodies/line");
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
     const steps = Math.PI * Math.hypot(radiusX, radiusY) * 2;
@@ -13,7 +10,7 @@ function createEllipse(radiusX, radiusY = radiusX, step = 1) {
         const value = (index / length) * 2 * Math.PI;
         const x = Math.cos(value) * radiusX;
         const y = Math.sin(value) * radiusY;
-        return new sat_1.default.Vector(x, y);
+        return new sat_1.Vector(x, y);
     });
 }
 exports.createEllipse = createEllipse;
@@ -22,20 +19,20 @@ exports.createEllipse = createEllipse;
  */
 function createBox(width, height) {
     return [
-        new sat_1.default.Vector(),
-        new sat_1.default.Vector(width, 0),
-        new sat_1.default.Vector(width, height),
-        new sat_1.default.Vector(0, height),
+        new sat_1.Vector(0, 0),
+        new sat_1.Vector(width, 0),
+        new sat_1.Vector(width, height),
+        new sat_1.Vector(0, height),
     ];
 }
 exports.createBox = createBox;
 /**
- * ensure returns a SAT.Vector
+ * ensure returns a Vector
  */
 function ensureVectorPoint(point = {}) {
-    return point instanceof sat_1.default.Vector
+    return point instanceof sat_1.Vector
         ? point
-        : new sat_1.default.Vector(point.x || 0, point.y || 0);
+        : new sat_1.Vector(point.x || 0, point.y || 0);
 }
 exports.ensureVectorPoint = ensureVectorPoint;
 /**

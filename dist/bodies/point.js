@@ -10,7 +10,7 @@ const utils_1 = require("../utils");
 class Point extends box_1.Box {
     /**
      * collider - point (very tiny box)
-     * @param {Vector} position {x, y}
+     * @param {PotentialVector} position {x, y}
      */
     constructor(position) {
         super((0, utils_1.ensureVectorPoint)(position), 0.1, 0.1);

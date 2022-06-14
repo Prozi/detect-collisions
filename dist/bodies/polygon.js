@@ -1,20 +1,17 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Polygon = void 0;
-const sat_1 = __importDefault(require("sat"));
+const sat_1 = require("sat");
 const model_1 = require("../model");
 const utils_1 = require("../utils");
 /**
  * collider - polygon
  */
-class Polygon extends sat_1.default.Polygon {
+class Polygon extends sat_1.Polygon {
     /**
      * collider - polygon
-     * @param {Vector} position {x, y}
-     * @param {Vector[]} points
+     * @param {PotentialVector} position {x, y}
+     * @param {PotentialVector[]} points
      */
     constructor(position, points) {
         super((0, utils_1.ensureVectorPoint)(position), (0, utils_1.ensurePolygonPoints)(points));

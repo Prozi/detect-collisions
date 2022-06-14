@@ -1,21 +1,21 @@
-import SAT from "sat";
+import { Vector as SATVector } from "sat";
 import { Line } from "./bodies/line";
 import { Circle } from "./bodies/circle";
 import { PotentialVector, Vector } from "./model";
 import { Polygon } from "./bodies/polygon";
-export declare function createEllipse(radiusX: number, radiusY?: number, step?: number): SAT.Vector[];
+export declare function createEllipse(radiusX: number, radiusY?: number, step?: number): SATVector[];
 /**
  * creates box polygon points
  */
-export declare function createBox(width: number, height: number): SAT.Vector[];
+export declare function createBox(width: number, height: number): SATVector[];
 /**
- * ensure returns a SAT.Vector
+ * ensure returns a Vector
  */
-export declare function ensureVectorPoint(point?: PotentialVector): SAT.Vector;
+export declare function ensureVectorPoint(point?: PotentialVector): SATVector;
 /**
  * ensure correct counterclockwise points
  */
-export declare function ensurePolygonPoints(points: PotentialVector[]): SAT.Vector[];
+export declare function ensurePolygonPoints(points: PotentialVector[]): SATVector[];
 /**
  * get distance between two {x, y} points
  */

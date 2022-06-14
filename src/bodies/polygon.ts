@@ -1,13 +1,19 @@
-import SAT from "sat";
+import { Polygon as SATPolygon } from "sat";
 import { BBox } from "rbush";
 import { System } from "../system";
-import { Collider, GetAABBAsBox, Types, Vector } from "../model";
+import {
+  Collider,
+  GetAABBAsBox,
+  PotentialVector,
+  Types,
+  Vector,
+} from "../model";
 import { ensureVectorPoint, ensurePolygonPoints, dashLineTo } from "../utils";
 
 /**
  * collider - polygon
  */
-export class Polygon extends SAT.Polygon implements BBox, Collider {
+export class Polygon extends SATPolygon implements BBox, Collider {
   minX!: number;
   maxX!: number;
   minY!: number;
@@ -37,10 +43,10 @@ export class Polygon extends SAT.Polygon implements BBox, Collider {
 
   /**
    * collider - polygon
-   * @param {Vector} position {x, y}
-   * @param {Vector[]} points
+   * @param {PotentialVector} position {x, y}
+   * @param {PotentialVector[]} points
    */
-  constructor(position: Vector, points: Vector[]) {
+  constructor(position: PotentialVector, points: PotentialVector[]) {
     super(ensureVectorPoint(position), ensurePolygonPoints(points));
 
     if (!points?.length) {

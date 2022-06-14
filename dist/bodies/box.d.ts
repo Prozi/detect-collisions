@@ -1,4 +1,4 @@
-import { Types, Vector } from "../model";
+import { Types, Vector, PotentialVector } from "../model";
 import { Polygon } from "./polygon";
 /**
  * collider - box
@@ -9,11 +9,11 @@ export declare class Box extends Polygon {
     private _height;
     /**
      * collider - box
-     * @param {Vector} position {x, y}
+     * @param {PotentialVector} position {x, y}
      * @param {number} width
      * @param {number} height
      */
-    constructor(position: Vector, width: number, height: number);
+    constructor(position: PotentialVector, width: number, height: number);
     /**
      * get box width
      */

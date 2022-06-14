@@ -1,6 +1,6 @@
 # Introduction
 
-**Detect-Collisions** is JavaScript library for quickly and accurately detecting collisions between Points, Lines, Boxes, Polygons, Ellipses and Circles. It combines the efficiency of a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and the accuracy of the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
+**Detect-Collisions** is <s>JavaScript</s> TypeScript library for quickly and accurately detecting collisions between Points, Lines, Boxes, Polygons, Ellipses and Circles. It combines the efficiency of a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and the accuracy of the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
 
 [<img src="https://img.shields.io/npm/v/detect-collisions?style=for-the-badge&color=success" alt="npm version" />](https://www.npmjs.com/package/detect-collisions?activeTab=versions)
 [<img src="https://img.shields.io/npm/l/detect-collisions.svg?style=for-the-badge&color=success" alt="license: MIT" />](https://github.com/Prozi/detect-collisions/blob/master/LICENSE)
@@ -28,7 +28,7 @@ $ yarn add detect-collisions
 
 To start, create a unique collisions system:
 
-```js
+```typescript
 const system = new System();
 ```
 
@@ -57,9 +57,9 @@ const system = new System();
 
 Create bodies:
 
-```js
-const circle = new Circle({ x: 100, y: 100 }, 10);
-const polygon = new Polygon({ x: 50, y: 50 }, [
+```typescript
+const circle: Circle = new Circle({ x: 100, y: 100 }, 10);
+const polygon: Polygon = new Polygon({ x: 50, y: 50 }, [
   { x: 0, y: 0 },
   { x: 20, y: 20 },
   { x: -10, y: 10 },
@@ -68,16 +68,16 @@ const polygon = new Polygon({ x: 50, y: 50 }, [
 
 Insert bodies to system:
 
-```js
+```typescript
 system.insert(circle);
 system.insert(polygon);
 ```
 
 Create and insert to system in one step:
 
-```js
-const circle = system.createCircle({ x: 100, y: 100 }, 10);
-const polygon = system.createPolygon({ x: 50, y: 50 }, [
+```typescript
+const circle: Circle = system.createCircle({ x: 100, y: 100 }, 10);
+const polygon: Polygon = system.createPolygon({ x: 50, y: 50 }, [
   { x: 0, y: 0 },
   { x: 20, y: 20 },
   { x: -10, y: 10 },
@@ -88,14 +88,14 @@ Moving bodies:
 
 `setPosition`: this modifies the `element.pos.x` and `element.pos.y` and updates its bounding box in collision system.
 
-```js
+```typescript
 circle.setPosition(x, y);
 polygon.setPosition(x, y);
 ```
 
 Remove bodies from system:
 
-```js
+```typescript
 system.remove(circle);
 system.remove(polygon);
 ```
@@ -108,13 +108,13 @@ system.remove(polygon);
 
 Collisions systems need to be updated when the bodies within them change. This includes when bodies are inserted, removed, or when their properties change (e.g. position, angle, scaling, etc.). Updating a collision system can be done by calling `update()` which should typically occur once per frame. Updating the `System` by after each position change is **required** for `System` to detect `BVH` correctly.
 
-```js
+```typescript
 system.updateBody(body);
 ```
 
 Update all bodies (use 0-1 times per frame):
 
-```js
+```typescript
 system.update();
 ```
 
@@ -122,26 +122,26 @@ system.update();
 
 The **preferred method** is once-in-a-gameloop checkAll and then handler:
 
-```js
+```typescript
 system.checkAll(handleCollisions);
 ```
 
 If you really need to check one body then use:
 
-```js
+```typescript
 system.checkOne(body, handleCollisions);
 ```
 
 When testing for collisions on a body, it is generally recommended that a broad-phase search be performed first by calling `getPotentials(body)` in order to quickly rule out bodies that are too far away to collide. **Detect-Collisions** uses a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for its broad-phase search. Calling `getPotentials(body)` on a body traverses the BVH and builds a list of potential collision candidates. Skipping the broad-phase search is not recommended. When testing for collisions against large numbers of bodies, performing a broad-phase search using a BVH is _much_ more efficient.
 
-```js
+```typescript
 const potentials = system.getPotentials(body);
 ```
 
 Once a list of potential collisions is acquired, loop through them and perform a narrow-phase collision test using `checkCollision()`. **Detect-Collisions** uses the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for its narrow-phase collision tests.
 
-```js
-system.getPotentials(body).forEach((collider) => {
+```typescript
+system.getPotentials(body).forEach((collider: Body) => {
   if (system.checkCollision(body, collider)) {
     handleCollisions(system.response);
   }
@@ -150,7 +150,7 @@ system.getPotentials(body).forEach((collider) => {
 
 It is also possible to skip the broad-phase search entirely and call `checkCollision()` directly on two bodies.
 
-```js
+```typescript
 if (system.checkCollision(polygon, line)) {
   console.log("Collision detected!", system.response);
 }
@@ -176,29 +176,35 @@ The three most useful properties on a `Response` object are `overlapV`, `a`, and
 
 These values can be used to "push" one body out of another using the minimum distance required. More simply, subtracting this vector from the source body's position will cause the bodies to no longer collide. Here's an example:
 
-```js
+```typescript
 if (system.checkCollision(player, wall)) {
-  const { overlapV } = system.response;
+  const { overlapV }: SAT.Response = system.response;
 
   player.setPosition(player.x - overlapV.x, player.y - overlapV.y);
-
-  system.updateBody(player);
 }
 ```
 
 ### 7. Detecting collision after insertion
 
-```js
-const collider = system.createCircle({ x: 100, y: 100 }, 10);
-const potentials = system.getPotentials(collider);
-const obj = { name: "coin", collider };
-const collided = potentials.some((body) =>
-  system.checkCollision(collider, body)
-);
+```typescript
+// create non-colliding collider
+function testCollision(): Circle | null {
+  const circle: Circle = system.createCircle({ x: 100, y: 100 }, 10);
+  const potentials: Vector[] = system.getPotentials(circle);
+  const collided: boolean = potentials.some((body: Body) =>
+    system.checkCollision(collider, body)
+  );
 
-if (collided) {
-  system.remove(obj.collider);
-  obj.collider = null;
+  if (collided) {
+    // collided so remove from system
+    system.remove(circle);
+
+    // notify function consumer that collider is non existant
+    return null;
+  }
+
+  // if no collision return created non-colliding collider
+  return collider;
 }
 ```
 
@@ -212,7 +218,7 @@ Handling true concave polygons requires breaking them down into their component 
 
 For debugging, it is often useful to be able to visualize the collision bodies. All of the bodies in a Collision system can be drawn to a `<canvas>` element by calling `draw()` and passing in the canvas' 2D context.
 
-```js
+```typescript
 const canvas = document.createElement("canvas");
 const context = canvas.getContext("2d");
 
@@ -226,7 +232,7 @@ context.stroke();
 
 Bodies can be individually drawn as well.
 
-```js
+```typescript
 context.strokeStyle = "#FFFFFF";
 context.beginPath();
 
@@ -238,7 +244,7 @@ context.stroke();
 
 The BVH can also be drawn to help test [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy).
 
-```js
+```typescript
 context.strokeStyle = "#FFFFFF";
 context.beginPath();
 
@@ -251,9 +257,9 @@ context.stroke();
 
 Some projects may only have a need to perform SAT collision tests without broad-phase searching. This can be achieved by avoiding collision systems altogether and only using the `checkCollision()` function.
 
-```js
-const circle = new Circle({ x: 45, y: 45 }, 20);
-const polygon = new Polygon({ x: 50, y: 50 }, [
+```typescript
+const circle: Circle = new Circle({ x: 45, y: 45 }, 20);
+const polygon: Polygon = new Polygon({ x: 50, y: 50 }, [
   { x: 0, y: 0 },
   { x: 20, y: 20 },
   { x: -10, y: 10 },
@@ -268,8 +274,8 @@ if (system.checkCollision(polygon, circle)) {
 
 To get raycast information use
 
-```ts
-system.raycast(start: Vector, end: Vector): { point: Vector; collider: TBody } | null
+```typescript
+system.raycast(start: Vector, end: Vector): { point: Vector; collider: Body } | null
 ```
 
 - point is the `Vector { x, y }` with coordinates of (closest) intersection

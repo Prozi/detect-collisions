@@ -1,4 +1,4 @@
-import SAT from "sat";
+import { Vector as SATVector } from "sat";
 import { Line } from "./bodies/line";
 import { Circle } from "./bodies/circle";
 import { PotentialVector, Vector } from "./model";
@@ -8,7 +8,7 @@ export function createEllipse(
   radiusX: number,
   radiusY: number = radiusX,
   step = 1
-): SAT.Vector[] {
+): SATVector[] {
   const steps: number = Math.PI * Math.hypot(radiusX, radiusY) * 2;
   const length: number = Math.max(8, Math.ceil(steps / step));
 
@@ -17,40 +17,40 @@ export function createEllipse(
     const x: number = Math.cos(value) * radiusX;
     const y: number = Math.sin(value) * radiusY;
 
-    return new SAT.Vector(x, y);
+    return new SATVector(x, y);
   });
 }
 
 /**
  * creates box polygon points
  */
-export function createBox(width: number, height: number): SAT.Vector[] {
+export function createBox(width: number, height: number): SATVector[] {
   return [
-    new SAT.Vector(),
-    new SAT.Vector(width, 0),
-    new SAT.Vector(width, height),
-    new SAT.Vector(0, height),
+    new SATVector(0, 0),
+    new SATVector(width, 0),
+    new SATVector(width, height),
+    new SATVector(0, height),
   ];
 }
 
 /**
- * ensure returns a SAT.Vector
+ * ensure returns a Vector
  */
-export function ensureVectorPoint(point: PotentialVector = {}): SAT.Vector {
-  return point instanceof SAT.Vector
+export function ensureVectorPoint(point: PotentialVector = {}): SATVector {
+  return point instanceof SATVector
     ? point
-    : new SAT.Vector(point.x || 0, point.y || 0);
+    : new SATVector(point.x || 0, point.y || 0);
 }
 
 /**
  * ensure correct counterclockwise points
  */
-export function ensurePolygonPoints(points: PotentialVector[]): SAT.Vector[] {
+export function ensurePolygonPoints(points: PotentialVector[]): SATVector[] {
   if (!points) {
     throw new Error("No points array provided");
   }
 
-  const vectorPoints: SAT.Vector[] = points.map(ensureVectorPoint);
+  const vectorPoints: SATVector[] = points.map(ensureVectorPoint);
 
   return clockwise(vectorPoints) ? vectorPoints.reverse() : vectorPoints;
 }

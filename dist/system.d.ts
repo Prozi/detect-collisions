@@ -1,6 +1,6 @@
-import SAT from "sat";
+/// <reference types="sat" />
 import RBush from "rbush";
-import { TBody, Vector, RaycastResult } from "./model";
+import { Data, Body, Vector, RaycastResult, Response } from "./model";
 import { Point } from "./bodies/point";
 import { Circle } from "./bodies/circle";
 import { Box } from "./bodies/box";
@@ -10,8 +10,11 @@ import { Ellipse } from "./bodies/ellipse";
 /**
  * collision system
  */
-export declare class System extends RBush<TBody> {
-    response: SAT.Response;
+export declare class System extends RBush<Body> implements Data {
+    data: {
+        children: Body[];
+    };
+    response: Response;
     /**
      * draw bodies
      */
@@ -23,15 +26,15 @@ export declare class System extends RBush<TBody> {
     /**
      * update body aabb and in tree
      */
-    updateBody(body: TBody): void;
+    updateBody(body: Body): void;
     /**
      * remove body aabb from collision tree
      */
-    remove(body: TBody, equals?: (a: TBody, b: TBody) => boolean): RBush<TBody>;
+    remove(body: Body, equals?: (a: Body, b: Body) => boolean): RBush<Body>;
     /**
      * add body aabb to collision tree
      */
-    insert(body: TBody): RBush<TBody>;
+    insert(body: Body): RBush<Body>;
     /**
      * update all bodies aabb
      */
@@ -43,23 +46,23 @@ export declare class System extends RBush<TBody> {
     /**
      * check one collider collisions with callback
      */
-    checkOne(body: TBody, callback: (response: SAT.Response) => void): void;
+    checkOne(body: Body, callback: (response: Response) => void): void;
     /**
      * check all colliders collisions with callback
      */
-    checkAll(callback: (response: SAT.Response) => void): void;
+    checkAll(callback: (response: Response) => void): void;
     /**
      * get object potential colliders
      */
-    getPotentials(body: TBody): TBody[];
+    getPotentials(body: Body): Body[];
     /**
      * check do 2 objects collide
      */
-    checkCollision(body: TBody, candidate: TBody): boolean;
+    checkCollision(body: Body, candidate: Body): boolean;
     /**
      * raycast to get collider of ray from start to end
      */
-    raycast(start: Vector, end: Vector, allowCollider?: (testCollider: TBody) => boolean): RaycastResult;
+    raycast(start: Vector, end: Vector, allowCollider?: (testCollider: Body) => boolean): RaycastResult;
     createPoint(position: Vector): Point;
     createLine(start: Vector, end: Vector, angle?: number): Line;
     createCircle(position: Vector, radius: number): Circle;

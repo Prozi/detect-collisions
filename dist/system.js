@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.System = void 0;
-const sat_1 = __importDefault(require("sat"));
+const sat_1 = require("sat");
 const rbush_1 = __importDefault(require("rbush"));
 const model_1 = require("./model");
 const utils_1 = require("./utils");
@@ -20,7 +20,7 @@ const ellipse_1 = require("./bodies/ellipse");
 class System extends rbush_1.default {
     constructor() {
         super(...arguments);
-        this.response = new sat_1.default.Response();
+        this.response = new model_1.Response();
     }
     /**
      * draw bodies
@@ -130,16 +130,16 @@ class System extends rbush_1.default {
     checkCollision(body, candidate) {
         this.response.clear();
         if (body.type === model_1.Types.Circle && candidate.type === model_1.Types.Circle) {
-            return sat_1.default.testCircleCircle(body, candidate, this.response);
+            return (0, sat_1.testCircleCircle)(body, candidate, this.response);
         }
         if (body.type === model_1.Types.Circle && candidate.type !== model_1.Types.Circle) {
-            return sat_1.default.testCirclePolygon(body, candidate, this.response);
+            return (0, sat_1.testCirclePolygon)(body, candidate, this.response);
         }
         if (body.type !== model_1.Types.Circle && candidate.type === model_1.Types.Circle) {
-            return sat_1.default.testPolygonCircle(body, candidate, this.response);
+            return (0, sat_1.testPolygonCircle)(body, candidate, this.response);
         }
         if (body.type !== model_1.Types.Circle && candidate.type !== model_1.Types.Circle) {
-            return sat_1.default.testPolygonPolygon(body, candidate, this.response);
+            return (0, sat_1.testPolygonPolygon)(body, candidate, this.response);
         }
         throw Error("Not implemented");
     }

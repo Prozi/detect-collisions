@@ -1,5 +1,3 @@
-/// <reference types="sat" />
-export { Response } from "sat";
 import { Point } from "./bodies/point";
 import { Circle } from "./bodies/circle";
 import { Box } from "./bodies/box";
@@ -7,6 +5,7 @@ import { Polygon } from "./bodies/polygon";
 import { System } from "./system";
 import { Line } from "./bodies/line";
 import { Ellipse } from "./bodies/ellipse";
+export { Response } from "sat";
 /**
  * types
  */
@@ -21,19 +20,9 @@ export declare enum Types {
 /**
  * for use of private function of sat.js
  */
-export interface GetAABBAsBox {
-    getAABBAsBox(): {
-        pos: SAT.Vector;
-        w: number;
-        h: number;
-    };
-}
-/**
- * for use of private function of sat.js
- */
 export interface Data {
     data: {
-        children: TBody[];
+        children: Body[];
     };
 }
 /**
@@ -41,7 +30,7 @@ export interface Data {
  */
 export declare type RaycastResult = {
     point: Vector;
-    collider: TBody;
+    collider: Body;
 } | null;
 /**
  * potential vector
@@ -51,16 +40,26 @@ export interface PotentialVector {
     y?: number;
 }
 /**
- * potential vector
+ * { x, y } vector
  */
-export interface Vector {
+export interface Vector extends PotentialVector {
     x: number;
     y: number;
 }
 /**
+ * for use of private function of sat.js
+ */
+export interface GetAABBAsBox {
+    getAABBAsBox(): {
+        pos: Vector;
+        w: number;
+        h: number;
+    };
+}
+/**
  * generic body union type
  */
-export declare type TBody = Point | Line | Ellipse | Circle | Box | Polygon;
+export declare type Body = Point | Line | Ellipse | Circle | Box | Polygon;
 /**
  * commonly used
  */

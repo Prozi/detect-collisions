@@ -1,19 +1,16 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Circle = void 0;
-const sat_1 = __importDefault(require("sat"));
+const sat_1 = require("sat");
 const model_1 = require("../model");
 const utils_1 = require("../utils");
 /**
  * collider - circle
  */
-class Circle extends sat_1.default.Circle {
+class Circle extends sat_1.Circle {
     /**
      * collider - circle
-     * @param {Vector} position {x, y}
+     * @param {PotentialVector} position {x, y}
      * @param {number} radius
      */
     constructor(position, radius) {

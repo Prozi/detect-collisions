@@ -10,7 +10,7 @@ const polygon_1 = require("./polygon");
 class Box extends polygon_1.Polygon {
     /**
      * collider - box
-     * @param {Vector} position {x, y}
+     * @param {PotentialVector} position {x, y}
      * @param {number} width
      * @param {number} height
      */

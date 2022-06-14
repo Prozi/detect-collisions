@@ -20,7 +20,7 @@ const polygon_1 = __webpack_require__(/*! ./polygon */ "./dist/bodies/polygon.js
 class Box extends polygon_1.Polygon {
     /**
      * collider - box
-     * @param {Vector} position {x, y}
+     * @param {PotentialVector} position {x, y}
      * @param {number} width
      * @param {number} height
      */
@@ -88,25 +88,22 @@ exports.Box = Box;
 /*!*******************************!*\
   !*** ./dist/bodies/circle.js ***!
   \*******************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Circle = void 0;
-const sat_1 = __importDefault(__webpack_require__(/*! sat */ "./node_modules/sat/SAT.js"));
+const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
 const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils.js");
 /**
  * collider - circle
  */
-class Circle extends sat_1.default.Circle {
+class Circle extends sat_1.Circle {
     /**
      * collider - circle
-     * @param {Vector} position {x, y}
+     * @param {PotentialVector} position {x, y}
      * @param {number} radius
      */
     constructor(position, radius) {
@@ -333,7 +330,7 @@ const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils.js");
 class Point extends box_1.Box {
     /**
      * collider - point (very tiny box)
-     * @param {Vector} position {x, y}
+     * @param {PotentialVector} position {x, y}
      */
     constructor(position) {
         super((0, utils_1.ensureVectorPoint)(position), 0.1, 0.1);
@@ -349,26 +346,23 @@ exports.Point = Point;
 /*!********************************!*\
   !*** ./dist/bodies/polygon.js ***!
   \********************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Polygon = void 0;
-const sat_1 = __importDefault(__webpack_require__(/*! sat */ "./node_modules/sat/SAT.js"));
+const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
 const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils.js");
 /**
  * collider - polygon
  */
-class Polygon extends sat_1.default.Polygon {
+class Polygon extends sat_1.Polygon {
     /**
      * collider - polygon
-     * @param {Vector} position {x, y}
-     * @param {Vector[]} points
+     * @param {PotentialVector} position {x, y}
+     * @param {PotentialVector[]} points
      */
     constructor(position, points) {
         super((0, utils_1.ensureVectorPoint)(position), (0, utils_1.ensurePolygonPoints)(points));
@@ -535,7 +529,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.System = void 0;
-const sat_1 = __importDefault(__webpack_require__(/*! sat */ "./node_modules/sat/SAT.js"));
+const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const rbush_1 = __importDefault(__webpack_require__(/*! rbush */ "./node_modules/rbush/rbush.min.js"));
 const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
 const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils.js");
@@ -551,7 +545,7 @@ const ellipse_1 = __webpack_require__(/*! ./bodies/ellipse */ "./dist/bodies/ell
 class System extends rbush_1.default {
     constructor() {
         super(...arguments);
-        this.response = new sat_1.default.Response();
+        this.response = new model_1.Response();
     }
     /**
      * draw bodies
@@ -661,16 +655,16 @@ class System extends rbush_1.default {
     checkCollision(body, candidate) {
         this.response.clear();
         if (body.type === model_1.Types.Circle && candidate.type === model_1.Types.Circle) {
-            return sat_1.default.testCircleCircle(body, candidate, this.response);
+            return (0, sat_1.testCircleCircle)(body, candidate, this.response);
         }
         if (body.type === model_1.Types.Circle && candidate.type !== model_1.Types.Circle) {
-            return sat_1.default.testCirclePolygon(body, candidate, this.response);
+            return (0, sat_1.testCirclePolygon)(body, candidate, this.response);
         }
         if (body.type !== model_1.Types.Circle && candidate.type === model_1.Types.Circle) {
-            return sat_1.default.testPolygonCircle(body, candidate, this.response);
+            return (0, sat_1.testPolygonCircle)(body, candidate, this.response);
         }
         if (body.type !== model_1.Types.Circle && candidate.type !== model_1.Types.Circle) {
-            return sat_1.default.testPolygonPolygon(body, candidate, this.response);
+            return (0, sat_1.testPolygonPolygon)(body, candidate, this.response);
         }
         throw Error("Not implemented");
     }
@@ -741,16 +735,13 @@ exports.System = System;
 /*!***********************!*\
   !*** ./dist/utils.js ***!
   \***********************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
-const sat_1 = __importDefault(__webpack_require__(/*! sat */ "./node_modules/sat/SAT.js"));
+const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js");
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
     const steps = Math.PI * Math.hypot(radiusX, radiusY) * 2;
@@ -759,7 +750,7 @@ function createEllipse(radiusX, radiusY = radiusX, step = 1) {
         const value = (index / length) * 2 * Math.PI;
         const x = Math.cos(value) * radiusX;
         const y = Math.sin(value) * radiusY;
-        return new sat_1.default.Vector(x, y);
+        return new sat_1.Vector(x, y);
     });
 }
 exports.createEllipse = createEllipse;
@@ -768,20 +759,20 @@ exports.createEllipse = createEllipse;
  */
 function createBox(width, height) {
     return [
-        new sat_1.default.Vector(),
-        new sat_1.default.Vector(width, 0),
-        new sat_1.default.Vector(width, height),
-        new sat_1.default.Vector(0, height),
+        new sat_1.Vector(0, 0),
+        new sat_1.Vector(width, 0),
+        new sat_1.Vector(width, height),
+        new sat_1.Vector(0, height),
     ];
 }
 exports.createBox = createBox;
 /**
- * ensure returns a SAT.Vector
+ * ensure returns a Vector
  */
 function ensureVectorPoint(point = {}) {
-    return point instanceof sat_1.default.Vector
+    return point instanceof sat_1.Vector
         ? point
-        : new sat_1.default.Vector(point.x || 0, point.y || 0);
+        : new sat_1.Vector(point.x || 0, point.y || 0);
 }
 exports.ensureVectorPoint = ensureVectorPoint;
 /**

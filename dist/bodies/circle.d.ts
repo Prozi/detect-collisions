@@ -1,11 +1,11 @@
-import SAT from "sat";
+import { Circle as SATCircle } from "sat";
 import { BBox } from "rbush";
 import { System } from "../system";
-import { Collider, Types, Vector } from "../model";
+import { Collider, PotentialVector, Types } from "../model";
 /**
  * collider - circle
  */
-export declare class Circle extends SAT.Circle implements BBox, Collider {
+export declare class Circle extends SATCircle implements BBox, Collider {
     minX: number;
     maxX: number;
     minY: number;
@@ -25,10 +25,10 @@ export declare class Circle extends SAT.Circle implements BBox, Collider {
     readonly type: Types.Circle;
     /**
      * collider - circle
-     * @param {Vector} position {x, y}
+     * @param {PotentialVector} position {x, y}
      * @param {number} radius
      */
-    constructor(position: Vector, radius: number);
+    constructor(position: PotentialVector, radius: number);
     get x(): number;
     /**
      * updating this.pos.x by this.x = x updates AABB

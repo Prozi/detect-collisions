@@ -1,13 +1,13 @@
-import SAT from "sat";
+import { Circle as SATCircle } from "sat";
 import { BBox } from "rbush";
 import { System } from "../system";
-import { Collider, Types, Vector } from "../model";
+import { Collider, PotentialVector, Types } from "../model";
 import { dashLineTo, ensureVectorPoint } from "../utils";
 
 /**
  * collider - circle
  */
-export class Circle extends SAT.Circle implements BBox, Collider {
+export class Circle extends SATCircle implements BBox, Collider {
   minX!: number;
   maxX!: number;
   minY!: number;
@@ -32,10 +32,10 @@ export class Circle extends SAT.Circle implements BBox, Collider {
 
   /**
    * collider - circle
-   * @param {Vector} position {x, y}
+   * @param {PotentialVector} position {x, y}
    * @param {number} radius
    */
-  constructor(position: Vector, radius: number) {
+  constructor(position: PotentialVector, radius: number) {
     super(ensureVectorPoint(position), radius);
 
     this.updateAABB();

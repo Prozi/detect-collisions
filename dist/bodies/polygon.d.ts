@@ -1,11 +1,11 @@
-import SAT from "sat";
+import { Polygon as SATPolygon } from "sat";
 import { BBox } from "rbush";
 import { System } from "../system";
-import { Collider, Types, Vector } from "../model";
+import { Collider, PotentialVector, Types } from "../model";
 /**
  * collider - polygon
  */
-export declare class Polygon extends SAT.Polygon implements BBox, Collider {
+export declare class Polygon extends SATPolygon implements BBox, Collider {
     minX: number;
     maxX: number;
     minY: number;
@@ -25,10 +25,10 @@ export declare class Polygon extends SAT.Polygon implements BBox, Collider {
     readonly type: Types.Polygon | Types.Box | Types.Point | Types.Ellipse | Types.Line;
     /**
      * collider - polygon
-     * @param {Vector} position {x, y}
-     * @param {Vector[]} points
+     * @param {PotentialVector} position {x, y}
+     * @param {PotentialVector[]} points
      */
-    constructor(position: Vector, points: Vector[]);
+    constructor(position: PotentialVector, points: PotentialVector[]);
     get x(): number;
     /**
      * updating this.pos.x by this.x = x updates AABB

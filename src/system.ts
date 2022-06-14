@@ -1,12 +1,18 @@
-import SAT from "sat";
+import {
+  testCircleCircle,
+  testCirclePolygon,
+  testPolygonCircle,
+  testPolygonPolygon,
+} from "sat";
 import RBush from "rbush";
 import {
   Data,
-  TBody,
+  Body,
   Types,
   Vector,
   GetAABBAsBox,
   RaycastResult,
+  Response,
 } from "./model";
 import {
   createBox,
@@ -24,14 +30,15 @@ import { Ellipse } from "./bodies/ellipse";
 /**
  * collision system
  */
-export class System extends RBush<TBody> {
-  response: SAT.Response = new SAT.Response();
+export class System extends RBush<Body> implements Data {
+  data!: { children: Body[] };
+  response: Response = new Response();
 
   /**
    * draw bodies
    */
   draw(context: CanvasRenderingContext2D): void {
-    this.all().forEach((body: TBody) => {
+    this.all().forEach((body: Body) => {
       body.draw(context);
     });
   }
@@ -40,19 +47,17 @@ export class System extends RBush<TBody> {
    * draw hierarchy
    */
   drawBVH(context: CanvasRenderingContext2D): void {
-    (this as unknown as Data).data.children.forEach(
-      ({ minX, maxX, minY, maxY }: TBody) => {
-        Polygon.prototype.draw.call(
-          {
-            pos: { x: minX, y: minY },
-            calcPoints: createBox(maxX - minX, maxY - minY),
-          },
-          context
-        );
-      }
-    );
+    this.data.children.forEach(({ minX, maxX, minY, maxY }: Body) => {
+      Polygon.prototype.draw.call(
+        {
+          pos: { x: minX, y: minY },
+          calcPoints: createBox(maxX - minX, maxY - minY),
+        },
+        context
+      );
+    });
 
-    this.all().forEach((body: TBody) => {
+    this.all().forEach((body: Body) => {
       const { pos, w, h } = (body as unknown as GetAABBAsBox).getAABBAsBox();
 
       Polygon.prototype.draw.call(
@@ -65,7 +70,7 @@ export class System extends RBush<TBody> {
   /**
    * update body aabb and in tree
    */
-  updateBody(body: TBody): void {
+  updateBody(body: Body): void {
     // old aabb needs to be removed
     this.remove(body);
     // then we update aabb
@@ -77,7 +82,7 @@ export class System extends RBush<TBody> {
   /**
    * remove body aabb from collision tree
    */
-  remove(body: TBody, equals?: (a: TBody, b: TBody) => boolean): RBush<TBody> {
+  remove(body: Body, equals?: (a: Body, b: Body) => boolean): RBush<Body> {
     body.system = undefined;
 
     return super.remove(body, equals);
@@ -86,7 +91,7 @@ export class System extends RBush<TBody> {
   /**
    * add body aabb to collision tree
    */
-  insert(body: TBody): RBush<TBody> {
+  insert(body: Body): RBush<Body> {
     body.system = this;
 
     return super.insert(body);
@@ -96,7 +101,7 @@ export class System extends RBush<TBody> {
    * update all bodies aabb
    */
   update(): void {
-    this.all().forEach((body: TBody) => {
+    this.all().forEach((body: Body) => {
       // no need to every cycle update static body aabb
       if (!body.isStatic) {
         this.updateBody(body);
@@ -108,7 +113,7 @@ export class System extends RBush<TBody> {
    * separate (move away) colliders
    */
   separate(): void {
-    this.checkAll((response: SAT.Response) => {
+    this.checkAll((response: Response) => {
       // static bodies and triggers do not move back / separate
       if (response.a.isTrigger) {
         return;
@@ -124,13 +129,13 @@ export class System extends RBush<TBody> {
   /**
    * check one collider collisions with callback
    */
-  checkOne(body: TBody, callback: (response: SAT.Response) => void): void {
+  checkOne(body: Body, callback: (response: Response) => void): void {
     // no need to check static body collision
     if (body.isStatic) {
       return;
     }
 
-    this.getPotentials(body).forEach((candidate: TBody) => {
+    this.getPotentials(body).forEach((candidate: Body) => {
       if (this.checkCollision(body, candidate)) {
         callback(this.response);
       }
@@ -140,8 +145,8 @@ export class System extends RBush<TBody> {
   /**
    * check all colliders collisions with callback
    */
-  checkAll(callback: (response: SAT.Response) => void): void {
-    this.all().forEach((body: TBody) => {
+  checkAll(callback: (response: Response) => void): void {
+    this.all().forEach((body: Body) => {
       this.checkOne(body, callback);
     });
   }
@@ -149,7 +154,7 @@ export class System extends RBush<TBody> {
   /**
    * get object potential colliders
    */
-  getPotentials(body: TBody): TBody[] {
+  getPotentials(body: Body): Body[] {
     // filter here is required as collides with self
     return this.search(body).filter((candidate) => candidate !== body);
   }
@@ -157,27 +162,23 @@ export class System extends RBush<TBody> {
   /**
    * check do 2 objects collide
    */
-  checkCollision(body: TBody, candidate: TBody): boolean {
+  checkCollision(body: Body, candidate: Body): boolean {
     this.response.clear();
 
     if (body.type === Types.Circle && candidate.type === Types.Circle) {
-      return SAT.testCircleCircle(body, candidate, this.response);
+      return testCircleCircle(body, candidate, this.response);
     }
 
     if (body.type === Types.Circle && candidate.type !== Types.Circle) {
-      return SAT.testCirclePolygon(body, candidate as Polygon, this.response);
+      return testCirclePolygon(body, candidate, this.response);
     }
 
     if (body.type !== Types.Circle && candidate.type === Types.Circle) {
-      return SAT.testPolygonCircle(body as Polygon, candidate, this.response);
+      return testPolygonCircle(body, candidate, this.response);
     }
 
     if (body.type !== Types.Circle && candidate.type !== Types.Circle) {
-      return SAT.testPolygonPolygon(
-        body as Polygon,
-        candidate as Polygon,
-        this.response
-      );
+      return testPolygonPolygon(body, candidate, this.response);
     }
 
     throw Error("Not implemented");
@@ -189,20 +190,20 @@ export class System extends RBush<TBody> {
   raycast(
     start: Vector,
     end: Vector,
-    allowCollider: (testCollider: TBody) => boolean = () => true
+    allowCollider: (testCollider: Body) => boolean = () => true
   ): RaycastResult {
     let minDistance = Infinity;
     let result: RaycastResult = null;
 
     const ray: Line = this.createLine(start, end);
-    const colliders: TBody[] = this.getPotentials(ray).filter(
-      (potential: TBody) =>
+    const colliders: Body[] = this.getPotentials(ray).filter(
+      (potential: Body) =>
         allowCollider(potential) && this.checkCollision(ray, potential)
     );
 
     this.remove(ray);
 
-    colliders.forEach((collider: TBody) => {
+    colliders.forEach((collider: Body) => {
       const points: Vector[] =
         collider.type === Types.Circle
           ? intersectLineCircle(ray, collider)
