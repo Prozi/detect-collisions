@@ -40,8 +40,9 @@ const system: System = new System();
 
 - `Circle & Polygon` extend their respective `SAT` counterparts so they have [all of its functionalities](https://github.com/jriecken/sat-js).
 - all bodies have `x & y` properties, setting those will update AABB (bounding box)
-- all bodies (without `Circle`) have `setAngle()` methods to rotate
-- `Box` has `center()` method for centering anchor, and `width & height` properties
+- all bodies (except `Circle`) have `setAngle()` methods to rotate
+- all bodies (except `Circle`) have `center()` method for centering anchor
+- `Box` has `width & height` properties
 
 ---
 
