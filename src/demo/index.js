@@ -1,9 +1,9 @@
-if (window.location.search.indexOf("?stress") !== -1) {
-  const { TestCanvas } = require("./stress");
+const { TestCanvas } = require("./canvas");
 
-  document.body.appendChild(new TestCanvas().element);
-} else {
-  const { Tank } = require("./tank");
+const isStressTest = window.location.search.indexOf("?stress") !== -1;
+const Test = isStressTest ? require("./stress") : require("./tank");
 
-  document.body.appendChild(new Tank().element);
-}
+const test = new Test();
+const canvas = new TestCanvas(test);
+
+document.body.appendChild(canvas.element);

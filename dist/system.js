@@ -36,13 +36,14 @@ class System extends rbush_1.default {
     drawBVH(context) {
         this.data.children.forEach(({ minX, maxX, minY, maxY }) => {
             polygon_1.Polygon.prototype.draw.call({
-                pos: { x: minX, y: minY },
+                x: minX,
+                y: minY,
                 calcPoints: (0, utils_1.createBox)(maxX - minX, maxY - minY),
             }, context);
         });
         this.all().forEach((body) => {
             const { pos, w, h } = body.getAABBAsBox();
-            polygon_1.Polygon.prototype.draw.call({ pos, calcPoints: (0, utils_1.createBox)(w, h) }, context);
+            polygon_1.Polygon.prototype.draw.call(Object.assign(Object.assign({}, pos), { calcPoints: (0, utils_1.createBox)(w, h) }), context);
         });
     }
     /**

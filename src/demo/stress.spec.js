@@ -9,7 +9,7 @@ describe("GIVEN Stress test", () => {
 
   describe("AND Stress is instantiated", () => {
     it("THEN it doesnt throw exception", () => {
-      const { Stress } = require("./stress");
+      const Stress = require("./stress");
       const create = () => new Stress();
 
       expect(create).not.toThrow();

@@ -9,7 +9,7 @@ describe("GIVEN Tank test", () => {
 
   describe("AND Tank is instantiated", () => {
     it("THEN it doesnt throw throw exception", () => {
-      const { Tank } = require("./tank");
+      const Tank = require("./tank");
       const create = () => new Tank();
 
       expect(create).not.toThrow();

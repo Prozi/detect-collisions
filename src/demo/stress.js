@@ -1,13 +1,11 @@
 const { System } = require("../../dist");
-
-const width = document.body.offsetWidth;
-const height = document.body.offsetHeight;
+const { width, height, random, loop } = require("./canvas");
 
 class Stress {
-  constructor(count) {
-    const size = (Math.hypot(width, height) || 1400) / (count / 2.4);
+  constructor(count = 500) {
+    const size = Math.hypot(width, height) / (count / 2.4);
 
-    this.physics = new System(13);
+    this.physics = new System();
     this.bodies = [];
     this.polygons = 0;
     this.boxes = 0;
@@ -42,6 +40,13 @@ class Stress {
     for (let i = 0; i < count; ++i) {
       this.createShape(!random(0, 20), size);
     }
+
+    this.legend = `<div><b>Total:</b> ${count}</div>
+    <div><b>Polygons:</b> ${this.polygons}</div>
+    <div><b>Boxes:</b> ${this.boxes}</div>
+    <div><b>Circles:</b> ${this.circles}</div>
+    <div><b>Ellipses:</b> ${this.ellipses}</div>
+    <div><b>Lines:</b> ${this.lines}</div>`;
 
     const start = loop((fps) => this.update(fps));
 
@@ -119,10 +124,9 @@ class Stress {
         body = this.physics.createBox(
           { x, y },
           random(minSize, maxSize),
-          random(minSize, maxSize)
+          random(minSize, maxSize),
+          { center: true }
         );
-
-        body.center();
 
         ++this.boxes;
         break;
@@ -133,19 +137,24 @@ class Stress {
           {
             x: x + random(minSize, maxSize),
             y: y + random(minSize, maxSize),
-          }
+          },
+          { center: true }
         );
 
         ++this.lines;
         break;
 
       default:
-        body = this.physics.createPolygon({ x, y }, [
-          { x: -random(minSize, maxSize), y: -random(minSize, maxSize) },
-          { x: random(minSize, maxSize), y: -random(minSize, maxSize) },
-          { x: random(minSize, maxSize), y: random(minSize, maxSize) },
-          { x: -random(minSize, maxSize), y: random(minSize, maxSize) },
-        ]);
+        body = this.physics.createPolygon(
+          { x, y },
+          [
+            { x: -random(minSize, maxSize), y: -random(minSize, maxSize) },
+            { x: random(minSize, maxSize), y: -random(minSize, maxSize) },
+            { x: random(minSize, maxSize), y: random(minSize, maxSize) },
+            { x: -random(minSize, maxSize), y: random(minSize, maxSize) },
+          ],
+          { center: true }
+        );
 
         ++this.polygons;
         break;
@@ -165,82 +174,4 @@ class Stress {
   }
 }
 
-class TestCanvas {
-  constructor(count = 500) {
-    this.test = new Stress(count);
-
-    this.element = document.createElement("div");
-    this.element.innerHTML = `
-      <div><b>Total:</b> ${count}</div>
-      <div><b>Polygons:</b> ${this.test.polygons}</div>
-      <div><b>Boxes:</b> ${this.test.boxes}</div>
-      <div><b>Circles:</b> ${this.test.circles}</div>
-      <div><b>Ellipses:</b> ${this.test.ellipses}</div>
-      <div><b>Lines:</b> ${this.test.lines}</div>
-      <div><label><input id="bvh" type="checkbox">Show Bounding Volume Hierarchy</label></div>
-    `;
-
-    this.canvas = document.createElement("canvas");
-    this.canvas.width = width;
-    this.canvas.height = height;
-
-    this.context = this.canvas.getContext("2d");
-    this.context.font = "24px Arial";
-
-    this.bvhCheckbox = this.element.querySelector("#bvh");
-
-    if (this.canvas instanceof Node) {
-      this.element.appendChild(this.canvas);
-    }
-
-    const start = loop(() => this.update());
-
-    start();
-  }
-
-  update() {
-    // Clear the canvas
-    this.context.fillStyle = "#000000";
-    this.context.fillRect(0, 0, width, height);
-
-    // Render the bodies
-    this.context.strokeStyle = "#FFFFFF";
-    this.context.beginPath();
-    this.test.physics.draw(this.context);
-    this.context.stroke();
-
-    // Render the BVH
-    if (this.bvhCheckbox.checked) {
-      this.context.strokeStyle = "#00FF00";
-      this.context.beginPath();
-      this.test.physics.drawBVH(this.context);
-      this.context.stroke();
-    }
-
-    // Render the FPS
-    this.context.fillStyle = "#FFCC00";
-    this.context.fillText(this.test.fps, 10, 30);
-  }
-}
-
-function random(min, max) {
-  return Math.floor(Math.random() * max) + min;
-}
-
-function loop(callback) {
-  let time = performance.now() - 1; // prevent Infinity fps
-
-  return function frame() {
-    const now = performance.now();
-    const fps = 1000 / (now - time);
-
-    callback(fps);
-    requestAnimationFrame(frame);
-
-    time = now;
-  };
-}
-
-module.exports.Stress = Stress;
-
-module.exports.TestCanvas = TestCanvas;
+module.exports = Stress;

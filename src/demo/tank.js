@@ -1,68 +1,49 @@
-const { System, Line } = require("../../dist");
+const { System } = require("../../dist");
+const { width, height, loop } = require("./canvas");
 
-module.exports.Tank = class Tank {
+class Tank {
   constructor() {
-    const width = document.body.offsetWidth || 1024;
-    const height = document.body.offsetHeight || 768;
-    const collisions = new System();
-
-    this.element = document.createElement("div");
-    this.canvas = document.createElement("canvas");
-    this.context = this.canvas.getContext("2d");
-    this.collisions = collisions;
+    this.physics = new System();
     this.bodies = [];
-
-    this.canvas.width = width;
-    this.canvas.height = height;
-    this.player = null;
+    this.player = this.createPlayer(400, 300);
 
     this.up = false;
     this.down = false;
     this.left = false;
     this.right = false;
 
-    this.element.innerHTML = `
-      <div><b>W, S</b> - Accelerate/Decelerate</div>
-      <div><b>A, D</b> - Turn</div>
-      <div><label><input id="bvh" type="checkbox"> Show Bounding Volume Hierarchy</label></div>
-    `;
+    this.legend = `<div><b>W, S</b> - Accelerate/Decelerate</div>
+    <div><b>A, D</b> - Turn</div>`;
 
-    const updateKeys = (e) => {
-      const keydown = e.type === "keydown";
-      const key = e.key.toLowerCase();
+    const updateKeys = ({ type, key }) => {
+      const keyDown = type === "keydown";
+      const keyLowerCase = key.toLowerCase();
 
-      key === "w" && (this.up = keydown);
-      key === "s" && (this.down = keydown);
-      key === "a" && (this.left = keydown);
-      key === "d" && (this.right = keydown);
+      keyLowerCase === "w" && (this.up = keyDown);
+      keyLowerCase === "s" && (this.down = keyDown);
+      keyLowerCase === "a" && (this.left = keyDown);
+      keyLowerCase === "d" && (this.right = keyDown);
     };
 
     document.addEventListener("keydown", updateKeys);
     document.addEventListener("keyup", updateKeys);
 
-    this.bvh_checkbox = this.element.querySelector("#bvh");
-
     if (this.canvas instanceof Node) {
       this.element.appendChild(this.canvas);
     }
 
-    this.createPlayer(400, 300);
-    this.createMap(800, 600);
+    this.createMap();
 
-    const frame = () => {
-      this.update();
+    const start = loop((fps) => this.update(fps));
 
-      requestAnimationFrame(frame);
-    };
-
-    frame();
+    start();
   }
 
   update() {
     this.handleInput();
     this.processGameLogic();
     this.handleCollisions();
-    this.render();
+    this.updateTurret();
   }
 
   handleInput() {
@@ -107,8 +88,8 @@ module.exports.Tank = class Tank {
   }
 
   handleCollisions() {
-    this.collisions.update();
-    this.collisions.checkAll(({ a, b, overlapV }) => {
+    this.physics.update();
+    this.physics.checkAll(({ a, b, overlapV }) => {
       if (a === this.playerTurret || b === this.playerTurret) {
         return;
       }
@@ -127,33 +108,18 @@ module.exports.Tank = class Tank {
     });
   }
 
-  render() {
-    this.context.fillStyle = "#000000";
-    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-    this.context.strokeStyle = "#FFFFFF";
-    this.context.beginPath();
-    this.collisions.draw(this.context);
-    this.context.stroke();
-
-    if (this.bvh_checkbox.checked) {
-      this.context.strokeStyle = "#00FF00";
-      this.context.beginPath();
-      this.collisions.drawBVH(this.context);
-      this.context.stroke();
-    }
-
+  updateTurret() {
     this.playerTurret.setPosition(this.player.x, this.player.y);
     this.playerTurret.setAngle(this.player.angle);
     this.playerTurret.updateAABB();
 
-    const hit = this.collisions.raycast(
+    const hit = this.physics.raycast(
       this.playerTurret.start,
       this.playerTurret.end,
       (test) => test !== this.player
     );
 
-    if (hit) {
+    if (hit && this.context) {
       this.context.strokeStyle = "#FF0000";
       this.context.beginPath();
       this.context.arc(hit.point.x, hit.point.y, 5, 0, 2 * Math.PI);
@@ -162,41 +128,43 @@ module.exports.Tank = class Tank {
   }
 
   createPlayer(x, y, size = 13) {
-    this.player = this.collisions.createBox(
+    const player = this.physics.createBox(
       { x: this.scaleX(x), y: this.scaleY(y) },
       this.scaleX(2.6 * size),
       this.scaleX(1.3 * size),
       { angle: 0.2, center: true }
     );
 
-    this.player.velocity = 0;
+    player.velocity = 0;
 
-    this.playerTurret = this.collisions.createLine(
-      this.player,
-      { x: this.player.x + this.scaleX(70), y: this.player.y },
+    this.playerTurret = this.physics.createLine(
+      player,
+      { x: player.x + this.scaleX(70), y: player.y },
       { angle: 0.2, isTrigger: true }
     );
 
     this.playerTurret.translate(this.scaleX(17), 0);
+
+    return player;
   }
 
   scaleX(x) {
-    return (x / 800) * this.canvas.width;
+    return (x / 800) * width;
   }
 
   scaleY(y) {
-    return (y / 600) * this.canvas.height;
+    return (y / 600) * height;
   }
 
   createCircle(x, y, radius) {
-    this.collisions.createCircle(
+    this.physics.createCircle(
       { x: this.scaleX(x), y: this.scaleY(y) },
       this.scaleX(radius)
     );
   }
 
   createEllipse(x, y, radiusX, radiusY, step, angle) {
-    this.collisions.createEllipse(
+    this.physics.createEllipse(
       { x: this.scaleX(x), y: this.scaleY(y) },
       this.scaleX(radiusX),
       this.scaleY(radiusY),
@@ -211,14 +179,15 @@ module.exports.Tank = class Tank {
       y: this.scaleY(pointY),
     }));
 
-    return this.collisions.createPolygon(
+    return this.physics.createPolygon(
       { x: this.scaleX(x), y: this.scaleY(y) },
       scaledPoints,
       { angle }
     );
   }
 
-  createMap(width, height) {
+  createMap(width = 800, height = 600) {
+    // World bounds
     // World bounds
     this.createPolygon(0, 0, [
       [0, 0],
@@ -346,4 +315,6 @@ module.exports.Tank = class Tank {
     // Lake
     this.createEllipse(530, 130, 80, 70, 10, -0.2);
   }
-};
+}
+
+module.exports = Tank;

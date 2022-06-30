@@ -51,7 +51,8 @@ export class System extends RBush<Body> implements Data {
     this.data.children.forEach(({ minX, maxX, minY, maxY }: Body) => {
       Polygon.prototype.draw.call(
         {
-          pos: { x: minX, y: minY },
+          x: minX,
+          y: minY,
           calcPoints: createBox(maxX - minX, maxY - minY),
         },
         context
@@ -62,7 +63,7 @@ export class System extends RBush<Body> implements Data {
       const { pos, w, h } = (body as unknown as GetAABBAsBox).getAABBAsBox();
 
       Polygon.prototype.draw.call(
-        { pos, calcPoints: createBox(w, h) },
+        { ...pos, calcPoints: createBox(w, h) },
         context
       );
     });

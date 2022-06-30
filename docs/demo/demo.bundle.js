@@ -559,13 +559,14 @@ class System extends rbush_1.default {
     drawBVH(context) {
         this.data.children.forEach(({ minX, maxX, minY, maxY }) => {
             polygon_1.Polygon.prototype.draw.call({
-                pos: { x: minX, y: minY },
+                x: minX,
+                y: minY,
                 calcPoints: (0, utils_1.createBox)(maxX - minX, maxY - minY),
             }, context);
         });
         this.all().forEach((body) => {
             const { pos, w, h } = body.getAABBAsBox();
-            polygon_1.Polygon.prototype.draw.call({ pos, calcPoints: (0, utils_1.createBox)(w, h) }, context);
+            polygon_1.Polygon.prototype.draw.call(Object.assign(Object.assign({}, pos), { calcPoints: (0, utils_1.createBox)(w, h) }), context);
         });
     }
     /**
@@ -1983,6 +1984,105 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;// Version 0.9
 
 /***/ }),
 
+/***/ "./src/demo/canvas.js":
+/*!****************************!*\
+  !*** ./src/demo/canvas.js ***!
+  \****************************/
+/***/ ((module) => {
+
+const width = document.body.offsetWidth | 1024;
+const height = document.body.offsetHeight | 768;
+
+class TestCanvas {
+  constructor(test) {
+    this.test = test;
+
+    this.element = document.createElement("div");
+    this.element.id = "debug";
+    this.element.innerHTML = `${this.test.legend}
+    <div>
+      <label>
+        <input id="bvh" type="checkbox"/> Show Bounding Volume Hierarchy
+      </label>
+    </div>`;
+
+    this.canvas = document.createElement("canvas");
+    this.canvas.width = width;
+    this.canvas.height = height;
+
+    this.context = this.canvas.getContext("2d");
+    this.context.font = "24px Arial";
+    this.test.context = this.context;
+
+    this.bvhCheckbox = this.element.querySelector("#bvh");
+
+    if (this.canvas instanceof Node) {
+      this.element.appendChild(this.canvas);
+    }
+
+    const start = loop(() => this.update());
+
+    start();
+  }
+
+  update() {
+    // Clear the canvas
+    this.context.fillStyle = "#000000";
+    this.context.fillRect(0, 0, width, height);
+
+    // Render the bodies
+    this.context.strokeStyle = "#FFFFFF";
+    this.context.beginPath();
+    this.test.physics.draw(this.context);
+    this.context.stroke();
+
+    // Render the BVH
+    if (this.bvhCheckbox.checked) {
+      this.context.strokeStyle = "#00FF00";
+      this.context.beginPath();
+      this.test.physics.drawBVH(this.context);
+      this.context.stroke();
+    }
+
+    // Render the FPS
+    if (this.test.fps) {
+      this.context.fillStyle = "#FFCC00";
+      this.context.fillText(this.test.fps, 10, 30);
+    }
+  }
+}
+
+function random(min, max) {
+  return Math.floor(Math.random() * max) + min;
+}
+
+function loop(callback) {
+  let time = performance.now() - 1; // prevent Infinity fps
+
+  return function frame() {
+    const now = performance.now();
+    const fps = 1000 / (now - time);
+
+    callback(fps);
+    requestAnimationFrame(frame);
+
+    time = now;
+  };
+}
+
+module.exports.TestCanvas = TestCanvas;
+
+module.exports.random = random;
+
+module.exports.loop = loop;
+
+module.exports.width = width;
+
+module.exports.height = height;
+
+
+/***/ }),
+
 /***/ "./src/demo/stress.js":
 /*!****************************!*\
   !*** ./src/demo/stress.js ***!
@@ -1990,15 +2090,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;// Version 0.9
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const { System } = __webpack_require__(/*! ../../dist */ "./dist/index.js");
-
-const width = document.body.offsetWidth;
-const height = document.body.offsetHeight;
+const { width, height, random, loop } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js");
 
 class Stress {
-  constructor(count) {
-    const size = (Math.hypot(width, height) || 1400) / (count / 2.4);
+  constructor(count = 500) {
+    const size = Math.hypot(width, height) / (count / 2.4);
 
-    this.physics = new System(13);
+    this.physics = new System();
     this.bodies = [];
     this.polygons = 0;
     this.boxes = 0;
@@ -2033,6 +2131,13 @@ class Stress {
     for (let i = 0; i < count; ++i) {
       this.createShape(!random(0, 20), size);
     }
+
+    this.legend = `<div><b>Total:</b> ${count}</div>
+    <div><b>Polygons:</b> ${this.polygons}</div>
+    <div><b>Boxes:</b> ${this.boxes}</div>
+    <div><b>Circles:</b> ${this.circles}</div>
+    <div><b>Ellipses:</b> ${this.ellipses}</div>
+    <div><b>Lines:</b> ${this.lines}</div>`;
 
     const start = loop((fps) => this.update(fps));
 
@@ -2110,10 +2215,9 @@ class Stress {
         body = this.physics.createBox(
           { x, y },
           random(minSize, maxSize),
-          random(minSize, maxSize)
+          random(minSize, maxSize),
+          { center: true }
         );
-
-        body.center();
 
         ++this.boxes;
         break;
@@ -2124,19 +2228,24 @@ class Stress {
           {
             x: x + random(minSize, maxSize),
             y: y + random(minSize, maxSize),
-          }
+          },
+          { center: true }
         );
 
         ++this.lines;
         break;
 
       default:
-        body = this.physics.createPolygon({ x, y }, [
-          { x: -random(minSize, maxSize), y: -random(minSize, maxSize) },
-          { x: random(minSize, maxSize), y: -random(minSize, maxSize) },
-          { x: random(minSize, maxSize), y: random(minSize, maxSize) },
-          { x: -random(minSize, maxSize), y: random(minSize, maxSize) },
-        ]);
+        body = this.physics.createPolygon(
+          { x, y },
+          [
+            { x: -random(minSize, maxSize), y: -random(minSize, maxSize) },
+            { x: random(minSize, maxSize), y: -random(minSize, maxSize) },
+            { x: random(minSize, maxSize), y: random(minSize, maxSize) },
+            { x: -random(minSize, maxSize), y: random(minSize, maxSize) },
+          ],
+          { center: true }
+        );
 
         ++this.polygons;
         break;
@@ -2156,85 +2265,7 @@ class Stress {
   }
 }
 
-class TestCanvas {
-  constructor(count = 500) {
-    this.test = new Stress(count);
-
-    this.element = document.createElement("div");
-    this.element.innerHTML = `
-      <div><b>Total:</b> ${count}</div>
-      <div><b>Polygons:</b> ${this.test.polygons}</div>
-      <div><b>Boxes:</b> ${this.test.boxes}</div>
-      <div><b>Circles:</b> ${this.test.circles}</div>
-      <div><b>Ellipses:</b> ${this.test.ellipses}</div>
-      <div><b>Lines:</b> ${this.test.lines}</div>
-      <div><label><input id="bvh" type="checkbox">Show Bounding Volume Hierarchy</label></div>
-    `;
-
-    this.canvas = document.createElement("canvas");
-    this.canvas.width = width;
-    this.canvas.height = height;
-
-    this.context = this.canvas.getContext("2d");
-    this.context.font = "24px Arial";
-
-    this.bvhCheckbox = this.element.querySelector("#bvh");
-
-    if (this.canvas instanceof Node) {
-      this.element.appendChild(this.canvas);
-    }
-
-    const start = loop(() => this.update());
-
-    start();
-  }
-
-  update() {
-    // Clear the canvas
-    this.context.fillStyle = "#000000";
-    this.context.fillRect(0, 0, width, height);
-
-    // Render the bodies
-    this.context.strokeStyle = "#FFFFFF";
-    this.context.beginPath();
-    this.test.physics.draw(this.context);
-    this.context.stroke();
-
-    // Render the BVH
-    if (this.bvhCheckbox.checked) {
-      this.context.strokeStyle = "#00FF00";
-      this.context.beginPath();
-      this.test.physics.drawBVH(this.context);
-      this.context.stroke();
-    }
-
-    // Render the FPS
-    this.context.fillStyle = "#FFCC00";
-    this.context.fillText(this.test.fps, 10, 30);
-  }
-}
-
-function random(min, max) {
-  return Math.floor(Math.random() * max) + min;
-}
-
-function loop(callback) {
-  let time = performance.now() - 1; // prevent Infinity fps
-
-  return function frame() {
-    const now = performance.now();
-    const fps = 1000 / (now - time);
-
-    callback(fps);
-    requestAnimationFrame(frame);
-
-    time = now;
-  };
-}
-
-module.exports.Stress = Stress;
-
-module.exports.TestCanvas = TestCanvas;
+module.exports = Stress;
 
 
 /***/ }),
@@ -2245,71 +2276,52 @@ module.exports.TestCanvas = TestCanvas;
   \**************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const { System, Line } = __webpack_require__(/*! ../../dist */ "./dist/index.js");
+const { System } = __webpack_require__(/*! ../../dist */ "./dist/index.js");
+const { width, height, loop } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js");
 
-module.exports.Tank = class Tank {
+class Tank {
   constructor() {
-    const width = document.body.offsetWidth || 1024;
-    const height = document.body.offsetHeight || 768;
-    const collisions = new System();
-
-    this.element = document.createElement("div");
-    this.canvas = document.createElement("canvas");
-    this.context = this.canvas.getContext("2d");
-    this.collisions = collisions;
+    this.physics = new System();
     this.bodies = [];
-
-    this.canvas.width = width;
-    this.canvas.height = height;
-    this.player = null;
+    this.player = this.createPlayer(400, 300);
 
     this.up = false;
     this.down = false;
     this.left = false;
     this.right = false;
 
-    this.element.innerHTML = `
-      <div><b>W, S</b> - Accelerate/Decelerate</div>
-      <div><b>A, D</b> - Turn</div>
-      <div><label><input id="bvh" type="checkbox"> Show Bounding Volume Hierarchy</label></div>
-    `;
+    this.legend = `<div><b>W, S</b> - Accelerate/Decelerate</div>
+    <div><b>A, D</b> - Turn</div>`;
 
-    const updateKeys = (e) => {
-      const keydown = e.type === "keydown";
-      const key = e.key.toLowerCase();
+    const updateKeys = ({ type, key }) => {
+      const keyDown = type === "keydown";
+      const keyLowerCase = key.toLowerCase();
 
-      key === "w" && (this.up = keydown);
-      key === "s" && (this.down = keydown);
-      key === "a" && (this.left = keydown);
-      key === "d" && (this.right = keydown);
+      keyLowerCase === "w" && (this.up = keyDown);
+      keyLowerCase === "s" && (this.down = keyDown);
+      keyLowerCase === "a" && (this.left = keyDown);
+      keyLowerCase === "d" && (this.right = keyDown);
     };
 
     document.addEventListener("keydown", updateKeys);
     document.addEventListener("keyup", updateKeys);
 
-    this.bvh_checkbox = this.element.querySelector("#bvh");
-
     if (this.canvas instanceof Node) {
       this.element.appendChild(this.canvas);
     }
 
-    this.createPlayer(400, 300);
-    this.createMap(800, 600);
+    this.createMap();
 
-    const frame = () => {
-      this.update();
+    const start = loop((fps) => this.update(fps));
 
-      requestAnimationFrame(frame);
-    };
-
-    frame();
+    start();
   }
 
   update() {
     this.handleInput();
     this.processGameLogic();
     this.handleCollisions();
-    this.render();
+    this.updateTurret();
   }
 
   handleInput() {
@@ -2354,8 +2366,8 @@ module.exports.Tank = class Tank {
   }
 
   handleCollisions() {
-    this.collisions.update();
-    this.collisions.checkAll(({ a, b, overlapV }) => {
+    this.physics.update();
+    this.physics.checkAll(({ a, b, overlapV }) => {
       if (a === this.playerTurret || b === this.playerTurret) {
         return;
       }
@@ -2374,33 +2386,18 @@ module.exports.Tank = class Tank {
     });
   }
 
-  render() {
-    this.context.fillStyle = "#000000";
-    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-    this.context.strokeStyle = "#FFFFFF";
-    this.context.beginPath();
-    this.collisions.draw(this.context);
-    this.context.stroke();
-
-    if (this.bvh_checkbox.checked) {
-      this.context.strokeStyle = "#00FF00";
-      this.context.beginPath();
-      this.collisions.drawBVH(this.context);
-      this.context.stroke();
-    }
-
+  updateTurret() {
     this.playerTurret.setPosition(this.player.x, this.player.y);
     this.playerTurret.setAngle(this.player.angle);
     this.playerTurret.updateAABB();
 
-    const hit = this.collisions.raycast(
+    const hit = this.physics.raycast(
       this.playerTurret.start,
       this.playerTurret.end,
       (test) => test !== this.player
     );
 
-    if (hit) {
+    if (hit && this.context) {
       this.context.strokeStyle = "#FF0000";
       this.context.beginPath();
       this.context.arc(hit.point.x, hit.point.y, 5, 0, 2 * Math.PI);
@@ -2409,41 +2406,43 @@ module.exports.Tank = class Tank {
   }
 
   createPlayer(x, y, size = 13) {
-    this.player = this.collisions.createBox(
+    const player = this.physics.createBox(
       { x: this.scaleX(x), y: this.scaleY(y) },
       this.scaleX(2.6 * size),
       this.scaleX(1.3 * size),
       { angle: 0.2, center: true }
     );
 
-    this.player.velocity = 0;
+    player.velocity = 0;
 
-    this.playerTurret = this.collisions.createLine(
-      this.player,
-      { x: this.player.x + this.scaleX(70), y: this.player.y },
+    this.playerTurret = this.physics.createLine(
+      player,
+      { x: player.x + this.scaleX(70), y: player.y },
       { angle: 0.2, isTrigger: true }
     );
 
     this.playerTurret.translate(this.scaleX(17), 0);
+
+    return player;
   }
 
   scaleX(x) {
-    return (x / 800) * this.canvas.width;
+    return (x / 800) * width;
   }
 
   scaleY(y) {
-    return (y / 600) * this.canvas.height;
+    return (y / 600) * height;
   }
 
   createCircle(x, y, radius) {
-    this.collisions.createCircle(
+    this.physics.createCircle(
       { x: this.scaleX(x), y: this.scaleY(y) },
       this.scaleX(radius)
     );
   }
 
   createEllipse(x, y, radiusX, radiusY, step, angle) {
-    this.collisions.createEllipse(
+    this.physics.createEllipse(
       { x: this.scaleX(x), y: this.scaleY(y) },
       this.scaleX(radiusX),
       this.scaleY(radiusY),
@@ -2458,14 +2457,15 @@ module.exports.Tank = class Tank {
       y: this.scaleY(pointY),
     }));
 
-    return this.collisions.createPolygon(
+    return this.physics.createPolygon(
       { x: this.scaleX(x), y: this.scaleY(y) },
       scaledPoints,
       { angle }
     );
   }
 
-  createMap(width, height) {
+  createMap(width = 800, height = 600) {
+    // World bounds
     // World bounds
     this.createPolygon(0, 0, [
       [0, 0],
@@ -2593,7 +2593,9 @@ module.exports.Tank = class Tank {
     // Lake
     this.createEllipse(530, 130, 80, 70, 10, -0.2);
   }
-};
+}
+
+module.exports = Tank;
 
 
 /***/ })
@@ -2631,15 +2633,15 @@ var __webpack_exports__ = {};
 /*!***************************!*\
   !*** ./src/demo/index.js ***!
   \***************************/
-if (window.location.search.indexOf("?stress") !== -1) {
-  const { TestCanvas } = __webpack_require__(/*! ./stress */ "./src/demo/stress.js");
+const { TestCanvas } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js");
 
-  document.body.appendChild(new TestCanvas().element);
-} else {
-  const { Tank } = __webpack_require__(/*! ./tank */ "./src/demo/tank.js");
+const isStressTest = window.location.search.indexOf("?stress") !== -1;
+const Test = isStressTest ? __webpack_require__(/*! ./stress */ "./src/demo/stress.js") : __webpack_require__(/*! ./tank */ "./src/demo/tank.js");
 
-  document.body.appendChild(new Tank().element);
-}
+const test = new Test();
+const canvas = new TestCanvas(test);
+
+document.body.appendChild(canvas.element);
 
 })();
 
