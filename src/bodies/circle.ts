@@ -1,8 +1,8 @@
 import { Circle as SATCircle } from "sat";
 import { BBox } from "rbush";
 import { System } from "../system";
-import { Collider, PotentialVector, Types } from "../model";
-import { dashLineTo, ensureVectorPoint } from "../utils";
+import { BodyOptions, Collider, PotentialVector, Types } from "../model";
+import { dashLineTo, ensureVectorPoint, extendBody } from "../utils";
 
 /**
  * collider - circle
@@ -35,8 +35,14 @@ export class Circle extends SATCircle implements BBox, Collider {
    * @param {PotentialVector} position {x, y}
    * @param {number} radius
    */
-  constructor(position: PotentialVector, radius: number) {
+  constructor(
+    position: PotentialVector,
+    radius: number,
+    options?: BodyOptions
+  ) {
     super(ensureVectorPoint(position), radius);
+
+    extendBody(this, options);
 
     this.updateAABB();
   }

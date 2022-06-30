@@ -5,7 +5,7 @@ const height = document.body.offsetHeight;
 
 class Stress {
   constructor(count) {
-    const size = (Math.hypot(width, height) || 500) / (count / 4);
+    const size = (Math.hypot(width, height) || 1400) / (count / 2.4);
 
     this.physics = new System(13);
     this.bodies = [];

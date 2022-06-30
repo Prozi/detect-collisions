@@ -2,8 +2,8 @@ const { System, Line } = require("../../dist");
 
 module.exports.Tank = class Tank {
   constructor() {
-    const width = document.body.offsetWidth;
-    const height = document.body.offsetHeight;
+    const width = document.body.offsetWidth || 1024;
+    const height = document.body.offsetHeight || 768;
     const collisions = new System();
 
     this.element = document.createElement("div");
@@ -166,20 +166,18 @@ module.exports.Tank = class Tank {
       { x: this.scaleX(x), y: this.scaleY(y) },
       this.scaleX(2.6 * size),
       this.scaleX(1.3 * size),
-      0.2
+      { angle: 0.2, center: true }
     );
 
-    this.player.center();
     this.player.velocity = 0;
 
     this.playerTurret = this.collisions.createLine(
-      this.player.pos,
-      { x: this.player.pos.x + 140, y: this.player.pos.y },
-      0.2
+      this.player,
+      { x: this.player.x + this.scaleX(70), y: this.player.y },
+      { angle: 0.2, isTrigger: true }
     );
 
-    this.playerTurret.translate(100, 0);
-    this.playerTurret.isTrigger = true;
+    this.playerTurret.translate(this.scaleX(17), 0);
   }
 
   scaleX(x) {
@@ -203,7 +201,7 @@ module.exports.Tank = class Tank {
       this.scaleX(radiusX),
       this.scaleY(radiusY),
       step,
-      angle
+      { angle }
     );
   }
 
@@ -216,7 +214,7 @@ module.exports.Tank = class Tank {
     return this.collisions.createPolygon(
       { x: this.scaleX(x), y: this.scaleY(y) },
       scaledPoints,
-      angle
+      { angle }
     );
   }
 

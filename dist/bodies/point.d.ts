@@ -1,5 +1,5 @@
 import { Box } from "./box";
-import { PotentialVector, Types } from "../model";
+import { BodyOptions, PotentialVector, Types } from "../model";
 /**
  * collider - point (very tiny box)
  */
@@ -9,6 +9,6 @@ export declare class Point extends Box {
      * collider - point (very tiny box)
      * @param {PotentialVector} position {x, y}
      */
-    constructor(position: PotentialVector);
+    constructor(position: PotentialVector, options?: BodyOptions);
 }
 //# sourceMappingURL=point.d.ts.map

@@ -90,8 +90,8 @@ class System extends rbush_1.default {
             if (response.a.isTrigger) {
                 return;
             }
-            response.a.pos.x -= response.overlapV.x;
-            response.a.pos.y -= response.overlapV.y;
+            response.a.x -= response.overlapV.x;
+            response.a.y -= response.overlapV.y;
             this.updateBody(response.a);
         });
     }
@@ -171,9 +171,8 @@ class System extends rbush_1.default {
         this.insert(point);
         return point;
     }
-    createLine(start, end, angle = 0) {
-        const line = new line_1.Line(start, end);
-        line.setAngle(angle);
+    createLine(start, end, options) {
+        const line = new line_1.Line(start, end, options);
         this.insert(line);
         return line;
     }
@@ -182,21 +181,18 @@ class System extends rbush_1.default {
         this.insert(circle);
         return circle;
     }
-    createBox(position, width, height, angle = 0) {
-        const box = new box_1.Box(position, width, height);
-        box.setAngle(angle);
+    createBox(position, width, height, options) {
+        const box = new box_1.Box(position, width, height, options);
         this.insert(box);
         return box;
     }
-    createEllipse(position, radiusX, radiusY, step, angle = 0) {
-        const ellipse = new ellipse_1.Ellipse(position, radiusX, radiusY, step);
-        ellipse.setAngle(angle);
+    createEllipse(position, radiusX, radiusY, step, options) {
+        const ellipse = new ellipse_1.Ellipse(position, radiusX, radiusY, step, options);
         this.insert(ellipse);
         return ellipse;
     }
-    createPolygon(position, points, angle = 0) {
-        const polygon = new polygon_1.Polygon(position, points);
-        polygon.setAngle(angle);
+    createPolygon(position, points, options) {
+        const polygon = new polygon_1.Polygon(position, points, options);
         this.insert(polygon);
         return polygon;
     }

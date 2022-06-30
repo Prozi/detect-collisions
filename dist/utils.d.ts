@@ -1,7 +1,7 @@
 import { Vector as SATVector } from "sat";
 import { Line } from "./bodies/line";
 import { Circle } from "./bodies/circle";
-import { PotentialVector, Vector } from "./model";
+import { Body, BodyOptions, PotentialVector, Vector } from "./model";
 import { Polygon } from "./bodies/polygon";
 export declare function createEllipse(radiusX: number, radiusY?: number, step?: number): SATVector[];
 /**
@@ -24,6 +24,10 @@ export declare function distance(a: Vector, b: Vector): number;
  * check direction of polygon
  */
 export declare function clockwise(points: Vector[]): boolean;
+/**
+ * used for all types of bodies
+ */
+export declare function extendBody(body: Body, options?: BodyOptions): void;
 /**
  * draws dashed line on canvas context
  */

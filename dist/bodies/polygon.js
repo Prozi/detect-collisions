@@ -13,12 +13,13 @@ class Polygon extends sat_1.Polygon {
      * @param {PotentialVector} position {x, y}
      * @param {PotentialVector[]} points
      */
-    constructor(position, points) {
+    constructor(position, points, options) {
         super((0, utils_1.ensureVectorPoint)(position), (0, utils_1.ensurePolygonPoints)(points));
         this.type = model_1.Types.Polygon;
         if (!(points === null || points === void 0 ? void 0 : points.length)) {
             throw new Error("No points in polygon");
         }
+        (0, utils_1.extendBody)(this, options);
         this.updateAABB();
     }
     get x() {
@@ -71,8 +72,8 @@ class Polygon extends sat_1.Polygon {
     draw(context) {
         const points = [...this.calcPoints, this.calcPoints[0]];
         points.forEach((point, index) => {
-            const toX = this.pos.x + point.x;
-            const toY = this.pos.y + point.y;
+            const toX = this.x + point.x;
+            const toY = this.y + point.y;
             const prev = this.calcPoints[index - 1] ||
                 this.calcPoints[this.calcPoints.length - 1];
             if (!index) {
@@ -85,8 +86,8 @@ class Polygon extends sat_1.Polygon {
             }
             else if (this.calcPoints.length > 1) {
                 if (this.isTrigger) {
-                    const fromX = this.pos.x + prev.x;
-                    const fromY = this.pos.y + prev.y;
+                    const fromX = this.x + prev.x;
+                    const fromY = this.y + prev.y;
                     (0, utils_1.dashLineTo)(context, fromX, fromY, toX, toY);
                 }
                 else {
@@ -94,6 +95,23 @@ class Polygon extends sat_1.Polygon {
                 }
             }
         });
+    }
+    getCentroidWithoutRotation() {
+        // reset angle for get centroid
+        const angle = this.angle;
+        this.setAngle(0);
+        const centroid = this.getCentroid();
+        // revert angle change
+        this.setAngle(angle);
+        return centroid;
+    }
+    /**
+     * reCenters the box anchor
+     */
+    center() {
+        const { x, y } = this.getCentroidWithoutRotation();
+        this.translate(-x, -y);
+        this.setPosition(this.x + x, this.y + y);
     }
 }
 exports.Polygon = Polygon;

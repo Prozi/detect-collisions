@@ -1,4 +1,5 @@
-import { Types, Vector } from "../model";
+import { Vector as SATVector } from "sat";
+import { BodyOptions, Types, Vector } from "../model";
 import { Polygon } from "./polygon";
 
 /**
@@ -12,14 +13,15 @@ export class Line extends Polygon {
    * @param {Vector} start {x, y}
    * @param {Vector} end {x, y}
    */
-  constructor(start: Vector, end: Vector) {
-    // position at middle of (start, end)
-    super({ x: (start.x + end.x) / 2, y: (start.y + end.y) / 2 }, [
-      // first point at minus half length
-      { x: -(end.x - start.x) / 2, y: -(end.y - start.y) / 2 },
-      // second point at plus half length
-      { x: (end.x - start.x) / 2, y: (end.y - start.y) / 2 },
-    ]);
+  constructor(start: Vector, end: Vector, options?: BodyOptions) {
+    super(
+      start,
+      [
+        { x: 0, y: 0 },
+        { x: end.x - start.x, y: end.y - start.y },
+      ],
+      options
+    );
 
     if (this.calcPoints.length === 1 || !end) {
       console.error({ start, end });
@@ -40,5 +42,12 @@ export class Line extends Polygon {
       x: this.x + this.calcPoints[1].x,
       y: this.y + this.calcPoints[1].y,
     };
+  }
+
+  getCentroid(): SATVector {
+    return new SATVector(
+      (this.end.x - this.start.x) / 2,
+      (this.end.y - this.start.y) / 2
+    );
   }
 }

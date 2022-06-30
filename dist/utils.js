@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = require("sat");
 const line_1 = require("./bodies/line");
+const model_1 = require("./model");
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
     const steps = Math.PI * Math.hypot(radiusX, radiusY) * 2;
     const length = Math.max(8, Math.ceil(steps / step));
@@ -66,6 +67,22 @@ function clockwise(points) {
     return sum > 0;
 }
 exports.clockwise = clockwise;
+/**
+ * used for all types of bodies
+ */
+function extendBody(body, options) {
+    body.isStatic = !!(options === null || options === void 0 ? void 0 : options.isStatic);
+    body.isTrigger = !!(options === null || options === void 0 ? void 0 : options.isTrigger);
+    if (body.type !== model_1.Types.Circle &&
+        body.type !== model_1.Types.Ellipse &&
+        (options === null || options === void 0 ? void 0 : options.center)) {
+        body.center();
+    }
+    if (body.type !== model_1.Types.Circle && (options === null || options === void 0 ? void 0 : options.angle)) {
+        body.setAngle(options.angle);
+    }
+}
+exports.extendBody = extendBody;
 /**
  * draws dashed line on canvas context
  */

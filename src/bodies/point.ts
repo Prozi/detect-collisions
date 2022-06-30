@@ -1,5 +1,5 @@
 import { Box } from "./box";
-import { PotentialVector, Types } from "../model";
+import { BodyOptions, PotentialVector, Types } from "../model";
 import { ensureVectorPoint } from "../utils";
 
 /**
@@ -12,7 +12,7 @@ export class Point extends Box {
    * collider - point (very tiny box)
    * @param {PotentialVector} position {x, y}
    */
-  constructor(position: PotentialVector) {
-    super(ensureVectorPoint(position), 0.1, 0.1);
+  constructor(position: PotentialVector, options?: BodyOptions) {
+    super(ensureVectorPoint(position), 0.1, 0.1, options);
   }
 }

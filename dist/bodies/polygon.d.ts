@@ -1,7 +1,7 @@
 import { Polygon as SATPolygon } from "sat";
 import { BBox } from "rbush";
 import { System } from "../system";
-import { Collider, PotentialVector, Types } from "../model";
+import { BodyOptions, Collider, PotentialVector, Types, Vector } from "../model";
 /**
  * collider - polygon
  */
@@ -28,7 +28,7 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      * @param {PotentialVector} position {x, y}
      * @param {PotentialVector[]} points
      */
-    constructor(position: PotentialVector, points: PotentialVector[]);
+    constructor(position: PotentialVector, points: PotentialVector[], options?: BodyOptions);
     get x(): number;
     /**
      * updating this.pos.x by this.x = x updates AABB
@@ -54,5 +54,10 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      * @param {CanvasRenderingContext2D} context The canvas context to draw on
      */
     draw(context: CanvasRenderingContext2D): void;
+    getCentroidWithoutRotation(): Vector;
+    /**
+     * reCenters the box anchor
+     */
+    center(): void;
 }
 //# sourceMappingURL=polygon.d.ts.map

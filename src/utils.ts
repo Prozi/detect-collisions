@@ -1,7 +1,7 @@
 import { Vector as SATVector } from "sat";
 import { Line } from "./bodies/line";
 import { Circle } from "./bodies/circle";
-import { PotentialVector, Vector } from "./model";
+import { Body, BodyOptions, PotentialVector, Types, Vector } from "./model";
 import { Polygon } from "./bodies/polygon";
 
 export function createEllipse(
@@ -76,6 +76,26 @@ export function clockwise(points: Vector[]): boolean {
   }
 
   return sum > 0;
+}
+
+/**
+ * used for all types of bodies
+ */
+export function extendBody(body: Body, options?: BodyOptions): void {
+  body.isStatic = !!options?.isStatic;
+  body.isTrigger = !!options?.isTrigger;
+
+  if (
+    body.type !== Types.Circle &&
+    body.type !== Types.Ellipse &&
+    options?.center
+  ) {
+    body.center();
+  }
+
+  if (body.type !== Types.Circle && options?.angle) {
+    body.setAngle(options.angle);
+  }
 }
 
 /**

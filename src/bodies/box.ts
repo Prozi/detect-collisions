@@ -1,4 +1,4 @@
-import { Types, Vector, PotentialVector } from "../model";
+import { Types, PotentialVector, BodyOptions } from "../model";
 import { createBox } from "../utils";
 import { Polygon } from "./polygon";
 
@@ -17,8 +17,13 @@ export class Box extends Polygon {
    * @param {number} width
    * @param {number} height
    */
-  constructor(position: PotentialVector, width: number, height: number) {
-    super(position, createBox(width, height));
+  constructor(
+    position: PotentialVector,
+    width: number,
+    height: number,
+    options?: BodyOptions
+  ) {
+    super(position, createBox(width, height), options);
 
     this._width = width;
     this._height = height;
@@ -54,36 +59,5 @@ export class Box extends Polygon {
     this._height = height;
 
     this.setPoints(createBox(this._width, this._height));
-  }
-
-  getCentroidWithoutRotation(): Vector {
-    // reset angle for get centroid
-    const angle = this.angle;
-
-    this.setAngle(0);
-
-    const centroid: Vector = this.getCentroid();
-
-    // revert angle change
-    this.setAngle(angle);
-
-    return centroid;
-  }
-
-  /**
-   * reCenters the box anchor
-   */
-  center(): void {
-    const firstPoint: Vector = this.points[0];
-
-    // skip if has original points translated already
-    if (firstPoint.x !== 0 || firstPoint.y !== 0) {
-      return;
-    }
-
-    const { x, y } = this.getCentroidWithoutRotation();
-
-    this.translate(-x, -y);
-    this.setPosition(this.pos.x + x, this.pos.y + y);
   }
 }

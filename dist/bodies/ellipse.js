@@ -15,8 +15,8 @@ class Ellipse extends polygon_1.Polygon {
      * @param {number} radiusY defaults to radiusX
      * @param {number} step precision division >= 1px
      */
-    constructor(position, radiusX, radiusY = radiusX, step = Math.hypot(radiusX, radiusY) / Math.PI) {
-        super(position, (0, utils_1.createEllipse)(radiusX, radiusY, step));
+    constructor(position, radiusX, radiusY = radiusX, step = Math.hypot(radiusX, radiusY) / Math.PI, options) {
+        super(position, (0, utils_1.createEllipse)(radiusX, radiusY, step), options);
         this.type = model_1.Types.Ellipse;
         this._radiusX = radiusX;
         this._radiusY = radiusY;

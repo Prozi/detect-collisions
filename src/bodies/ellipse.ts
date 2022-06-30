@@ -1,4 +1,4 @@
-import { Types, Vector } from "../model";
+import { BodyOptions, Types, Vector } from "../model";
 import { createEllipse } from "../utils";
 import { Polygon } from "./polygon";
 
@@ -23,9 +23,10 @@ export class Ellipse extends Polygon {
     position: Vector,
     radiusX: number,
     radiusY: number = radiusX,
-    step: number = Math.hypot(radiusX, radiusY) / Math.PI
+    step: number = Math.hypot(radiusX, radiusY) / Math.PI,
+    options?: BodyOptions
   ) {
-    super(position, createEllipse(radiusX, radiusY, step));
+    super(position, createEllipse(radiusX, radiusY, step), options);
 
     this._radiusX = radiusX;
     this._radiusY = radiusY;

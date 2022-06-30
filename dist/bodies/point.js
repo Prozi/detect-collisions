@@ -12,8 +12,8 @@ class Point extends box_1.Box {
      * collider - point (very tiny box)
      * @param {PotentialVector} position {x, y}
      */
-    constructor(position) {
-        super((0, utils_1.ensureVectorPoint)(position), 0.1, 0.1);
+    constructor(position, options) {
+        super((0, utils_1.ensureVectorPoint)(position), 0.1, 0.1, options);
         this.type = model_1.Types.Point;
     }
 }

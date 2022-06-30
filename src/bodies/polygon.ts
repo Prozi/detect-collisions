@@ -2,13 +2,19 @@ import { Polygon as SATPolygon } from "sat";
 import { BBox } from "rbush";
 import { System } from "../system";
 import {
+  BodyOptions,
   Collider,
   GetAABBAsBox,
   PotentialVector,
   Types,
   Vector,
 } from "../model";
-import { ensureVectorPoint, ensurePolygonPoints, dashLineTo } from "../utils";
+import {
+  ensureVectorPoint,
+  ensurePolygonPoints,
+  dashLineTo,
+  extendBody,
+} from "../utils";
 
 /**
  * collider - polygon
@@ -46,12 +52,18 @@ export class Polygon extends SATPolygon implements BBox, Collider {
    * @param {PotentialVector} position {x, y}
    * @param {PotentialVector[]} points
    */
-  constructor(position: PotentialVector, points: PotentialVector[]) {
+  constructor(
+    position: PotentialVector,
+    points: PotentialVector[],
+    options?: BodyOptions
+  ) {
     super(ensureVectorPoint(position), ensurePolygonPoints(points));
 
     if (!points?.length) {
       throw new Error("No points in polygon");
     }
+
+    extendBody(this, options);
 
     this.updateAABB();
   }
@@ -114,8 +126,8 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     const points: Vector[] = [...this.calcPoints, this.calcPoints[0]];
 
     points.forEach((point: Vector, index: number) => {
-      const toX = this.pos.x + point.x;
-      const toY = this.pos.y + point.y;
+      const toX = this.x + point.x;
+      const toY = this.y + point.y;
       const prev =
         this.calcPoints[index - 1] ||
         this.calcPoints[this.calcPoints.length - 1];
@@ -128,8 +140,8 @@ export class Polygon extends SATPolygon implements BBox, Collider {
         }
       } else if (this.calcPoints.length > 1) {
         if (this.isTrigger) {
-          const fromX = this.pos.x + prev.x;
-          const fromY = this.pos.y + prev.y;
+          const fromX = this.x + prev.x;
+          const fromY = this.y + prev.y;
 
           dashLineTo(context, fromX, fromY, toX, toY);
         } else {
@@ -137,5 +149,29 @@ export class Polygon extends SATPolygon implements BBox, Collider {
         }
       }
     });
+  }
+
+  getCentroidWithoutRotation(): Vector {
+    // reset angle for get centroid
+    const angle = this.angle;
+
+    this.setAngle(0);
+
+    const centroid: Vector = this.getCentroid();
+
+    // revert angle change
+    this.setAngle(angle);
+
+    return centroid;
+  }
+
+  /**
+   * reCenters the box anchor
+   */
+  center(): void {
+    const { x, y } = this.getCentroidWithoutRotation();
+
+    this.translate(-x, -y);
+    this.setPosition(this.x + x, this.y + y);
   }
 }

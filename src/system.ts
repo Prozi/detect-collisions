@@ -13,6 +13,7 @@ import {
   GetAABBAsBox,
   RaycastResult,
   Response,
+  BodyOptions,
 } from "./model";
 import {
   createBox,
@@ -119,8 +120,8 @@ export class System extends RBush<Body> implements Data {
         return;
       }
 
-      response.a.pos.x -= response.overlapV.x;
-      response.a.pos.y -= response.overlapV.y;
+      response.a.x -= response.overlapV.x;
+      response.a.y -= response.overlapV.y;
 
       this.updateBody(response.a);
     });
@@ -230,10 +231,9 @@ export class System extends RBush<Body> implements Data {
     return point;
   }
 
-  createLine(start: Vector, end: Vector, angle = 0): Line {
-    const line = new Line(start, end);
+  createLine(start: Vector, end: Vector, options?: BodyOptions): Line {
+    const line = new Line(start, end, options);
 
-    line.setAngle(angle);
     this.insert(line);
 
     return line;
@@ -247,10 +247,14 @@ export class System extends RBush<Body> implements Data {
     return circle;
   }
 
-  createBox(position: Vector, width: number, height: number, angle = 0): Box {
-    const box = new Box(position, width, height);
+  createBox(
+    position: Vector,
+    width: number,
+    height: number,
+    options?: BodyOptions
+  ): Box {
+    const box = new Box(position, width, height, options);
 
-    box.setAngle(angle);
     this.insert(box);
 
     return box;
@@ -261,20 +265,22 @@ export class System extends RBush<Body> implements Data {
     radiusX: number,
     radiusY: number,
     step?: number,
-    angle = 0
+    options?: BodyOptions
   ): Ellipse {
-    const ellipse = new Ellipse(position, radiusX, radiusY, step);
+    const ellipse = new Ellipse(position, radiusX, radiusY, step, options);
 
-    ellipse.setAngle(angle);
     this.insert(ellipse);
 
     return ellipse;
   }
 
-  createPolygon(position: Vector, points: Vector[], angle = 0): Polygon {
-    const polygon = new Polygon(position, points);
+  createPolygon(
+    position: Vector,
+    points: Vector[],
+    options?: BodyOptions
+  ): Polygon {
+    const polygon = new Polygon(position, points, options);
 
-    polygon.setAngle(angle);
     this.insert(polygon);
 
     return polygon;

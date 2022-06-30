@@ -24,8 +24,8 @@ class Box extends polygon_1.Polygon {
      * @param {number} width
      * @param {number} height
      */
-    constructor(position, width, height) {
-        super(position, (0, utils_1.createBox)(width, height));
+    constructor(position, width, height, options) {
+        super(position, (0, utils_1.createBox)(width, height), options);
         this.type = model_1.Types.Box;
         this._width = width;
         this._height = height;
@@ -56,28 +56,6 @@ class Box extends polygon_1.Polygon {
         this._height = height;
         this.setPoints((0, utils_1.createBox)(this._width, this._height));
     }
-    getCentroidWithoutRotation() {
-        // reset angle for get centroid
-        const angle = this.angle;
-        this.setAngle(0);
-        const centroid = this.getCentroid();
-        // revert angle change
-        this.setAngle(angle);
-        return centroid;
-    }
-    /**
-     * reCenters the box anchor
-     */
-    center() {
-        const firstPoint = this.points[0];
-        // skip if has original points translated already
-        if (firstPoint.x !== 0 || firstPoint.y !== 0) {
-            return;
-        }
-        const { x, y } = this.getCentroidWithoutRotation();
-        this.translate(-x, -y);
-        this.setPosition(this.pos.x + x, this.pos.y + y);
-    }
 }
 exports.Box = Box;
 //# sourceMappingURL=box.js.map
@@ -106,9 +84,10 @@ class Circle extends sat_1.Circle {
      * @param {PotentialVector} position {x, y}
      * @param {number} radius
      */
-    constructor(position, radius) {
+    constructor(position, radius, options) {
         super((0, utils_1.ensureVectorPoint)(position), radius);
         this.type = model_1.Types.Circle;
+        (0, utils_1.extendBody)(this, options);
         this.updateAABB();
     }
     get x() {
@@ -206,8 +185,8 @@ class Ellipse extends polygon_1.Polygon {
      * @param {number} radiusY defaults to radiusX
      * @param {number} step precision division >= 1px
      */
-    constructor(position, radiusX, radiusY = radiusX, step = Math.hypot(radiusX, radiusY) / Math.PI) {
-        super(position, (0, utils_1.createEllipse)(radiusX, radiusY, step));
+    constructor(position, radiusX, radiusY = radiusX, step = Math.hypot(radiusX, radiusY) / Math.PI, options) {
+        super(position, (0, utils_1.createEllipse)(radiusX, radiusY, step), options);
         this.type = model_1.Types.Ellipse;
         this._radiusX = radiusX;
         this._radiusY = radiusY;
@@ -268,6 +247,7 @@ exports.Ellipse = Ellipse;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Line = void 0;
+const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
 const polygon_1 = __webpack_require__(/*! ./polygon */ "./dist/bodies/polygon.js");
 /**
@@ -279,14 +259,11 @@ class Line extends polygon_1.Polygon {
      * @param {Vector} start {x, y}
      * @param {Vector} end {x, y}
      */
-    constructor(start, end) {
-        // position at middle of (start, end)
-        super({ x: (start.x + end.x) / 2, y: (start.y + end.y) / 2 }, [
-            // first point at minus half length
-            { x: -(end.x - start.x) / 2, y: -(end.y - start.y) / 2 },
-            // second point at plus half length
-            { x: (end.x - start.x) / 2, y: (end.y - start.y) / 2 },
-        ]);
+    constructor(start, end, options) {
+        super(start, [
+            { x: 0, y: 0 },
+            { x: end.x - start.x, y: end.y - start.y },
+        ], options);
         this.type = model_1.Types.Line;
         if (this.calcPoints.length === 1 || !end) {
             console.error({ start, end });
@@ -304,6 +281,9 @@ class Line extends polygon_1.Polygon {
             x: this.x + this.calcPoints[1].x,
             y: this.y + this.calcPoints[1].y,
         };
+    }
+    getCentroid() {
+        return new sat_1.Vector((this.end.x - this.start.x) / 2, (this.end.y - this.start.y) / 2);
     }
 }
 exports.Line = Line;
@@ -332,8 +312,8 @@ class Point extends box_1.Box {
      * collider - point (very tiny box)
      * @param {PotentialVector} position {x, y}
      */
-    constructor(position) {
-        super((0, utils_1.ensureVectorPoint)(position), 0.1, 0.1);
+    constructor(position, options) {
+        super((0, utils_1.ensureVectorPoint)(position), 0.1, 0.1, options);
         this.type = model_1.Types.Point;
     }
 }
@@ -364,12 +344,13 @@ class Polygon extends sat_1.Polygon {
      * @param {PotentialVector} position {x, y}
      * @param {PotentialVector[]} points
      */
-    constructor(position, points) {
+    constructor(position, points, options) {
         super((0, utils_1.ensureVectorPoint)(position), (0, utils_1.ensurePolygonPoints)(points));
         this.type = model_1.Types.Polygon;
         if (!(points === null || points === void 0 ? void 0 : points.length)) {
             throw new Error("No points in polygon");
         }
+        (0, utils_1.extendBody)(this, options);
         this.updateAABB();
     }
     get x() {
@@ -422,8 +403,8 @@ class Polygon extends sat_1.Polygon {
     draw(context) {
         const points = [...this.calcPoints, this.calcPoints[0]];
         points.forEach((point, index) => {
-            const toX = this.pos.x + point.x;
-            const toY = this.pos.y + point.y;
+            const toX = this.x + point.x;
+            const toY = this.y + point.y;
             const prev = this.calcPoints[index - 1] ||
                 this.calcPoints[this.calcPoints.length - 1];
             if (!index) {
@@ -436,8 +417,8 @@ class Polygon extends sat_1.Polygon {
             }
             else if (this.calcPoints.length > 1) {
                 if (this.isTrigger) {
-                    const fromX = this.pos.x + prev.x;
-                    const fromY = this.pos.y + prev.y;
+                    const fromX = this.x + prev.x;
+                    const fromY = this.y + prev.y;
                     (0, utils_1.dashLineTo)(context, fromX, fromY, toX, toY);
                 }
                 else {
@@ -445,6 +426,23 @@ class Polygon extends sat_1.Polygon {
                 }
             }
         });
+    }
+    getCentroidWithoutRotation() {
+        // reset angle for get centroid
+        const angle = this.angle;
+        this.setAngle(0);
+        const centroid = this.getCentroid();
+        // revert angle change
+        this.setAngle(angle);
+        return centroid;
+    }
+    /**
+     * reCenters the box anchor
+     */
+    center() {
+        const { x, y } = this.getCentroidWithoutRotation();
+        this.translate(-x, -y);
+        this.setPosition(this.x + x, this.y + y);
     }
 }
 exports.Polygon = Polygon;
@@ -615,8 +613,8 @@ class System extends rbush_1.default {
             if (response.a.isTrigger) {
                 return;
             }
-            response.a.pos.x -= response.overlapV.x;
-            response.a.pos.y -= response.overlapV.y;
+            response.a.x -= response.overlapV.x;
+            response.a.y -= response.overlapV.y;
             this.updateBody(response.a);
         });
     }
@@ -696,9 +694,8 @@ class System extends rbush_1.default {
         this.insert(point);
         return point;
     }
-    createLine(start, end, angle = 0) {
-        const line = new line_1.Line(start, end);
-        line.setAngle(angle);
+    createLine(start, end, options) {
+        const line = new line_1.Line(start, end, options);
         this.insert(line);
         return line;
     }
@@ -707,21 +704,18 @@ class System extends rbush_1.default {
         this.insert(circle);
         return circle;
     }
-    createBox(position, width, height, angle = 0) {
-        const box = new box_1.Box(position, width, height);
-        box.setAngle(angle);
+    createBox(position, width, height, options) {
+        const box = new box_1.Box(position, width, height, options);
         this.insert(box);
         return box;
     }
-    createEllipse(position, radiusX, radiusY, step, angle = 0) {
-        const ellipse = new ellipse_1.Ellipse(position, radiusX, radiusY, step);
-        ellipse.setAngle(angle);
+    createEllipse(position, radiusX, radiusY, step, options) {
+        const ellipse = new ellipse_1.Ellipse(position, radiusX, radiusY, step, options);
         this.insert(ellipse);
         return ellipse;
     }
-    createPolygon(position, points, angle = 0) {
-        const polygon = new polygon_1.Polygon(position, points);
-        polygon.setAngle(angle);
+    createPolygon(position, points, options) {
+        const polygon = new polygon_1.Polygon(position, points, options);
         this.insert(polygon);
         return polygon;
     }
@@ -740,9 +734,10 @@ exports.System = System;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js");
+const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
     const steps = Math.PI * Math.hypot(radiusX, radiusY) * 2;
     const length = Math.max(8, Math.ceil(steps / step));
@@ -806,6 +801,22 @@ function clockwise(points) {
     return sum > 0;
 }
 exports.clockwise = clockwise;
+/**
+ * used for all types of bodies
+ */
+function extendBody(body, options) {
+    body.isStatic = !!(options === null || options === void 0 ? void 0 : options.isStatic);
+    body.isTrigger = !!(options === null || options === void 0 ? void 0 : options.isTrigger);
+    if (body.type !== model_1.Types.Circle &&
+        body.type !== model_1.Types.Ellipse &&
+        (options === null || options === void 0 ? void 0 : options.center)) {
+        body.center();
+    }
+    if (body.type !== model_1.Types.Circle && (options === null || options === void 0 ? void 0 : options.angle)) {
+        body.setAngle(options.angle);
+    }
+}
+exports.extendBody = extendBody;
 /**
  * draws dashed line on canvas context
  */
@@ -1985,7 +1996,7 @@ const height = document.body.offsetHeight;
 
 class Stress {
   constructor(count) {
-    const size = (Math.hypot(width, height) || 500) / (count / 4);
+    const size = (Math.hypot(width, height) || 1400) / (count / 2.4);
 
     this.physics = new System(13);
     this.bodies = [];
@@ -2238,8 +2249,8 @@ const { System, Line } = __webpack_require__(/*! ../../dist */ "./dist/index.js"
 
 module.exports.Tank = class Tank {
   constructor() {
-    const width = document.body.offsetWidth;
-    const height = document.body.offsetHeight;
+    const width = document.body.offsetWidth || 1024;
+    const height = document.body.offsetHeight || 768;
     const collisions = new System();
 
     this.element = document.createElement("div");
@@ -2402,20 +2413,18 @@ module.exports.Tank = class Tank {
       { x: this.scaleX(x), y: this.scaleY(y) },
       this.scaleX(2.6 * size),
       this.scaleX(1.3 * size),
-      0.2
+      { angle: 0.2, center: true }
     );
 
-    this.player.center();
     this.player.velocity = 0;
 
     this.playerTurret = this.collisions.createLine(
-      this.player.pos,
-      { x: this.player.pos.x + 140, y: this.player.pos.y },
-      0.2
+      this.player,
+      { x: this.player.x + this.scaleX(70), y: this.player.y },
+      { angle: 0.2, isTrigger: true }
     );
 
-    this.playerTurret.translate(100, 0);
-    this.playerTurret.isTrigger = true;
+    this.playerTurret.translate(this.scaleX(17), 0);
   }
 
   scaleX(x) {
@@ -2439,7 +2448,7 @@ module.exports.Tank = class Tank {
       this.scaleX(radiusX),
       this.scaleY(radiusY),
       step,
-      angle
+      { angle }
     );
   }
 
@@ -2452,7 +2461,7 @@ module.exports.Tank = class Tank {
     return this.collisions.createPolygon(
       { x: this.scaleX(x), y: this.scaleY(y) },
       scaledPoints,
-      angle
+      { angle }
     );
   }
 
@@ -2625,7 +2634,7 @@ var __webpack_exports__ = {};
 if (window.location.search.indexOf("?stress") !== -1) {
   const { TestCanvas } = __webpack_require__(/*! ./stress */ "./src/demo/stress.js");
 
-  document.body.appendChild(new TestCanvas(5000).element);
+  document.body.appendChild(new TestCanvas().element);
 } else {
   const { Tank } = __webpack_require__(/*! ./tank */ "./src/demo/tank.js");
 

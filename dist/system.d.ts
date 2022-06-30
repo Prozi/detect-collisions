@@ -1,6 +1,6 @@
 /// <reference types="sat" />
 import RBush from "rbush";
-import { Data, Body, Vector, RaycastResult, Response } from "./model";
+import { Data, Body, Vector, RaycastResult, Response, BodyOptions } from "./model";
 import { Point } from "./bodies/point";
 import { Circle } from "./bodies/circle";
 import { Box } from "./bodies/box";
@@ -64,10 +64,10 @@ export declare class System extends RBush<Body> implements Data {
      */
     raycast(start: Vector, end: Vector, allowCollider?: (testCollider: Body) => boolean): RaycastResult;
     createPoint(position: Vector): Point;
-    createLine(start: Vector, end: Vector, angle?: number): Line;
+    createLine(start: Vector, end: Vector, options?: BodyOptions): Line;
     createCircle(position: Vector, radius: number): Circle;
-    createBox(position: Vector, width: number, height: number, angle?: number): Box;
-    createEllipse(position: Vector, radiusX: number, radiusY: number, step?: number, angle?: number): Ellipse;
-    createPolygon(position: Vector, points: Vector[], angle?: number): Polygon;
+    createBox(position: Vector, width: number, height: number, options?: BodyOptions): Box;
+    createEllipse(position: Vector, radiusX: number, radiusY: number, step?: number, options?: BodyOptions): Ellipse;
+    createPolygon(position: Vector, points: Vector[], options?: BodyOptions): Polygon;
 }
 //# sourceMappingURL=system.d.ts.map

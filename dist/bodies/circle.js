@@ -13,9 +13,10 @@ class Circle extends sat_1.Circle {
      * @param {PotentialVector} position {x, y}
      * @param {number} radius
      */
-    constructor(position, radius) {
+    constructor(position, radius, options) {
         super((0, utils_1.ensureVectorPoint)(position), radius);
         this.type = model_1.Types.Circle;
+        (0, utils_1.extendBody)(this, options);
         this.updateAABB();
     }
     get x() {

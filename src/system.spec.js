@@ -42,8 +42,7 @@ describe("GIVEN System", () => {
 
       const system = new System();
 
-      system.createBox({ x: 50, y: 50 }, 100, 100);
-
+      const box = system.createBox({ x: 50, y: 50 }, 100, 100);
       const hit = system.raycast({ x: 0, y: 0 }, { x: 100, y: 100 });
 
       expect(hit.point.x).toBe(50);

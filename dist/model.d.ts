@@ -25,6 +25,12 @@ export interface Data {
         children: Body[];
     };
 }
+export interface BodyOptions {
+    isStatic?: boolean;
+    isTrigger?: boolean;
+    center?: boolean;
+    angle?: number;
+}
 /**
  * system.raycast(from, to) result
  */
