@@ -2049,6 +2049,10 @@ class TestCanvas {
       this.context.fillStyle = "#FFCC00";
       this.context.fillText(this.test.fps, 10, 30);
     }
+
+    if (this.test.drawCallback) {
+      this.test.drawCallback();
+    }
   }
 }
 
@@ -2397,12 +2401,14 @@ class Tank {
       (test) => test !== this.player
     );
 
-    if (hit && this.context) {
-      this.context.strokeStyle = "#FF0000";
-      this.context.beginPath();
-      this.context.arc(hit.point.x, hit.point.y, 5, 0, 2 * Math.PI);
-      this.context.stroke();
-    }
+    this.drawCallback = () => {
+      if (hit) {
+        this.context.strokeStyle = "#FF0000";
+        this.context.beginPath();
+        this.context.arc(hit.point.x, hit.point.y, 5, 0, 2 * Math.PI);
+        this.context.stroke();
+      }
+    };
   }
 
   createPlayer(x, y, size = 13) {

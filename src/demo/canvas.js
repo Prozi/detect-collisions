@@ -57,6 +57,10 @@ class TestCanvas {
       this.context.fillStyle = "#FFCC00";
       this.context.fillText(this.test.fps, 10, 30);
     }
+
+    if (this.test.drawCallback) {
+      this.test.drawCallback();
+    }
   }
 }
 
