@@ -2,16 +2,29 @@ import { Circle as SATCircle } from "sat";
 import { BBox } from "rbush";
 import { System } from "../system";
 import { BodyOptions, Collider, PotentialVector, Types } from "../model";
-import { dashLineTo, ensureVectorPoint, extendBody } from "../utils";
+import {
+  dashLineTo,
+  ensureVectorPoint,
+  extendBody,
+  updateAABB,
+} from "../utils";
 
 /**
  * collider - circle
  */
 export class Circle extends SATCircle implements BBox, Collider {
+  /**
+   * bbox parameters
+   */
   minX!: number;
   maxX!: number;
   minY!: number;
   maxY!: number;
+
+  /**
+   * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
+   */
+  padding = 0;
 
   /**
    * static bodies don't move but they collide
@@ -88,11 +101,20 @@ export class Circle extends SATCircle implements BBox, Collider {
   /**
    * Updates Bounding Box of collider
    */
-  updateAABB(): void {
-    this.minX = this.pos.x - this.r;
-    this.minY = this.pos.y - this.r;
-    this.maxX = this.pos.x + this.r;
-    this.maxY = this.pos.y + this.r;
+  getAABBAsBBox(): BBox {
+    return {
+      minX: this.pos.x - this.r,
+      minY: this.pos.y - this.r,
+      maxX: this.pos.x + this.r,
+      maxY: this.pos.y + this.r,
+    };
+  }
+
+  /**
+   * Updates Bounding Box of collider
+   */
+  updateAABB(bounds = this.getAABBAsBBox()): void {
+    updateAABB(this, bounds);
   }
 
   /**

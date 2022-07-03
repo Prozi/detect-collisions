@@ -6,10 +6,17 @@ import { BodyOptions, Collider, PotentialVector, Types } from "../model";
  * collider - circle
  */
 export declare class Circle extends SATCircle implements BBox, Collider {
+    /**
+     * bbox parameters
+     */
     minX: number;
     maxX: number;
     minY: number;
     maxY: number;
+    /**
+     * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
+     */
+    padding: number;
     /**
      * static bodies don't move but they collide
      */
@@ -48,7 +55,11 @@ export declare class Circle extends SATCircle implements BBox, Collider {
     /**
      * Updates Bounding Box of collider
      */
-    updateAABB(): void;
+    getAABBAsBBox(): BBox;
+    /**
+     * Updates Bounding Box of collider
+     */
+    updateAABB(bounds?: BBox): void;
     /**
      * Draws collider on a CanvasRenderingContext2D's current path
      * @param {CanvasRenderingContext2D} context The canvas context to draw on

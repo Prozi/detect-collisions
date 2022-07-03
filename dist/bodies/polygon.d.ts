@@ -6,10 +6,17 @@ import { BodyOptions, Collider, PotentialVector, Types, Vector } from "../model"
  * collider - polygon
  */
 export declare class Polygon extends SATPolygon implements BBox, Collider {
+    /**
+     * bbox parameters
+     */
     minX: number;
     maxX: number;
     minY: number;
     maxY: number;
+    /**
+     * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
+     */
+    padding: number;
     /**
      * static bodies don't move but they collide
      */
@@ -46,9 +53,13 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      */
     setPosition(x: number, y: number): void;
     /**
+     * get bbox without padding
+     */
+    getAABBAsBBox(): BBox;
+    /**
      * Updates Bounding Box of collider
      */
-    updateAABB(): void;
+    updateAABB(bounds?: BBox): void;
     /**
      * Draws collider on a CanvasRenderingContext2D's current path
      * @param {CanvasRenderingContext2D} context The canvas context to draw on

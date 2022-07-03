@@ -86,6 +86,10 @@ class Circle extends sat_1.Circle {
      */
     constructor(position, radius, options) {
         super((0, utils_1.ensureVectorPoint)(position), radius);
+        /**
+         * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
+         */
+        this.padding = 0;
         this.type = model_1.Types.Circle;
         (0, utils_1.extendBody)(this, options);
         this.updateAABB();
@@ -126,11 +130,19 @@ class Circle extends sat_1.Circle {
     /**
      * Updates Bounding Box of collider
      */
-    updateAABB() {
-        this.minX = this.pos.x - this.r;
-        this.minY = this.pos.y - this.r;
-        this.maxX = this.pos.x + this.r;
-        this.maxY = this.pos.y + this.r;
+    getAABBAsBBox() {
+        return {
+            minX: this.pos.x - this.r,
+            minY: this.pos.y - this.r,
+            maxX: this.pos.x + this.r,
+            maxY: this.pos.y + this.r,
+        };
+    }
+    /**
+     * Updates Bounding Box of collider
+     */
+    updateAABB(bounds = this.getAABBAsBBox()) {
+        (0, utils_1.updateAABB)(this, bounds);
     }
     /**
      * Draws collider on a CanvasRenderingContext2D's current path
@@ -346,6 +358,10 @@ class Polygon extends sat_1.Polygon {
      */
     constructor(position, points, options) {
         super((0, utils_1.ensureVectorPoint)(position), (0, utils_1.ensurePolygonPoints)(points));
+        /**
+         * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
+         */
+        this.padding = 0;
         this.type = model_1.Types.Polygon;
         if (!(points === null || points === void 0 ? void 0 : points.length)) {
             throw new Error("No points in polygon");
@@ -387,14 +403,22 @@ class Polygon extends sat_1.Polygon {
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
     }
     /**
+     * get bbox without padding
+     */
+    getAABBAsBBox() {
+        const { pos, w, h } = this.getAABBAsBox();
+        return {
+            minX: pos.x,
+            minY: pos.y,
+            maxX: pos.x + w,
+            maxY: pos.y + h,
+        };
+    }
+    /**
      * Updates Bounding Box of collider
      */
-    updateAABB() {
-        const { pos, w, h } = this.getAABBAsBox();
-        this.minX = pos.x;
-        this.minY = pos.y;
-        this.maxX = pos.x + w;
-        this.maxY = pos.y + h;
+    updateAABB(bounds = this.getAABBAsBBox()) {
+        (0, utils_1.updateAABB)(this, bounds);
     }
     /**
      * Draws collider on a CanvasRenderingContext2D's current path
@@ -557,26 +581,30 @@ class System extends rbush_1.default {
      * draw hierarchy
      */
     drawBVH(context) {
-        this.data.children.forEach(({ minX, maxX, minY, maxY }) => {
+        [...this.all(), ...this.data.children].forEach(({ minX, maxX, minY, maxY }) => {
             polygon_1.Polygon.prototype.draw.call({
                 x: minX,
                 y: minY,
                 calcPoints: (0, utils_1.createBox)(maxX - minX, maxY - minY),
             }, context);
         });
-        this.all().forEach((body) => {
-            const { pos, w, h } = body.getAABBAsBox();
-            polygon_1.Polygon.prototype.draw.call(Object.assign(Object.assign({}, pos), { calcPoints: (0, utils_1.createBox)(w, h) }), context);
-        });
     }
     /**
      * update body aabb and in tree
      */
     updateBody(body) {
+        const bounds = body.getAABBAsBBox();
+        const update = bounds.minX < body.minX ||
+            bounds.minY < body.minY ||
+            bounds.maxX > body.maxX ||
+            bounds.maxY > body.maxY;
+        if (!update) {
+            return;
+        }
         // old aabb needs to be removed
         this.remove(body);
         // then we update aabb
-        body.updateAABB();
+        body.updateAABB(bounds);
         // then we reinsert body to collision tree
         this.insert(body);
     }
@@ -735,7 +763,7 @@ exports.System = System;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.updateAABB = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js");
 const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
@@ -808,6 +836,7 @@ exports.clockwise = clockwise;
 function extendBody(body, options) {
     body.isStatic = !!(options === null || options === void 0 ? void 0 : options.isStatic);
     body.isTrigger = !!(options === null || options === void 0 ? void 0 : options.isTrigger);
+    body.padding = (options === null || options === void 0 ? void 0 : options.padding) || 0;
     if (body.type !== model_1.Types.Circle &&
         body.type !== model_1.Types.Ellipse &&
         (options === null || options === void 0 ? void 0 : options.center)) {
@@ -818,6 +847,13 @@ function extendBody(body, options) {
     }
 }
 exports.extendBody = extendBody;
+function updateAABB(body, bounds) {
+    body.minX = bounds.minX - body.padding;
+    body.minY = bounds.minY - body.padding;
+    body.maxX = bounds.maxX + body.padding;
+    body.maxY = bounds.maxY + body.padding;
+}
+exports.updateAABB = updateAABB;
 /**
  * draws dashed line on canvas context
  */
@@ -1990,8 +2026,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;// Version 0.9
   \****************************/
 /***/ ((module) => {
 
-const width = document.body.offsetWidth | 1024;
-const height = document.body.offsetHeight | 768;
+const width = innerWidth || 1024;
+const height = innerHeight || 768;
 
 class TestCanvas {
   constructor(test) {
@@ -2060,15 +2096,15 @@ function random(min, max) {
   return Math.floor(Math.random() * max) + min;
 }
 
-function loop(callback) {
+function loop(callback, loopFn = requestAnimationFrame) {
   let time = performance.now() - 1; // prevent Infinity fps
 
   return function frame() {
     const now = performance.now();
     const fps = 1000 / (now - time);
 
+    loopFn(frame);
     callback(fps);
-    requestAnimationFrame(frame);
 
     time = now;
   };
@@ -2097,10 +2133,10 @@ const { System } = __webpack_require__(/*! ../../dist */ "./dist/index.js");
 const { width, height, random, loop } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js");
 
 class Stress {
-  constructor(count = 500) {
-    const size = Math.hypot(width, height) / (count / 2.4);
+  constructor(count = 1000) {
+    const size = Math.hypot(width, height) / count;
 
-    this.physics = new System();
+    this.physics = new System(24);
     this.bodies = [];
     this.polygons = 0;
     this.boxes = 0;
@@ -2194,6 +2230,8 @@ class Stress {
     const x = random(0, width);
     const y = random(0, height);
     const direction = (random(0, 360) * Math.PI) / 180;
+    const center = true;
+    const padding = size * 7;
 
     let body;
     let variant = random(0, 5);
@@ -2209,7 +2247,9 @@ class Stress {
         body = this.physics.createEllipse(
           { x, y },
           random(minSize, maxSize),
-          random(minSize, maxSize)
+          random(minSize, maxSize),
+          2,
+          { padding }
         );
 
         ++this.ellipses;
@@ -2220,7 +2260,7 @@ class Stress {
           { x, y },
           random(minSize, maxSize),
           random(minSize, maxSize),
-          { center: true }
+          { center, padding }
         );
 
         ++this.boxes;
@@ -2233,7 +2273,7 @@ class Stress {
             x: x + random(minSize, maxSize),
             y: y + random(minSize, maxSize),
           },
-          { center: true }
+          { center, padding }
         );
 
         ++this.lines;
@@ -2248,7 +2288,7 @@ class Stress {
             { x: random(minSize, maxSize), y: random(minSize, maxSize) },
             { x: -random(minSize, maxSize), y: random(minSize, maxSize) },
           ],
-          { center: true }
+          { center, padding }
         );
 
         ++this.polygons;

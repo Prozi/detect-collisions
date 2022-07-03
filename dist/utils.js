@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.updateAABB = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = require("sat");
 const line_1 = require("./bodies/line");
 const model_1 = require("./model");
@@ -73,6 +73,7 @@ exports.clockwise = clockwise;
 function extendBody(body, options) {
     body.isStatic = !!(options === null || options === void 0 ? void 0 : options.isStatic);
     body.isTrigger = !!(options === null || options === void 0 ? void 0 : options.isTrigger);
+    body.padding = (options === null || options === void 0 ? void 0 : options.padding) || 0;
     if (body.type !== model_1.Types.Circle &&
         body.type !== model_1.Types.Ellipse &&
         (options === null || options === void 0 ? void 0 : options.center)) {
@@ -83,6 +84,13 @@ function extendBody(body, options) {
     }
 }
 exports.extendBody = extendBody;
+function updateAABB(body, bounds) {
+    body.minX = bounds.minX - body.padding;
+    body.minY = bounds.minY - body.padding;
+    body.maxX = bounds.maxX + body.padding;
+    body.maxY = bounds.maxY + body.padding;
+}
+exports.updateAABB = updateAABB;
 /**
  * draws dashed line on canvas context
  */

@@ -1,5 +1,5 @@
-const width = document.body.offsetWidth | 1024;
-const height = document.body.offsetHeight | 768;
+const width = innerWidth || 1024;
+const height = innerHeight || 768;
 
 class TestCanvas {
   constructor(test) {
@@ -68,15 +68,15 @@ function random(min, max) {
   return Math.floor(Math.random() * max) + min;
 }
 
-function loop(callback) {
+function loop(callback, loopFn = requestAnimationFrame) {
   let time = performance.now() - 1; // prevent Infinity fps
 
   return function frame() {
     const now = performance.now();
     const fps = 1000 / (now - time);
 
+    loopFn(frame);
     callback(fps);
-    requestAnimationFrame(frame);
 
     time = now;
   };

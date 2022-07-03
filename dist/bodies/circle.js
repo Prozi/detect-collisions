@@ -15,6 +15,10 @@ class Circle extends sat_1.Circle {
      */
     constructor(position, radius, options) {
         super((0, utils_1.ensureVectorPoint)(position), radius);
+        /**
+         * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
+         */
+        this.padding = 0;
         this.type = model_1.Types.Circle;
         (0, utils_1.extendBody)(this, options);
         this.updateAABB();
@@ -55,11 +59,19 @@ class Circle extends sat_1.Circle {
     /**
      * Updates Bounding Box of collider
      */
-    updateAABB() {
-        this.minX = this.pos.x - this.r;
-        this.minY = this.pos.y - this.r;
-        this.maxX = this.pos.x + this.r;
-        this.maxY = this.pos.y + this.r;
+    getAABBAsBBox() {
+        return {
+            minX: this.pos.x - this.r,
+            minY: this.pos.y - this.r,
+            maxX: this.pos.x + this.r,
+            maxY: this.pos.y + this.r,
+        };
+    }
+    /**
+     * Updates Bounding Box of collider
+     */
+    updateAABB(bounds = this.getAABBAsBBox()) {
+        (0, utils_1.updateAABB)(this, bounds);
     }
     /**
      * Draws collider on a CanvasRenderingContext2D's current path

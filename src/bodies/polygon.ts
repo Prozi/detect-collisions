@@ -14,16 +14,25 @@ import {
   ensurePolygonPoints,
   dashLineTo,
   extendBody,
+  updateAABB,
 } from "../utils";
 
 /**
  * collider - polygon
  */
 export class Polygon extends SATPolygon implements BBox, Collider {
+  /**
+   * bbox parameters
+   */
   minX!: number;
   maxX!: number;
   minY!: number;
   maxY!: number;
+
+  /**
+   * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
+   */
+  padding = 0;
 
   /**
    * static bodies don't move but they collide
@@ -107,15 +116,24 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   }
 
   /**
-   * Updates Bounding Box of collider
+   * get bbox without padding
    */
-  updateAABB(): void {
+  getAABBAsBBox(): BBox {
     const { pos, w, h } = (this as unknown as GetAABBAsBox).getAABBAsBox();
 
-    this.minX = pos.x;
-    this.minY = pos.y;
-    this.maxX = pos.x + w;
-    this.maxY = pos.y + h;
+    return {
+      minX: pos.x,
+      minY: pos.y,
+      maxX: pos.x + w,
+      maxY: pos.y + h,
+    };
+  }
+
+  /**
+   * Updates Bounding Box of collider
+   */
+  updateAABB(bounds = this.getAABBAsBBox()): void {
+    updateAABB(this, bounds);
   }
 
   /**

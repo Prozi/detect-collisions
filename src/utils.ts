@@ -3,6 +3,7 @@ import { Line } from "./bodies/line";
 import { Circle } from "./bodies/circle";
 import { Body, BodyOptions, PotentialVector, Types, Vector } from "./model";
 import { Polygon } from "./bodies/polygon";
+import { BBox } from "rbush";
 
 export function createEllipse(
   radiusX: number,
@@ -84,6 +85,7 @@ export function clockwise(points: Vector[]): boolean {
 export function extendBody(body: Body, options?: BodyOptions): void {
   body.isStatic = !!options?.isStatic;
   body.isTrigger = !!options?.isTrigger;
+  body.padding = options?.padding || 0;
 
   if (
     body.type !== Types.Circle &&
@@ -96,6 +98,13 @@ export function extendBody(body: Body, options?: BodyOptions): void {
   if (body.type !== Types.Circle && options?.angle) {
     body.setAngle(options.angle);
   }
+}
+
+export function updateAABB(body: Body, bounds: BBox): void {
+  body.minX = bounds.minX - body.padding;
+  body.minY = bounds.minY - body.padding;
+  body.maxX = bounds.maxX + body.padding;
+  body.maxY = bounds.maxY + body.padding;
 }
 
 /**

@@ -48,35 +48,39 @@ export class System extends RBush<Body> implements Data {
    * draw hierarchy
    */
   drawBVH(context: CanvasRenderingContext2D): void {
-    this.data.children.forEach(({ minX, maxX, minY, maxY }: Body) => {
-      Polygon.prototype.draw.call(
-        {
-          x: minX,
-          y: minY,
-          calcPoints: createBox(maxX - minX, maxY - minY),
-        },
-        context
-      );
-    });
-
-    this.all().forEach((body: Body) => {
-      const { pos, w, h } = (body as unknown as GetAABBAsBox).getAABBAsBox();
-
-      Polygon.prototype.draw.call(
-        { ...pos, calcPoints: createBox(w, h) },
-        context
-      );
-    });
+    [...this.all(), ...this.data.children].forEach(
+      ({ minX, maxX, minY, maxY }: Body) => {
+        Polygon.prototype.draw.call(
+          {
+            x: minX,
+            y: minY,
+            calcPoints: createBox(maxX - minX, maxY - minY),
+          },
+          context
+        );
+      }
+    );
   }
 
   /**
    * update body aabb and in tree
    */
   updateBody(body: Body): void {
+    const bounds = body.getAABBAsBBox();
+    const update =
+      bounds.minX < body.minX ||
+      bounds.minY < body.minY ||
+      bounds.maxX > body.maxX ||
+      bounds.maxY > body.maxY;
+
+    if (!update) {
+      return;
+    }
+
     // old aabb needs to be removed
     this.remove(body);
     // then we update aabb
-    body.updateAABB();
+    body.updateAABB(bounds);
     // then we reinsert body to collision tree
     this.insert(body);
   }

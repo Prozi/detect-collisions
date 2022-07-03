@@ -2,10 +2,10 @@ const { System } = require("../../dist");
 const { width, height, random, loop } = require("./canvas");
 
 class Stress {
-  constructor(count = 500) {
-    const size = Math.hypot(width, height) / (count / 2.4);
+  constructor(count = 1000) {
+    const size = Math.hypot(width, height) / count;
 
-    this.physics = new System();
+    this.physics = new System(24);
     this.bodies = [];
     this.polygons = 0;
     this.boxes = 0;
@@ -99,6 +99,8 @@ class Stress {
     const x = random(0, width);
     const y = random(0, height);
     const direction = (random(0, 360) * Math.PI) / 180;
+    const center = true;
+    const padding = size * 7;
 
     let body;
     let variant = random(0, 5);
@@ -114,7 +116,9 @@ class Stress {
         body = this.physics.createEllipse(
           { x, y },
           random(minSize, maxSize),
-          random(minSize, maxSize)
+          random(minSize, maxSize),
+          2,
+          { padding }
         );
 
         ++this.ellipses;
@@ -125,7 +129,7 @@ class Stress {
           { x, y },
           random(minSize, maxSize),
           random(minSize, maxSize),
-          { center: true }
+          { center, padding }
         );
 
         ++this.boxes;
@@ -138,7 +142,7 @@ class Stress {
             x: x + random(minSize, maxSize),
             y: y + random(minSize, maxSize),
           },
-          { center: true }
+          { center, padding }
         );
 
         ++this.lines;
@@ -153,7 +157,7 @@ class Stress {
             { x: random(minSize, maxSize), y: random(minSize, maxSize) },
             { x: -random(minSize, maxSize), y: random(minSize, maxSize) },
           ],
-          { center: true }
+          { center, padding }
         );
 
         ++this.polygons;

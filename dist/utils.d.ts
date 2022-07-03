@@ -3,6 +3,7 @@ import { Line } from "./bodies/line";
 import { Circle } from "./bodies/circle";
 import { Body, BodyOptions, PotentialVector, Vector } from "./model";
 import { Polygon } from "./bodies/polygon";
+import { BBox } from "rbush";
 export declare function createEllipse(radiusX: number, radiusY?: number, step?: number): SATVector[];
 /**
  * creates box polygon points
@@ -28,6 +29,7 @@ export declare function clockwise(points: Vector[]): boolean;
  * used for all types of bodies
  */
 export declare function extendBody(body: Body, options?: BodyOptions): void;
+export declare function updateAABB(body: Body, bounds: BBox): void;
 /**
  * draws dashed line on canvas context
  */

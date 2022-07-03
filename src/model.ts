@@ -5,6 +5,7 @@ import { Polygon } from "./bodies/polygon";
 import { System } from "./system";
 import { Line } from "./bodies/line";
 import { Ellipse } from "./bodies/ellipse";
+import { BBox } from "rbush";
 export { Response } from "sat";
 
 /**
@@ -31,6 +32,7 @@ export interface BodyOptions {
   isTrigger?: boolean;
   center?: boolean;
   angle?: number;
+  padding?: number;
 }
 
 /**
@@ -86,6 +88,11 @@ export interface Collider {
   isTrigger?: boolean;
 
   /**
+   * BHV padding (defaults to 0)
+   */
+  padding: number;
+
+  /**
    * collisions system reference
    */
   system?: System;
@@ -99,4 +106,9 @@ export interface Collider {
    * should be called only by System.updateBody
    */
   updateAABB(): void;
+
+  /**
+   * should be called only by System.updateBody
+   */
+  getAABBAsBBox(): BBox;
 }

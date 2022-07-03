@@ -15,6 +15,10 @@ class Polygon extends sat_1.Polygon {
      */
     constructor(position, points, options) {
         super((0, utils_1.ensureVectorPoint)(position), (0, utils_1.ensurePolygonPoints)(points));
+        /**
+         * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
+         */
+        this.padding = 0;
         this.type = model_1.Types.Polygon;
         if (!(points === null || points === void 0 ? void 0 : points.length)) {
             throw new Error("No points in polygon");
@@ -56,14 +60,22 @@ class Polygon extends sat_1.Polygon {
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
     }
     /**
+     * get bbox without padding
+     */
+    getAABBAsBBox() {
+        const { pos, w, h } = this.getAABBAsBox();
+        return {
+            minX: pos.x,
+            minY: pos.y,
+            maxX: pos.x + w,
+            maxY: pos.y + h,
+        };
+    }
+    /**
      * Updates Bounding Box of collider
      */
-    updateAABB() {
-        const { pos, w, h } = this.getAABBAsBox();
-        this.minX = pos.x;
-        this.minY = pos.y;
-        this.maxX = pos.x + w;
-        this.maxY = pos.y + h;
+    updateAABB(bounds = this.getAABBAsBBox()) {
+        (0, utils_1.updateAABB)(this, bounds);
     }
     /**
      * Draws collider on a CanvasRenderingContext2D's current path

@@ -34,26 +34,30 @@ class System extends rbush_1.default {
      * draw hierarchy
      */
     drawBVH(context) {
-        this.data.children.forEach(({ minX, maxX, minY, maxY }) => {
+        [...this.all(), ...this.data.children].forEach(({ minX, maxX, minY, maxY }) => {
             polygon_1.Polygon.prototype.draw.call({
                 x: minX,
                 y: minY,
                 calcPoints: (0, utils_1.createBox)(maxX - minX, maxY - minY),
             }, context);
         });
-        this.all().forEach((body) => {
-            const { pos, w, h } = body.getAABBAsBox();
-            polygon_1.Polygon.prototype.draw.call(Object.assign(Object.assign({}, pos), { calcPoints: (0, utils_1.createBox)(w, h) }), context);
-        });
     }
     /**
      * update body aabb and in tree
      */
     updateBody(body) {
+        const bounds = body.getAABBAsBBox();
+        const update = bounds.minX < body.minX ||
+            bounds.minY < body.minY ||
+            bounds.maxX > body.maxX ||
+            bounds.maxY > body.maxY;
+        if (!update) {
+            return;
+        }
         // old aabb needs to be removed
         this.remove(body);
         // then we update aabb
-        body.updateAABB();
+        body.updateAABB(bounds);
         // then we reinsert body to collision tree
         this.insert(body);
     }
