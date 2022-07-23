@@ -44,16 +44,14 @@ export function ensureVectorPoint(point: PotentialVector = {}): SATVector {
 }
 
 /**
- * ensure correct counterclockwise points
+ * ensure Vector points array
  */
 export function ensurePolygonPoints(points: PotentialVector[]): SATVector[] {
   if (!points) {
     throw new Error("No points array provided");
   }
 
-  const vectorPoints: SATVector[] = points.map(ensureVectorPoint);
-
-  return clockwise(vectorPoints) ? vectorPoints.reverse() : vectorPoints;
+  return points.map(ensureVectorPoint);
 }
 
 /**

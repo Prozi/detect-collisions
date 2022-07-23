@@ -197,7 +197,7 @@ function testCollision(): Circle | null {
   const circle: Circle = system.createCircle({ x: 100, y: 100 }, 10);
   const potentials: Body[] = system.getPotentials(circle);
   const collided: boolean = potentials.some((body: Body) =>
-    system.checkCollision(collider, body)
+    system.checkCollision(circle, body)
   );
 
   if (collided) {
@@ -209,7 +209,7 @@ function testCollision(): Circle | null {
   }
 
   // if no collision return created non-colliding collider
-  return collider;
+  return circle;
 }
 ```
 

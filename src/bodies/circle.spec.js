@@ -39,7 +39,6 @@ describe("GIVEN Circle", () => {
   describe("AND two circles perfectly overlap", () => {
     it("THEN they give correct collision results", () => {
       const { System } = require("../../dist/");
-
       const system = new System();
 
       system.createCircle({ x: 0, y: 0 }, 10);
@@ -49,6 +48,20 @@ describe("GIVEN Circle", () => {
         expect(result.aInB).toBeTruthy();
         expect(result.bInA).toBeTruthy();
       });
+    });
+  });
+
+  describe("AND you set options", () => {
+    it("THEN the parameters are set", () => {
+      const { System } = require("../../dist/");
+      const system = new System();
+      const body = system.createCircle({}, 10, {
+        isStatic: true,
+        isTrigger: true,
+      });
+
+      expect(body.isStatic).toBe(true);
+      expect(body.isTrigger).toBe(true);
     });
   });
 });

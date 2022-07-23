@@ -30,4 +30,22 @@ describe("GIVEN Line", () => {
 
     expect(results).toBeGreaterThan(0);
   });
+
+  describe("AND you set options", () => {
+    it("THEN the parameters are set", () => {
+      const { System } = require("../../dist/");
+      const system = new System();
+      const body = system.createLine(
+        { x: 0, y: 0 },
+        { x: 10, y: 0 },
+        {
+          isStatic: true,
+          isTrigger: true,
+        }
+      );
+
+      expect(body.isStatic).toBe(true);
+      expect(body.isTrigger).toBe(true);
+    });
+  });
 });

@@ -171,8 +171,8 @@ class System extends rbush_1.default {
         });
         return result;
     }
-    createPoint(position) {
-        const point = new point_1.Point(position);
+    createPoint(position, options) {
+        const point = new point_1.Point(position, options);
         this.insert(point);
         return point;
     }
@@ -181,8 +181,8 @@ class System extends rbush_1.default {
         this.insert(line);
         return line;
     }
-    createCircle(position, radius) {
-        const circle = new circle_1.Circle(position, radius);
+    createCircle(position, radius, options) {
+        const circle = new circle_1.Circle(position, radius, options);
         this.insert(circle);
         return circle;
     }

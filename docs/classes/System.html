@@ -108,12 +108,12 @@ rectangles. Based on an optimized <strong>R-tree</strong> data structure with
 <h5>children<span class="tsd-signature-symbol">: </span><a href="../types/Body.html" class="tsd-signature-type" data-tsd-kind="Type alias">Body</a><span class="tsd-signature-symbol">[]</span></h5></li></ul></div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/Data.html">Data</a>.<a href="../interfaces/Data.html#data">data</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/90f8996/src/system.ts#L35">src/system.ts:35</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/962cffb/src/system.ts#L35">src/system.ts:35</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="response" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>response</span><a href="#response" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">response<span class="tsd-signature-symbol">:</span> <a href="Response.html" class="tsd-signature-type" data-tsd-kind="Class">Response</a><span class="tsd-signature-symbol"> = ...</span></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/90f8996/src/system.ts#L36">src/system.ts:36</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/962cffb/src/system.ts#L36">src/system.ts:36</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="all" class="tsd-anchor"></a>
@@ -305,7 +305,7 @@ custom item format by overriding <code>toBBox()</code>, <code>compareMinX()</cod
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="createCircle" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>create<wbr/>Circle</span><a href="#createCircle" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature" id="createCircle.createCircle-1">create<wbr/>Circle<span class="tsd-signature-symbol">(</span>position<span class="tsd-signature-symbol">: </span><a href="../interfaces/Vector.html" class="tsd-signature-type" data-tsd-kind="Interface">Vector</a>, radius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Circle.html" class="tsd-signature-type" data-tsd-kind="Class">Circle</a></li></ul>
+<li class="tsd-signature" id="createCircle.createCircle-1">create<wbr/>Circle<span class="tsd-signature-symbol">(</span>position<span class="tsd-signature-symbol">: </span><a href="../interfaces/Vector.html" class="tsd-signature-type" data-tsd-kind="Interface">Vector</a>, radius<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/BodyOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">BodyOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Circle.html" class="tsd-signature-type" data-tsd-kind="Class">Circle</a></li></ul>
 <ul class="tsd-descriptions">
 <li class="tsd-description">
 <div class="tsd-parameters">
@@ -314,7 +314,9 @@ custom item format by overriding <code>toBBox()</code>, <code>compareMinX()</cod
 <li>
 <h5>position: <a href="../interfaces/Vector.html" class="tsd-signature-type" data-tsd-kind="Interface">Vector</a></h5></li>
 <li>
-<h5>radius: <span class="tsd-signature-type">number</span></h5></li></ul></div>
+<h5>radius: <span class="tsd-signature-type">number</span></h5></li>
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> options: <a href="../interfaces/BodyOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">BodyOptions</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="Circle.html" class="tsd-signature-type" data-tsd-kind="Class">Circle</a></h4></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="createEllipse" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>create<wbr/>Ellipse</span><a href="#createEllipse" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
@@ -355,14 +357,16 @@ custom item format by overriding <code>toBBox()</code>, <code>compareMinX()</cod
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="createPoint" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>create<wbr/>Point</span><a href="#createPoint" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature" id="createPoint.createPoint-1">create<wbr/>Point<span class="tsd-signature-symbol">(</span>position<span class="tsd-signature-symbol">: </span><a href="../interfaces/Vector.html" class="tsd-signature-type" data-tsd-kind="Interface">Vector</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Point.html" class="tsd-signature-type" data-tsd-kind="Class">Point</a></li></ul>
+<li class="tsd-signature" id="createPoint.createPoint-1">create<wbr/>Point<span class="tsd-signature-symbol">(</span>position<span class="tsd-signature-symbol">: </span><a href="../interfaces/Vector.html" class="tsd-signature-type" data-tsd-kind="Interface">Vector</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/BodyOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">BodyOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Point.html" class="tsd-signature-type" data-tsd-kind="Class">Point</a></li></ul>
 <ul class="tsd-descriptions">
 <li class="tsd-description">
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>position: <a href="../interfaces/Vector.html" class="tsd-signature-type" data-tsd-kind="Interface">Vector</a></h5></li></ul></div>
+<h5>position: <a href="../interfaces/Vector.html" class="tsd-signature-type" data-tsd-kind="Interface">Vector</a></h5></li>
+<li>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> options: <a href="../interfaces/BodyOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">BodyOptions</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="Point.html" class="tsd-signature-type" data-tsd-kind="Class">Point</a></h4></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="createPolygon" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>create<wbr/>Polygon</span><a href="#createPolygon" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>

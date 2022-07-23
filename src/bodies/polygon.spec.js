@@ -35,4 +35,18 @@ describe("GIVEN Polygon", () => {
     expect(poly.pos.x).toBe(10);
     expect(poly.pos.y).toBe(10);
   });
+
+  describe("AND you set options", () => {
+    it("THEN the parameters are set", () => {
+      const { System } = require("../../dist/");
+      const system = new System();
+      const body = system.createPolygon({}, [{}], {
+        isStatic: true,
+        isTrigger: true,
+      });
+
+      expect(body.isStatic).toBe(true);
+      expect(body.isTrigger).toBe(true);
+    });
+  });
 });

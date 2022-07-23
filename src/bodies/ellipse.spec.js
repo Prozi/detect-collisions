@@ -85,4 +85,18 @@ describe("GIVEN Ellipse", () => {
       });
     });
   });
+
+  describe("AND you set options", () => {
+    it("THEN the parameters are set", () => {
+      const { System } = require("../../dist/");
+      const system = new System();
+      const body = system.createEllipse({}, 10, 10, 1, {
+        isStatic: true,
+        isTrigger: true,
+      });
+
+      expect(body.isStatic).toBe(true);
+      expect(body.isTrigger).toBe(true);
+    });
+  });
 });

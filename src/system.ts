@@ -228,8 +228,8 @@ export class System extends RBush<Body> implements Data {
     return result;
   }
 
-  createPoint(position: Vector): Point {
-    const point = new Point(position);
+  createPoint(position: Vector, options?: BodyOptions): Point {
+    const point = new Point(position, options);
 
     this.insert(point);
 
@@ -244,8 +244,12 @@ export class System extends RBush<Body> implements Data {
     return line;
   }
 
-  createCircle(position: Vector, radius: number): Circle {
-    const circle = new Circle(position, radius);
+  createCircle(
+    position: Vector,
+    radius: number,
+    options?: BodyOptions
+  ): Circle {
+    const circle = new Circle(position, radius, options);
 
     this.insert(circle);
 

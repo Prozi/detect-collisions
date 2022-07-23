@@ -14,7 +14,7 @@ export declare function createBox(width: number, height: number): SATVector[];
  */
 export declare function ensureVectorPoint(point?: PotentialVector): SATVector;
 /**
- * ensure correct counterclockwise points
+ * ensure Vector points array
  */
 export declare function ensurePolygonPoints(points: PotentialVector[]): SATVector[];
 /**

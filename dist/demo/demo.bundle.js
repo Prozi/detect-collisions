@@ -718,8 +718,8 @@ class System extends rbush_1.default {
         });
         return result;
     }
-    createPoint(position) {
-        const point = new point_1.Point(position);
+    createPoint(position, options) {
+        const point = new point_1.Point(position, options);
         this.insert(point);
         return point;
     }
@@ -728,8 +728,8 @@ class System extends rbush_1.default {
         this.insert(line);
         return line;
     }
-    createCircle(position, radius) {
-        const circle = new circle_1.Circle(position, radius);
+    createCircle(position, radius, options) {
+        const circle = new circle_1.Circle(position, radius, options);
         this.insert(circle);
         return circle;
     }
@@ -800,14 +800,13 @@ function ensureVectorPoint(point = {}) {
 }
 exports.ensureVectorPoint = ensureVectorPoint;
 /**
- * ensure correct counterclockwise points
+ * ensure Vector points array
  */
 function ensurePolygonPoints(points) {
     if (!points) {
         throw new Error("No points array provided");
     }
-    const vectorPoints = points.map(ensureVectorPoint);
-    return clockwise(vectorPoints) ? vectorPoints.reverse() : vectorPoints;
+    return points.map(ensureVectorPoint);
 }
 exports.ensurePolygonPoints = ensurePolygonPoints;
 /**
@@ -2134,7 +2133,7 @@ const { width, height, random, loop } = __webpack_require__(/*! ./canvas */ "./s
 
 class Stress {
   constructor(count = 1000) {
-    const size = Math.hypot(width, height) / count;
+    const size = Math.hypot(width, height) / 500;
 
     this.physics = new System(24);
     this.bodies = [];
@@ -2231,14 +2230,16 @@ class Stress {
     const y = random(0, height);
     const direction = (random(0, 360) * Math.PI) / 180;
     const center = true;
-    const padding = size * 7;
+    const padding = 3;
 
     let body;
     let variant = random(0, 5);
 
     switch (variant) {
       case 0:
-        body = this.physics.createCircle({ x, y }, random(minSize, maxSize));
+        body = this.physics.createCircle({ x, y }, random(minSize, maxSize), {
+          padding,
+        });
 
         ++this.circles;
         break;

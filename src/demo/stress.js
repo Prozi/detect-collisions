@@ -3,7 +3,7 @@ const { width, height, random, loop } = require("./canvas");
 
 class Stress {
   constructor(count = 1000) {
-    const size = Math.hypot(width, height) / count;
+    const size = Math.hypot(width, height) / 500;
 
     this.physics = new System(24);
     this.bodies = [];
@@ -100,14 +100,16 @@ class Stress {
     const y = random(0, height);
     const direction = (random(0, 360) * Math.PI) / 180;
     const center = true;
-    const padding = size * 7;
+    const padding = 3;
 
     let body;
     let variant = random(0, 5);
 
     switch (variant) {
       case 0:
-        body = this.physics.createCircle({ x, y }, random(minSize, maxSize));
+        body = this.physics.createCircle({ x, y }, random(minSize, maxSize), {
+          padding,
+        });
 
         ++this.circles;
         break;
