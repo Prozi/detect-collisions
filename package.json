@@ -1,6 +1,6 @@
 {
   "name": "detect-collisions",
-  "version": "6.2.0",
+  "version": "6.2.1",
   "description": "2d collision detection for Points, Lines, Boxes, Polygons, Ellipses and Circles (with SAT and BVH)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
