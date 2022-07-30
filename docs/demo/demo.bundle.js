@@ -791,7 +791,7 @@ function createBox(width, height) {
 }
 exports.createBox = createBox;
 /**
- * ensure returns a Vector
+ * ensure Vector point
  */
 function ensureVectorPoint(point = {}) {
     return point instanceof sat_1.Vector
@@ -800,13 +800,14 @@ function ensureVectorPoint(point = {}) {
 }
 exports.ensureVectorPoint = ensureVectorPoint;
 /**
- * ensure Vector points array
+ * ensure Vector points (for polygon) in counter-clockwise order
  */
 function ensurePolygonPoints(points) {
     if (!points) {
         throw new Error("No points array provided");
     }
-    return points.map(ensureVectorPoint);
+    const polygonPoints = points.map(ensureVectorPoint);
+    return clockwise(polygonPoints) ? polygonPoints.reverse() : polygonPoints;
 }
 exports.ensurePolygonPoints = ensurePolygonPoints;
 /**
@@ -2230,7 +2231,7 @@ class Stress {
     const y = random(0, height);
     const direction = (random(0, 360) * Math.PI) / 180;
     const center = true;
-    const padding = 3;
+    const padding = Math.hypot(width, height) / 1024;
 
     let body;
     let variant = random(0, 5);
@@ -2284,10 +2285,10 @@ class Stress {
         body = this.physics.createPolygon(
           { x, y },
           [
-            { x: -random(minSize, maxSize), y: -random(minSize, maxSize) },
-            { x: random(minSize, maxSize), y: -random(minSize, maxSize) },
-            { x: random(minSize, maxSize), y: random(minSize, maxSize) },
             { x: -random(minSize, maxSize), y: random(minSize, maxSize) },
+            { x: random(minSize, maxSize), y: random(minSize, maxSize) },
+            { x: random(minSize, maxSize), y: -random(minSize, maxSize) },
+            { x: -random(minSize, maxSize), y: -random(minSize, maxSize) },
           ],
           { center, padding }
         );
