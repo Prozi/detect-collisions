@@ -49,4 +49,75 @@ describe("GIVEN Polygon", () => {
       expect(body.isTrigger).toBe(true);
     });
   });
+
+  let polygonPoints;
+
+  beforeEach(() => {
+    polygonPoints = [
+      {
+        x: 2,
+        y: 5,
+      },
+      {
+        x: 180,
+        y: -59,
+      },
+      {
+        x: 177,
+        y: -69,
+      },
+      {
+        x: -2,
+        y: -5,
+      },
+    ];
+  });
+
+  describe("AND has clockwise points", () => {
+    it("THEN it collides properly", () => {
+      const { System } = require("../../dist/");
+      const system = new System();
+      const circle = system.createCircle(
+        {
+          x: -1311,
+          y: 1642,
+        },
+        3
+      );
+
+      const polygon = system.createPolygon(
+        {
+          x: -1418,
+          y: 1675,
+        },
+        polygonPoints
+      );
+
+      expect(system.checkCollision(circle, polygon)).toBe(true);
+    });
+  });
+
+  describe("AND has counter-clockwise points", () => {
+    it("THEN it collides properly", () => {
+      const { System } = require("../../dist/");
+      const system = new System();
+      const circle = system.createCircle(
+        {
+          x: -1311,
+          y: 1642,
+        },
+        3
+      );
+
+      const polygon = system.createPolygon(
+        {
+          x: -1418,
+          y: 1675,
+        },
+        polygonPoints.reverse()
+      );
+
+      expect(system.checkCollision(circle, polygon)).toBe(true);
+    });
+  });
 });

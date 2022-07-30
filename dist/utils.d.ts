@@ -10,11 +10,11 @@ export declare function createEllipse(radiusX: number, radiusY?: number, step?: 
  */
 export declare function createBox(width: number, height: number): SATVector[];
 /**
- * ensure returns a Vector
+ * ensure Vector point
  */
 export declare function ensureVectorPoint(point?: PotentialVector): SATVector;
 /**
- * ensure Vector points array
+ * ensure Vector points (for polygon) in counter-clockwise order
  */
 export declare function ensurePolygonPoints(points: PotentialVector[]): SATVector[];
 /**

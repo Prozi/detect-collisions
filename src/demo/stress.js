@@ -100,7 +100,7 @@ class Stress {
     const y = random(0, height);
     const direction = (random(0, 360) * Math.PI) / 180;
     const center = true;
-    const padding = 3;
+    const padding = Math.hypot(width, height) / 1024;
 
     let body;
     let variant = random(0, 5);
@@ -154,10 +154,10 @@ class Stress {
         body = this.physics.createPolygon(
           { x, y },
           [
-            { x: -random(minSize, maxSize), y: -random(minSize, maxSize) },
-            { x: random(minSize, maxSize), y: -random(minSize, maxSize) },
-            { x: random(minSize, maxSize), y: random(minSize, maxSize) },
             { x: -random(minSize, maxSize), y: random(minSize, maxSize) },
+            { x: random(minSize, maxSize), y: random(minSize, maxSize) },
+            { x: random(minSize, maxSize), y: -random(minSize, maxSize) },
+            { x: -random(minSize, maxSize), y: -random(minSize, maxSize) },
           ],
           { center, padding }
         );

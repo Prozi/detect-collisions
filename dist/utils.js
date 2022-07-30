@@ -28,7 +28,7 @@ function createBox(width, height) {
 }
 exports.createBox = createBox;
 /**
- * ensure returns a Vector
+ * ensure Vector point
  */
 function ensureVectorPoint(point = {}) {
     return point instanceof sat_1.Vector
@@ -37,13 +37,14 @@ function ensureVectorPoint(point = {}) {
 }
 exports.ensureVectorPoint = ensureVectorPoint;
 /**
- * ensure Vector points array
+ * ensure Vector points (for polygon) in counter-clockwise order
  */
 function ensurePolygonPoints(points) {
     if (!points) {
         throw new Error("No points array provided");
     }
-    return points.map(ensureVectorPoint);
+    const polygonPoints = points.map(ensureVectorPoint);
+    return clockwise(polygonPoints) ? polygonPoints.reverse() : polygonPoints;
 }
 exports.ensurePolygonPoints = ensurePolygonPoints;
 /**

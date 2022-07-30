@@ -35,7 +35,7 @@ export function createBox(width: number, height: number): SATVector[] {
 }
 
 /**
- * ensure returns a Vector
+ * ensure Vector point
  */
 export function ensureVectorPoint(point: PotentialVector = {}): SATVector {
   return point instanceof SATVector
@@ -44,14 +44,16 @@ export function ensureVectorPoint(point: PotentialVector = {}): SATVector {
 }
 
 /**
- * ensure Vector points array
+ * ensure Vector points (for polygon) in counter-clockwise order
  */
 export function ensurePolygonPoints(points: PotentialVector[]): SATVector[] {
   if (!points) {
     throw new Error("No points array provided");
   }
 
-  return points.map(ensureVectorPoint);
+  const polygonPoints: SATVector[] = points.map(ensureVectorPoint);
+
+  return clockwise(polygonPoints) ? polygonPoints.reverse() : polygonPoints;
 }
 
 /**
