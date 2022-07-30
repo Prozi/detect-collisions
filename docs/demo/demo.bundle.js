@@ -197,7 +197,7 @@ class Ellipse extends polygon_1.Polygon {
      * @param {number} radiusY defaults to radiusX
      * @param {number} step precision division >= 1px
      */
-    constructor(position, radiusX, radiusY = radiusX, step = Math.hypot(radiusX, radiusY) / Math.PI, options) {
+    constructor(position, radiusX, radiusY = radiusX, step = (radiusX + radiusY) / Math.PI, options) {
         super(position, (0, utils_1.createEllipse)(radiusX, radiusY, step), options);
         this.type = model_1.Types.Ellipse;
         this._radiusX = radiusX;
@@ -769,7 +769,7 @@ const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js")
 const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
     const steps = Math.PI * Math.hypot(radiusX, radiusY) * 2;
-    const length = Math.max(8, Math.ceil(steps / step));
+    const length = Math.max(8, Math.ceil(steps / Math.max(1, step)));
     return Array.from({ length }, (_, index) => {
         const value = (index / length) * 2 * Math.PI;
         const x = Math.cos(value) * radiusX;
@@ -2033,6 +2033,9 @@ class TestCanvas {
   constructor(test) {
     this.test = test;
 
+    this.fps = 0;
+    this.frame = 0;
+
     this.element = document.createElement("div");
     this.element.id = "debug";
     this.element.innerHTML = `${this.test.legend}
@@ -2056,12 +2059,15 @@ class TestCanvas {
       this.element.appendChild(this.canvas);
     }
 
-    const start = loop(() => this.update());
+    this.started = Date.now();
 
-    start();
+    loop(() => this.update());
   }
 
   update() {
+    this.frame++;
+    this.fps = this.frame / ((Date.now() - this.started) / 1000);
+
     // Clear the canvas
     this.context.fillStyle = "#000000";
     this.context.fillRect(0, 0, width, height);
@@ -2081,10 +2087,8 @@ class TestCanvas {
     }
 
     // Render the FPS
-    if (this.test.fps) {
-      this.context.fillStyle = "#FFCC00";
-      this.context.fillText(this.test.fps, 10, 30);
-    }
+    this.context.fillStyle = "#FFCC00";
+    this.context.fillText(`FPS: ${this.fps.toFixed(0)}`, 24, 48);
 
     if (this.test.drawCallback) {
       this.test.drawCallback();
@@ -2097,17 +2101,19 @@ function random(min, max) {
 }
 
 function loop(callback, loopFn = requestAnimationFrame) {
-  let time = performance.now() - 1; // prevent Infinity fps
+  let time = performance.now();
 
-  return function frame() {
-    const now = performance.now();
-    const fps = 1000 / (now - time);
-
+  function frame() {
     loopFn(frame);
-    callback(fps);
 
+    const now = performance.now();
+    const timeScale = (now - time) / (1000 / 60);
     time = now;
-  };
+
+    callback(timeScale);
+  }
+
+  frame();
 }
 
 module.exports.TestCanvas = TestCanvas;
@@ -2131,12 +2137,14 @@ module.exports.height = height;
 
 const { System } = __webpack_require__(/*! ../../dist */ "./dist/index.js");
 const { width, height, random, loop } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js");
+const count = 1000;
+const padding = (Math.PI * Math.sqrt(width * height)) / count;
 
 class Stress {
-  constructor(count = 1000) {
-    const size = Math.hypot(width, height) / 500;
+  constructor() {
+    const size = (width * height) / (count * 500);
 
-    this.physics = new System(24);
+    this.physics = new System();
     this.bodies = [];
     this.polygons = 0;
     this.boxes = 0;
@@ -2144,28 +2152,40 @@ class Stress {
     this.ellipses = 0;
     this.lines = 0;
 
-    this.fps = 0;
-    this.frame = 0;
-    this.fpsTotal = 0;
-
     // World bounds
     this.bounds = [
-      this.physics.createPolygon({ x: 0, y: 0 }, [
+      this.physics.createPolygon(
         { x: 0, y: 0 },
-        { x: width, y: 0 },
-      ]),
-      this.physics.createPolygon({ x: 0, y: 0 }, [
-        { x: width, y: 0 },
-        { x: width, y: height },
-      ]),
-      this.physics.createPolygon({ x: 0, y: 0 }, [
-        { x: width, y: height },
-        { x: 0, y: height },
-      ]),
-      this.physics.createPolygon({ x: 0, y: 0 }, [
-        { x: 0, y: height },
+        [
+          { x: 0, y: 0 },
+          { x: width, y: 0 },
+        ],
+        { isStatic: true }
+      ),
+      this.physics.createPolygon(
         { x: 0, y: 0 },
-      ]),
+        [
+          { x: width, y: 0 },
+          { x: width, y: height },
+        ],
+        { isStatic: true }
+      ),
+      this.physics.createPolygon(
+        { x: 0, y: 0 },
+        [
+          { x: width, y: height },
+          { x: 0, y: height },
+        ],
+        { isStatic: true }
+      ),
+      this.physics.createPolygon(
+        { x: 0, y: 0 },
+        [
+          { x: 0, y: height },
+          { x: 0, y: 0 },
+        ],
+        { isStatic: true }
+      ),
     ];
 
     for (let i = 0; i < count; ++i) {
@@ -2179,42 +2199,30 @@ class Stress {
     <div><b>Ellipses:</b> ${this.ellipses}</div>
     <div><b>Lines:</b> ${this.lines}</div>`;
 
-    const start = loop((fps) => this.update(fps));
-
-    start();
+    loop((timeScale) => this.update(timeScale));
   }
 
-  update(fps) {
-    this.frame++;
-    this.fpsTotal += fps;
-    this.fps = Math.round(this.fpsTotal / this.frame);
-
-    if (this.frame > 100) {
-      this.frame = 1;
-      this.fpsTotal = this.fps;
-    }
-
+  update(timeScale) {
     this.bodies.forEach((body) => {
       if (body.type !== "Circle") {
-        body.rotationAngle += body.rotationSpeed;
+        body.rotationAngle += body.rotationSpeed * timeScale;
         body.setAngle(body.rotationAngle);
       }
 
+      // adaptive padding, when no collisions goes up to "padding" variable value
+      body.padding = (body.padding + padding) / 2;
       body.setPosition(
-        body.pos.x + body.directionX,
-        body.pos.y + body.directionY
+        body.x + body.directionX * timeScale,
+        body.y + body.directionY * timeScale
       );
     });
 
     this.physics.checkAll(({ a, overlapV }) => {
-      if (this.bounds.includes(a)) {
-        return;
-      }
-
       const direction = (random(0, 360) * Math.PI) / 180;
 
-      a.setPosition(a.pos.x - overlapV.x, a.pos.y - overlapV.y);
-
+      // adaptive padding, when collides, halves
+      a.padding /= 2;
+      a.setPosition(a.x - overlapV.x, a.y - overlapV.y);
       a.directionX = Math.cos(direction);
       a.directionY = Math.sin(direction);
 
@@ -2225,34 +2233,29 @@ class Stress {
   }
 
   createShape(large, size) {
-    const minSize = size * 1.0 * (large ? 2 : 1);
-    const maxSize = size * 1.25 * (large ? 3 : 1);
+    const minSize = size * 1.0 * (large ? Math.random() + 1 : 1);
+    const maxSize = size * 1.25 * (large ? Math.random() * 2 + 1 : 1);
     const x = random(0, width);
     const y = random(0, height);
     const direction = (random(0, 360) * Math.PI) / 180;
-    const center = true;
-    const padding = Math.hypot(width, height) / 1024;
+    const options = {
+      center: true,
+    };
 
     let body;
     let variant = random(0, 5);
 
     switch (variant) {
       case 0:
-        body = this.physics.createCircle({ x, y }, random(minSize, maxSize), {
-          padding,
-        });
+        body = this.physics.createCircle({ x, y }, random(minSize, maxSize));
 
         ++this.circles;
         break;
 
       case 1:
-        body = this.physics.createEllipse(
-          { x, y },
-          random(minSize, maxSize),
-          random(minSize, maxSize),
-          2,
-          { padding }
-        );
+        const width = random(minSize, maxSize);
+        const height = random(minSize, maxSize);
+        body = this.physics.createEllipse({ x, y }, width, height);
 
         ++this.ellipses;
         break;
@@ -2262,7 +2265,7 @@ class Stress {
           { x, y },
           random(minSize, maxSize),
           random(minSize, maxSize),
-          { center, padding }
+          options
         );
 
         ++this.boxes;
@@ -2275,7 +2278,7 @@ class Stress {
             x: x + random(minSize, maxSize),
             y: y + random(minSize, maxSize),
           },
-          { center, padding }
+          options
         );
 
         ++this.lines;
@@ -2290,7 +2293,7 @@ class Stress {
             { x: random(minSize, maxSize), y: -random(minSize, maxSize) },
             { x: -random(minSize, maxSize), y: -random(minSize, maxSize) },
           ],
-          { center, padding }
+          options
         );
 
         ++this.polygons;
@@ -2358,28 +2361,31 @@ class Tank {
 
     this.createMap();
 
-    const start = loop((fps) => this.update(fps));
-
-    start();
+    loop((timeScale) => this.update(timeScale));
   }
 
-  update() {
-    this.handleInput();
+  update(timeScale) {
+    this.handleInput(timeScale);
     this.processGameLogic();
     this.handleCollisions();
     this.updateTurret();
   }
 
-  handleInput() {
-    this.up && (this.player.velocity += 0.1);
-    this.down && (this.player.velocity -= 0.1);
+  handleInput(timeScale) {
+    if (this.up) {
+      this.player.velocity += 0.2 * timeScale;
+    }
+
+    if (this.down) {
+      this.player.velocity -= 0.2 * timeScale;
+    }
 
     if (this.left) {
-      this.player.setAngle(this.player.angle - 0.04);
+      this.player.setAngle(this.player.angle - 0.03 * timeScale);
     }
 
     if (this.right) {
-      this.player.setAngle(this.player.angle + 0.04);
+      this.player.setAngle(this.player.angle + 0.03 * timeScale);
     }
   }
 
