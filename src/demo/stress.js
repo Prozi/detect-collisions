@@ -1,11 +1,13 @@
 const { System } = require("../../dist");
 const { width, height, random, loop } = require("./canvas");
+const count = 1000;
+const padding = (Math.PI * Math.sqrt(width * height)) / count;
 
 class Stress {
-  constructor(count = 1000) {
-    const size = Math.hypot(width, height) / 500;
+  constructor() {
+    const size = (width * height) / (count * 500);
 
-    this.physics = new System(24);
+    this.physics = new System();
     this.bodies = [];
     this.polygons = 0;
     this.boxes = 0;
@@ -13,28 +15,40 @@ class Stress {
     this.ellipses = 0;
     this.lines = 0;
 
-    this.fps = 0;
-    this.frame = 0;
-    this.fpsTotal = 0;
-
     // World bounds
     this.bounds = [
-      this.physics.createPolygon({ x: 0, y: 0 }, [
+      this.physics.createPolygon(
         { x: 0, y: 0 },
-        { x: width, y: 0 },
-      ]),
-      this.physics.createPolygon({ x: 0, y: 0 }, [
-        { x: width, y: 0 },
-        { x: width, y: height },
-      ]),
-      this.physics.createPolygon({ x: 0, y: 0 }, [
-        { x: width, y: height },
-        { x: 0, y: height },
-      ]),
-      this.physics.createPolygon({ x: 0, y: 0 }, [
-        { x: 0, y: height },
+        [
+          { x: 0, y: 0 },
+          { x: width, y: 0 },
+        ],
+        { isStatic: true }
+      ),
+      this.physics.createPolygon(
         { x: 0, y: 0 },
-      ]),
+        [
+          { x: width, y: 0 },
+          { x: width, y: height },
+        ],
+        { isStatic: true }
+      ),
+      this.physics.createPolygon(
+        { x: 0, y: 0 },
+        [
+          { x: width, y: height },
+          { x: 0, y: height },
+        ],
+        { isStatic: true }
+      ),
+      this.physics.createPolygon(
+        { x: 0, y: 0 },
+        [
+          { x: 0, y: height },
+          { x: 0, y: 0 },
+        ],
+        { isStatic: true }
+      ),
     ];
 
     for (let i = 0; i < count; ++i) {
@@ -48,42 +62,30 @@ class Stress {
     <div><b>Ellipses:</b> ${this.ellipses}</div>
     <div><b>Lines:</b> ${this.lines}</div>`;
 
-    const start = loop((fps) => this.update(fps));
-
-    start();
+    loop((timeScale) => this.update(timeScale));
   }
 
-  update(fps) {
-    this.frame++;
-    this.fpsTotal += fps;
-    this.fps = Math.round(this.fpsTotal / this.frame);
-
-    if (this.frame > 100) {
-      this.frame = 1;
-      this.fpsTotal = this.fps;
-    }
-
+  update(timeScale) {
     this.bodies.forEach((body) => {
       if (body.type !== "Circle") {
-        body.rotationAngle += body.rotationSpeed;
+        body.rotationAngle += body.rotationSpeed * timeScale;
         body.setAngle(body.rotationAngle);
       }
 
+      // adaptive padding, when no collisions goes up to "padding" variable value
+      body.padding = (body.padding + padding) / 2;
       body.setPosition(
-        body.pos.x + body.directionX,
-        body.pos.y + body.directionY
+        body.x + body.directionX * timeScale,
+        body.y + body.directionY * timeScale
       );
     });
 
     this.physics.checkAll(({ a, overlapV }) => {
-      if (this.bounds.includes(a)) {
-        return;
-      }
-
       const direction = (random(0, 360) * Math.PI) / 180;
 
-      a.setPosition(a.pos.x - overlapV.x, a.pos.y - overlapV.y);
-
+      // adaptive padding, when collides, halves
+      a.padding /= 2;
+      a.setPosition(a.x - overlapV.x, a.y - overlapV.y);
       a.directionX = Math.cos(direction);
       a.directionY = Math.sin(direction);
 
@@ -94,34 +96,29 @@ class Stress {
   }
 
   createShape(large, size) {
-    const minSize = size * 1.0 * (large ? 2 : 1);
-    const maxSize = size * 1.25 * (large ? 3 : 1);
+    const minSize = size * 1.0 * (large ? Math.random() + 1 : 1);
+    const maxSize = size * 1.25 * (large ? Math.random() * 2 + 1 : 1);
     const x = random(0, width);
     const y = random(0, height);
     const direction = (random(0, 360) * Math.PI) / 180;
-    const center = true;
-    const padding = Math.hypot(width, height) / 1024;
+    const options = {
+      center: true,
+    };
 
     let body;
     let variant = random(0, 5);
 
     switch (variant) {
       case 0:
-        body = this.physics.createCircle({ x, y }, random(minSize, maxSize), {
-          padding,
-        });
+        body = this.physics.createCircle({ x, y }, random(minSize, maxSize));
 
         ++this.circles;
         break;
 
       case 1:
-        body = this.physics.createEllipse(
-          { x, y },
-          random(minSize, maxSize),
-          random(minSize, maxSize),
-          2,
-          { padding }
-        );
+        const width = random(minSize, maxSize);
+        const height = random(minSize, maxSize);
+        body = this.physics.createEllipse({ x, y }, width, height);
 
         ++this.ellipses;
         break;
@@ -131,7 +128,7 @@ class Stress {
           { x, y },
           random(minSize, maxSize),
           random(minSize, maxSize),
-          { center, padding }
+          options
         );
 
         ++this.boxes;
@@ -144,7 +141,7 @@ class Stress {
             x: x + random(minSize, maxSize),
             y: y + random(minSize, maxSize),
           },
-          { center, padding }
+          options
         );
 
         ++this.lines;
@@ -159,7 +156,7 @@ class Stress {
             { x: random(minSize, maxSize), y: -random(minSize, maxSize) },
             { x: -random(minSize, maxSize), y: -random(minSize, maxSize) },
           ],
-          { center, padding }
+          options
         );
 
         ++this.polygons;

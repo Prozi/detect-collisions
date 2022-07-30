@@ -34,28 +34,31 @@ class Tank {
 
     this.createMap();
 
-    const start = loop((fps) => this.update(fps));
-
-    start();
+    loop((timeScale) => this.update(timeScale));
   }
 
-  update() {
-    this.handleInput();
+  update(timeScale) {
+    this.handleInput(timeScale);
     this.processGameLogic();
     this.handleCollisions();
     this.updateTurret();
   }
 
-  handleInput() {
-    this.up && (this.player.velocity += 0.1);
-    this.down && (this.player.velocity -= 0.1);
+  handleInput(timeScale) {
+    if (this.up) {
+      this.player.velocity += 0.2 * timeScale;
+    }
+
+    if (this.down) {
+      this.player.velocity -= 0.2 * timeScale;
+    }
 
     if (this.left) {
-      this.player.setAngle(this.player.angle - 0.04);
+      this.player.setAngle(this.player.angle - 0.03 * timeScale);
     }
 
     if (this.right) {
-      this.player.setAngle(this.player.angle + 0.04);
+      this.player.setAngle(this.player.angle + 0.03 * timeScale);
     }
   }
 

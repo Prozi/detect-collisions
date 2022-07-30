@@ -6,7 +6,7 @@ const line_1 = require("./bodies/line");
 const model_1 = require("./model");
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
     const steps = Math.PI * Math.hypot(radiusX, radiusY) * 2;
-    const length = Math.max(8, Math.ceil(steps / step));
+    const length = Math.max(8, Math.ceil(steps / Math.max(1, step)));
     return Array.from({ length }, (_, index) => {
         const value = (index / length) * 2 * Math.PI;
         const x = Math.cos(value) * radiusX;

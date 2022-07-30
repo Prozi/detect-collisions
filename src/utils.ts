@@ -11,7 +11,7 @@ export function createEllipse(
   step = 1
 ): SATVector[] {
   const steps: number = Math.PI * Math.hypot(radiusX, radiusY) * 2;
-  const length: number = Math.max(8, Math.ceil(steps / step));
+  const length: number = Math.max(8, Math.ceil(steps / Math.max(1, step)));
 
   return Array.from({ length }, (_: unknown, index: number) => {
     const value: number = (index / length) * 2 * Math.PI;

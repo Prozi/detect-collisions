@@ -10,7 +10,6 @@ import {
   Body,
   Types,
   Vector,
-  GetAABBAsBox,
   RaycastResult,
   Response,
   BodyOptions,

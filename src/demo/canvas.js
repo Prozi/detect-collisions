@@ -5,6 +5,9 @@ class TestCanvas {
   constructor(test) {
     this.test = test;
 
+    this.fps = 0;
+    this.frame = 0;
+
     this.element = document.createElement("div");
     this.element.id = "debug";
     this.element.innerHTML = `${this.test.legend}
@@ -28,12 +31,15 @@ class TestCanvas {
       this.element.appendChild(this.canvas);
     }
 
-    const start = loop(() => this.update());
+    this.started = Date.now();
 
-    start();
+    loop(() => this.update());
   }
 
   update() {
+    this.frame++;
+    this.fps = this.frame / ((Date.now() - this.started) / 1000);
+
     // Clear the canvas
     this.context.fillStyle = "#000000";
     this.context.fillRect(0, 0, width, height);
@@ -53,10 +59,8 @@ class TestCanvas {
     }
 
     // Render the FPS
-    if (this.test.fps) {
-      this.context.fillStyle = "#FFCC00";
-      this.context.fillText(this.test.fps, 10, 30);
-    }
+    this.context.fillStyle = "#FFCC00";
+    this.context.fillText(`FPS: ${this.fps.toFixed(0)}`, 24, 48);
 
     if (this.test.drawCallback) {
       this.test.drawCallback();
@@ -69,17 +73,19 @@ function random(min, max) {
 }
 
 function loop(callback, loopFn = requestAnimationFrame) {
-  let time = performance.now() - 1; // prevent Infinity fps
+  let time = performance.now();
 
-  return function frame() {
-    const now = performance.now();
-    const fps = 1000 / (now - time);
-
+  function frame() {
     loopFn(frame);
-    callback(fps);
 
+    const now = performance.now();
+    const timeScale = (now - time) / (1000 / 60);
     time = now;
-  };
+
+    callback(timeScale);
+  }
+
+  frame();
 }
 
 module.exports.TestCanvas = TestCanvas;
