@@ -1,6 +1,105 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./dist/base-system.js":
+/*!*****************************!*\
+  !*** ./dist/base-system.js ***!
+  \*****************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.BaseSystem = void 0;
+const rbush_1 = __importDefault(__webpack_require__(/*! rbush */ "./node_modules/rbush/rbush.min.js"));
+const box_1 = __webpack_require__(/*! ./bodies/box */ "./dist/bodies/box.js");
+const circle_1 = __webpack_require__(/*! ./bodies/circle */ "./dist/bodies/circle.js");
+const ellipse_1 = __webpack_require__(/*! ./bodies/ellipse */ "./dist/bodies/ellipse.js");
+const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js");
+const point_1 = __webpack_require__(/*! ./bodies/point */ "./dist/bodies/point.js");
+const polygon_1 = __webpack_require__(/*! ./bodies/polygon */ "./dist/bodies/polygon.js");
+const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils.js");
+/**
+ * very base collision system
+ */
+class BaseSystem extends rbush_1.default {
+    /**
+     * draw bodies
+     */
+    draw(context) {
+        this.all().forEach((body) => {
+            body.draw(context);
+        });
+    }
+    /**
+     * draw hierarchy
+     */
+    drawBVH(context) {
+        [...this.all(), ...this.data.children].forEach(({ minX, maxX, minY, maxY }) => {
+            polygon_1.Polygon.prototype.draw.call({
+                x: minX,
+                y: minY,
+                calcPoints: (0, utils_1.createBox)(maxX - minX, maxY - minY),
+            }, context);
+        });
+    }
+    /**
+     * create point at position with options and add to system
+     */
+    createPoint(position, options) {
+        const point = new point_1.Point(position, options);
+        this.insert(point);
+        return point;
+    }
+    /**
+     * create line at position with options and add to system
+     */
+    createLine(start, end, options) {
+        const line = new line_1.Line(start, end, options);
+        this.insert(line);
+        return line;
+    }
+    /**
+     * create circle at position with options and add to system
+     */
+    createCircle(position, radius, options) {
+        const circle = new circle_1.Circle(position, radius, options);
+        this.insert(circle);
+        return circle;
+    }
+    /**
+     * create box at position with options and add to system
+     */
+    createBox(position, width, height, options) {
+        const box = new box_1.Box(position, width, height, options);
+        this.insert(box);
+        return box;
+    }
+    /**
+     * create ellipse at position with options and add to system
+     */
+    createEllipse(position, radiusX, radiusY, step, options) {
+        const ellipse = new ellipse_1.Ellipse(position, radiusX, radiusY, step, options);
+        this.insert(ellipse);
+        return ellipse;
+    }
+    /**
+     * create polygon at position with options and add to system
+     */
+    createPolygon(position, points, options) {
+        const polygon = new polygon_1.Polygon(position, points, options);
+        this.insert(polygon);
+        return polygon;
+    }
+}
+exports.BaseSystem = BaseSystem;
+//# sourceMappingURL=base-system.js.map
+
+/***/ }),
+
 /***/ "./dist/bodies/box.js":
 /*!****************************!*\
   !*** ./dist/bodies/box.js ***!
@@ -552,52 +651,23 @@ var Types;
 /*!************************!*\
   !*** ./dist/system.js ***!
   \************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.System = void 0;
-const rbush_1 = __importDefault(__webpack_require__(/*! rbush */ "./node_modules/rbush/rbush.min.js"));
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
-const box_1 = __webpack_require__(/*! ./bodies/box */ "./dist/bodies/box.js");
-const circle_1 = __webpack_require__(/*! ./bodies/circle */ "./dist/bodies/circle.js");
-const ellipse_1 = __webpack_require__(/*! ./bodies/ellipse */ "./dist/bodies/ellipse.js");
-const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js");
-const point_1 = __webpack_require__(/*! ./bodies/point */ "./dist/bodies/point.js");
-const polygon_1 = __webpack_require__(/*! ./bodies/polygon */ "./dist/bodies/polygon.js");
+const base_system_1 = __webpack_require__(/*! ./base-system */ "./dist/base-system.js");
 const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
 const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils.js");
 /**
  * collision system
  */
-class System extends rbush_1.default {
+class System extends base_system_1.BaseSystem {
     constructor() {
         super(...arguments);
         this.response = new model_1.Response();
-    }
-    /**
-     * draw bodies
-     */
-    draw(context) {
-        this.all().forEach((body) => {
-            body.draw(context);
-        });
-    }
-    /**
-     * draw hierarchy
-     */
-    drawBVH(context) {
-        [...this.all(), ...this.data.children].forEach(({ minX, maxX, minY, maxY }) => {
-            polygon_1.Polygon.prototype.draw.call({
-                x: minX,
-                y: minY,
-                calcPoints: (0, utils_1.createBox)(maxX - minX, maxY - minY),
-            }, context);
-        });
     }
     /**
      * update body aabb and in tree
@@ -691,21 +761,28 @@ class System extends rbush_1.default {
      */
     checkCollision(body, candidate) {
         this.response.clear();
-        if (body.type === model_1.Types.Circle && candidate.type === model_1.Types.Circle) {
-            return (0, sat_1.testCircleCircle)(body, candidate, this.response);
-        }
-        if (body.type === model_1.Types.Circle && candidate.type !== model_1.Types.Circle) {
+        if (body.type === model_1.Types.Circle) {
+            if (candidate.type === model_1.Types.Circle) {
+                return (0, sat_1.testCircleCircle)(body, candidate, this.response);
+            }
             return (0, sat_1.testCirclePolygon)(body, candidate, this.response);
         }
-        if (body.type !== model_1.Types.Circle && candidate.type === model_1.Types.Circle) {
+        if (candidate.type === model_1.Types.Circle) {
             return (0, sat_1.testPolygonCircle)(body, candidate, this.response);
         }
-        if (body.type !== model_1.Types.Circle && candidate.type !== model_1.Types.Circle) {
+        if (body.type === model_1.Types.Polygon || candidate.type === model_1.Types.Polygon) {
             const convexBodies = (0, utils_1.ensureConvexPolygons)(body);
             const convexCandidates = (0, utils_1.ensureConvexPolygons)(candidate);
-            return convexBodies.some((convexBody) => convexCandidates.some((convexCandidate) => (0, sat_1.testPolygonPolygon)(convexBody, convexCandidate, this.response)));
+            return convexBodies.some((convexBody) => convexCandidates.some((convexCandidate) => {
+                const collide = (0, sat_1.testPolygonPolygon)(convexBody, convexCandidate, this.response);
+                if (collide) {
+                    this.response.a = body;
+                    this.response.b = candidate;
+                }
+                return collide;
+            }));
         }
-        throw Error("Not implemented");
+        return (0, sat_1.testPolygonPolygon)(body, candidate, this.response);
     }
     /**
      * raycast to get collider of ray from start to end
@@ -729,36 +806,6 @@ class System extends rbush_1.default {
             });
         });
         return result;
-    }
-    createPoint(position, options) {
-        const point = new point_1.Point(position, options);
-        this.insert(point);
-        return point;
-    }
-    createLine(start, end, options) {
-        const line = new line_1.Line(start, end, options);
-        this.insert(line);
-        return line;
-    }
-    createCircle(position, radius, options) {
-        const circle = new circle_1.Circle(position, radius, options);
-        this.insert(circle);
-        return circle;
-    }
-    createBox(position, width, height, options) {
-        const box = new box_1.Box(position, width, height, options);
-        this.insert(box);
-        return box;
-    }
-    createEllipse(position, radiusX, radiusY, step, options) {
-        const ellipse = new ellipse_1.Ellipse(position, radiusX, radiusY, step, options);
-        this.insert(ellipse);
-        return ellipse;
-    }
-    createPolygon(position, points, options) {
-        const polygon = new polygon_1.Polygon(position, points, options);
-        this.insert(polygon);
-        return polygon;
     }
 }
 exports.System = System;

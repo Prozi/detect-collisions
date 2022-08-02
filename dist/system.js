@@ -1,46 +1,17 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.System = void 0;
-const rbush_1 = __importDefault(require("rbush"));
 const sat_1 = require("sat");
-const box_1 = require("./bodies/box");
-const circle_1 = require("./bodies/circle");
-const ellipse_1 = require("./bodies/ellipse");
-const line_1 = require("./bodies/line");
-const point_1 = require("./bodies/point");
-const polygon_1 = require("./bodies/polygon");
+const base_system_1 = require("./base-system");
 const model_1 = require("./model");
 const utils_1 = require("./utils");
 /**
  * collision system
  */
-class System extends rbush_1.default {
+class System extends base_system_1.BaseSystem {
     constructor() {
         super(...arguments);
         this.response = new model_1.Response();
-    }
-    /**
-     * draw bodies
-     */
-    draw(context) {
-        this.all().forEach((body) => {
-            body.draw(context);
-        });
-    }
-    /**
-     * draw hierarchy
-     */
-    drawBVH(context) {
-        [...this.all(), ...this.data.children].forEach(({ minX, maxX, minY, maxY }) => {
-            polygon_1.Polygon.prototype.draw.call({
-                x: minX,
-                y: minY,
-                calcPoints: (0, utils_1.createBox)(maxX - minX, maxY - minY),
-            }, context);
-        });
     }
     /**
      * update body aabb and in tree
@@ -134,21 +105,28 @@ class System extends rbush_1.default {
      */
     checkCollision(body, candidate) {
         this.response.clear();
-        if (body.type === model_1.Types.Circle && candidate.type === model_1.Types.Circle) {
-            return (0, sat_1.testCircleCircle)(body, candidate, this.response);
-        }
-        if (body.type === model_1.Types.Circle && candidate.type !== model_1.Types.Circle) {
+        if (body.type === model_1.Types.Circle) {
+            if (candidate.type === model_1.Types.Circle) {
+                return (0, sat_1.testCircleCircle)(body, candidate, this.response);
+            }
             return (0, sat_1.testCirclePolygon)(body, candidate, this.response);
         }
-        if (body.type !== model_1.Types.Circle && candidate.type === model_1.Types.Circle) {
+        if (candidate.type === model_1.Types.Circle) {
             return (0, sat_1.testPolygonCircle)(body, candidate, this.response);
         }
-        if (body.type !== model_1.Types.Circle && candidate.type !== model_1.Types.Circle) {
+        if (body.type === model_1.Types.Polygon || candidate.type === model_1.Types.Polygon) {
             const convexBodies = (0, utils_1.ensureConvexPolygons)(body);
             const convexCandidates = (0, utils_1.ensureConvexPolygons)(candidate);
-            return convexBodies.some((convexBody) => convexCandidates.some((convexCandidate) => (0, sat_1.testPolygonPolygon)(convexBody, convexCandidate, this.response)));
+            return convexBodies.some((convexBody) => convexCandidates.some((convexCandidate) => {
+                const collide = (0, sat_1.testPolygonPolygon)(convexBody, convexCandidate, this.response);
+                if (collide) {
+                    this.response.a = body;
+                    this.response.b = candidate;
+                }
+                return collide;
+            }));
         }
-        throw Error("Not implemented");
+        return (0, sat_1.testPolygonPolygon)(body, candidate, this.response);
     }
     /**
      * raycast to get collider of ray from start to end
@@ -172,36 +150,6 @@ class System extends rbush_1.default {
             });
         });
         return result;
-    }
-    createPoint(position, options) {
-        const point = new point_1.Point(position, options);
-        this.insert(point);
-        return point;
-    }
-    createLine(start, end, options) {
-        const line = new line_1.Line(start, end, options);
-        this.insert(line);
-        return line;
-    }
-    createCircle(position, radius, options) {
-        const circle = new circle_1.Circle(position, radius, options);
-        this.insert(circle);
-        return circle;
-    }
-    createBox(position, width, height, options) {
-        const box = new box_1.Box(position, width, height, options);
-        this.insert(box);
-        return box;
-    }
-    createEllipse(position, radiusX, radiusY, step, options) {
-        const ellipse = new ellipse_1.Ellipse(position, radiusX, radiusY, step, options);
-        this.insert(ellipse);
-        return ellipse;
-    }
-    createPolygon(position, points, options) {
-        const polygon = new polygon_1.Polygon(position, points, options);
-        this.insert(polygon);
-        return polygon;
     }
 }
 exports.System = System;

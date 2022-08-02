@@ -1,28 +1,12 @@
 /// <reference types="sat" />
 import RBush from "rbush";
-import { Box } from "./bodies/box";
-import { Circle } from "./bodies/circle";
-import { Ellipse } from "./bodies/ellipse";
-import { Line } from "./bodies/line";
-import { Point } from "./bodies/point";
-import { Polygon } from "./bodies/polygon";
-import { Body, BodyOptions, Data, RaycastResult, Response, Vector } from "./model";
+import { BaseSystem } from "./base-system";
+import { Body, Data, RaycastResult, Response, Vector } from "./model";
 /**
  * collision system
  */
-export declare class System extends RBush<Body> implements Data {
-    data: {
-        children: Body[];
-    };
+export declare class System extends BaseSystem implements Data {
     response: Response;
-    /**
-     * draw bodies
-     */
-    draw(context: CanvasRenderingContext2D): void;
-    /**
-     * draw hierarchy
-     */
-    drawBVH(context: CanvasRenderingContext2D): void;
     /**
      * update body aabb and in tree
      */
@@ -63,11 +47,5 @@ export declare class System extends RBush<Body> implements Data {
      * raycast to get collider of ray from start to end
      */
     raycast(start: Vector, end: Vector, allowCollider?: (testCollider: Body) => boolean): RaycastResult;
-    createPoint(position: Vector, options?: BodyOptions): Point;
-    createLine(start: Vector, end: Vector, options?: BodyOptions): Line;
-    createCircle(position: Vector, radius: number, options?: BodyOptions): Circle;
-    createBox(position: Vector, width: number, height: number, options?: BodyOptions): Box;
-    createEllipse(position: Vector, radiusX: number, radiusY: number, step?: number, options?: BodyOptions): Ellipse;
-    createPolygon(position: Vector, points: Vector[], options?: BodyOptions): Polygon;
 }
 //# sourceMappingURL=system.d.ts.map
