@@ -141,11 +141,7 @@ describe("GIVEN Polygon", () => {
         { x: 440, y: 220 },
       ]);
 
-      let collide = false;
-
-      system.checkAll((response) => {
-        throw response;
-      });
+      const collide = system.checkCollision(concave, convex);
 
       expect(collide).toBe(false);
     });
