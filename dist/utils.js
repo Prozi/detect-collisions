@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ensureConvexPolygons = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.updateAABB = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = require("sat");
 const line_1 = require("./bodies/line");
-const polygon_1 = require("./bodies/polygon");
 const model_1 = require("./model");
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
     const steps = Math.PI * Math.hypot(radiusX, radiusY) * 2;
@@ -193,11 +192,11 @@ exports.mapArrayToVector = mapArrayToVector;
  * replace body with array of related convex polygons
  */
 function ensureConvexPolygons(body) {
-    return body.isConvex
-        ? [body]
-        : body
-            .getConvex()
-            .map((polygon) => new polygon_1.Polygon(body, ensurePolygonPoints(polygon.map(mapArrayToVector))));
+    if (body.isConvex) {
+        return [body];
+    }
+    body.updateConvexPolygons();
+    return body.convexPolygons;
 }
 exports.ensureConvexPolygons = ensureConvexPolygons;
 //# sourceMappingURL=utils.js.map

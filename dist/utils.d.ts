@@ -1,5 +1,5 @@
 import { BBox } from "rbush";
-import { Vector as SATVector } from "sat";
+import { Polygon as SATPolygon, Vector as SATVector } from "sat";
 import { Circle } from "./bodies/circle";
 import { Line } from "./bodies/line";
 import { Polygon } from "./bodies/polygon";
@@ -51,5 +51,5 @@ export declare function mapArrayToVector([x, y]: number[]): Vector;
 /**
  * replace body with array of related convex polygons
  */
-export declare function ensureConvexPolygons(body: Polygon): Polygon[];
+export declare function ensureConvexPolygons(body: Polygon): SATPolygon[];
 //# sourceMappingURL=utils.d.ts.map

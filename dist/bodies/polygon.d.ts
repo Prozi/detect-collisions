@@ -18,6 +18,10 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      */
     isConvex: boolean;
     /**
+     * optimization for above
+     */
+    convexPolygons: SATPolygon[];
+    /**
      * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
      */
     padding: number;
@@ -51,6 +55,7 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      */
     set y(y: number);
     getConvex(): number[][][];
+    updateConvexPolygons(): void;
     /**
      * update position
      * @param {number} x

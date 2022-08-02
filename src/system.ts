@@ -1,5 +1,6 @@
 import RBush from "rbush";
 import {
+  Polygon as SATPolygon,
   testCircleCircle,
   testCirclePolygon,
   testPolygonCircle,
@@ -8,7 +9,6 @@ import {
 
 import { BaseSystem } from "./base-system";
 import { Line } from "./bodies/line";
-import { Polygon } from "./bodies/polygon";
 import { Body, Data, RaycastResult, Response, Types, Vector } from "./model";
 import {
   distance,
@@ -148,8 +148,8 @@ export class System extends BaseSystem implements Data {
       const convexBodies = ensureConvexPolygons(body);
       const convexCandidates = ensureConvexPolygons(candidate);
 
-      return convexBodies.some((convexBody: Polygon) =>
-        convexCandidates.some((convexCandidate: Polygon) => {
+      return convexBodies.some((convexBody: SATPolygon) =>
+        convexCandidates.some((convexCandidate: SATPolygon) => {
           const collide = testPolygonPolygon(
             convexBody,
             convexCandidate,

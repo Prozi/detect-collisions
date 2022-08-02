@@ -16,6 +16,7 @@ import {
   ensurePolygonPoints,
   ensureVectorPoint,
   extendBody,
+  mapArrayToVector,
   mapVectorToArray,
   updateAABB,
 } from "../utils";
@@ -36,6 +37,11 @@ export class Polygon extends SATPolygon implements BBox, Collider {
    * is it a convex polyon as opposed to a hollow inside (concave) polygon
    */
   isConvex = false;
+
+  /**
+   * optimization for above
+   */
+  convexPolygons: SATPolygon[];
 
   /**
    * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
@@ -83,7 +89,11 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     extendBody(this, options);
 
     // all other types other than polygon are always convex
-    this.isConvex = this.points.length === 2 || this.getConvex().length === 1;
+    const convex = this.getConvex();
+    this.isConvex = convex.length < 2;
+    this.convexPolygons = this.isConvex
+      ? []
+      : Array.from({ length: this.points.length }, () => new SATPolygon());
 
     this.updateAABB();
   }
@@ -115,7 +125,19 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   }
 
   getConvex(): number[][][] {
-    return quickDecomp(this.calcPoints.map(mapVectorToArray));
+    return this.points.length > 2
+      ? quickDecomp(this.calcPoints.map(mapVectorToArray))
+      : [];
+  }
+
+  updateConvexPolygons(): void {
+    this.getConvex().forEach((points: number[][], index: number) => {
+      this.convexPolygons[index].pos.x = this.x;
+      this.convexPolygons[index].pos.y = this.y;
+      this.convexPolygons[index].setPoints(
+        ensurePolygonPoints(points.map(mapArrayToVector))
+      );
+    });
   }
 
   /**

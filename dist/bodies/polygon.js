@@ -30,7 +30,11 @@ class Polygon extends sat_1.Polygon {
         }
         (0, utils_1.extendBody)(this, options);
         // all other types other than polygon are always convex
-        this.isConvex = this.points.length === 2 || this.getConvex().length === 1;
+        const convex = this.getConvex();
+        this.isConvex = convex.length < 2;
+        this.convexPolygons = this.isConvex
+            ? []
+            : Array.from({ length: this.points.length }, () => new sat_1.Polygon());
         this.updateAABB();
     }
     get x() {
@@ -56,7 +60,16 @@ class Polygon extends sat_1.Polygon {
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
     }
     getConvex() {
-        return (0, poly_decomp_1.quickDecomp)(this.calcPoints.map(utils_1.mapVectorToArray));
+        return this.points.length > 2
+            ? (0, poly_decomp_1.quickDecomp)(this.calcPoints.map(utils_1.mapVectorToArray))
+            : [];
+    }
+    updateConvexPolygons() {
+        this.getConvex().forEach((points, index) => {
+            this.convexPolygons[index].pos.x = this.x;
+            this.convexPolygons[index].pos.y = this.y;
+            this.convexPolygons[index].setPoints((0, utils_1.ensurePolygonPoints)(points.map(utils_1.mapArrayToVector)));
+        });
     }
     /**
      * update position
