@@ -1,5 +1,5 @@
-import { Box } from "./box";
 import { BodyOptions, PotentialVector, Types } from "../model";
+import { Box } from "./box";
 /**
  * collider - point (very tiny box)
  */

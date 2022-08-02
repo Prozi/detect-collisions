@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Point = void 0;
-const box_1 = require("./box");
 const model_1 = require("../model");
 const utils_1 = require("../utils");
+const box_1 = require("./box");
 /**
  * collider - point (very tiny box)
  */

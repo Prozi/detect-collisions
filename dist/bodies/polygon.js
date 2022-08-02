@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Polygon = void 0;
+const poly_decomp_1 = require("poly-decomp");
 const sat_1 = require("sat");
 const model_1 = require("../model");
 const utils_1 = require("../utils");
@@ -16,6 +17,10 @@ class Polygon extends sat_1.Polygon {
     constructor(position, points, options) {
         super((0, utils_1.ensureVectorPoint)(position), (0, utils_1.ensurePolygonPoints)(points));
         /**
+         * is it a convex polyon as opposed to a hollow inside (concave) polygon
+         */
+        this.isConvex = false;
+        /**
          * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
          */
         this.padding = 0;
@@ -24,6 +29,8 @@ class Polygon extends sat_1.Polygon {
             throw new Error("No points in polygon");
         }
         (0, utils_1.extendBody)(this, options);
+        // all other types other than polygon are always convex
+        this.isConvex = this.points.length === 2 || this.getConvex().length === 1;
         this.updateAABB();
     }
     get x() {
@@ -47,6 +54,9 @@ class Polygon extends sat_1.Polygon {
         var _a;
         this.pos.y = y;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+    }
+    getConvex() {
+        return (0, poly_decomp_1.quickDecomp)(this.calcPoints.map(utils_1.mapVectorToArray));
     }
     /**
      * update position

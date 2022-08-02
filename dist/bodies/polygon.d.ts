@@ -1,7 +1,7 @@
-import { Polygon as SATPolygon } from "sat";
 import { BBox } from "rbush";
-import { System } from "../system";
+import { Polygon as SATPolygon } from "sat";
 import { BodyOptions, Collider, PotentialVector, Types, Vector } from "../model";
+import { System } from "../system";
 /**
  * collider - polygon
  */
@@ -13,6 +13,10 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
     maxX: number;
     minY: number;
     maxY: number;
+    /**
+     * is it a convex polyon as opposed to a hollow inside (concave) polygon
+     */
+    isConvex: boolean;
     /**
      * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
      */
@@ -46,6 +50,7 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      * updating this.pos.y by this.y = y updates AABB
      */
     set y(y: number);
+    getConvex(): number[][][];
     /**
      * update position
      * @param {number} x

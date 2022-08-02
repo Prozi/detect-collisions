@@ -4,16 +4,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.System = void 0;
-const sat_1 = require("sat");
 const rbush_1 = __importDefault(require("rbush"));
+const sat_1 = require("sat");
+const box_1 = require("./bodies/box");
+const circle_1 = require("./bodies/circle");
+const ellipse_1 = require("./bodies/ellipse");
+const line_1 = require("./bodies/line");
+const point_1 = require("./bodies/point");
+const polygon_1 = require("./bodies/polygon");
 const model_1 = require("./model");
 const utils_1 = require("./utils");
-const point_1 = require("./bodies/point");
-const circle_1 = require("./bodies/circle");
-const box_1 = require("./bodies/box");
-const polygon_1 = require("./bodies/polygon");
-const line_1 = require("./bodies/line");
-const ellipse_1 = require("./bodies/ellipse");
 /**
  * collision system
  */
@@ -144,7 +144,9 @@ class System extends rbush_1.default {
             return (0, sat_1.testPolygonCircle)(body, candidate, this.response);
         }
         if (body.type !== model_1.Types.Circle && candidate.type !== model_1.Types.Circle) {
-            return (0, sat_1.testPolygonPolygon)(body, candidate, this.response);
+            const convexBodies = (0, utils_1.ensureConvexPolygons)(body);
+            const convexCandidates = (0, utils_1.ensureConvexPolygons)(candidate);
+            return convexBodies.some((convexBody) => convexCandidates.some((convexCandidate) => (0, sat_1.testPolygonPolygon)(convexBody, convexCandidate, this.response)));
         }
         throw Error("Not implemented");
     }

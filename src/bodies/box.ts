@@ -1,4 +1,4 @@
-import { Types, PotentialVector, BodyOptions } from "../model";
+import { BodyOptions, PotentialVector, Types } from "../model";
 import { createBox } from "../utils";
 import { Polygon } from "./polygon";
 

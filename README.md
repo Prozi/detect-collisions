@@ -215,9 +215,7 @@ function testCollision(): Circle | null {
 
 ## Concave Polygons
 
-**Detect-Collisions** uses the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for its narrow-phase collision tests. One caveat to SAT is that it only works properly on convex bodies. However, concave polygons can be "faked" by using a series of lines. Keep in mind that a polygon drawn using lines is "hollow".
-
-Handling true concave polygons requires breaking them down into their component convex polygons (Convex Decomposition) and testing them for collisions individually. There are plans to integrate this functionality into the library in the future, but for now, check out [poly-decomp.js](https://github.com/schteppe/poly-decomp.js).
+Hollow / non-convex polygons are fully supported since v6.3.0!
 
 ## Rendering
 

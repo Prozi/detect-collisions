@@ -1,31 +1,34 @@
+import RBush from "rbush";
 import {
   testCircleCircle,
   testCirclePolygon,
   testPolygonCircle,
   testPolygonPolygon,
 } from "sat";
-import RBush from "rbush";
+
+import { Box } from "./bodies/box";
+import { Circle } from "./bodies/circle";
+import { Ellipse } from "./bodies/ellipse";
+import { Line } from "./bodies/line";
+import { Point } from "./bodies/point";
+import { Polygon } from "./bodies/polygon";
 import {
-  Data,
   Body,
-  Types,
-  Vector,
+  BodyOptions,
+  Data,
   RaycastResult,
   Response,
-  BodyOptions,
+  Types,
+  Vector,
 } from "./model";
 import {
   createBox,
   distance,
+  ensureConvexPolygons,
   intersectLineCircle,
   intersectLinePolygon,
+  mapArrayToVector,
 } from "./utils";
-import { Point } from "./bodies/point";
-import { Circle } from "./bodies/circle";
-import { Box } from "./bodies/box";
-import { Polygon } from "./bodies/polygon";
-import { Line } from "./bodies/line";
-import { Ellipse } from "./bodies/ellipse";
 
 /**
  * collision system
@@ -183,7 +186,14 @@ export class System extends RBush<Body> implements Data {
     }
 
     if (body.type !== Types.Circle && candidate.type !== Types.Circle) {
-      return testPolygonPolygon(body, candidate, this.response);
+      const convexBodies = ensureConvexPolygons(body);
+      const convexCandidates = ensureConvexPolygons(candidate);
+
+      return convexBodies.some((convexBody: Polygon) =>
+        convexCandidates.some((convexCandidate: Polygon) =>
+          testPolygonPolygon(convexBody, convexCandidate, this.response)
+        )
+      );
     }
 
     throw Error("Not implemented");

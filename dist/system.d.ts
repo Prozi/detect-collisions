@@ -1,12 +1,12 @@
 /// <reference types="sat" />
 import RBush from "rbush";
-import { Data, Body, Vector, RaycastResult, Response, BodyOptions } from "./model";
-import { Point } from "./bodies/point";
-import { Circle } from "./bodies/circle";
 import { Box } from "./bodies/box";
-import { Polygon } from "./bodies/polygon";
-import { Line } from "./bodies/line";
+import { Circle } from "./bodies/circle";
 import { Ellipse } from "./bodies/ellipse";
+import { Line } from "./bodies/line";
+import { Point } from "./bodies/point";
+import { Polygon } from "./bodies/polygon";
+import { Body, BodyOptions, Data, RaycastResult, Response, Vector } from "./model";
 /**
  * collision system
  */

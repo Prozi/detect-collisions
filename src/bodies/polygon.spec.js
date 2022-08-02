@@ -120,4 +120,34 @@ describe("GIVEN Polygon", () => {
       expect(system.checkCollision(circle, polygon)).toBe(true);
     });
   });
+
+  describe("AND is concave (not convex) polygon", () => {
+    it("THEN it collides properly", () => {
+      const { System } = require("../../dist/");
+      const system = new System();
+      const concave = system.createPolygon({ x: 0, y: 0 }, [
+        { x: 190, y: 147 },
+        { x: 256, y: 265 },
+        { x: 400, y: 274 },
+        { x: 360, y: 395 },
+        { x: 80, y: 350 },
+      ]);
+      const convex = system.createPolygon({ x: 0, y: 0 }, [
+        { x: 273, y: 251 },
+        { x: 200, y: 120 },
+        { x: 230, y: 40 },
+        { x: 320, y: 10 },
+        { x: 440, y: 86 },
+        { x: 440, y: 220 },
+      ]);
+
+      let collide = false;
+
+      system.checkAll((response) => {
+        throw response;
+      });
+
+      expect(collide).toBe(false);
+    });
+  });
 });

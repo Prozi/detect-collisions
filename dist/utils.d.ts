@@ -1,9 +1,9 @@
-import { Vector as SATVector } from "sat";
-import { Line } from "./bodies/line";
-import { Circle } from "./bodies/circle";
-import { Body, BodyOptions, PotentialVector, Vector } from "./model";
-import { Polygon } from "./bodies/polygon";
 import { BBox } from "rbush";
+import { Vector as SATVector } from "sat";
+import { Circle } from "./bodies/circle";
+import { Line } from "./bodies/line";
+import { Polygon } from "./bodies/polygon";
+import { Body, BodyOptions, PotentialVector, Vector } from "./model";
 export declare function createEllipse(radiusX: number, radiusY?: number, step?: number): SATVector[];
 /**
  * creates box polygon points
@@ -40,4 +40,16 @@ export declare function intersectLineLine(line1: Line, line2: Line): Vector | nu
  * check if line (ray) intersects polygon
  */
 export declare function intersectLinePolygon(line: Line, polygon: Polygon): Vector[];
+/**
+ * change format from SAT.js to poly-decomp
+ */
+export declare function mapVectorToArray({ x, y }: Vector): number[];
+/**
+ * change format from SAT.js to poly-decomp
+ */
+export declare function mapArrayToVector([x, y]: number[]): Vector;
+/**
+ * replace body with array of related convex polygons
+ */
+export declare function ensureConvexPolygons(body: Polygon): Polygon[];
 //# sourceMappingURL=utils.d.ts.map

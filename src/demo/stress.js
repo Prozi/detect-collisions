@@ -62,7 +62,7 @@ class Stress {
     <div><b>Ellipses:</b> ${this.ellipses}</div>
     <div><b>Lines:</b> ${this.lines}</div>`;
 
-    loop((timeScale) => this.update(timeScale));
+    loop((timeScale) => this.update(Math.min(1, timeScale)));
   }
 
   update(timeScale) {

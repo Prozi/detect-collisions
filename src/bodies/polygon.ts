@@ -1,6 +1,7 @@
-import { Polygon as SATPolygon } from "sat";
+import { quickDecomp } from "poly-decomp";
 import { BBox } from "rbush";
-import { System } from "../system";
+import { Polygon as SATPolygon } from "sat";
+
 import {
   BodyOptions,
   Collider,
@@ -9,11 +10,13 @@ import {
   Types,
   Vector,
 } from "../model";
+import { System } from "../system";
 import {
-  ensureVectorPoint,
-  ensurePolygonPoints,
   dashLineTo,
+  ensurePolygonPoints,
+  ensureVectorPoint,
   extendBody,
+  mapVectorToArray,
   updateAABB,
 } from "../utils";
 
@@ -28,6 +31,11 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   maxX!: number;
   minY!: number;
   maxY!: number;
+
+  /**
+   * is it a convex polyon as opposed to a hollow inside (concave) polygon
+   */
+  isConvex = false;
 
   /**
    * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
@@ -74,6 +82,9 @@ export class Polygon extends SATPolygon implements BBox, Collider {
 
     extendBody(this, options);
 
+    // all other types other than polygon are always convex
+    this.isConvex = this.points.length === 2 || this.getConvex().length === 1;
+
     this.updateAABB();
   }
 
@@ -101,6 +112,10 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     this.pos.y = y;
 
     this.system?.updateBody(this);
+  }
+
+  getConvex(): number[][][] {
+    return quickDecomp(this.calcPoints.map(mapVectorToArray));
   }
 
   /**

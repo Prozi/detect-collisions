@@ -1,4 +1,5 @@
 import { Vector as SATVector } from "sat";
+
 import { BodyOptions, Types, Vector } from "../model";
 import { Polygon } from "./polygon";
 
