@@ -197,7 +197,7 @@ function ensureConvexPolygons(body) {
         ? [body]
         : body
             .getConvex()
-            .map((polygon) => new polygon_1.Polygon({ x: 0, y: 0 }, polygon.map(mapArrayToVector)));
+            .map((polygon) => new polygon_1.Polygon(body, ensurePolygonPoints(polygon.map(mapArrayToVector))));
 }
 exports.ensureConvexPolygons = ensureConvexPolygons;
 //# sourceMappingURL=utils.js.map

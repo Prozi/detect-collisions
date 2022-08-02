@@ -7,6 +7,26 @@ class Tank {
     this.bodies = [];
     this.player = this.createPlayer(400, 300);
 
+    const concave = this.physics.createPolygon(
+      { x: width / 2, y: height / 2 },
+      [
+        { x: 190, y: 147 },
+        { x: 256, y: 265 },
+        { x: 400, y: 274 },
+        { x: 360, y: 395 },
+        { x: 80, y: 350 },
+      ]
+    );
+
+    const convex = this.physics.createPolygon({ x: width / 2, y: height / 2 }, [
+      { x: 273, y: 251 },
+      { x: 200, y: 120 },
+      { x: 230, y: 40 },
+      { x: 320, y: 10 },
+      { x: 440, y: 86 },
+      { x: 440, y: 220 },
+    ]);
+
     this.up = false;
     this.down = false;
     this.left = false;

@@ -248,6 +248,9 @@ export function ensureConvexPolygons(body: Polygon): Polygon[] {
         .getConvex()
         .map(
           (polygon: number[][]) =>
-            new Polygon({ x: 0, y: 0 }, polygon.map(mapArrayToVector))
+            new Polygon(
+              body,
+              ensurePolygonPoints(polygon.map(mapArrayToVector))
+            )
         );
 }
