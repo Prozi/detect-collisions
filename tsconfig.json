@@ -1,6 +1,22 @@
 {
-  "compilerOptions": { "experimentalDecorators": true, "esModuleInterop": true, "strict": true, "allowJs": true, "sourceMap": true, "declaration": true, "declarationMap": true, "moduleResolution": "node", "target": "es2015", "module": "none", "outDir": "dist" },
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "allowJs": true,
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
+    "moduleResolution": "node",
+    "target": "es2015",
+    "module": "none",
+    "outDir": "dist"
+  },
   "files": ["src/index.ts"],
-  "include": ["src/**/*.ts", "node_modules/sat/**/*.ts", "node_modules/rbush/**/*.ts"],
+  "include": [
+    "src/**/*.ts",
+    "node_modules/sat/**/*.ts",
+    "node_modules/rbush/**/*.ts"
+  ],
   "exclude": ["**/*.spec.ts", "*.js"]
 }

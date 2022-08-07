@@ -1,0 +1,12 @@
+{
+  "entryPoints": ["src/index.ts"],
+  "out": "docs",
+  "plugin": [
+    "typedoc-monorepo-link-types",
+    "typedoc-plugin-resolve-crossmodule-references"
+  ],
+  "theme": "default",
+  "tsconfig": "./tsconfig.json",
+  "name": "Detect-Collisions",
+  "noMissingExports": true
+}

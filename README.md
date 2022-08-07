@@ -189,24 +189,17 @@ if (physics.checkCollision(player, wall)) {
 ### 7. Detecting collision after insertion
 
 ```typescript
-// create collider self-destructing on collision
-function testCollision(position: Vector, radius: number = 10): Circle | null {
+// create self-destructing collider
+function testCollision(position: Vector, radius: number = 10): boolean {
   const circle: Circle = physics.createCircle(position, radius);
   const potentials: Body[] = physics.getPotentials(circle);
   const collided: boolean = potentials.some((body: Body) =>
     physics.checkCollision(circle, body)
   );
 
-  if (collided) {
-    // collided so remove from system
-    physics.remove(circle);
+  physics.remove(circle);
 
-    // notify function consumer that collider is non existant
-    return null;
-  }
-
-  // if no collision return created non-colliding collider
-  return circle;
+  return collided;
 }
 ```
 
