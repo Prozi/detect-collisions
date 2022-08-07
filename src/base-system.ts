@@ -1,12 +1,10 @@
-import RBush from "rbush";
-
 import { Box } from "./bodies/box";
 import { Circle } from "./bodies/circle";
 import { Ellipse } from "./bodies/ellipse";
 import { Line } from "./bodies/line";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
-import { Body, BodyOptions, Data, Vector } from "./model";
+import { Body, BodyOptions, Data, RBush, Vector } from "./model";
 import { createBox } from "./utils";
 
 /**

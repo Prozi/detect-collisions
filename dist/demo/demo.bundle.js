@@ -5,27 +5,24 @@
 /*!*****************************!*\
   !*** ./dist/base-system.js ***!
   \*****************************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BaseSystem = void 0;
-const rbush_1 = __importDefault(__webpack_require__(/*! rbush */ "./node_modules/rbush/rbush.min.js"));
 const box_1 = __webpack_require__(/*! ./bodies/box */ "./dist/bodies/box.js");
 const circle_1 = __webpack_require__(/*! ./bodies/circle */ "./dist/bodies/circle.js");
 const ellipse_1 = __webpack_require__(/*! ./bodies/ellipse */ "./dist/bodies/ellipse.js");
 const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js");
 const point_1 = __webpack_require__(/*! ./bodies/point */ "./dist/bodies/point.js");
 const polygon_1 = __webpack_require__(/*! ./bodies/polygon */ "./dist/bodies/polygon.js");
+const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
 const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils.js");
 /**
  * very base collision system
  */
-class BaseSystem extends rbush_1.default {
+class BaseSystem extends model_1.RBush {
     /**
      * draw bodies
      */
@@ -636,13 +633,18 @@ __exportStar(__webpack_require__(/*! ./utils */ "./dist/utils.js"), exports);
 /*!***********************!*\
   !*** ./dist/model.js ***!
   \***********************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
 
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Types = exports.Response = void 0;
-var sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
+exports.Types = exports.Response = exports.RBush = void 0;
+const rbush_1 = __importDefault(__webpack_require__(/*! rbush */ "./node_modules/rbush/rbush.min.js"));
+Object.defineProperty(exports, "RBush", ({ enumerable: true, get: function () { return rbush_1.default; } }));
+const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 Object.defineProperty(exports, "Response", ({ enumerable: true, get: function () { return sat_1.Response; } }));
 /**
  * types

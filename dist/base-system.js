@@ -1,21 +1,18 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseSystem = void 0;
-const rbush_1 = __importDefault(require("rbush"));
 const box_1 = require("./bodies/box");
 const circle_1 = require("./bodies/circle");
 const ellipse_1 = require("./bodies/ellipse");
 const line_1 = require("./bodies/line");
 const point_1 = require("./bodies/point");
 const polygon_1 = require("./bodies/polygon");
+const model_1 = require("./model");
 const utils_1 = require("./utils");
 /**
  * very base collision system
  */
-class BaseSystem extends rbush_1.default {
+class BaseSystem extends model_1.RBush {
     /**
      * draw bodies
      */

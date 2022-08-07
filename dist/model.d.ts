@@ -1,4 +1,5 @@
-import { BBox } from "rbush";
+import { BBox, default as RBush } from "rbush";
+import { Response } from "sat";
 import { Box } from "./bodies/box";
 import { Circle } from "./bodies/circle";
 import { Ellipse } from "./bodies/ellipse";
@@ -6,7 +7,7 @@ import { Line } from "./bodies/line";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
 import { System } from "./system";
-export { Response } from "sat";
+export { RBush, Response, BBox };
 /**
  * types
  */
