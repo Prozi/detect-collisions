@@ -820,6 +820,12 @@ class System extends base_system_1.BaseSystem {
         });
         return result;
     }
+    getBounceDirection(body, overlap) {
+        const v2 = new sat_1.Vector(body.x - overlap.x, body.y - overlap.y);
+        const v1 = new sat_1.Vector(overlap.x - body.x, overlap.y - body.y);
+        const len = v1.dot(v2.normalize()) * 2;
+        return new sat_1.Vector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
+    }
 }
 exports.System = System;
 //# sourceMappingURL=system.js.map
@@ -2924,7 +2930,7 @@ class Stress {
           { x: 0, y: 0 },
           { x: width, y: 0 },
         ],
-        { isStatic: true }
+        { isStatic: true, center: true }
       ),
       this.physics.createPolygon(
         { x: 0, y: 0 },
@@ -2932,7 +2938,7 @@ class Stress {
           { x: width, y: 0 },
           { x: width, y: height },
         ],
-        { isStatic: true }
+        { isStatic: true, center: true }
       ),
       this.physics.createPolygon(
         { x: 0, y: 0 },
@@ -2940,7 +2946,7 @@ class Stress {
           { x: width, y: height },
           { x: 0, y: height },
         ],
-        { isStatic: true }
+        { isStatic: true, center: true }
       ),
       this.physics.createPolygon(
         { x: 0, y: 0 },
@@ -2948,7 +2954,7 @@ class Stress {
           { x: 0, y: height },
           { x: 0, y: 0 },
         ],
-        { isStatic: true }
+        { isStatic: true, center: true }
       ),
     ];
 
@@ -2981,19 +2987,41 @@ class Stress {
       );
     });
 
-    this.physics.checkAll(({ a, overlapV }) => {
-      const direction = (random(0, 360) * Math.PI) / 180;
+    this.physics.checkAll(({ a, b, overlapV }) => {
+      this.bounce(a, {
+        x: overlapV.x + a.directionX - b.directionX,
+        y: overlapV.y + a.directionY - b.directionY,
+      });
+      this.bounce(b, {
+        x: -overlapV.x - a.directionX + b.directionX,
+        y: -overlapV.y - a.directionY + b.directionY,
+      });
 
       // adaptive padding, when collides, halves
       a.padding /= 2;
-      a.setPosition(a.x - overlapV.x, a.y - overlapV.y);
-      a.directionX = Math.cos(direction);
-      a.directionY = Math.sin(direction);
+      a.pos.x -= overlapV.x;
+      a.pos.y -= overlapV.y;
 
       if (a.type !== "Circle") {
         a.rotationSpeed = (Math.random() - Math.random()) * 0.1;
       }
     });
+  }
+
+  bounce(a, overlapV) {
+    const { x, y } = this.physics.getBounceDirection(a, {
+      x: a.x + a.directionX,
+      y: a.y + a.directionY,
+    });
+
+    a.directionX = x;
+    a.directionY = y;
+
+    if (Math.abs(overlapV.y) > Math.abs(overlapV.x)) {
+      a.directionY = -a.directionY;
+    } else {
+      a.directionX = -a.directionX;
+    }
   }
 
   createShape(large, size) {

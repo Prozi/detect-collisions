@@ -23,7 +23,7 @@ class Stress {
           { x: 0, y: 0 },
           { x: width, y: 0 },
         ],
-        { isStatic: true }
+        { isStatic: true, center: true }
       ),
       this.physics.createPolygon(
         { x: 0, y: 0 },
@@ -31,7 +31,7 @@ class Stress {
           { x: width, y: 0 },
           { x: width, y: height },
         ],
-        { isStatic: true }
+        { isStatic: true, center: true }
       ),
       this.physics.createPolygon(
         { x: 0, y: 0 },
@@ -39,7 +39,7 @@ class Stress {
           { x: width, y: height },
           { x: 0, y: height },
         ],
-        { isStatic: true }
+        { isStatic: true, center: true }
       ),
       this.physics.createPolygon(
         { x: 0, y: 0 },
@@ -47,7 +47,7 @@ class Stress {
           { x: 0, y: height },
           { x: 0, y: 0 },
         ],
-        { isStatic: true }
+        { isStatic: true, center: true }
       ),
     ];
 
@@ -80,19 +80,41 @@ class Stress {
       );
     });
 
-    this.physics.checkAll(({ a, overlapV }) => {
-      const direction = (random(0, 360) * Math.PI) / 180;
+    this.physics.checkAll(({ a, b, overlapV }) => {
+      this.bounce(a, {
+        x: overlapV.x + a.directionX - b.directionX,
+        y: overlapV.y + a.directionY - b.directionY,
+      });
+      this.bounce(b, {
+        x: -overlapV.x - a.directionX + b.directionX,
+        y: -overlapV.y - a.directionY + b.directionY,
+      });
 
       // adaptive padding, when collides, halves
       a.padding /= 2;
-      a.setPosition(a.x - overlapV.x, a.y - overlapV.y);
-      a.directionX = Math.cos(direction);
-      a.directionY = Math.sin(direction);
+      a.pos.x -= overlapV.x;
+      a.pos.y -= overlapV.y;
 
       if (a.type !== "Circle") {
         a.rotationSpeed = (Math.random() - Math.random()) * 0.1;
       }
     });
+  }
+
+  bounce(a, overlapV) {
+    const { x, y } = this.physics.getBounceDirection(a, {
+      x: a.x + a.directionX,
+      y: a.y + a.directionY,
+    });
+
+    a.directionX = x;
+    a.directionY = y;
+
+    if (Math.abs(overlapV.y) > Math.abs(overlapV.x)) {
+      a.directionY = -a.directionY;
+    } else {
+      a.directionX = -a.directionX;
+    }
   }
 
   createShape(large, size) {
