@@ -1,3 +1,4 @@
+/// <reference types="sat" />
 import RBush from "rbush";
 import { BaseSystem } from "./base-system";
 import { Body, Data, RaycastResult, Response, Vector } from "./model";
