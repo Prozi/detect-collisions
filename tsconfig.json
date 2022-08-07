@@ -11,7 +11,7 @@
     "target": "es2015",
     "module": "none",
     "outDir": "dist",
-    "types": []
+    "types": ["rbush", "sat"]
   },
   "files": ["src/index.ts"],
   "include": ["src/**/*.ts"],
