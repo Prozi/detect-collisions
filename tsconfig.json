@@ -10,13 +10,10 @@
     "moduleResolution": "node",
     "target": "es2015",
     "module": "none",
-    "outDir": "dist"
+    "outDir": "dist",
+    "types": []
   },
   "files": ["src/index.ts"],
-  "include": [
-    "src/**/*.ts",
-    "node_modules/sat/**/*.ts",
-    "node_modules/rbush/**/*.ts"
-  ],
+  "include": ["src/**/*.ts"],
   "exclude": ["**/*.spec.ts", "*.js"]
 }

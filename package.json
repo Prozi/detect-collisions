@@ -1,13 +1,13 @@
 {
   "name": "detect-collisions",
-  "version": "6.3.3",
+  "version": "6.3.4",
   "description": "2d collision detection for Points, Lines, Boxes, Polygons, Ellipses and Circles (with SAT and BVH)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "rm -rf dist && tsc",
     "dev:demo": "webpack serve --port 4200",
-    "build:demo": "yarn build && webpack",
+    "build:demo": "webpack",
     "build:docs": "rm -rf docs && yarn typedoc && yarn docs:postbuild",
     "docs:postbuild": "cp dist/demo -r docs",
     "docs": "yarn build:docs && chef-express docs --debug",

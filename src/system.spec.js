@@ -106,19 +106,4 @@ describe("GIVEN System", () => {
       expectToBeNear(hit.point.y, 70, 10);
     });
   });
-
-  it("THEN getBounceDirection works correctly", () => {
-    const { System, getBounceDirection } = require("../dist/");
-
-    const physics = new System();
-    const circle = physics.createCircle({ x: 100, y: 100 }, 30);
-
-    physics.createCircle({ x: 120, y: 100 }, 30);
-    physics.checkOne(circle, ({ a, b }) => {
-      const bounce = getBounceDirection(a, b);
-
-      expect(bounce.x).toBe(-1);
-      expect(bounce.y).toBe(0);
-    });
-  });
 });

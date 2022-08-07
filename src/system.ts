@@ -5,7 +5,6 @@ import {
   testCirclePolygon,
   testPolygonCircle,
   testPolygonPolygon,
-  Vector as SATVector,
 } from "sat";
 
 import { BaseSystem } from "./base-system";
