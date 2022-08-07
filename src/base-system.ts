@@ -99,7 +99,7 @@ export class BaseSystem extends RBush<Body> implements Data {
   createEllipse(
     position: Vector,
     radiusX: number,
-    radiusY: number,
+    radiusY: number = radiusX,
     step?: number,
     options?: BodyOptions
   ): Ellipse {

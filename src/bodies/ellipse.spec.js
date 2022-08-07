@@ -5,14 +5,14 @@ describe("GIVEN Ellipse", () => {
     it("THEN it gives correct collision results", () => {
       const { System } = require("../../dist/");
 
-      const system = new System();
-      const ellipse = system.createEllipse({ x: 0, y: 0 }, 10, 30);
+      const physics = new System();
+      const ellipse = physics.createEllipse({ x: 0, y: 0 }, 10, 30);
 
-      system.createEllipse({ x: 25, y: 0 }, 10, 30);
+      physics.createEllipse({ x: 25, y: 0 }, 10, 30);
 
       let collisions = 0;
 
-      system.checkAll(() => {
+      physics.checkAll(() => {
         collisions++;
       });
 
@@ -20,7 +20,7 @@ describe("GIVEN Ellipse", () => {
 
       ellipse.radiusX = 20;
 
-      system.checkAll(() => {
+      physics.checkAll(() => {
         collisions++;
       });
 
@@ -28,7 +28,7 @@ describe("GIVEN Ellipse", () => {
 
       ellipse.updateAABB();
 
-      system.checkAll(() => {
+      physics.checkAll(() => {
         collisions++;
       });
 
@@ -40,14 +40,14 @@ describe("GIVEN Ellipse", () => {
     it("THEN it gives correct collision results", () => {
       const { System } = require("../../dist/");
 
-      const system = new System();
-      const ellipse = system.createEllipse({ x: 0, y: 0 }, 30, 10);
+      const physics = new System();
+      const ellipse = physics.createEllipse({ x: 0, y: 0 }, 30, 10);
 
-      system.createEllipse({ x: 0, y: 25 }, 30, 10);
+      physics.createEllipse({ x: 0, y: 25 }, 30, 10);
 
       let collisions = 0;
 
-      system.checkAll(() => {
+      physics.checkAll(() => {
         collisions++;
       });
 
@@ -55,7 +55,7 @@ describe("GIVEN Ellipse", () => {
 
       ellipse.radiusY = 20;
 
-      system.checkAll(() => {
+      physics.checkAll(() => {
         collisions++;
       });
 
@@ -63,7 +63,7 @@ describe("GIVEN Ellipse", () => {
 
       ellipse.updateAABB();
 
-      system.checkAll(() => {
+      physics.checkAll(() => {
         collisions++;
       });
 
@@ -75,12 +75,12 @@ describe("GIVEN Ellipse", () => {
     it("THEN they give correct collision results", () => {
       const { System } = require("../../dist/");
 
-      const system = new System();
+      const physics = new System();
 
-      system.createEllipse({ x: 0, y: 0 }, 10, 30);
-      system.createEllipse({ x: 0, y: 0 }, 10, 30);
+      physics.createEllipse({ x: 0, y: 0 }, 10, 30);
+      physics.createEllipse({ x: 0, y: 0 }, 10, 30);
 
-      system.checkAll((result) => {
+      physics.checkAll((result) => {
         expect(result.aInB || result.bInA).toBeTruthy();
       });
     });
@@ -89,8 +89,8 @@ describe("GIVEN Ellipse", () => {
   describe("AND you set options", () => {
     it("THEN the parameters are set", () => {
       const { System } = require("../../dist/");
-      const system = new System();
-      const body = system.createEllipse({}, 10, 10, 1, {
+      const physics = new System();
+      const body = physics.createEllipse({}, 10, 10, 1, {
         isStatic: true,
         isTrigger: true,
       });

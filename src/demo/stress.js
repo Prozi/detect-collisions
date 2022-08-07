@@ -1,4 +1,4 @@
-const { System } = require("../../dist");
+const { System, SATVector, getBounceDirection } = require("../../dist");
 const { width, height, random, loop } = require("./canvas");
 const count = 1000;
 const padding = (Math.PI * Math.sqrt(width * height)) / count;
@@ -81,19 +81,14 @@ class Stress {
     });
 
     this.physics.checkAll(({ a, b, overlapV }) => {
-      this.bounce(a, {
-        x: overlapV.x + a.directionX - b.directionX,
-        y: overlapV.y + a.directionY - b.directionY,
-      });
-      this.bounce(b, {
-        x: -overlapV.x - a.directionX + b.directionX,
-        y: -overlapV.y - a.directionY + b.directionY,
-      });
+      a.pos.x -= overlapV.x;
+      a.pos.y -= overlapV.y;
 
       // adaptive padding, when collides, halves
       a.padding /= 2;
-      a.pos.x -= overlapV.x;
-      a.pos.y -= overlapV.y;
+
+      this.bounce(a, b);
+      this.bounce(b, a);
 
       if (a.type !== "Circle") {
         a.rotationSpeed = (Math.random() - Math.random()) * 0.1;
@@ -101,20 +96,23 @@ class Stress {
     });
   }
 
-  bounce(a, overlapV) {
-    const { x, y } = this.physics.getBounceDirection(a, {
-      x: a.x + a.directionX,
-      y: a.y + a.directionY,
-    });
+  bounce(a, b) {
+    if (b.isStatic) {
+      const { x, y } = new SATVector(
+        width / 2 - a.x,
+        height / 2 - a.y
+      ).normalize();
+
+      a.directionX = x;
+      a.directionY = y;
+
+      return;
+    }
+
+    const { x, y } = getBounceDirection(a, b);
 
     a.directionX = x;
     a.directionY = y;
-
-    if (Math.abs(overlapV.y) > Math.abs(overlapV.x)) {
-      a.directionY = -a.directionY;
-    } else {
-      a.directionX = -a.directionX;
-    }
   }
 
   createShape(large, size) {

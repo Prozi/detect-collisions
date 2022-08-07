@@ -13,8 +13,8 @@ describe("GIVEN Point", () => {
   describe("AND you set options", () => {
     it("THEN the parameters are set", () => {
       const { System } = require("../../dist/");
-      const system = new System();
-      const body = system.createPoint(
+      const physics = new System();
+      const body = physics.createPoint(
         { x: 0, y: 0 },
         {
           isStatic: true,

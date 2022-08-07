@@ -1,5 +1,5 @@
 import { BBox, default as RBush } from "rbush";
-import { Response } from "sat";
+import { Response, Vector as SATVector } from "sat";
 
 import { Box } from "./bodies/box";
 import { Circle } from "./bodies/circle";
@@ -9,7 +9,7 @@ import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
 import { System } from "./system";
 
-export { RBush, Response, BBox };
+export { RBush, BBox, Response, SATVector };
 
 /**
  * types

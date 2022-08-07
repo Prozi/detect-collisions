@@ -23,7 +23,7 @@ $ yarn add detect-collisions
 
 ## API Documentation
 
-https://prozi.github.io/detect-collisions/
+https://prozi.github.io/detect-collisions/modules.html
 
 ## Usage
 

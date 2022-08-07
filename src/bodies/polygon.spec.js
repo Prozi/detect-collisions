@@ -39,8 +39,8 @@ describe("GIVEN Polygon", () => {
   describe("AND you set options", () => {
     it("THEN the parameters are set", () => {
       const { System } = require("../../dist/");
-      const system = new System();
-      const body = system.createPolygon({}, [{}], {
+      const physics = new System();
+      const body = physics.createPolygon({}, [{}], {
         isStatic: true,
         isTrigger: true,
       });
@@ -76,8 +76,8 @@ describe("GIVEN Polygon", () => {
   describe("AND has clockwise points", () => {
     it("THEN it collides properly", () => {
       const { System } = require("../../dist/");
-      const system = new System();
-      const circle = system.createCircle(
+      const physics = new System();
+      const circle = physics.createCircle(
         {
           x: -1311,
           y: 1642,
@@ -85,7 +85,7 @@ describe("GIVEN Polygon", () => {
         3
       );
 
-      const polygon = system.createPolygon(
+      const polygon = physics.createPolygon(
         {
           x: -1418,
           y: 1675,
@@ -93,15 +93,15 @@ describe("GIVEN Polygon", () => {
         polygonPoints
       );
 
-      expect(system.checkCollision(circle, polygon)).toBe(true);
+      expect(physics.checkCollision(circle, polygon)).toBe(true);
     });
   });
 
   describe("AND has counter-clockwise points", () => {
     it("THEN it collides properly", () => {
       const { System } = require("../../dist/");
-      const system = new System();
-      const circle = system.createCircle(
+      const physics = new System();
+      const circle = physics.createCircle(
         {
           x: -1311,
           y: 1642,
@@ -109,7 +109,7 @@ describe("GIVEN Polygon", () => {
         3
       );
 
-      const polygon = system.createPolygon(
+      const polygon = physics.createPolygon(
         {
           x: -1418,
           y: 1675,
@@ -117,22 +117,22 @@ describe("GIVEN Polygon", () => {
         polygonPoints.reverse()
       );
 
-      expect(system.checkCollision(circle, polygon)).toBe(true);
+      expect(physics.checkCollision(circle, polygon)).toBe(true);
     });
   });
 
   describe("AND is concave (not convex) polygon", () => {
     it("THEN it collides properly", () => {
       const { System } = require("../../dist/");
-      const system = new System();
-      const concave = system.createPolygon({ x: 0, y: 0 }, [
+      const physics = new System();
+      const concave = physics.createPolygon({ x: 0, y: 0 }, [
         { x: 190, y: 147 },
         { x: 256, y: 265 },
         { x: 400, y: 274 },
         { x: 360, y: 395 },
         { x: 80, y: 350 },
       ]);
-      const convex = system.createPolygon({ x: 0, y: 0 }, [
+      const convex = physics.createPolygon({ x: 0, y: 0 }, [
         { x: 273, y: 251 },
         { x: 200, y: 120 },
         { x: 230, y: 40 },
@@ -141,7 +141,7 @@ describe("GIVEN Polygon", () => {
         { x: 440, y: 220 },
       ]);
 
-      const collide = system.checkCollision(concave, convex);
+      const collide = physics.checkCollision(concave, convex);
 
       expect(collide).toBe(false);
     });

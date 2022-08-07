@@ -250,3 +250,14 @@ export function ensureConvexPolygons(body: Polygon): SATPolygon[] {
 
   return body.convexPolygons;
 }
+
+/**
+ * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
+ */
+export function getBounceDirection(body: Vector, collider: Vector): Vector {
+  const v2 = new SATVector(collider.x - body.x, collider.y - body.y);
+  const v1 = new SATVector(body.x - collider.x, body.y - collider.y);
+  const len = v1.dot(v2.normalize()) * 2;
+
+  return new SATVector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
+}

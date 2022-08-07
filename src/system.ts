@@ -1,11 +1,11 @@
 import RBush from "rbush";
 import {
   Polygon as SATPolygon,
-  Vector as SATVector,
   testCircleCircle,
   testCirclePolygon,
   testPolygonCircle,
   testPolygonPolygon,
+  Vector as SATVector,
 } from "sat";
 
 import { BaseSystem } from "./base-system";
@@ -206,13 +206,5 @@ export class System extends BaseSystem implements Data {
     });
 
     return result;
-  }
-
-  getBounceDirection(body: Vector, overlap: Vector): Vector {
-    const v2 = new SATVector(body.x - overlap.x, body.y - overlap.y);
-    const v1 = new SATVector(overlap.x - body.x, overlap.y - body.y);
-    const len = v1.dot(v2.normalize()) * 2;
-
-    return new SATVector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
   }
 }

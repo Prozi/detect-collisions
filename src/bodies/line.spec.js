@@ -12,19 +12,19 @@ describe("GIVEN Line", () => {
   it("THEN two lines collide", () => {
     const { System, Line } = require("../../dist");
 
-    const system = new System();
+    const physics = new System();
     const line1 = new Line({ x: -10, y: -10 }, { x: 10, y: 10 });
     const line2 = new Line({ x: 10, y: -10 }, { x: -10, y: 10 });
 
-    system.insert(line1);
-    system.insert(line2);
+    physics.insert(line1);
+    physics.insert(line2);
 
     let results = 0;
 
     line1.updateAABB();
     line2.updateAABB();
 
-    system.checkAll(() => {
+    physics.checkAll(() => {
       results++;
     });
 
@@ -34,8 +34,8 @@ describe("GIVEN Line", () => {
   describe("AND you set options", () => {
     it("THEN the parameters are set", () => {
       const { System } = require("../../dist/");
-      const system = new System();
-      const body = system.createLine(
+      const physics = new System();
+      const body = physics.createLine(
         { x: 0, y: 0 },
         { x: 10, y: 0 },
         {

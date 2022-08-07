@@ -4,14 +4,14 @@ describe("GIVEN Box", () => {
   it("THEN changing width works correctly", () => {
     const { System } = require("../../dist/");
 
-    const system = new System();
-    const box = system.createBox({}, 90, 100);
+    const physics = new System();
+    const box = physics.createBox({}, 90, 100);
 
-    system.createBox({ x: 100 }, 90, 100);
+    physics.createBox({ x: 100 }, 90, 100);
 
     let results = 0;
 
-    system.checkAll(() => {
+    physics.checkAll(() => {
       results++;
     });
 
@@ -19,9 +19,9 @@ describe("GIVEN Box", () => {
 
     box.width = 110;
 
-    system.updateBody(box);
+    physics.updateBody(box);
 
-    system.checkAll(() => {
+    physics.checkAll(() => {
       results++;
     });
 
@@ -31,14 +31,14 @@ describe("GIVEN Box", () => {
   it("THEN changing height works correctly", () => {
     const { System } = require("../../dist/");
 
-    const system = new System();
-    const box = system.createBox({}, 100, 90);
+    const physics = new System();
+    const box = physics.createBox({}, 100, 90);
 
-    system.createBox({ y: 100 }, 100, 90);
+    physics.createBox({ y: 100 }, 100, 90);
 
     let results = 0;
 
-    system.checkAll(() => {
+    physics.checkAll(() => {
       results++;
     });
 
@@ -46,9 +46,9 @@ describe("GIVEN Box", () => {
 
     box.height = 110;
 
-    system.updateBody(box);
+    physics.updateBody(box);
 
-    system.checkAll(() => {
+    physics.checkAll(() => {
       results++;
     });
 
@@ -58,35 +58,35 @@ describe("GIVEN Box", () => {
   it("THEN getPotentials works with Box with angle", () => {
     const { System, Circle, Box } = require("../../dist/");
 
-    const system = new System();
+    const physics = new System();
     const circle = new Circle({ x: 100, y: 100 }, 100);
 
-    system.insert(circle);
+    physics.insert(circle);
 
     const pos = { x: 400, y: 100 };
     const circle2 = new Circle(pos, 50);
 
-    system.insert(circle2);
+    physics.insert(circle2);
 
     const box = new Box({ x: 400, y: 300 }, 200, 100);
 
     box.setOffset({ x: 0, y: -50 });
-    system.insert(box);
+    physics.insert(box);
 
     box.setAngle(5);
-    system.updateBody(box);
+    physics.updateBody(box);
 
     let case1works = false;
     let case2works = false;
 
-    if (system.checkCollision(circle2, box)) {
+    if (physics.checkCollision(circle2, box)) {
       case1works = true;
     }
 
     expect(case1works).toBeTruthy();
 
-    system.getPotentials(circle2).forEach((collider) => {
-      if (system.checkCollision(circle2, collider)) {
+    physics.getPotentials(circle2).forEach((collider) => {
+      if (physics.checkCollision(circle2, collider)) {
         console.log("getPotentials works on Box with angle");
 
         case2works = true;
