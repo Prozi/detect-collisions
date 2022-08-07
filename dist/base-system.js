@@ -68,7 +68,7 @@ class BaseSystem extends model_1.RBush {
     /**
      * create ellipse at position with options and add to system
      */
-    createEllipse(position, radiusX, radiusY, step, options) {
+    createEllipse(position, radiusX, radiusY = radiusX, step, options) {
         const ellipse = new ellipse_1.Ellipse(position, radiusX, radiusY, step, options);
         this.insert(ellipse);
         return ellipse;

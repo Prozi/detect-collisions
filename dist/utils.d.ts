@@ -52,4 +52,8 @@ export declare function mapArrayToVector([x, y]: number[]): Vector;
  * replace body with array of related convex polygons
  */
 export declare function ensureConvexPolygons(body: Polygon): SATPolygon[];
+/**
+ * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
+ */
+export declare function getBounceDirection(body: Vector, collider: Vector): Vector;
 //# sourceMappingURL=utils.d.ts.map

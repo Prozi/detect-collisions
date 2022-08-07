@@ -47,6 +47,5 @@ export declare class System extends BaseSystem implements Data {
      * raycast to get collider of ray from start to end
      */
     raycast(start: Vector, end: Vector, allowCollider?: (testCollider: Body) => boolean): RaycastResult;
-    getBounceDirection(body: Vector, overlap: Vector): Vector;
 }
 //# sourceMappingURL=system.d.ts.map

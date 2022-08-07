@@ -78,7 +78,7 @@ class BaseSystem extends model_1.RBush {
     /**
      * create ellipse at position with options and add to system
      */
-    createEllipse(position, radiusX, radiusY, step, options) {
+    createEllipse(position, radiusX, radiusY = radiusX, step, options) {
         const ellipse = new ellipse_1.Ellipse(position, radiusX, radiusY, step, options);
         this.insert(ellipse);
         return ellipse;
@@ -641,11 +641,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Types = exports.Response = exports.RBush = void 0;
+exports.Types = exports.SATVector = exports.Response = exports.RBush = void 0;
 const rbush_1 = __importDefault(__webpack_require__(/*! rbush */ "./node_modules/rbush/rbush.min.js"));
 Object.defineProperty(exports, "RBush", ({ enumerable: true, get: function () { return rbush_1.default; } }));
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 Object.defineProperty(exports, "Response", ({ enumerable: true, get: function () { return sat_1.Response; } }));
+Object.defineProperty(exports, "SATVector", ({ enumerable: true, get: function () { return sat_1.Vector; } }));
 /**
  * types
  */
@@ -822,12 +823,6 @@ class System extends base_system_1.BaseSystem {
         });
         return result;
     }
-    getBounceDirection(body, overlap) {
-        const v2 = new sat_1.Vector(body.x - overlap.x, body.y - overlap.y);
-        const v1 = new sat_1.Vector(overlap.x - body.x, overlap.y - body.y);
-        const len = v1.dot(v2.normalize()) * 2;
-        return new sat_1.Vector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
-    }
 }
 exports.System = System;
 //# sourceMappingURL=system.js.map
@@ -843,7 +838,7 @@ exports.System = System;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ensureConvexPolygons = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.updateAABB = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.getBounceDirection = exports.ensureConvexPolygons = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.updateAABB = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js");
 const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
@@ -1042,6 +1037,16 @@ function ensureConvexPolygons(body) {
     return body.convexPolygons;
 }
 exports.ensureConvexPolygons = ensureConvexPolygons;
+/**
+ * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
+ */
+function getBounceDirection(body, collider) {
+    const v2 = new sat_1.Vector(collider.x - body.x, collider.y - body.y);
+    const v1 = new sat_1.Vector(body.x - collider.x, body.y - collider.y);
+    const len = v1.dot(v2.normalize()) * 2;
+    return new sat_1.Vector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
+}
+exports.getBounceDirection = getBounceDirection;
 //# sourceMappingURL=utils.js.map
 
 /***/ }),
@@ -2907,7 +2912,7 @@ module.exports.height = height;
   \****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const { System } = __webpack_require__(/*! ../../dist */ "./dist/index.js");
+const { System, SATVector, getBounceDirection } = __webpack_require__(/*! ../../dist */ "./dist/index.js");
 const { width, height, random, loop } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js");
 const count = 1000;
 const padding = (Math.PI * Math.sqrt(width * height)) / count;
@@ -2990,19 +2995,14 @@ class Stress {
     });
 
     this.physics.checkAll(({ a, b, overlapV }) => {
-      this.bounce(a, {
-        x: overlapV.x + a.directionX - b.directionX,
-        y: overlapV.y + a.directionY - b.directionY,
-      });
-      this.bounce(b, {
-        x: -overlapV.x - a.directionX + b.directionX,
-        y: -overlapV.y - a.directionY + b.directionY,
-      });
+      a.pos.x -= overlapV.x;
+      a.pos.y -= overlapV.y;
 
       // adaptive padding, when collides, halves
       a.padding /= 2;
-      a.pos.x -= overlapV.x;
-      a.pos.y -= overlapV.y;
+
+      this.bounce(a, b);
+      this.bounce(b, a);
 
       if (a.type !== "Circle") {
         a.rotationSpeed = (Math.random() - Math.random()) * 0.1;
@@ -3010,20 +3010,23 @@ class Stress {
     });
   }
 
-  bounce(a, overlapV) {
-    const { x, y } = this.physics.getBounceDirection(a, {
-      x: a.x + a.directionX,
-      y: a.y + a.directionY,
-    });
+  bounce(a, b) {
+    if (b.isStatic) {
+      const { x, y } = new SATVector(
+        width / 2 - a.x,
+        height / 2 - a.y
+      ).normalize();
+
+      a.directionX = x;
+      a.directionY = y;
+
+      return;
+    }
+
+    const { x, y } = getBounceDirection(a, b);
 
     a.directionX = x;
     a.directionY = y;
-
-    if (Math.abs(overlapV.y) > Math.abs(overlapV.x)) {
-      a.directionY = -a.directionY;
-    } else {
-      a.directionX = -a.directionX;
-    }
   }
 
   createShape(large, size) {

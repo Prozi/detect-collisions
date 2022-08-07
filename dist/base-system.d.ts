@@ -39,7 +39,7 @@ export declare class BaseSystem extends RBush<Body> implements Data {
     /**
      * create ellipse at position with options and add to system
      */
-    createEllipse(position: Vector, radiusX: number, radiusY: number, step?: number, options?: BodyOptions): Ellipse;
+    createEllipse(position: Vector, radiusX: number, radiusY?: number, step?: number, options?: BodyOptions): Ellipse;
     /**
      * create polygon at position with options and add to system
      */

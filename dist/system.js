@@ -151,12 +151,6 @@ class System extends base_system_1.BaseSystem {
         });
         return result;
     }
-    getBounceDirection(body, overlap) {
-        const v2 = new sat_1.Vector(body.x - overlap.x, body.y - overlap.y);
-        const v1 = new sat_1.Vector(overlap.x - body.x, overlap.y - body.y);
-        const len = v1.dot(v2.normalize()) * 2;
-        return new sat_1.Vector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
-    }
 }
 exports.System = System;
 //# sourceMappingURL=system.js.map

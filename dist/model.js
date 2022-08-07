@@ -3,11 +3,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Types = exports.Response = exports.RBush = void 0;
+exports.Types = exports.SATVector = exports.Response = exports.RBush = void 0;
 const rbush_1 = __importDefault(require("rbush"));
 Object.defineProperty(exports, "RBush", { enumerable: true, get: function () { return rbush_1.default; } });
 const sat_1 = require("sat");
 Object.defineProperty(exports, "Response", { enumerable: true, get: function () { return sat_1.Response; } });
+Object.defineProperty(exports, "SATVector", { enumerable: true, get: function () { return sat_1.Vector; } });
 /**
  * types
  */

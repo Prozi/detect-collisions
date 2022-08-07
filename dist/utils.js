@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ensureConvexPolygons = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.updateAABB = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.getBounceDirection = exports.ensureConvexPolygons = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.updateAABB = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = require("sat");
 const line_1 = require("./bodies/line");
 const model_1 = require("./model");
@@ -199,4 +199,14 @@ function ensureConvexPolygons(body) {
     return body.convexPolygons;
 }
 exports.ensureConvexPolygons = ensureConvexPolygons;
+/**
+ * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
+ */
+function getBounceDirection(body, collider) {
+    const v2 = new sat_1.Vector(collider.x - body.x, collider.y - body.y);
+    const v1 = new sat_1.Vector(body.x - collider.x, body.y - collider.y);
+    const len = v1.dot(v2.normalize()) * 2;
+    return new sat_1.Vector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
+}
+exports.getBounceDirection = getBounceDirection;
 //# sourceMappingURL=utils.js.map
