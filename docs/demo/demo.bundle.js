@@ -794,10 +794,22 @@ class System extends base_system_1.BaseSystem {
             if (candidate.type === model_1.Types.Circle) {
                 return (0, sat_1.testCircleCircle)(body, candidate, this.response);
             }
-            return (0, utils_1.ensureConvexPolygons)(candidate).some((convexCandidate) => (0, sat_1.testCirclePolygon)(body, convexCandidate, this.response));
+            return (0, utils_1.ensureConvexPolygons)(candidate).some((convexCandidate) => {
+                const collided = (0, sat_1.testCirclePolygon)(body, convexCandidate, this.response);
+                if (collided) {
+                    this.response.b = candidate;
+                }
+                return collided;
+            });
         }
         if (candidate.type === model_1.Types.Circle) {
-            return (0, utils_1.ensureConvexPolygons)(body).some((convexBody) => (0, sat_1.testPolygonCircle)(convexBody, candidate, this.response));
+            return (0, utils_1.ensureConvexPolygons)(body).some((convexBody) => {
+                const collided = (0, sat_1.testPolygonCircle)(convexBody, candidate, this.response);
+                if (collided) {
+                    this.response.a = body;
+                }
+                return collided;
+            });
         }
         if (body.type === model_1.Types.Polygon || candidate.type === model_1.Types.Polygon) {
             const convexBodies = (0, utils_1.ensureConvexPolygons)(body);
@@ -2989,10 +3001,8 @@ class Stress {
 
   update(timeScale) {
     this.bodies.forEach((body) => {
-      if (body.type !== "Circle") {
-        body.rotationAngle += body.rotationSpeed * timeScale;
-        body.setAngle(body.rotationAngle);
-      }
+      body.rotationAngle += body.rotationSpeed * timeScale;
+      body.setAngle(body.rotationAngle);
 
       // adaptive padding, when no collisions goes up to "padding" variable value
       body.padding = (body.padding + padding) / 2;
@@ -3012,9 +3022,7 @@ class Stress {
       this.bounce(a, b);
       this.bounce(b, a);
 
-      if (a.type !== "Circle") {
-        a.rotationSpeed = (Math.random() - Math.random()) * 0.1;
-      }
+      a.rotationSpeed = (Math.random() - Math.random()) * 0.1;
     });
   }
 
@@ -3105,12 +3113,10 @@ class Stress {
         break;
     }
 
-    if (body.type !== "Circle") {
-      // set initial rotation angle direction
-      body.rotationSpeed = (Math.random() - Math.random()) * 0.1;
-      body.rotationAngle = (random(0, 360) * Math.PI) / 180;
-      body.setAngle(body.rotationAngle);
-    }
+    // set initial rotation angle direction
+    body.rotationSpeed = (Math.random() - Math.random()) * 0.1;
+    body.rotationAngle = (random(0, 360) * Math.PI) / 180;
+    body.setAngle(body.rotationAngle);
 
     body.directionX = Math.cos(direction);
     body.directionY = Math.sin(direction);
