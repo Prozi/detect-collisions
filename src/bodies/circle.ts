@@ -28,6 +28,11 @@ export class Circle extends SATCircle implements BBox, Collider {
   padding = 0;
 
   /**
+   * for compatibility reasons circle has angle
+   */
+  angle = 0;
+
+  /**
    * static bodies don't move but they collide
    */
   isStatic?: boolean;
@@ -143,4 +148,10 @@ export class Circle extends SATCircle implements BBox, Collider {
       context.arc(this.pos.x, this.pos.y, radius, 0, Math.PI * 2);
     }
   }
+
+  setAngle(angle: number): void {
+    this.angle = angle;
+  }
+
+  center(): void {}
 }

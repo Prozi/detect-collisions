@@ -137,11 +137,16 @@ export class System extends BaseSystem implements Data {
         return testCircleCircle(body, candidate, this.response);
       }
 
-      return testCirclePolygon(body, candidate, this.response);
+      return ensureConvexPolygons(candidate).some(
+        (convexCandidate: SATPolygon) =>
+          testCirclePolygon(body, convexCandidate, this.response)
+      );
     }
 
     if (candidate.type === Types.Circle) {
-      return testPolygonCircle(body, candidate, this.response);
+      return ensureConvexPolygons(body).some((convexBody: SATPolygon) =>
+        testPolygonCircle(convexBody, candidate, this.response)
+      );
     }
 
     if (body.type === Types.Polygon || candidate.type === Types.Polygon) {

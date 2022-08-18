@@ -80,4 +80,6 @@ export class Ellipse extends Polygon {
 
     this.setPoints(createEllipse(this._radiusX, this._radiusY, this._step));
   }
+
+  center(): void {}
 }

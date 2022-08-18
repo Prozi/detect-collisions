@@ -88,17 +88,11 @@ export function extendBody(body: Body, options?: BodyOptions): void {
   body.isTrigger = !!options?.isTrigger;
   body.padding = options?.padding || 0;
 
-  if (
-    body.type !== Types.Circle &&
-    body.type !== Types.Ellipse &&
-    options?.center
-  ) {
+  if (options?.center) {
     body.center();
   }
 
-  if (body.type !== Types.Circle && options?.angle) {
-    body.setAngle(options.angle);
-  }
+  body.setAngle(options?.angle || 0);
 }
 
 export function updateAABB(body: Body, bounds: BBox): void {

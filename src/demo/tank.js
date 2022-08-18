@@ -1,4 +1,4 @@
-const { System } = require("../../dist");
+const { System, mapVectorToArray } = require("../../dist");
 const { width, height, loop } = require("./canvas");
 
 class Tank {
@@ -7,25 +7,26 @@ class Tank {
     this.bodies = [];
     this.player = this.createPlayer(400, 300);
 
-    const concave = this.physics.createPolygon(
-      { x: width / 2, y: height / 2 },
+    this.createPolygon(
+      300,
+      300,
       [
-        { x: 190, y: 147 },
-        { x: 256, y: 265 },
-        { x: 400, y: 274 },
-        { x: 360, y: 395 },
-        { x: 80, y: 350 },
+        { x: -11.25, y: -6.76 },
+        { x: -12.5, y: -6.76 },
+        { x: -12.5, y: 6.75 },
+        { x: -3.1, y: 6.75 },
+        { x: -3.1, y: 0.41 },
+        { x: -2.35, y: 0.41 },
+        { x: -2.35, y: 6.75 },
+        { x: 0.77, y: 6.75 },
+        { x: 0.77, y: 7.5 },
+        { x: -13.25, y: 7.5 },
+        { x: -13.25, y: -7.51 },
+        { x: -11.25, y: -7.51 },
       ]
+        .map(mapVectorToArray)
+        .map(([x, y]) => [x * 10, y * 10])
     );
-
-    const convex = this.physics.createPolygon({ x: width / 2, y: height / 2 }, [
-      { x: 273, y: 251 },
-      { x: 200, y: 120 },
-      { x: 230, y: 40 },
-      { x: 320, y: 10 },
-      { x: 440, y: 86 },
-      { x: 440, y: 220 },
-    ]);
 
     this.up = false;
     this.down = false;
@@ -153,10 +154,9 @@ class Tank {
   }
 
   createPlayer(x, y, size = 13) {
-    const player = this.physics.createBox(
+    const player = this.physics.createCircle(
       { x: this.scaleX(x), y: this.scaleY(y) },
-      this.scaleX(2.6 * size),
-      this.scaleX(1.3 * size),
+      this.scaleX(2 * size),
       { angle: 0.2, center: true }
     );
 

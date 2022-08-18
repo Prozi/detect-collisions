@@ -145,5 +145,29 @@ describe("GIVEN Polygon", () => {
 
       expect(collide).toBe(false);
     });
+
+    it("THEN it collides properly", () => {
+      const { System } = require("../../dist/");
+      const physics = new System();
+      const concave = physics.createPolygon({ x: 0, y: 0 }, [
+        { x: -11.25, y: -6.76 },
+        { x: -12.5, y: -6.76 },
+        { x: -12.5, y: 6.75 },
+        { x: -3.1, y: 6.75 },
+        { x: -3.1, y: 0.41 },
+        { x: -2.35, y: 0.41 },
+        { x: -2.35, y: 6.75 },
+        { x: 0.77, y: 6.75 },
+        { x: 0.77, y: 7.5 },
+        { x: -13.25, y: 7.5 },
+        { x: -13.25, y: -7.51 },
+        { x: -11.25, y: -7.51 },
+      ]);
+      const convex = physics.createCircle({ x: 0.77, y: 6.75 }, 1);
+
+      const collide = physics.checkCollision(concave, convex);
+
+      expect(collide).toBe(true);
+    });
   });
 });

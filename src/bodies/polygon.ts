@@ -90,10 +90,11 @@ export class Polygon extends SATPolygon implements BBox, Collider {
 
     // all other types other than polygon are always convex
     const convex = this.getConvex();
-    this.isConvex = convex.length < 2;
+    // point and line are convex
+    this.isConvex = !convex.length;
     this.convexPolygons = this.isConvex
       ? []
-      : Array.from({ length: this.points.length }, () => new SATPolygon());
+      : Array.from({ length: convex.length }, () => new SATPolygon());
 
     this.updateAABB();
   }
@@ -125,9 +126,11 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   }
 
   getConvex(): number[][][] {
+    // if not line
     return this.points.length > 2
       ? quickDecomp(this.calcPoints.map(mapVectorToArray))
-      : [];
+      : // for line and point
+        [];
   }
 
   updateConvexPolygons(): void {
