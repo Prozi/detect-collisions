@@ -105,40 +105,53 @@ class System extends base_system_1.BaseSystem {
      */
     checkCollision(body, candidate) {
         this.response.clear();
+        let result = false;
+        const collisionVectors = [];
         if (body.type === model_1.Types.Circle) {
             if (candidate.type === model_1.Types.Circle) {
-                return (0, sat_1.testCircleCircle)(body, candidate, this.response);
+                result = (0, sat_1.testCircleCircle)(body, candidate, this.response);
             }
-            return (0, utils_1.ensureConvexPolygons)(candidate).some((convexCandidate) => {
-                const collided = (0, sat_1.testCirclePolygon)(body, convexCandidate, this.response);
-                if (collided) {
-                    this.response.b = candidate;
-                }
-                return collided;
-            });
+            else {
+                result = (0, utils_1.ensureConvexPolygons)(candidate).reduce((collidedAtLeastOnce, convexCandidate) => {
+                    const collides = (0, sat_1.testCirclePolygon)(body, convexCandidate, this.response);
+                    if (collides) {
+                        collisionVectors.push(this.response.overlapV.clone());
+                    }
+                    return collidedAtLeastOnce || collides;
+                }, false);
+            }
         }
-        if (candidate.type === model_1.Types.Circle) {
-            return (0, utils_1.ensureConvexPolygons)(body).some((convexBody) => {
-                const collided = (0, sat_1.testPolygonCircle)(convexBody, candidate, this.response);
-                if (collided) {
-                    this.response.a = body;
+        else if (candidate.type === model_1.Types.Circle) {
+            result = (0, utils_1.ensureConvexPolygons)(body).reduce((collidedAtLeastOnce, convexBody) => {
+                const collides = (0, sat_1.testPolygonCircle)(convexBody, candidate, this.response);
+                if (collides) {
+                    collisionVectors.push(this.response.overlapV.clone());
                 }
-                return collided;
-            });
+                return collidedAtLeastOnce || collides;
+            }, false);
         }
-        if (body.type === model_1.Types.Polygon || candidate.type === model_1.Types.Polygon) {
+        else if (!body.isConvex || !candidate.isConvex) {
             const convexBodies = (0, utils_1.ensureConvexPolygons)(body);
             const convexCandidates = (0, utils_1.ensureConvexPolygons)(candidate);
-            return convexBodies.some((convexBody) => convexCandidates.some((convexCandidate) => {
-                const collide = (0, sat_1.testPolygonPolygon)(convexBody, convexCandidate, this.response);
-                if (collide) {
-                    this.response.a = body;
-                    this.response.b = candidate;
+            result = convexBodies.reduce((result, convexBody) => convexCandidates.reduce((collidedAtLeastOnce, convexCandidate) => {
+                const collides = (0, sat_1.testPolygonPolygon)(convexBody, convexCandidate, this.response);
+                if (collides) {
+                    collisionVectors.push(this.response.overlapV.clone());
                 }
-                return collide;
-            }));
+                return collidedAtLeastOnce || collides;
+            }, false) || result, false);
         }
-        return (0, sat_1.testPolygonPolygon)(body, candidate, this.response);
+        else {
+            result = (0, sat_1.testPolygonPolygon)(body, candidate, this.response);
+        }
+        if (result && collisionVectors.length) {
+            this.response.a = body;
+            this.response.b = candidate;
+            this.response.overlapV = collisionVectors.reduce((sum, collisionVector) => sum.add(collisionVector), new model_1.SATVector());
+            this.response.overlap = this.response.overlapV.len();
+            this.response.overlapN = this.response.overlapV.clone().normalize();
+        }
+        return result;
     }
     /**
      * raycast to get collider of ray from start to end
