@@ -19,6 +19,10 @@ class Circle extends sat_1.Circle {
          * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
          */
         this.padding = 0;
+        /**
+         * for compatibility reasons circle has angle
+         */
+        this.angle = 0;
         this.type = model_1.Types.Circle;
         (0, utils_1.extendBody)(this, options);
         this.updateAABB();
@@ -96,6 +100,10 @@ class Circle extends sat_1.Circle {
             context.arc(this.pos.x, this.pos.y, radius, 0, Math.PI * 2);
         }
     }
+    setAngle(angle) {
+        this.angle = angle;
+    }
+    center() { }
 }
 exports.Circle = Circle;
 //# sourceMappingURL=circle.js.map

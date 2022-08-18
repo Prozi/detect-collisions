@@ -18,6 +18,10 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      */
     padding: number;
     /**
+     * for compatibility reasons circle has angle
+     */
+    angle: number;
+    /**
      * static bodies don't move but they collide
      */
     isStatic?: boolean;
@@ -65,5 +69,7 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      * @param {CanvasRenderingContext2D} context The canvas context to draw on
      */
     draw(context: CanvasRenderingContext2D): void;
+    setAngle(angle: number): void;
+    center(): void;
 }
 //# sourceMappingURL=circle.d.ts.map

@@ -109,10 +109,10 @@ class System extends base_system_1.BaseSystem {
             if (candidate.type === model_1.Types.Circle) {
                 return (0, sat_1.testCircleCircle)(body, candidate, this.response);
             }
-            return (0, sat_1.testCirclePolygon)(body, candidate, this.response);
+            return (0, utils_1.ensureConvexPolygons)(candidate).some((convexCandidate) => (0, sat_1.testCirclePolygon)(body, convexCandidate, this.response));
         }
         if (candidate.type === model_1.Types.Circle) {
-            return (0, sat_1.testPolygonCircle)(body, candidate, this.response);
+            return (0, utils_1.ensureConvexPolygons)(body).some((convexBody) => (0, sat_1.testPolygonCircle)(convexBody, candidate, this.response));
         }
         if (body.type === model_1.Types.Polygon || candidate.type === model_1.Types.Polygon) {
             const convexBodies = (0, utils_1.ensureConvexPolygons)(body);

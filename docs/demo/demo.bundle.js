@@ -186,6 +186,10 @@ class Circle extends sat_1.Circle {
          * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
          */
         this.padding = 0;
+        /**
+         * for compatibility reasons circle has angle
+         */
+        this.angle = 0;
         this.type = model_1.Types.Circle;
         (0, utils_1.extendBody)(this, options);
         this.updateAABB();
@@ -263,6 +267,10 @@ class Circle extends sat_1.Circle {
             context.arc(this.pos.x, this.pos.y, radius, 0, Math.PI * 2);
         }
     }
+    setAngle(angle) {
+        this.angle = angle;
+    }
+    center() { }
 }
 exports.Circle = Circle;
 //# sourceMappingURL=circle.js.map
@@ -339,6 +347,7 @@ class Ellipse extends polygon_1.Polygon {
         this._radiusY = radiusY;
         this.setPoints((0, utils_1.createEllipse)(this._radiusX, this._radiusY, this._step));
     }
+    center() { }
 }
 exports.Ellipse = Ellipse;
 //# sourceMappingURL=ellipse.js.map
@@ -421,9 +430,10 @@ class Point extends box_1.Box {
      * @param {PotentialVector} position {x, y}
      */
     constructor(position, options) {
-        super((0, utils_1.ensureVectorPoint)(position), 0.1, 0.1, options);
+        super((0, utils_1.ensureVectorPoint)(position), 0.001, 0.001, options);
         this.type = model_1.Types.Point;
     }
+    center() { }
 }
 exports.Point = Point;
 //# sourceMappingURL=point.js.map
@@ -470,10 +480,11 @@ class Polygon extends sat_1.Polygon {
         (0, utils_1.extendBody)(this, options);
         // all other types other than polygon are always convex
         const convex = this.getConvex();
-        this.isConvex = convex.length < 2;
+        // point and line are convex
+        this.isConvex = !convex.length;
         this.convexPolygons = this.isConvex
             ? []
-            : Array.from({ length: this.points.length }, () => new sat_1.Polygon());
+            : Array.from({ length: convex.length }, () => new sat_1.Polygon());
         this.updateAABB();
     }
     get x() {
@@ -499,9 +510,11 @@ class Polygon extends sat_1.Polygon {
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
     }
     getConvex() {
+        // if not line
         return this.points.length > 2
             ? (0, poly_decomp_1.quickDecomp)(this.calcPoints.map(utils_1.mapVectorToArray))
-            : [];
+            : // for line and point
+                [];
     }
     updateConvexPolygons() {
         this.getConvex().forEach((points, index) => {
@@ -781,10 +794,10 @@ class System extends base_system_1.BaseSystem {
             if (candidate.type === model_1.Types.Circle) {
                 return (0, sat_1.testCircleCircle)(body, candidate, this.response);
             }
-            return (0, sat_1.testCirclePolygon)(body, candidate, this.response);
+            return (0, utils_1.ensureConvexPolygons)(candidate).some((convexCandidate) => (0, sat_1.testCirclePolygon)(body, convexCandidate, this.response));
         }
         if (candidate.type === model_1.Types.Circle) {
-            return (0, sat_1.testPolygonCircle)(body, candidate, this.response);
+            return (0, utils_1.ensureConvexPolygons)(body).some((convexBody) => (0, sat_1.testPolygonCircle)(convexBody, candidate, this.response));
         }
         if (body.type === model_1.Types.Polygon || candidate.type === model_1.Types.Polygon) {
             const convexBodies = (0, utils_1.ensureConvexPolygons)(body);
@@ -841,7 +854,6 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getBounceDirection = exports.ensureConvexPolygons = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.updateAABB = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js");
-const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
     const steps = Math.PI * Math.hypot(radiusX, radiusY) * 2;
     const length = Math.max(8, Math.ceil(steps / Math.max(1, step)));
@@ -912,14 +924,10 @@ function extendBody(body, options) {
     body.isStatic = !!(options === null || options === void 0 ? void 0 : options.isStatic);
     body.isTrigger = !!(options === null || options === void 0 ? void 0 : options.isTrigger);
     body.padding = (options === null || options === void 0 ? void 0 : options.padding) || 0;
-    if (body.type !== model_1.Types.Circle &&
-        body.type !== model_1.Types.Ellipse &&
-        (options === null || options === void 0 ? void 0 : options.center)) {
+    if (options === null || options === void 0 ? void 0 : options.center) {
         body.center();
     }
-    if (body.type !== model_1.Types.Circle && (options === null || options === void 0 ? void 0 : options.angle)) {
-        body.setAngle(options.angle);
-    }
+    body.setAngle((options === null || options === void 0 ? void 0 : options.angle) || 0);
 }
 exports.extendBody = extendBody;
 function updateAABB(body, bounds) {
@@ -3122,7 +3130,7 @@ module.exports = Stress;
   \**************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const { System } = __webpack_require__(/*! ../../dist */ "./dist/index.js");
+const { System, mapVectorToArray } = __webpack_require__(/*! ../../dist */ "./dist/index.js");
 const { width, height, loop } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js");
 
 class Tank {
@@ -3131,25 +3139,26 @@ class Tank {
     this.bodies = [];
     this.player = this.createPlayer(400, 300);
 
-    const concave = this.physics.createPolygon(
-      { x: width / 2, y: height / 2 },
+    this.createPolygon(
+      300,
+      300,
       [
-        { x: 190, y: 147 },
-        { x: 256, y: 265 },
-        { x: 400, y: 274 },
-        { x: 360, y: 395 },
-        { x: 80, y: 350 },
+        { x: -11.25, y: -6.76 },
+        { x: -12.5, y: -6.76 },
+        { x: -12.5, y: 6.75 },
+        { x: -3.1, y: 6.75 },
+        { x: -3.1, y: 0.41 },
+        { x: -2.35, y: 0.41 },
+        { x: -2.35, y: 6.75 },
+        { x: 0.77, y: 6.75 },
+        { x: 0.77, y: 7.5 },
+        { x: -13.25, y: 7.5 },
+        { x: -13.25, y: -7.51 },
+        { x: -11.25, y: -7.51 },
       ]
+        .map(mapVectorToArray)
+        .map(([x, y]) => [x * 10, y * 10])
     );
-
-    const convex = this.physics.createPolygon({ x: width / 2, y: height / 2 }, [
-      { x: 273, y: 251 },
-      { x: 200, y: 120 },
-      { x: 230, y: 40 },
-      { x: 320, y: 10 },
-      { x: 440, y: 86 },
-      { x: 440, y: 220 },
-    ]);
 
     this.up = false;
     this.down = false;
@@ -3277,10 +3286,9 @@ class Tank {
   }
 
   createPlayer(x, y, size = 13) {
-    const player = this.physics.createBox(
+    const player = this.physics.createCircle(
       { x: this.scaleX(x), y: this.scaleY(y) },
-      this.scaleX(2.6 * size),
-      this.scaleX(1.3 * size),
+      this.scaleX(2 * size),
       { angle: 0.2, center: true }
     );
 

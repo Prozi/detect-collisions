@@ -61,6 +61,7 @@ class Ellipse extends polygon_1.Polygon {
         this._radiusY = radiusY;
         this.setPoints((0, utils_1.createEllipse)(this._radiusX, this._radiusY, this._step));
     }
+    center() { }
 }
 exports.Ellipse = Ellipse;
 //# sourceMappingURL=ellipse.js.map
