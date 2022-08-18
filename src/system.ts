@@ -139,7 +139,11 @@ export class System extends BaseSystem implements Data {
 
       return ensureConvexPolygons(candidate).some(
         (convexCandidate: SATPolygon) => {
-          const collided = testCirclePolygon(body, convexCandidate, this.response)
+          const collided = testCirclePolygon(
+            body,
+            convexCandidate,
+            this.response
+          );
 
           if (collided) {
             this.response.b = candidate;
@@ -152,7 +156,11 @@ export class System extends BaseSystem implements Data {
 
     if (candidate.type === Types.Circle) {
       return ensureConvexPolygons(body).some((convexBody: SATPolygon) => {
-        const collided = testPolygonCircle(convexBody, candidate, this.response)
+        const collided = testPolygonCircle(
+          convexBody,
+          candidate,
+          this.response
+        );
 
         if (collided) {
           this.response.a = body;
