@@ -40,9 +40,11 @@ const physics: System = new System();
 ### 2. Creating, Inserting, Moving, Removing Bodies
 
 - `Circle & Polygon` extend their respective `SAT` counterparts so they have [all of its functionalities](https://github.com/jriecken/sat-js).
-- all bodies have `x & y` properties, setting those will update AABB (bounding box)
-- all bodies have `angle` and `setAngle()` method to rotate
-- all bodies have `center()` method for centering anchor (does nothing for `Circle` and `Ellipse`) 
+- all bodies have `x & y` properties, setting those **will** update *bounding box*
+- all bodies have `setPosition(x, y)`, using it **will** update *bounding box*
+- all bodies have `pos` with `x & y` properties, setting those **will not** update *bounding box*
+- all bodies have `angle` and `setAngle()` method to rotate (useless for `Circle` but stores value)
+- all bodies have `center()` method for centering anchor (useless for `Circle, Ellipse, Point`)
 - `Box` has `width & height` properties
 
 ---
