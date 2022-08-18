@@ -9,7 +9,15 @@ import {
 
 import { BaseSystem } from "./base-system";
 import { Line } from "./bodies/line";
-import { Body, Data, RaycastResult, Response, Types, Vector } from "./model";
+import {
+  Body,
+  Data,
+  RaycastResult,
+  Response,
+  SATVector,
+  Types,
+  Vector,
+} from "./model";
 import {
   distance,
   ensureConvexPolygons,
@@ -132,67 +140,89 @@ export class System extends BaseSystem implements Data {
   checkCollision(body: Body, candidate: Body): boolean {
     this.response.clear();
 
+    let result = false;
+
+    const collisionVectors: SATVector[] = [];
+
     if (body.type === Types.Circle) {
       if (candidate.type === Types.Circle) {
-        return testCircleCircle(body, candidate, this.response);
-      }
+        result = testCircleCircle(body, candidate, this.response);
+      } else {
+        result = ensureConvexPolygons(candidate).reduce(
+          (collidedAtLeastOnce: boolean, convexCandidate: SATPolygon) => {
+            const collides = testCirclePolygon(
+              body,
+              convexCandidate,
+              this.response
+            );
 
-      return ensureConvexPolygons(candidate).some(
-        (convexCandidate: SATPolygon) => {
-          const collided = testCirclePolygon(
-            body,
-            convexCandidate,
+            if (collides) {
+              collisionVectors.push(this.response.overlapV.clone());
+            }
+
+            return collidedAtLeastOnce || collides;
+          },
+          false
+        );
+      }
+    } else if (candidate.type === Types.Circle) {
+      result = ensureConvexPolygons(body).reduce(
+        (collidedAtLeastOnce: boolean, convexBody: SATPolygon) => {
+          const collides = testPolygonCircle(
+            convexBody,
+            candidate,
             this.response
           );
 
-          if (collided) {
-            this.response.b = candidate;
+          if (collides) {
+            collisionVectors.push(this.response.overlapV.clone());
           }
 
-          return collided;
-        }
+          return collidedAtLeastOnce || collides;
+        },
+        false
       );
-    }
-
-    if (candidate.type === Types.Circle) {
-      return ensureConvexPolygons(body).some((convexBody: SATPolygon) => {
-        const collided = testPolygonCircle(
-          convexBody,
-          candidate,
-          this.response
-        );
-
-        if (collided) {
-          this.response.a = body;
-        }
-
-        return collided;
-      });
-    }
-
-    if (body.type === Types.Polygon || candidate.type === Types.Polygon) {
+    } else if (!body.isConvex || !candidate.isConvex) {
       const convexBodies = ensureConvexPolygons(body);
       const convexCandidates = ensureConvexPolygons(candidate);
 
-      return convexBodies.some((convexBody: SATPolygon) =>
-        convexCandidates.some((convexCandidate: SATPolygon) => {
-          const collide = testPolygonPolygon(
-            convexBody,
-            convexCandidate,
-            this.response
-          );
+      result = convexBodies.reduce(
+        (result: boolean, convexBody: SATPolygon) =>
+          convexCandidates.reduce(
+            (collidedAtLeastOnce: boolean, convexCandidate: SATPolygon) => {
+              const collides = testPolygonPolygon(
+                convexBody,
+                convexCandidate,
+                this.response
+              );
 
-          if (collide) {
-            this.response.a = body;
-            this.response.b = candidate;
-          }
+              if (collides) {
+                collisionVectors.push(this.response.overlapV.clone());
+              }
 
-          return collide;
-        })
+              return collidedAtLeastOnce || collides;
+            },
+            false
+          ) || result,
+        false
       );
+    } else {
+      result = testPolygonPolygon(body, candidate, this.response);
     }
 
-    return testPolygonPolygon(body, candidate, this.response);
+    if (result && collisionVectors.length) {
+      this.response.a = body;
+      this.response.b = candidate;
+      this.response.overlapV = collisionVectors.reduce(
+        (sum: SATVector, collisionVector: SATVector) =>
+          sum.add(collisionVector),
+        new SATVector()
+      );
+      this.response.overlap = this.response.overlapV.len();
+      this.response.overlapN = this.response.overlapV.clone().normalize();
+    }
+
+    return result;
   }
 
   /**

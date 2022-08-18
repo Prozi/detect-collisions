@@ -156,7 +156,7 @@ class Tank {
   createPlayer(x, y, size = 13) {
     const player = this.physics.createCircle(
       { x: this.scaleX(x), y: this.scaleY(y) },
-      this.scaleX(2 * size),
+      this.scaleX(size),
       { angle: 0.2, center: true }
     );
 
