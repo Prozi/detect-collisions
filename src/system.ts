@@ -11,6 +11,7 @@ import { BaseSystem } from "./base-system";
 import { Line } from "./bodies/line";
 import {
   Body,
+  CollisionState,
   Data,
   RaycastResult,
   Response,
@@ -141,20 +142,9 @@ export class System extends BaseSystem implements Data {
     this.response.clear();
 
     let result = false;
-    let collisionVector: SATVector | undefined;
-    let collisions = 0;
 
-    const handleCollision = (collides: boolean) => {
-      if (!collides) {
-        return;
-      }
-
-      if (typeof collisionVector === "undefined") {
-        collisionVector = new SATVector();
-      }
-
-      collisionVector.add(this.response.overlapV);
-      collisions++;
+    const state: CollisionState = {
+      collides: false,
     };
 
     if (body.type === Types.Circle) {
@@ -163,15 +153,13 @@ export class System extends BaseSystem implements Data {
       } else {
         result = ensureConvexPolygons(candidate).reduce(
           (collidedAtLeastOnce: boolean, convexCandidate: SATPolygon) => {
-            const collides = testCirclePolygon(
+            state.collides = testCirclePolygon(
               body,
               convexCandidate,
               this.response
             );
 
-            handleCollision(collides);
-
-            return collidedAtLeastOnce || collides;
+            return collidedAtLeastOnce || this.collided(state);
           },
           false
         );
@@ -179,15 +167,13 @@ export class System extends BaseSystem implements Data {
     } else if (candidate.type === Types.Circle) {
       result = ensureConvexPolygons(body).reduce(
         (collidedAtLeastOnce: boolean, convexBody: SATPolygon) => {
-          const collides = testPolygonCircle(
+          state.collides = testPolygonCircle(
             convexBody,
             candidate,
             this.response
           );
 
-          handleCollision(collides);
-
-          return collidedAtLeastOnce || collides;
+          return collidedAtLeastOnce || this.collided(state);
         },
         false
       );
@@ -199,15 +185,13 @@ export class System extends BaseSystem implements Data {
         (result: boolean, convexBody: SATPolygon) =>
           convexCandidates.reduce(
             (collidedAtLeastOnce: boolean, convexCandidate: SATPolygon) => {
-              const collides = testPolygonPolygon(
+              state.collides = testPolygonPolygon(
                 convexBody,
                 convexCandidate,
                 this.response
               );
 
-              handleCollision(collides);
-
-              return collidedAtLeastOnce || collides;
+              return collidedAtLeastOnce || this.collided(state);
             },
             false
           ) || result,
@@ -217,10 +201,10 @@ export class System extends BaseSystem implements Data {
       result = testPolygonPolygon(body, candidate, this.response);
     }
 
-    if (collisionVector) {
+    if (state.collisionVector) {
       this.response.a = body;
       this.response.b = candidate;
-      this.response.overlapV = collisionVector;
+      this.response.overlapV = state.collisionVector;
       this.response.overlapN = this.response.overlapV.clone().normalize();
       this.response.overlap = this.response.overlapV.len();
     }
@@ -264,5 +248,19 @@ export class System extends BaseSystem implements Data {
     });
 
     return result;
+  }
+
+  private collided(state: CollisionState): boolean {
+    if (state.collides) {
+      if (typeof state.collisionVector === "undefined") {
+        state.collisionVector = new SATVector();
+      }
+
+      state.collisionVector.add(this.response.overlapV);
+    }
+
+    this.response.clear();
+
+    return state.collides;
   }
 }
