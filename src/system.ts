@@ -141,8 +141,21 @@ export class System extends BaseSystem implements Data {
     this.response.clear();
 
     let result = false;
+    let collisionVector: SATVector | undefined;
+    let collisions = 0;
 
-    const collisionVectors: SATVector[] = [];
+    const handleCollision = (collides: boolean) => {
+      if (!collides) {
+        return;
+      }
+
+      if (typeof collisionVector === "undefined") {
+        collisionVector = new SATVector();
+      }
+
+      collisionVector.add(this.response.overlapV);
+      collisions++;
+    };
 
     if (body.type === Types.Circle) {
       if (candidate.type === Types.Circle) {
@@ -156,9 +169,7 @@ export class System extends BaseSystem implements Data {
               this.response
             );
 
-            if (collides) {
-              collisionVectors.push(this.response.overlapV.clone());
-            }
+            handleCollision(collides);
 
             return collidedAtLeastOnce || collides;
           },
@@ -174,9 +185,7 @@ export class System extends BaseSystem implements Data {
             this.response
           );
 
-          if (collides) {
-            collisionVectors.push(this.response.overlapV.clone());
-          }
+          handleCollision(collides);
 
           return collidedAtLeastOnce || collides;
         },
@@ -196,9 +205,7 @@ export class System extends BaseSystem implements Data {
                 this.response
               );
 
-              if (collides) {
-                collisionVectors.push(this.response.overlapV.clone());
-              }
+              handleCollision(collides);
 
               return collidedAtLeastOnce || collides;
             },
@@ -210,16 +217,12 @@ export class System extends BaseSystem implements Data {
       result = testPolygonPolygon(body, candidate, this.response);
     }
 
-    if (result && collisionVectors.length) {
+    if (collisionVector) {
       this.response.a = body;
       this.response.b = candidate;
-      this.response.overlapV = collisionVectors.reduce(
-        (sum: SATVector, collisionVector: SATVector) =>
-          sum.add(collisionVector),
-        new SATVector()
-      );
-      this.response.overlap = this.response.overlapV.len();
+      this.response.overlapV = collisionVector;
       this.response.overlapN = this.response.overlapV.clone().normalize();
+      this.response.overlap = this.response.overlapV.len();
     }
 
     return result;

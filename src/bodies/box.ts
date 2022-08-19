@@ -8,6 +8,8 @@ import { Polygon } from "./polygon";
 export class Box extends Polygon {
   readonly type: Types.Box | Types.Point = Types.Box;
 
+  isConvex = true;
+
   private _width: number;
   private _height: number;
 

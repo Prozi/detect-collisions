@@ -27,6 +27,11 @@ export class Circle extends SATCircle implements BBox, Collider {
    */
   padding = 0;
 
+  /*
+   * circles are convex
+   */
+  isConvex = true;
+
   /**
    * for compatibility reasons circle has angle
    */
