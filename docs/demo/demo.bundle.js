@@ -831,6 +831,8 @@ class System extends base_system_1.BaseSystem {
         if (state.collisionVector) {
             this.response.a = body;
             this.response.b = candidate;
+            this.response.aInB = (0, utils_1.checkAInB)(body, candidate);
+            this.response.bInA = (0, utils_1.checkAInB)(candidate, body);
             this.response.overlapV = state.collisionVector;
             this.response.overlapN = this.response.overlapV.clone().normalize();
             this.response.overlap = this.response.overlapV.len();
@@ -885,7 +887,7 @@ exports.System = System;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getBounceDirection = exports.ensureConvexPolygons = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.updateAABB = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.getBounceDirection = exports.ensureConvexPolygons = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.checkAInB = exports.updateAABB = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js");
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
@@ -971,6 +973,12 @@ function updateAABB(body, bounds) {
     body.maxY = bounds.maxY + body.padding;
 }
 exports.updateAABB = updateAABB;
+function checkAInB(a, b) {
+    const insideX = a.minX >= b.minX && a.maxX <= b.maxX;
+    const insideY = a.minY >= b.minY && a.maxY <= b.maxY;
+    return insideX && insideY;
+}
+exports.checkAInB = checkAInB;
 /**
  * draws dashed line on canvas context
  */

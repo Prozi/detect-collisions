@@ -102,6 +102,13 @@ export function updateAABB(body: Body, bounds: BBox): void {
   body.maxY = bounds.maxY + body.padding;
 }
 
+export function checkAInB(a: BBox, b: BBox): boolean {
+  const insideX = a.minX >= b.minX && a.maxX <= b.maxX;
+  const insideY = a.minY >= b.minY && a.maxY <= b.maxY;
+
+  return insideX && insideY;
+}
+
 /**
  * draws dashed line on canvas context
  */
