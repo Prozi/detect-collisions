@@ -106,7 +106,18 @@ class System extends base_system_1.BaseSystem {
     checkCollision(body, candidate) {
         this.response.clear();
         let result = false;
-        const collisionVectors = [];
+        let collisionVector;
+        let collisions = 0;
+        const handleCollision = (collides) => {
+            if (!collides) {
+                return;
+            }
+            if (typeof collisionVector === "undefined") {
+                collisionVector = new model_1.SATVector();
+            }
+            collisionVector.add(this.response.overlapV);
+            collisions++;
+        };
         if (body.type === model_1.Types.Circle) {
             if (candidate.type === model_1.Types.Circle) {
                 result = (0, sat_1.testCircleCircle)(body, candidate, this.response);
@@ -114,9 +125,7 @@ class System extends base_system_1.BaseSystem {
             else {
                 result = (0, utils_1.ensureConvexPolygons)(candidate).reduce((collidedAtLeastOnce, convexCandidate) => {
                     const collides = (0, sat_1.testCirclePolygon)(body, convexCandidate, this.response);
-                    if (collides) {
-                        collisionVectors.push(this.response.overlapV.clone());
-                    }
+                    handleCollision(collides);
                     return collidedAtLeastOnce || collides;
                 }, false);
             }
@@ -124,9 +133,7 @@ class System extends base_system_1.BaseSystem {
         else if (candidate.type === model_1.Types.Circle) {
             result = (0, utils_1.ensureConvexPolygons)(body).reduce((collidedAtLeastOnce, convexBody) => {
                 const collides = (0, sat_1.testPolygonCircle)(convexBody, candidate, this.response);
-                if (collides) {
-                    collisionVectors.push(this.response.overlapV.clone());
-                }
+                handleCollision(collides);
                 return collidedAtLeastOnce || collides;
             }, false);
         }
@@ -135,21 +142,19 @@ class System extends base_system_1.BaseSystem {
             const convexCandidates = (0, utils_1.ensureConvexPolygons)(candidate);
             result = convexBodies.reduce((result, convexBody) => convexCandidates.reduce((collidedAtLeastOnce, convexCandidate) => {
                 const collides = (0, sat_1.testPolygonPolygon)(convexBody, convexCandidate, this.response);
-                if (collides) {
-                    collisionVectors.push(this.response.overlapV.clone());
-                }
+                handleCollision(collides);
                 return collidedAtLeastOnce || collides;
             }, false) || result, false);
         }
         else {
             result = (0, sat_1.testPolygonPolygon)(body, candidate, this.response);
         }
-        if (result && collisionVectors.length) {
+        if (collisionVector) {
             this.response.a = body;
             this.response.b = candidate;
-            this.response.overlapV = collisionVectors.reduce((sum, collisionVector) => sum.add(collisionVector), new model_1.SATVector());
-            this.response.overlap = this.response.overlapV.len();
+            this.response.overlapV = collisionVector;
             this.response.overlapN = this.response.overlapV.clone().normalize();
+            this.response.overlap = this.response.overlapV.len();
         }
         return result;
     }

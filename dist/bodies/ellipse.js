@@ -18,6 +18,7 @@ class Ellipse extends polygon_1.Polygon {
     constructor(position, radiusX, radiusY = radiusX, step = (radiusX + radiusY) / Math.PI, options) {
         super(position, (0, utils_1.createEllipse)(radiusX, radiusY, step), options);
         this.type = model_1.Types.Ellipse;
+        this.isConvex = true;
         this._radiusX = radiusX;
         this._radiusY = radiusY;
         this._step = step;

@@ -5,6 +5,7 @@ import { Polygon } from "./polygon";
  */
 export declare class Ellipse extends Polygon {
     readonly type: Types.Ellipse;
+    isConvex: boolean;
     private _radiusX;
     private _radiusY;
     private _step;

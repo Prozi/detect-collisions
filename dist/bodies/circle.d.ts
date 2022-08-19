@@ -17,6 +17,7 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
      */
     padding: number;
+    isConvex: boolean;
     /**
      * for compatibility reasons circle has angle
      */

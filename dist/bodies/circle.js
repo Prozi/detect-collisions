@@ -19,6 +19,10 @@ class Circle extends sat_1.Circle {
          * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
          */
         this.padding = 0;
+        /*
+         * circles are convex
+         */
+        this.isConvex = true;
         /**
          * for compatibility reasons circle has angle
          */
