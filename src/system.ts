@@ -159,7 +159,7 @@ export class System extends BaseSystem implements Data {
               this.response
             );
 
-            return collidedAtLeastOnce || this.collided(state);
+            return this.collided(state) || collidedAtLeastOnce;
           },
           false
         );
@@ -173,7 +173,7 @@ export class System extends BaseSystem implements Data {
             this.response
           );
 
-          return collidedAtLeastOnce || this.collided(state);
+          return this.collided(state) || collidedAtLeastOnce;
         },
         false
       );
@@ -191,7 +191,7 @@ export class System extends BaseSystem implements Data {
                 this.response
               );
 
-              return collidedAtLeastOnce || this.collided(state);
+              return this.collided(state) || collidedAtLeastOnce;
             },
             false
           ) || result,

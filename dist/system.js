@@ -116,14 +116,14 @@ class System extends base_system_1.BaseSystem {
             else {
                 result = (0, utils_1.ensureConvexPolygons)(candidate).reduce((collidedAtLeastOnce, convexCandidate) => {
                     state.collides = (0, sat_1.testCirclePolygon)(body, convexCandidate, this.response);
-                    return collidedAtLeastOnce || this.collided(state);
+                    return this.collided(state) || collidedAtLeastOnce;
                 }, false);
             }
         }
         else if (candidate.type === model_1.Types.Circle) {
             result = (0, utils_1.ensureConvexPolygons)(body).reduce((collidedAtLeastOnce, convexBody) => {
                 state.collides = (0, sat_1.testPolygonCircle)(convexBody, candidate, this.response);
-                return collidedAtLeastOnce || this.collided(state);
+                return this.collided(state) || collidedAtLeastOnce;
             }, false);
         }
         else if (!body.isConvex || !candidate.isConvex) {
@@ -131,7 +131,7 @@ class System extends base_system_1.BaseSystem {
             const convexCandidates = (0, utils_1.ensureConvexPolygons)(candidate);
             result = convexBodies.reduce((result, convexBody) => convexCandidates.reduce((collidedAtLeastOnce, convexCandidate) => {
                 state.collides = (0, sat_1.testPolygonPolygon)(convexBody, convexCandidate, this.response);
-                return collidedAtLeastOnce || this.collided(state);
+                return this.collided(state) || collidedAtLeastOnce;
             }, false) || result, false);
         }
         else {
