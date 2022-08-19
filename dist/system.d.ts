@@ -47,5 +47,6 @@ export declare class System extends BaseSystem implements Data {
      * raycast to get collider of ray from start to end
      */
     raycast(start: Vector, end: Vector, allowCollider?: (testCollider: Body) => boolean): RaycastResult;
+    private collided;
 }
 //# sourceMappingURL=system.d.ts.map

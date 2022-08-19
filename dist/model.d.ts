@@ -106,4 +106,8 @@ export interface Collider {
      */
     getAABBAsBBox(): BBox;
 }
+export interface CollisionState {
+    collides: boolean;
+    collisionVector?: SATVector;
+}
 //# sourceMappingURL=model.d.ts.map
