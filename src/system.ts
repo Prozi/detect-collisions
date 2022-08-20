@@ -202,22 +202,28 @@ export class System extends BaseSystem implements Data {
       result = testPolygonPolygon(body, candidate, this.response);
     }
 
+    // collisionVector is set if body or candidate was concave during this.collided()
     if (state.collisionVector) {
       this.response.overlapV = state.collisionVector;
       this.response.overlapN = this.response.overlapV.clone().normalize();
       this.response.overlap = this.response.overlapV.len();
     }
 
+    // set proper response object bodies
     if (!body.isConvex || !candidate.isConvex) {
       this.response.a = body;
       this.response.b = candidate;
     }
 
+    // correct aInB and bInA if body was concave
     if (!body.isConvex) {
       this.response.aInB = checkAInB(body, candidate);
+      this.response.bInA = state.bInA!; // this was set during this.collided()
     }
 
+    // correct aInB and bInA if candidate was concave
     if (!candidate.isConvex) {
+      this.response.aInB = state.aInB!; // this was set during this.collided()
       this.response.bInA = checkAInB(candidate, body);
     }
 
@@ -264,13 +270,20 @@ export class System extends BaseSystem implements Data {
 
   private collided(state: CollisionState): boolean {
     if (state.collides) {
+      // lazy create vector
       if (typeof state.collisionVector === "undefined") {
         state.collisionVector = new SATVector();
       }
 
+      // sum all collision vectors
       state.collisionVector.add(this.response.overlapV);
     }
 
+    // aInB and bInA is kept in state for later restore
+    state.aInB = state.aInB || this.response.aInB;
+    state.bInA = state.bInA || this.response.bInA;
+
+    // cleared response is at end recreated properly for concaves
     this.response.clear();
 
     return state.collides;

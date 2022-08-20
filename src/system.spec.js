@@ -106,7 +106,7 @@ describe("GIVEN System", () => {
       expectToBeNear(hit.point.y, 70, 10);
     });
 
-    it("THEN circle with concave polygon has correct aInB, bInA", () => {
+    it("THEN circle inside concave polygon have correct aInB, bInA", () => {
       const { System } = require("../dist/");
       const physics = new System();
       const concave = physics.createPolygon({ x: 0, y: 0 }, [
@@ -127,8 +127,33 @@ describe("GIVEN System", () => {
 
       physics.checkCollision(concave, convex);
 
-      expect(physics.response.bInA).toBe(true);
       expect(physics.response.aInB).toBe(false);
+      expect(physics.response.bInA).toBe(true);
+    });
+
+    it("THEN concave polygon inside circle have correct aInB, bInA", () => {
+      const { System } = require("../dist/");
+      const physics = new System();
+      const concave = physics.createPolygon({ x: 0, y: 0 }, [
+        { x: -11.25, y: -6.76 },
+        { x: -12.5, y: -6.76 },
+        { x: -12.5, y: 6.75 },
+        { x: -3.1, y: 6.75 },
+        { x: -3.1, y: 0.41 },
+        { x: -2.35, y: 0.41 },
+        { x: -2.35, y: 6.75 },
+        { x: 0.77, y: 6.75 },
+        { x: 0.77, y: 7.5 },
+        { x: -13.25, y: 7.5 },
+        { x: -13.25, y: -7.51 },
+        { x: -11.25, y: -7.51 },
+      ]);
+      const convex = physics.createCircle({ x: -5, y: 3.75 }, 40);
+
+      physics.checkCollision(concave, convex);
+
+      expect(physics.response.aInB).toBe(true);
+      expect(physics.response.bInA).toBe(false);
     });
   });
 });
