@@ -839,13 +839,15 @@ class System extends base_system_1.BaseSystem {
             this.response.a = body;
             this.response.b = candidate;
         }
-        // correct aInB and bInA if body was concave
-        if (!body.isConvex) {
+        if (!body.isConvex && !candidate.isConvex) {
+            this.response.aInB = (0, utils_1.checkAInB)(body, candidate);
+            this.response.bInA = (0, utils_1.checkAInB)(candidate, body);
+        }
+        else if (!body.isConvex) {
             this.response.aInB = (0, utils_1.checkAInB)(body, candidate);
             this.response.bInA = state.bInA; // this was set during this.collided()
         }
-        // correct aInB and bInA if candidate was concave
-        if (!candidate.isConvex) {
+        else if (!candidate.isConvex) {
             this.response.aInB = state.aInB; // this was set during this.collided()
             this.response.bInA = (0, utils_1.checkAInB)(candidate, body);
         }
