@@ -155,5 +155,46 @@ describe("GIVEN System", () => {
       expect(physics.response.aInB).toBe(true);
       expect(physics.response.bInA).toBe(false);
     });
+
+    it("THEN concave polygon inside concave polygon have correct aInB, bInA", () => {
+      const { System } = require("../dist/");
+      const physics = new System();
+      const concave = physics.createPolygon({ x: 0, y: 0 }, [
+        { x: -11.25, y: -6.76 },
+        { x: -12.5, y: -6.76 },
+        { x: -12.5, y: 6.75 },
+        { x: -3.1, y: 6.75 },
+        { x: -3.1, y: 0.41 },
+        { x: -2.35, y: 0.41 },
+        { x: -2.35, y: 6.75 },
+        { x: 0.77, y: 6.75 },
+        { x: 0.77, y: 7.5 },
+        { x: -13.25, y: 7.5 },
+        { x: -13.25, y: -7.51 },
+        { x: -11.25, y: -7.51 },
+      ]);
+      const concaveInside = physics.createPolygon(
+        { x: 0, y: 0 },
+        [
+          { x: -11.25, y: -6.76 },
+          { x: -12.5, y: -6.76 },
+          { x: -12.5, y: 6.75 },
+          { x: -3.1, y: 6.75 },
+          { x: -3.1, y: 0.41 },
+          { x: -2.35, y: 0.41 },
+          { x: -2.35, y: 6.75 },
+          { x: 0.77, y: 6.75 },
+          { x: 0.77, y: 7.5 },
+          { x: -13.25, y: 7.5 },
+          { x: -13.25, y: -7.51 },
+          { x: -11.25, y: -7.51 },
+        ].map(({ x, y }) => ({ x: x / 10, y: y / 10 }))
+      );
+
+      physics.checkCollision(concave, concaveInside);
+
+      expect(physics.response.aInB).toBe(false);
+      expect(physics.response.bInA).toBe(true);
+    });
   });
 });
