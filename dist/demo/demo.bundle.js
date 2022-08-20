@@ -829,13 +829,19 @@ class System extends base_system_1.BaseSystem {
             result = (0, sat_1.testPolygonPolygon)(body, candidate, this.response);
         }
         if (state.collisionVector) {
-            this.response.a = body;
-            this.response.b = candidate;
-            this.response.aInB = (0, utils_1.checkAInB)(body, candidate);
-            this.response.bInA = (0, utils_1.checkAInB)(candidate, body);
             this.response.overlapV = state.collisionVector;
             this.response.overlapN = this.response.overlapV.clone().normalize();
             this.response.overlap = this.response.overlapV.len();
+        }
+        if (!body.isConvex || !candidate.isConvex) {
+            this.response.a = body;
+            this.response.b = candidate;
+        }
+        if (!body.isConvex) {
+            this.response.aInB = (0, utils_1.checkAInB)(body, candidate);
+        }
+        if (!candidate.isConvex) {
+            this.response.bInA = (0, utils_1.checkAInB)(candidate, body);
         }
         return result;
     }
