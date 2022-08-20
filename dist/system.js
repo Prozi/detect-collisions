@@ -140,6 +140,8 @@ class System extends base_system_1.BaseSystem {
         if (state.collisionVector) {
             this.response.a = body;
             this.response.b = candidate;
+            this.response.aInB = (0, utils_1.checkAInB)(body, candidate);
+            this.response.bInA = (0, utils_1.checkAInB)(candidate, body);
             this.response.overlapV = state.collisionVector;
             this.response.overlapN = this.response.overlapV.clone().normalize();
             this.response.overlap = this.response.overlapV.len();

@@ -24,6 +24,7 @@ import {
   ensureConvexPolygons,
   intersectLineCircle,
   intersectLinePolygon,
+  checkAInB,
 } from "./utils";
 
 /**
@@ -204,6 +205,8 @@ export class System extends BaseSystem implements Data {
     if (state.collisionVector) {
       this.response.a = body;
       this.response.b = candidate;
+      this.response.aInB = checkAInB(body, candidate);
+      this.response.bInA = checkAInB(candidate, body);
       this.response.overlapV = state.collisionVector;
       this.response.overlapN = this.response.overlapV.clone().normalize();
       this.response.overlap = this.response.overlapV.len();

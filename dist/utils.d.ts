@@ -30,6 +30,7 @@ export declare function clockwise(points: Vector[]): boolean;
  */
 export declare function extendBody(body: Body, options?: BodyOptions): void;
 export declare function updateAABB(body: Body, bounds: BBox): void;
+export declare function checkAInB(a: BBox, b: BBox): boolean;
 /**
  * draws dashed line on canvas context
  */
