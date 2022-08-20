@@ -203,13 +203,22 @@ export class System extends BaseSystem implements Data {
     }
 
     if (state.collisionVector) {
-      this.response.a = body;
-      this.response.b = candidate;
-      this.response.aInB = checkAInB(body, candidate);
-      this.response.bInA = checkAInB(candidate, body);
       this.response.overlapV = state.collisionVector;
       this.response.overlapN = this.response.overlapV.clone().normalize();
       this.response.overlap = this.response.overlapV.len();
+    }
+
+    if (!body.isConvex || !candidate.isConvex) {
+      this.response.a = body;
+      this.response.b = candidate;
+    }
+
+    if (!body.isConvex) {
+      this.response.aInB = checkAInB(body, candidate);
+    }
+
+    if (!candidate.isConvex) {
+      this.response.bInA = checkAInB(candidate, body);
     }
 
     return result;
