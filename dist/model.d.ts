@@ -109,5 +109,7 @@ export interface Collider {
 export interface CollisionState {
     collides: boolean;
     collisionVector?: SATVector;
+    aInB?: boolean;
+    bInA?: boolean;
 }
 //# sourceMappingURL=model.d.ts.map
