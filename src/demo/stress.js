@@ -15,36 +15,24 @@ class Stress {
 
     // World bounds
     this.bounds = [
-      this.physics.createPolygon(
+      this.physics.createLine(
         { x: 0, y: 0 },
-        [
-          { x: 0, y: 0 },
-          { x: width, y: 0 },
-        ],
+        { x: width, y: 0 },
         { isStatic: true, center: true }
       ),
-      this.physics.createPolygon(
-        { x: 0, y: 0 },
-        [
-          { x: width, y: 0 },
-          { x: width, y: height },
-        ],
+      this.physics.createLine(
+        { x: width, y: 0 },
+        { x: width, y: height },
         { isStatic: true, center: true }
       ),
-      this.physics.createPolygon(
-        { x: 0, y: 0 },
-        [
-          { x: width, y: height },
-          { x: 0, y: height },
-        ],
+      this.physics.createLine(
+        { x: width, y: height },
+        { x: 0, y: height },
         { isStatic: true, center: true }
       ),
-      this.physics.createPolygon(
+      this.physics.createLine(
+        { x: 0, y: height },
         { x: 0, y: 0 },
-        [
-          { x: 0, y: height },
-          { x: 0, y: 0 },
-        ],
         { isStatic: true, center: true }
       ),
     ];
@@ -84,22 +72,21 @@ class Stress {
       // adaptive padding, when collides, halves
       a.padding /= 2;
 
-      this.bounce(a, b);
-      this.bounce(b, a);
+      this.bounce(a, b, overlapV);
+      this.bounce(b, a, overlapV.clone().reverse());
 
       a.rotationSpeed = (Math.random() - Math.random()) * 0.1;
     });
   }
 
-  bounce(a, b) {
+  bounce(a, b, overlapV) {
     if (b.isStatic) {
-      const { x, y } = new SATVector(
-        width / 2 - a.x,
-        height / 2 - a.y
-      ).normalize();
-
-      a.directionX = x;
-      a.directionY = y;
+      // flip on wall
+      if (Math.abs(overlapV.x) > Math.abs(overlapV.y)) {
+        a.directionX *= -1;
+      } else {
+        a.directionY *= -1;
+      }
 
       return;
     }

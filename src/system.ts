@@ -30,7 +30,7 @@ import {
 /**
  * collision system
  */
-export class System extends BaseSystem implements Data {
+export class System extends BaseSystem {
   response: Response = new Response();
 
   /**

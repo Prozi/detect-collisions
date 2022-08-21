@@ -1,6 +1,6 @@
-import { quickDecomp } from "poly-decomp";
-import { BBox } from "rbush";
-import { Polygon as SATPolygon } from "sat";
+import { quickDecomp } from 'poly-decomp';
+import { BBox } from 'rbush';
+import { Polygon as SATPolygon } from 'sat';
 
 import {
   BodyOptions,
@@ -9,9 +9,9 @@ import {
   PotentialVector,
   SATVector,
   Types,
-  Vector,
-} from "../model";
-import { System } from "../system";
+  Vector
+} from '../model';
+import { System } from '../system';
 import {
   dashLineTo,
   ensurePolygonPoints,
@@ -19,8 +19,8 @@ import {
   extendBody,
   mapArrayToVector,
   mapVectorToArray,
-  updateAABB,
-} from "../utils";
+  updateAABB
+} from '../utils';
 
 /**
  * collider - polygon
@@ -37,7 +37,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   /**
    * is it a convex polyon as opposed to a hollow inside (concave) polygon
    */
-  isConvex = false;
+  isConvex!: boolean;
 
   /**
    * optimization for above
@@ -84,7 +84,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     super(ensureVectorPoint(position), ensurePolygonPoints(points));
 
     if (!points?.length) {
-      throw new Error("No points in polygon");
+      throw new Error('No points in polygon');
     }
 
     extendBody(this, options);
@@ -173,7 +173,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
       minX: pos.x,
       minY: pos.y,
       maxX: pos.x + w,
-      maxY: pos.y + h,
+      maxY: pos.y + h
     };
   }
 
@@ -245,10 +245,6 @@ export class Polygon extends SATPolygon implements BBox, Collider {
    * after points update set is convex
    */
   protected updateIsConvex(): void {
-    if (this.type !== Types.Polygon) {
-      return;
-    }
-
     // all other types other than polygon are always convex
     const convex = this.getConvex();
     // everything with empty array or one element array

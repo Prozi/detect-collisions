@@ -4,7 +4,14 @@ import { Ellipse } from "./bodies/ellipse";
 import { Line } from "./bodies/line";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
-import { Body, BodyOptions, Data, RBush, Vector } from "./model";
+import {
+  Body,
+  BodyOptions,
+  Data,
+  PotentialVector,
+  RBush,
+  Vector,
+} from "./model";
 import { createBox } from "./utils";
 
 /**
@@ -43,7 +50,7 @@ export class BaseSystem extends RBush<Body> implements Data {
   /**
    * create point at position with options and add to system
    */
-  createPoint(position: Vector, options?: BodyOptions): Point {
+  createPoint(position: PotentialVector, options?: BodyOptions): Point {
     const point = new Point(position, options);
 
     this.insert(point);
@@ -66,7 +73,7 @@ export class BaseSystem extends RBush<Body> implements Data {
    * create circle at position with options and add to system
    */
   createCircle(
-    position: Vector,
+    position: PotentialVector,
     radius: number,
     options?: BodyOptions
   ): Circle {
@@ -81,7 +88,7 @@ export class BaseSystem extends RBush<Body> implements Data {
    * create box at position with options and add to system
    */
   createBox(
-    position: Vector,
+    position: PotentialVector,
     width: number,
     height: number,
     options?: BodyOptions
@@ -97,7 +104,7 @@ export class BaseSystem extends RBush<Body> implements Data {
    * create ellipse at position with options and add to system
    */
   createEllipse(
-    position: Vector,
+    position: PotentialVector,
     radiusX: number,
     radiusY: number = radiusX,
     step?: number,
@@ -114,8 +121,8 @@ export class BaseSystem extends RBush<Body> implements Data {
    * create polygon at position with options and add to system
    */
   createPolygon(
-    position: Vector,
-    points: Vector[],
+    position: PotentialVector,
+    points: PotentialVector[],
     options?: BodyOptions
   ): Polygon {
     const polygon = new Polygon(position, points, options);
