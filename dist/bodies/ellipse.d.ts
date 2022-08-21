@@ -1,4 +1,4 @@
-import { BodyOptions, Types, Vector } from "../model";
+import { BodyOptions, Types, PotentialVector } from "../model";
 import { Polygon } from "./polygon";
 /**
  * collider - ellipse
@@ -11,12 +11,12 @@ export declare class Ellipse extends Polygon {
     private _step;
     /**
      * collider - ellipse
-     * @param {Vector} position {x, y}
+     * @param {PotentialVector} position {x, y}
      * @param {number} radiusX
      * @param {number} radiusY defaults to radiusX
      * @param {number} step precision division >= 1px
      */
-    constructor(position: Vector, radiusX: number, radiusY?: number, step?: number, options?: BodyOptions);
+    constructor(position: PotentialVector, radiusX: number, radiusY?: number, step?: number, options?: BodyOptions);
     /**
      * get ellipse step number
      */

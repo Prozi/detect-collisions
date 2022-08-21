@@ -1,11 +1,11 @@
 /// <reference types="sat" />
 import RBush from "rbush";
 import { BaseSystem } from "./base-system";
-import { Body, Data, RaycastResult, Response, Vector } from "./model";
+import { Body, RaycastResult, Response, Vector } from "./model";
 /**
  * collision system
  */
-export declare class System extends BaseSystem implements Data {
+export declare class System extends BaseSystem {
     response: Response;
     /**
      * update body aabb and in tree

@@ -4,7 +4,7 @@ import { Ellipse } from "./bodies/ellipse";
 import { Line } from "./bodies/line";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
-import { Body, BodyOptions, Data, RBush, Vector } from "./model";
+import { Body, BodyOptions, Data, PotentialVector, RBush, Vector } from "./model";
 /**
  * very base collision system
  */
@@ -23,7 +23,7 @@ export declare class BaseSystem extends RBush<Body> implements Data {
     /**
      * create point at position with options and add to system
      */
-    createPoint(position: Vector, options?: BodyOptions): Point;
+    createPoint(position: PotentialVector, options?: BodyOptions): Point;
     /**
      * create line at position with options and add to system
      */
@@ -31,18 +31,18 @@ export declare class BaseSystem extends RBush<Body> implements Data {
     /**
      * create circle at position with options and add to system
      */
-    createCircle(position: Vector, radius: number, options?: BodyOptions): Circle;
+    createCircle(position: PotentialVector, radius: number, options?: BodyOptions): Circle;
     /**
      * create box at position with options and add to system
      */
-    createBox(position: Vector, width: number, height: number, options?: BodyOptions): Box;
+    createBox(position: PotentialVector, width: number, height: number, options?: BodyOptions): Box;
     /**
      * create ellipse at position with options and add to system
      */
-    createEllipse(position: Vector, radiusX: number, radiusY?: number, step?: number, options?: BodyOptions): Ellipse;
+    createEllipse(position: PotentialVector, radiusX: number, radiusY?: number, step?: number, options?: BodyOptions): Ellipse;
     /**
      * create polygon at position with options and add to system
      */
-    createPolygon(position: Vector, points: Vector[], options?: BodyOptions): Polygon;
+    createPolygon(position: PotentialVector, points: PotentialVector[], options?: BodyOptions): Polygon;
 }
 //# sourceMappingURL=base-system.d.ts.map

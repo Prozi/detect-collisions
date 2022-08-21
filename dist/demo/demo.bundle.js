@@ -308,7 +308,7 @@ const polygon_1 = __webpack_require__(/*! ./polygon */ "./dist/bodies/polygon.js
 class Ellipse extends polygon_1.Polygon {
     /**
      * collider - ellipse
-     * @param {Vector} position {x, y}
+     * @param {PotentialVector} position {x, y}
      * @param {number} radiusX
      * @param {number} radiusY defaults to radiusX
      * @param {number} step precision division >= 1px
@@ -491,10 +491,6 @@ class Polygon extends sat_1.Polygon {
     constructor(position, points, options) {
         super((0, utils_1.ensureVectorPoint)(position), (0, utils_1.ensurePolygonPoints)(points));
         /**
-         * is it a convex polyon as opposed to a hollow inside (concave) polygon
-         */
-        this.isConvex = false;
-        /**
          * optimization for above
          */
         this.convexPolygons = [];
@@ -637,9 +633,6 @@ class Polygon extends sat_1.Polygon {
      * after points update set is convex
      */
     updateIsConvex() {
-        if (this.type !== model_1.Types.Polygon) {
-            return;
-        }
         // all other types other than polygon are always convex
         const convex = this.getConvex();
         // everything with empty array or one element array
@@ -3037,36 +3030,24 @@ class Stress {
 
     // World bounds
     this.bounds = [
-      this.physics.createPolygon(
+      this.physics.createLine(
         { x: 0, y: 0 },
-        [
-          { x: 0, y: 0 },
-          { x: width, y: 0 },
-        ],
+        { x: width, y: 0 },
         { isStatic: true, center: true }
       ),
-      this.physics.createPolygon(
-        { x: 0, y: 0 },
-        [
-          { x: width, y: 0 },
-          { x: width, y: height },
-        ],
+      this.physics.createLine(
+        { x: width, y: 0 },
+        { x: width, y: height },
         { isStatic: true, center: true }
       ),
-      this.physics.createPolygon(
-        { x: 0, y: 0 },
-        [
-          { x: width, y: height },
-          { x: 0, y: height },
-        ],
+      this.physics.createLine(
+        { x: width, y: height },
+        { x: 0, y: height },
         { isStatic: true, center: true }
       ),
-      this.physics.createPolygon(
+      this.physics.createLine(
+        { x: 0, y: height },
         { x: 0, y: 0 },
-        [
-          { x: 0, y: height },
-          { x: 0, y: 0 },
-        ],
         { isStatic: true, center: true }
       ),
     ];
@@ -3106,22 +3087,21 @@ class Stress {
       // adaptive padding, when collides, halves
       a.padding /= 2;
 
-      this.bounce(a, b);
-      this.bounce(b, a);
+      this.bounce(a, b, overlapV);
+      this.bounce(b, a, overlapV.clone().reverse());
 
       a.rotationSpeed = (Math.random() - Math.random()) * 0.1;
     });
   }
 
-  bounce(a, b) {
+  bounce(a, b, overlapV) {
     if (b.isStatic) {
-      const { x, y } = new SATVector(
-        width / 2 - a.x,
-        height / 2 - a.y
-      ).normalize();
-
-      a.directionX = x;
-      a.directionY = y;
+      // flip on wall
+      if (Math.abs(overlapV.x) > Math.abs(overlapV.y)) {
+        a.directionX *= -1;
+      } else {
+        a.directionY *= -1;
+      }
 
       return;
     }

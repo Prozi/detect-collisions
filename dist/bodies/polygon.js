@@ -17,10 +17,6 @@ class Polygon extends sat_1.Polygon {
     constructor(position, points, options) {
         super((0, utils_1.ensureVectorPoint)(position), (0, utils_1.ensurePolygonPoints)(points));
         /**
-         * is it a convex polyon as opposed to a hollow inside (concave) polygon
-         */
-        this.isConvex = false;
-        /**
          * optimization for above
          */
         this.convexPolygons = [];
@@ -163,9 +159,6 @@ class Polygon extends sat_1.Polygon {
      * after points update set is convex
      */
     updateIsConvex() {
-        if (this.type !== model_1.Types.Polygon) {
-            return;
-        }
         // all other types other than polygon are always convex
         const convex = this.getConvex();
         // everything with empty array or one element array

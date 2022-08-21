@@ -10,7 +10,7 @@ const polygon_1 = require("./polygon");
 class Ellipse extends polygon_1.Polygon {
     /**
      * collider - ellipse
-     * @param {Vector} position {x, y}
+     * @param {PotentialVector} position {x, y}
      * @param {number} radiusX
      * @param {number} radiusY defaults to radiusX
      * @param {number} step precision division >= 1px
