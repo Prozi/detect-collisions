@@ -226,7 +226,7 @@ export function intersectLinePolygon(line: Line, polygon: Polygon): Vector[] {
 }
 
 /**
- * change format from SAT.js to poly-decomp
+ * change format from poly-decomp to SAT.js
  */
 export function mapVectorToArray({ x, y }: Vector): number[] {
   return [x, y];

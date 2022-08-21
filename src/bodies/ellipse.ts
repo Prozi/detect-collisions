@@ -83,5 +83,13 @@ export class Ellipse extends Polygon {
     this.setPoints(createEllipse(this._radiusX, this._radiusY, this._step));
   }
 
+  /**
+   * do not attempt to use Polygon.center()
+   */
   center(): void {}
+
+  /**
+   * do not attempt to use Polygon.updateIsConvex()
+   */
+  protected updateIsConvex(): void {}
 }

@@ -62,4 +62,9 @@ export class Box extends Polygon {
 
     this.setPoints(createBox(this._width, this._height));
   }
+
+  /**
+   * do not attempt to use Polygon.updateIsConvex()
+   */
+  protected updateIsConvex(): void {}
 }

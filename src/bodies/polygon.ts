@@ -40,9 +40,9 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   isConvex = false;
 
   /**
-   * optimization for above - set in setPoints (so also in constructor)
+   * optimization for above
    */
-  convexPolygons!: SATPolygon[];
+  convexPolygons: SATPolygon[] = [];
 
   /**
    * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
@@ -88,6 +88,8 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     }
 
     extendBody(this, options);
+
+    this.updateAABB();
   }
 
   get x(): number {
@@ -124,22 +126,29 @@ export class Polygon extends SATPolygon implements BBox, Collider {
         [];
   }
 
-  setPoints(points: SATVector[]) {
+  setPoints(points: SATVector[]): Polygon {
     super.setPoints(points);
     this.updateIsConvex();
-    this.updateAABB();
 
     return this;
   }
 
-  updateConvexPolygons(): void {
-    this.getConvex().forEach((points: number[][], index: number) => {
+  updateConvexPolygons(convex: number[][][] = this.getConvex()): void {
+    convex.forEach((points: number[][], index: number) => {
+      // lazy create
+      if (!this.convexPolygons[index]) {
+        this.convexPolygons[index] = new SATPolygon();
+      }
+
       this.convexPolygons[index].pos.x = this.x;
       this.convexPolygons[index].pos.y = this.y;
       this.convexPolygons[index].setPoints(
         ensurePolygonPoints(points.map(mapArrayToVector))
       );
     });
+
+    // trim array length
+    this.convexPolygons.length = convex.length;
   }
 
   /**
@@ -235,13 +244,14 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   /**
    * after points update set is convex
    */
-  private updateIsConvex(): void {
+  protected updateIsConvex(): void {
+    if (this.type !== Types.Polygon) {
+      return;
+    }
+
     // all other types other than polygon are always convex
     const convex = this.getConvex();
     // everything with empty array or one element array
     this.isConvex = convex.length <= 1;
-    this.convexPolygons = this.isConvex
-      ? []
-      : Array.from({ length: convex.length }, () => new SATPolygon());
   }
 }

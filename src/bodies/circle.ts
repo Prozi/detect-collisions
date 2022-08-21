@@ -158,5 +158,8 @@ export class Circle extends SATCircle implements BBox, Collider {
     this.angle = angle;
   }
 
+  /**
+   * for compatility reasons, does nothing
+   */
   center(): void {}
 }

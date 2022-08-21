@@ -9,6 +9,8 @@ import { Polygon } from "./polygon";
 export class Line extends Polygon {
   readonly type: Types.Line = Types.Line;
 
+  isConvex = true;
+
   /**
    * collider - line from start to end
    * @param {Vector} start {x, y}
@@ -51,4 +53,9 @@ export class Line extends Polygon {
       (this.end.y - this.start.y) / 2
     );
   }
+
+  /**
+   * do not attempt to use Polygon.updateIsConvex()
+   */
+  protected updateIsConvex(): void {}
 }
