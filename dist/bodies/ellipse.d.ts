@@ -41,6 +41,13 @@ export declare class Ellipse extends Polygon {
      * set ellipse radiusY, update points
      */
     set radiusY(radiusY: number);
+    /**
+     * do not attempt to use Polygon.center()
+     */
     center(): void;
+    /**
+     * do not attempt to use Polygon.updateIsConvex()
+     */
+    protected updateIsConvex(): void;
 }
 //# sourceMappingURL=ellipse.d.ts.map

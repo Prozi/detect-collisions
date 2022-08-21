@@ -47,6 +47,10 @@ class Box extends polygon_1.Polygon {
         this._height = height;
         this.setPoints((0, utils_1.createBox)(this._width, this._height));
     }
+    /**
+     * do not attempt to use Polygon.updateIsConvex()
+     */
+    updateIsConvex() { }
 }
 exports.Box = Box;
 //# sourceMappingURL=box.js.map

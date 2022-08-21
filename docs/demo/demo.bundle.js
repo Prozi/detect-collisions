@@ -153,6 +153,10 @@ class Box extends polygon_1.Polygon {
         this._height = height;
         this.setPoints((0, utils_1.createBox)(this._width, this._height));
     }
+    /**
+     * do not attempt to use Polygon.updateIsConvex()
+     */
+    updateIsConvex() { }
 }
 exports.Box = Box;
 //# sourceMappingURL=box.js.map
@@ -275,6 +279,9 @@ class Circle extends sat_1.Circle {
     setAngle(angle) {
         this.angle = angle;
     }
+    /**
+     * for compatility reasons, does nothing
+     */
     center() { }
 }
 exports.Circle = Circle;
@@ -353,7 +360,14 @@ class Ellipse extends polygon_1.Polygon {
         this._radiusY = radiusY;
         this.setPoints((0, utils_1.createEllipse)(this._radiusX, this._radiusY, this._step));
     }
+    /**
+     * do not attempt to use Polygon.center()
+     */
     center() { }
+    /**
+     * do not attempt to use Polygon.updateIsConvex()
+     */
+    updateIsConvex() { }
 }
 exports.Ellipse = Ellipse;
 //# sourceMappingURL=ellipse.js.map
@@ -388,6 +402,7 @@ class Line extends polygon_1.Polygon {
             { x: end.x - start.x, y: end.y - start.y },
         ], options);
         this.type = model_1.Types.Line;
+        this.isConvex = true;
         if (this.calcPoints.length === 1 || !end) {
             console.error({ start, end });
             throw new Error("No end point for line provided");
@@ -408,6 +423,10 @@ class Line extends polygon_1.Polygon {
     getCentroid() {
         return new sat_1.Vector((this.end.x - this.start.x) / 2, (this.end.y - this.start.y) / 2);
     }
+    /**
+     * do not attempt to use Polygon.updateIsConvex()
+     */
+    updateIsConvex() { }
 }
 exports.Line = Line;
 //# sourceMappingURL=line.js.map
@@ -476,6 +495,10 @@ class Polygon extends sat_1.Polygon {
          */
         this.isConvex = false;
         /**
+         * optimization for above
+         */
+        this.convexPolygons = [];
+        /**
          * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
          */
         this.padding = 0;
@@ -484,13 +507,6 @@ class Polygon extends sat_1.Polygon {
             throw new Error("No points in polygon");
         }
         (0, utils_1.extendBody)(this, options);
-        // all other types other than polygon are always convex
-        const convex = this.getConvex();
-        // point and line are convex
-        this.isConvex = !convex.length;
-        this.convexPolygons = this.isConvex
-            ? []
-            : Array.from({ length: convex.length }, () => new sat_1.Polygon());
         this.updateAABB();
     }
     get x() {
@@ -522,12 +538,23 @@ class Polygon extends sat_1.Polygon {
             : // for line and point
                 [];
     }
-    updateConvexPolygons() {
-        this.getConvex().forEach((points, index) => {
+    setPoints(points) {
+        super.setPoints(points);
+        this.updateIsConvex();
+        return this;
+    }
+    updateConvexPolygons(convex = this.getConvex()) {
+        convex.forEach((points, index) => {
+            // lazy create
+            if (!this.convexPolygons[index]) {
+                this.convexPolygons[index] = new sat_1.Polygon();
+            }
             this.convexPolygons[index].pos.x = this.x;
             this.convexPolygons[index].pos.y = this.y;
             this.convexPolygons[index].setPoints((0, utils_1.ensurePolygonPoints)(points.map(utils_1.mapArrayToVector)));
         });
+        // trim array length
+        this.convexPolygons.length = convex.length;
     }
     /**
      * update position
@@ -605,6 +632,18 @@ class Polygon extends sat_1.Polygon {
         const { x, y } = this.getCentroidWithoutRotation();
         this.translate(-x, -y);
         this.setPosition(this.x + x, this.y + y);
+    }
+    /**
+     * after points update set is convex
+     */
+    updateIsConvex() {
+        if (this.type !== model_1.Types.Polygon) {
+            return;
+        }
+        // all other types other than polygon are always convex
+        const convex = this.getConvex();
+        // everything with empty array or one element array
+        this.isConvex = convex.length <= 1;
     }
 }
 exports.Polygon = Polygon;
@@ -1083,7 +1122,7 @@ function intersectLinePolygon(line, polygon) {
 }
 exports.intersectLinePolygon = intersectLinePolygon;
 /**
- * change format from SAT.js to poly-decomp
+ * change format from poly-decomp to SAT.js
  */
 function mapVectorToArray({ x, y }) {
     return [x, y];
@@ -2880,9 +2919,6 @@ class TestCanvas {
   constructor(test) {
     this.test = test;
 
-    this.fps = 0;
-    this.frame = 0;
-
     this.element = document.createElement("div");
     this.element.id = "debug";
     this.element.innerHTML = `${this.test.legend}
@@ -2907,6 +2943,8 @@ class TestCanvas {
     }
 
     this.started = Date.now();
+    this.fps = 0;
+    this.frame = 0;
 
     loop(() => this.update());
   }
@@ -2985,12 +3023,10 @@ module.exports.height = height;
 const { System, SATVector, getBounceDirection } = __webpack_require__(/*! ../../dist */ "./dist/index.js");
 const { width, height, random, loop } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js");
 const count = 1000;
-const padding = (Math.PI * Math.sqrt(width * height)) / count;
+const size = Math.sqrt((width * height) / (count * 50));
 
 class Stress {
   constructor() {
-    const size = (width * height) / (count * 500);
-
     this.physics = new System();
     this.bodies = [];
     this.polygons = 0;
@@ -3050,9 +3086,10 @@ class Stress {
   }
 
   update(timeScale) {
+    const padding = size * timeScale * 0.67;
+
     this.bodies.forEach((body) => {
-      body.rotationAngle += body.rotationSpeed * timeScale;
-      body.setAngle(body.rotationAngle);
+      body.setAngle(body.angle + body.rotationSpeed * timeScale);
 
       // adaptive padding, when no collisions goes up to "padding" variable value
       body.padding = (body.padding + padding) / 2;
@@ -3165,8 +3202,7 @@ class Stress {
 
     // set initial rotation angle direction
     body.rotationSpeed = (Math.random() - Math.random()) * 0.1;
-    body.rotationAngle = (random(0, 360) * Math.PI) / 180;
-    body.setAngle(body.rotationAngle);
+    body.setAngle((random(0, 360) * Math.PI) / 180);
 
     body.directionX = Math.cos(direction);
     body.directionY = Math.sin(direction);
@@ -3294,13 +3330,14 @@ class Tank {
     }
 
     if (this.player.velocity) {
-      this.player.pos.x += x * this.player.velocity;
-      this.player.pos.y += y * this.player.velocity;
+      this.player.setPosition(
+        this.player.x + x * this.player.velocity,
+        this.player.y + y * this.player.velocity
+      );
     }
   }
 
   handleCollisions() {
-    this.physics.update();
     this.physics.checkAll(({ a, b, overlapV }) => {
       if (a === this.playerTurret || b === this.playerTurret) {
         return;
@@ -3321,9 +3358,8 @@ class Tank {
   }
 
   updateTurret() {
-    this.playerTurret.setPosition(this.player.x, this.player.y);
     this.playerTurret.setAngle(this.player.angle);
-    this.playerTurret.updateAABB();
+    this.playerTurret.setPosition(this.player.x, this.player.y);
 
     const hit = this.physics.raycast(
       this.playerTurret.start,
@@ -3344,7 +3380,7 @@ class Tank {
   createPlayer(x, y, size = 13) {
     const player = this.physics.createCircle(
       { x: this.scaleX(x), y: this.scaleY(y) },
-      this.scaleX(size),
+      this.scaleX(size * 0.67),
       { angle: 0.2, center: true }
     );
 
@@ -3352,11 +3388,9 @@ class Tank {
 
     this.playerTurret = this.physics.createLine(
       player,
-      { x: player.x + this.scaleX(70), y: player.y },
+      { x: player.x + this.scaleX(20) + this.scaleY(20), y: player.y },
       { angle: 0.2, isTrigger: true }
     );
-
-    this.playerTurret.translate(this.scaleX(17), 0);
 
     return player;
   }

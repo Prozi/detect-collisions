@@ -21,6 +21,10 @@ class Polygon extends sat_1.Polygon {
          */
         this.isConvex = false;
         /**
+         * optimization for above
+         */
+        this.convexPolygons = [];
+        /**
          * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
          */
         this.padding = 0;
@@ -29,13 +33,6 @@ class Polygon extends sat_1.Polygon {
             throw new Error("No points in polygon");
         }
         (0, utils_1.extendBody)(this, options);
-        // all other types other than polygon are always convex
-        const convex = this.getConvex();
-        // point and line are convex
-        this.isConvex = !convex.length;
-        this.convexPolygons = this.isConvex
-            ? []
-            : Array.from({ length: convex.length }, () => new sat_1.Polygon());
         this.updateAABB();
     }
     get x() {
@@ -67,12 +64,23 @@ class Polygon extends sat_1.Polygon {
             : // for line and point
                 [];
     }
-    updateConvexPolygons() {
-        this.getConvex().forEach((points, index) => {
+    setPoints(points) {
+        super.setPoints(points);
+        this.updateIsConvex();
+        return this;
+    }
+    updateConvexPolygons(convex = this.getConvex()) {
+        convex.forEach((points, index) => {
+            // lazy create
+            if (!this.convexPolygons[index]) {
+                this.convexPolygons[index] = new sat_1.Polygon();
+            }
             this.convexPolygons[index].pos.x = this.x;
             this.convexPolygons[index].pos.y = this.y;
             this.convexPolygons[index].setPoints((0, utils_1.ensurePolygonPoints)(points.map(utils_1.mapArrayToVector)));
         });
+        // trim array length
+        this.convexPolygons.length = convex.length;
     }
     /**
      * update position
@@ -150,6 +158,18 @@ class Polygon extends sat_1.Polygon {
         const { x, y } = this.getCentroidWithoutRotation();
         this.translate(-x, -y);
         this.setPosition(this.x + x, this.y + y);
+    }
+    /**
+     * after points update set is convex
+     */
+    updateIsConvex() {
+        if (this.type !== model_1.Types.Polygon) {
+            return;
+        }
+        // all other types other than polygon are always convex
+        const convex = this.getConvex();
+        // everything with empty array or one element array
+        this.isConvex = convex.length <= 1;
     }
 }
 exports.Polygon = Polygon;

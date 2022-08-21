@@ -19,6 +19,7 @@ class Line extends polygon_1.Polygon {
             { x: end.x - start.x, y: end.y - start.y },
         ], options);
         this.type = model_1.Types.Line;
+        this.isConvex = true;
         if (this.calcPoints.length === 1 || !end) {
             console.error({ start, end });
             throw new Error("No end point for line provided");
@@ -39,6 +40,10 @@ class Line extends polygon_1.Polygon {
     getCentroid() {
         return new sat_1.Vector((this.end.x - this.start.x) / 2, (this.end.y - this.start.y) / 2);
     }
+    /**
+     * do not attempt to use Polygon.updateIsConvex()
+     */
+    updateIsConvex() { }
 }
 exports.Line = Line;
 //# sourceMappingURL=line.js.map

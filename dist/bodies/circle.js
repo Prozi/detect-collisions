@@ -107,6 +107,9 @@ class Circle extends sat_1.Circle {
     setAngle(angle) {
         this.angle = angle;
     }
+    /**
+     * for compatility reasons, does nothing
+     */
     center() { }
 }
 exports.Circle = Circle;

@@ -31,5 +31,9 @@ export declare class Box extends Polygon {
      * set box height, update points
      */
     set height(height: number);
+    /**
+     * do not attempt to use Polygon.updateIsConvex()
+     */
+    protected updateIsConvex(): void;
 }
 //# sourceMappingURL=box.d.ts.map

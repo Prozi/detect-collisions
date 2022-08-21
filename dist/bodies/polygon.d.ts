@@ -1,6 +1,6 @@
 import { BBox } from "rbush";
 import { Polygon as SATPolygon } from "sat";
-import { BodyOptions, Collider, PotentialVector, Types, Vector } from "../model";
+import { BodyOptions, Collider, PotentialVector, SATVector, Types, Vector } from "../model";
 import { System } from "../system";
 /**
  * collider - polygon
@@ -55,7 +55,8 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      */
     set y(y: number);
     getConvex(): number[][][];
-    updateConvexPolygons(): void;
+    setPoints(points: SATVector[]): Polygon;
+    updateConvexPolygons(convex?: number[][][]): void;
     /**
      * update position
      * @param {number} x
@@ -80,5 +81,9 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      * reCenters the box anchor
      */
     center(): void;
+    /**
+     * after points update set is convex
+     */
+    protected updateIsConvex(): void;
 }
 //# sourceMappingURL=polygon.d.ts.map

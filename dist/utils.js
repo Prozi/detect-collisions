@@ -176,7 +176,7 @@ function intersectLinePolygon(line, polygon) {
 }
 exports.intersectLinePolygon = intersectLinePolygon;
 /**
- * change format from SAT.js to poly-decomp
+ * change format from poly-decomp to SAT.js
  */
 function mapVectorToArray({ x, y }) {
     return [x, y];

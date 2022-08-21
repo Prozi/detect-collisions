@@ -71,6 +71,9 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      */
     draw(context: CanvasRenderingContext2D): void;
     setAngle(angle: number): void;
+    /**
+     * for compatility reasons, does nothing
+     */
     center(): void;
 }
 //# sourceMappingURL=circle.d.ts.map

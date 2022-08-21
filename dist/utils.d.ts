@@ -42,7 +42,7 @@ export declare function intersectLineLine(line1: Line, line2: Line): Vector | nu
  */
 export declare function intersectLinePolygon(line: Line, polygon: Polygon): Vector[];
 /**
- * change format from SAT.js to poly-decomp
+ * change format from poly-decomp to SAT.js
  */
 export declare function mapVectorToArray({ x, y }: Vector): number[];
 /**
