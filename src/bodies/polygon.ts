@@ -7,6 +7,7 @@ import {
   Collider,
   GetAABBAsBox,
   PotentialVector,
+  SATVector,
   Types,
   Vector,
 } from "../model";
@@ -39,9 +40,9 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   isConvex = false;
 
   /**
-   * optimization for above
+   * optimization for above - set in setPoints (so also in constructor)
    */
-  convexPolygons: SATPolygon[];
+  convexPolygons!: SATPolygon[];
 
   /**
    * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
@@ -87,16 +88,6 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     }
 
     extendBody(this, options);
-
-    // all other types other than polygon are always convex
-    const convex = this.getConvex();
-    // point and line are convex
-    this.isConvex = !convex.length;
-    this.convexPolygons = this.isConvex
-      ? []
-      : Array.from({ length: convex.length }, () => new SATPolygon());
-
-    this.updateAABB();
   }
 
   get x(): number {
@@ -131,6 +122,14 @@ export class Polygon extends SATPolygon implements BBox, Collider {
       ? quickDecomp(this.calcPoints.map(mapVectorToArray))
       : // for line and point
         [];
+  }
+
+  setPoints(points: SATVector[]) {
+    super.setPoints(points);
+    this.updateIsConvex();
+    this.updateAABB();
+
+    return this;
   }
 
   updateConvexPolygons(): void {
@@ -231,5 +230,18 @@ export class Polygon extends SATPolygon implements BBox, Collider {
 
     this.translate(-x, -y);
     this.setPosition(this.x + x, this.y + y);
+  }
+
+  /**
+   * after points update set is convex
+   */
+  private updateIsConvex(): void {
+    // all other types other than polygon are always convex
+    const convex = this.getConvex();
+    // everything with empty array or one element array
+    this.isConvex = convex.length <= 1;
+    this.convexPolygons = this.isConvex
+      ? []
+      : Array.from({ length: convex.length }, () => new SATPolygon());
   }
 }
