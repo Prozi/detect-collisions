@@ -106,13 +106,14 @@ class Tank {
     }
 
     if (this.player.velocity) {
-      this.player.pos.x += x * this.player.velocity;
-      this.player.pos.y += y * this.player.velocity;
+      this.player.setPosition(
+        this.player.x + x * this.player.velocity,
+        this.player.y + y * this.player.velocity
+      );
     }
   }
 
   handleCollisions() {
-    this.physics.update();
     this.physics.checkAll(({ a, b, overlapV }) => {
       if (a === this.playerTurret || b === this.playerTurret) {
         return;
@@ -133,9 +134,8 @@ class Tank {
   }
 
   updateTurret() {
-    this.playerTurret.setPosition(this.player.x, this.player.y);
     this.playerTurret.setAngle(this.player.angle);
-    this.playerTurret.updateAABB();
+    this.playerTurret.setPosition(this.player.x, this.player.y);
 
     const hit = this.physics.raycast(
       this.playerTurret.start,
@@ -156,7 +156,7 @@ class Tank {
   createPlayer(x, y, size = 13) {
     const player = this.physics.createCircle(
       { x: this.scaleX(x), y: this.scaleY(y) },
-      this.scaleX(size),
+      this.scaleX(size * 0.67),
       { angle: 0.2, center: true }
     );
 
@@ -164,11 +164,9 @@ class Tank {
 
     this.playerTurret = this.physics.createLine(
       player,
-      { x: player.x + this.scaleX(70), y: player.y },
+      { x: player.x + this.scaleX(20) + this.scaleY(20), y: player.y },
       { angle: 0.2, isTrigger: true }
     );
-
-    this.playerTurret.translate(this.scaleX(17), 0);
 
     return player;
   }

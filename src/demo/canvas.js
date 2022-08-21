@@ -5,9 +5,6 @@ class TestCanvas {
   constructor(test) {
     this.test = test;
 
-    this.fps = 0;
-    this.frame = 0;
-
     this.element = document.createElement("div");
     this.element.id = "debug";
     this.element.innerHTML = `${this.test.legend}
@@ -32,6 +29,8 @@ class TestCanvas {
     }
 
     this.started = Date.now();
+    this.fps = 0;
+    this.frame = 0;
 
     loop(() => this.update());
   }

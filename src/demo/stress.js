@@ -1,12 +1,10 @@
 const { System, SATVector, getBounceDirection } = require("../../dist");
 const { width, height, random, loop } = require("./canvas");
 const count = 1000;
-const padding = (Math.PI * Math.sqrt(width * height)) / count;
+const size = Math.sqrt((width * height) / (count * 50));
 
 class Stress {
   constructor() {
-    const size = (width * height) / (count * 500);
-
     this.physics = new System();
     this.bodies = [];
     this.polygons = 0;
@@ -66,9 +64,10 @@ class Stress {
   }
 
   update(timeScale) {
+    const padding = size * timeScale * 0.67;
+
     this.bodies.forEach((body) => {
-      body.rotationAngle += body.rotationSpeed * timeScale;
-      body.setAngle(body.rotationAngle);
+      body.setAngle(body.angle + body.rotationSpeed * timeScale);
 
       // adaptive padding, when no collisions goes up to "padding" variable value
       body.padding = (body.padding + padding) / 2;
@@ -181,8 +180,7 @@ class Stress {
 
     // set initial rotation angle direction
     body.rotationSpeed = (Math.random() - Math.random()) * 0.1;
-    body.rotationAngle = (random(0, 360) * Math.PI) / 180;
-    body.setAngle(body.rotationAngle);
+    body.setAngle((random(0, 360) * Math.PI) / 180);
 
     body.directionX = Math.cos(direction);
     body.directionY = Math.sin(direction);
