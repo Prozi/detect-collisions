@@ -73,7 +73,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     | Types.Line = Types.Polygon;
 
   private pointsBackup!: SATVector[];
-  private scaleVector: SATVector;
+  private scaleVector: Vector = { x: 1, y: 1 };
 
   /**
    * collider - polygon
@@ -92,8 +92,6 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     }
 
     extendBody(this, options);
-
-    this.scaleVector = new SATVector(1, 1);
 
     this.updateAABB();
   }
@@ -195,7 +193,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     this.scaleVector.x = x;
     this.scaleVector.y = y;
 
-    this.points.forEach((point, i) => {
+    this.points.forEach((point: SATVector, i: number) => {
       point.x = this.pointsBackup[i].x * x;
       point.y = this.pointsBackup[i].y * y;
     });

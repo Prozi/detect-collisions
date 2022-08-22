@@ -110,16 +110,9 @@ export function checkAInB(a: BBox, b: BBox): boolean {
 }
 
 export function clonePointsArray(points: SATVector[]): SATVector[] {
-  let pointsClone = [];
-
-  for (var i = 0; i < points.length; i++) {
-    let point = points[i];
-
-    pointsClone.push(new SATVector(point.x, point.y));
-  }
-
-  return pointsClone;
-}
+  return Array.from(points, (_: unknown, index: number) =>
+    points[index].clone()
+  );
 
 /**
  * draws dashed line on canvas context
