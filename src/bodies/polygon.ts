@@ -138,7 +138,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     return this.points.length > 2
       ? quickDecomp(this.calcPoints.map(mapVectorToArray))
       : // for line and point
-        [];
+      [];
   }
 
   setPoints(points: SATVector[]): Polygon {
@@ -277,6 +277,13 @@ export class Polygon extends SATPolygon implements BBox, Collider {
 
     this.translate(-x, -y);
     this.setPosition(this.x + x, this.y + y);
+  }
+
+  rotate(angle: number): Polygon {
+    super.rotate(angle);
+    this.pointsBackup = clonePointsArray(this.points);
+
+    return this;
   }
 
   /**
