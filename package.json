@@ -6,6 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "rm -rf dist && tsc",
+    "benchmark": "yarn build && node src/demo/benchmark.js",
     "dev:demo": "webpack serve --port 4200",
     "build:demo": "webpack",
     "build:docs": "rm -rf docs && yarn typedoc && yarn docs:postbuild",

@@ -1,10 +1,10 @@
-const { System, SATVector, getBounceDirection } = require("../../dist");
+const { System, getBounceDirection } = require("../../dist");
 const { width, height, random, loop } = require("./canvas");
-const count = 1000;
-const size = Math.sqrt((width * height) / (count * 50));
 
 class Stress {
-  constructor() {
+  constructor(count = 1000) {
+    const size = Math.sqrt((width * height) / (count * 50));
+
     this.physics = new System();
     this.bodies = [];
     this.polygons = 0;
@@ -12,6 +12,7 @@ class Stress {
     this.circles = 0;
     this.ellipses = 0;
     this.lines = 0;
+    this.count = count;
 
     // World bounds
     this.bounds = [
@@ -48,10 +49,11 @@ class Stress {
     <div><b>Ellipses:</b> ${this.ellipses}</div>
     <div><b>Lines:</b> ${this.lines}</div>`;
 
-    loop((timeScale) => this.update(Math.min(1, timeScale)));
+    this.start = () =>
+      loop((timeScale) => this.update(Math.min(1, timeScale), size));
   }
 
-  update(timeScale) {
+  update(timeScale, size) {
     const padding = size * timeScale * 0.67;
 
     this.bodies.forEach((body) => {

@@ -7,3 +7,7 @@ const test = new Test();
 const canvas = new TestCanvas(test);
 
 document.body.appendChild(canvas.element);
+
+if (test.start) {
+  test.start();
+}
