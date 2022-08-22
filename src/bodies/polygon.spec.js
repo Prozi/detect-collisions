@@ -169,5 +169,30 @@ describe("GIVEN Polygon", () => {
 
       expect(collide).toBe(true);
     });
+
+    it("THEN it rescales properly", () => {
+      const { System } = require("../../dist/");
+      const physics = new System();
+      const polygon = physics.createPolygon({ x: 0, y: 0 }, [
+        { x: -10, y: -10 },
+        { x: -10, y: 10 },
+        { x: 10, y: 10 },
+        { x: 10, y: -10 },
+      ]);
+      const circle = physics.createCircle({ x: -5, y: 0 }, 1);
+
+      // Make sure minX isn't -10 * 0.3 * 0.3
+      polygon.setScale(0.3);
+      polygon.setScale(0.3);
+
+      const { minX, minY, maxX, maxY } = polygon.getAABBAsBBox();
+      const collide = physics.checkCollision(polygon, circle);
+
+      expect(minX).toBe(-3);
+      expect(minY).toBe(-3);
+      expect(maxX).toBe(3);
+      expect(maxY).toBe(3);
+      expect(collide).toBe(false);
+    });
   });
 });

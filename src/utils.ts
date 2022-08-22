@@ -109,6 +109,18 @@ export function checkAInB(a: BBox, b: BBox): boolean {
   return insideX && insideY;
 }
 
+export function clonePointsArray(points: SATVector[]): SATVector[] {
+  let pointsClone = [];
+
+  for (var i = 0; i < points.length; i++) {
+    let point = points[i];
+
+    pointsClone.push(new SATVector(point.x, point.y));
+  }
+
+  return pointsClone;
+}
+
 /**
  * draws dashed line on canvas context
  */
