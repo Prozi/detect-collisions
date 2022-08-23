@@ -44,6 +44,7 @@ const physics: System = new System();
 - all bodies have `setPosition(x, y)`, using it **will** update *bounding box*
 - all bodies have `pos` with `x & y` properties, setting those **will not** update *bounding box*
 - all bodies have `angle` and `setAngle()` method to rotate (useless for `Circle` but stores value)
+- all bodies have `scale` and `setScale()` method to scale (for `Circle` takes 1 parameter, `x, y` for rest)
 - all bodies have `center()` method for centering anchor (useless for `Circle, Ellipse, Point`)
 - `Box` has `width & height` properties
 
