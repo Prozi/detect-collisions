@@ -20,6 +20,7 @@ import {
   mapArrayToVector,
   mapVectorToArray,
   updateAABB,
+  clonePointsArray,
 } from "../utils";
 
 /**
@@ -71,6 +72,9 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     | Types.Ellipse
     | Types.Line = Types.Polygon;
 
+  private pointsBackup!: SATVector[];
+  private scaleVector: Vector = { x: 1, y: 1 };
+
   /**
    * collider - polygon
    * @param {PotentialVector} position {x, y}
@@ -118,17 +122,30 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     this.system?.updateBody(this);
   }
 
+  get scale(): number {
+    return this.scaleVector.x;
+  }
+
+  /**
+   * allow easier setting of scale
+   */
+  set scale(scale: number) {
+    this.setScale(scale);
+  }
+
   getConvex(): number[][][] {
     // if not line
     return this.points.length > 2
       ? quickDecomp(this.calcPoints.map(mapVectorToArray))
       : // for line and point
-        [];
+      [];
   }
 
   setPoints(points: SATVector[]): Polygon {
     super.setPoints(points);
     this.updateIsConvex();
+
+    this.pointsBackup = clonePointsArray(this.points);
 
     return this;
   }
@@ -161,6 +178,27 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     this.pos.y = y;
 
     this.system?.updateBody(this);
+  }
+
+  /**
+   * update scale
+   * @param {number} x
+   * @param {number} y
+   */
+  setScale(x: number, y: number = x): void {
+    if (!this.pointsBackup) {
+      this.pointsBackup = clonePointsArray(this.points);
+    }
+
+    this.scaleVector.x = x;
+    this.scaleVector.y = y;
+
+    this.points.forEach((point: SATVector, i: number) => {
+      point.x = this.pointsBackup[i].x * x;
+      point.y = this.pointsBackup[i].y * y;
+    });
+
+    super.setPoints(this.points);
   }
 
   /**
@@ -239,6 +277,13 @@ export class Polygon extends SATPolygon implements BBox, Collider {
 
     this.translate(-x, -y);
     this.setPosition(this.x + x, this.y + y);
+  }
+
+  rotate(angle: number): Polygon {
+    super.rotate(angle);
+    this.pointsBackup = clonePointsArray(this.points);
+
+    return this;
   }
 
   /**

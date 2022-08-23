@@ -54,6 +54,8 @@ export class Circle extends SATCircle implements BBox, Collider {
 
   readonly type: Types.Circle = Types.Circle;
 
+  private radiusBackup: number;
+
   /**
    * collider - circle
    * @param {PotentialVector} position {x, y}
@@ -67,6 +69,8 @@ export class Circle extends SATCircle implements BBox, Collider {
     super(ensureVectorPoint(position), radius);
 
     extendBody(this, options);
+
+    this.radiusBackup = radius;
 
     this.updateAABB();
   }
@@ -97,6 +101,17 @@ export class Circle extends SATCircle implements BBox, Collider {
     this.system?.updateBody(this);
   }
 
+  get scale(): number {
+    return this.r / this.radiusBackup;
+  }
+
+  /**
+   * shorthand for setScale()
+   */
+  set scale(scale: number) {
+    this.setScale(scale);
+  }
+
   /**
    * update position
    * @param {number} x
@@ -105,6 +120,16 @@ export class Circle extends SATCircle implements BBox, Collider {
   setPosition(x: number, y: number): void {
     this.pos.x = x;
     this.pos.y = y;
+
+    this.system?.updateBody(this);
+  }
+
+  /**
+   * update scale
+   * @param {number} scale
+   */
+  setScale(scale: number): void {
+    this.r = this.radiusBackup * scale;
 
     this.system?.updateBody(this);
   }
