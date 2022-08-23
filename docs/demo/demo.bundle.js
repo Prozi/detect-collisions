@@ -201,6 +201,7 @@ class Circle extends sat_1.Circle {
         this.angle = 0;
         this.type = model_1.Types.Circle;
         (0, utils_1.extendBody)(this, options);
+        this.radiusBackup = radius;
         this.updateAABB();
     }
     get x() {
@@ -225,6 +226,15 @@ class Circle extends sat_1.Circle {
         this.pos.y = y;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
     }
+    get scale() {
+        return this.r / this.radiusBackup;
+    }
+    /**
+     * shorthand for setScale()
+     */
+    set scale(scale) {
+        this.setScale(scale);
+    }
     /**
      * update position
      * @param {number} x
@@ -234,6 +244,15 @@ class Circle extends sat_1.Circle {
         var _a;
         this.pos.x = x;
         this.pos.y = y;
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+    }
+    /**
+     * update scale
+     * @param {number} scale
+     */
+    setScale(scale) {
+        var _a;
+        this.r = this.radiusBackup * scale;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
     }
     /**
@@ -499,6 +518,7 @@ class Polygon extends sat_1.Polygon {
          */
         this.padding = 0;
         this.type = model_1.Types.Polygon;
+        this.scaleVector = { x: 1, y: 1 };
         if (!(points === null || points === void 0 ? void 0 : points.length)) {
             throw new Error("No points in polygon");
         }
@@ -527,6 +547,15 @@ class Polygon extends sat_1.Polygon {
         this.pos.y = y;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
     }
+    get scale() {
+        return this.scaleVector.x;
+    }
+    /**
+     * allow easier setting of scale
+     */
+    set scale(scale) {
+        this.setScale(scale);
+    }
     getConvex() {
         // if not line
         return this.points.length > 2
@@ -537,6 +566,7 @@ class Polygon extends sat_1.Polygon {
     setPoints(points) {
         super.setPoints(points);
         this.updateIsConvex();
+        this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
         return this;
     }
     updateConvexPolygons(convex = this.getConvex()) {
@@ -562,6 +592,23 @@ class Polygon extends sat_1.Polygon {
         this.pos.x = x;
         this.pos.y = y;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+    }
+    /**
+     * update scale
+     * @param {number} x
+     * @param {number} y
+     */
+    setScale(x, y = x) {
+        if (!this.pointsBackup) {
+            this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
+        }
+        this.scaleVector.x = x;
+        this.scaleVector.y = y;
+        this.points.forEach((point, i) => {
+            point.x = this.pointsBackup[i].x * x;
+            point.y = this.pointsBackup[i].y * y;
+        });
+        super.setPoints(this.points);
     }
     /**
      * get bbox without padding
@@ -628,6 +675,11 @@ class Polygon extends sat_1.Polygon {
         const { x, y } = this.getCentroidWithoutRotation();
         this.translate(-x, -y);
         this.setPosition(this.x + x, this.y + y);
+    }
+    rotate(angle) {
+        super.rotate(angle);
+        this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
+        return this;
     }
     /**
      * after points update set is convex
@@ -939,7 +991,7 @@ exports.System = System;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getBounceDirection = exports.ensureConvexPolygons = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.checkAInB = exports.updateAABB = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.getBounceDirection = exports.ensureConvexPolygons = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.updateAABB = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js");
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
@@ -1031,6 +1083,10 @@ function checkAInB(a, b) {
     return insideX && insideY;
 }
 exports.checkAInB = checkAInB;
+function clonePointsArray(points) {
+    return Array.from(points, (_, index) => points[index].clone());
+}
+exports.clonePointsArray = clonePointsArray;
 /**
  * draws dashed line on canvas context
  */
@@ -3013,13 +3069,13 @@ module.exports.height = height;
   \****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const { System, SATVector, getBounceDirection } = __webpack_require__(/*! ../../dist */ "./dist/index.js");
+const { System, getBounceDirection } = __webpack_require__(/*! ../../dist */ "./dist/index.js");
 const { width, height, random, loop } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js");
-const count = 1000;
-const size = Math.sqrt((width * height) / (count * 50));
 
 class Stress {
-  constructor() {
+  constructor(count = 1000) {
+    const size = Math.sqrt((width * height) / (count * 50));
+
     this.physics = new System();
     this.bodies = [];
     this.polygons = 0;
@@ -3027,6 +3083,7 @@ class Stress {
     this.circles = 0;
     this.ellipses = 0;
     this.lines = 0;
+    this.count = count;
 
     // World bounds
     this.bounds = [
@@ -3063,10 +3120,11 @@ class Stress {
     <div><b>Ellipses:</b> ${this.ellipses}</div>
     <div><b>Lines:</b> ${this.lines}</div>`;
 
-    loop((timeScale) => this.update(Math.min(1, timeScale)));
+    this.start = () =>
+      loop((timeScale) => this.update(Math.min(1, timeScale), size));
   }
 
-  update(timeScale) {
+  update(timeScale, size) {
     const padding = size * timeScale * 0.67;
 
     this.bodies.forEach((body) => {
@@ -3591,6 +3649,10 @@ const test = new Test();
 const canvas = new TestCanvas(test);
 
 document.body.appendChild(canvas.element);
+
+if (test.start) {
+  test.start();
+}
 
 })();
 

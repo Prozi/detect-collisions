@@ -42,7 +42,7 @@ describe("GIVEN Polygon", () => {
       const physics = new System();
       const body = physics.createPolygon({}, [{}], {
         isStatic: true,
-        isTrigger: true
+        isTrigger: true,
       });
 
       expect(body.isStatic).toBe(true);
@@ -56,20 +56,20 @@ describe("GIVEN Polygon", () => {
     polygonPoints = [
       {
         x: 2,
-        y: 5
+        y: 5,
       },
       {
         x: 180,
-        y: -59
+        y: -59,
       },
       {
         x: 177,
-        y: -69
+        y: -69,
       },
       {
         x: -2,
-        y: -5
-      }
+        y: -5,
+      },
     ];
   });
 
@@ -80,7 +80,7 @@ describe("GIVEN Polygon", () => {
       const circle = physics.createCircle(
         {
           x: -1311,
-          y: 1642
+          y: 1642,
         },
         3
       );
@@ -88,7 +88,7 @@ describe("GIVEN Polygon", () => {
       const polygon = physics.createPolygon(
         {
           x: -1418,
-          y: 1675
+          y: 1675,
         },
         polygonPoints
       );
@@ -104,7 +104,7 @@ describe("GIVEN Polygon", () => {
       const circle = physics.createCircle(
         {
           x: -1311,
-          y: 1642
+          y: 1642,
         },
         3
       );
@@ -112,7 +112,7 @@ describe("GIVEN Polygon", () => {
       const polygon = physics.createPolygon(
         {
           x: -1418,
-          y: 1675
+          y: 1675,
         },
         polygonPoints.reverse()
       );
@@ -130,7 +130,7 @@ describe("GIVEN Polygon", () => {
         { x: 256, y: 265 },
         { x: 400, y: 274 },
         { x: 360, y: 395 },
-        { x: 80, y: 350 }
+        { x: 80, y: 350 },
       ]);
       const convex = physics.createPolygon({ x: 0, y: 0 }, [
         { x: 273, y: 251 },
@@ -138,7 +138,7 @@ describe("GIVEN Polygon", () => {
         { x: 230, y: 40 },
         { x: 320, y: 10 },
         { x: 440, y: 86 },
-        { x: 440, y: 220 }
+        { x: 440, y: 220 },
       ]);
 
       const collide = physics.checkCollision(concave, convex);
@@ -161,7 +161,7 @@ describe("GIVEN Polygon", () => {
         { x: 0.77, y: 7.5 },
         { x: -13.25, y: 7.5 },
         { x: -13.25, y: -7.51 },
-        { x: -11.25, y: -7.51 }
+        { x: -11.25, y: -7.51 },
       ]);
       const convex = physics.createCircle({ x: 0.77, y: 6.75 }, 1);
 
@@ -177,7 +177,7 @@ describe("GIVEN Polygon", () => {
         { x: -10, y: -10 },
         { x: -10, y: 10 },
         { x: 10, y: 10 },
-        { x: 10, y: -10 }
+        { x: 10, y: -10 },
       ]);
       const circle = physics.createCircle({ x: -5, y: 0 }, 1);
 
@@ -202,7 +202,7 @@ describe("GIVEN Polygon", () => {
         { x: -10, y: -10 },
         { x: -10, y: 10 },
         { x: 10, y: 10 },
-        { x: 10, y: -10 }
+        { x: 10, y: -10 },
       ]);
 
       // Make sure that pointsBackup is assigned

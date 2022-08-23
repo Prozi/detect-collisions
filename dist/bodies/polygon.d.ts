@@ -38,6 +38,8 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      */
     system?: System;
     readonly type: Types.Polygon | Types.Box | Types.Point | Types.Ellipse | Types.Line;
+    private pointsBackup;
+    private readonly scaleVector;
     /**
      * collider - polygon
      * @param {PotentialVector} position {x, y}
@@ -54,6 +56,11 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      * updating this.pos.y by this.y = y updates AABB
      */
     set y(y: number);
+    get scale(): number;
+    /**
+     * allow easier setting of scale
+     */
+    set scale(scale: number);
     getConvex(): number[][][];
     setPoints(points: SATVector[]): Polygon;
     updateConvexPolygons(convex?: number[][][]): void;
@@ -63,6 +70,12 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      * @param {number} y
      */
     setPosition(x: number, y: number): void;
+    /**
+     * update scale
+     * @param {number} x
+     * @param {number} y
+     */
+    setScale(x: number, y?: number): void;
     /**
      * get bbox without padding
      */
@@ -81,6 +94,7 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      * reCenters the box anchor
      */
     center(): void;
+    rotate(angle: number): Polygon;
     /**
      * after points update set is convex
      */

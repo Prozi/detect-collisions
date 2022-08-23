@@ -40,9 +40,9 @@ const physics: System = new System();
 ### 2. Creating, Inserting, Moving, Removing Bodies
 
 - `Circle & Polygon` extend their respective `SAT` counterparts so they have [all of its functionalities](https://github.com/jriecken/sat-js).
-- all bodies have `x & y` properties, setting those **will** update *bounding box*
-- all bodies have `setPosition(x, y)`, using it **will** update *bounding box*
-- all bodies have `pos` with `x & y` properties, setting those **will not** update *bounding box*
+- all bodies have `x & y` properties, setting those **will** update _bounding box_
+- all bodies have `setPosition(x, y)`, using it **will** update _bounding box_
+- all bodies have `pos` with `x & y` properties, setting those **will not** update _bounding box_
 - all bodies have `angle` and `setAngle()` method to rotate (useless for `Circle` but stores value)
 - all bodies have `scale` and `setScale()` method to scale (for `Circle` takes 1 parameter, `x, y` for rest)
 - all bodies have `center()` method for centering anchor (useless for `Circle, Ellipse, Point`)
@@ -294,3 +294,14 @@ This isn't caused by faulty collisions, but rather how a project handles its col
 One workaround is to resolve each collision, update the collision system, and repeat until no collisions are found. Keep in mind that this can potentially lead to infinite loops if the two colliding bodies equally negate each other. Another solution is to collect all overlaps and combine them into a single resultant vector and then push the body out, but this can get rather complicated.
 
 There is no perfect solution. How collisions are handled depends on the project.
+
+## Benchmark
+
+```bash
+$ yarn add detect-collisions
+$ cd node_modules/detect-collisions
+$ yarn benchmark
+```
+
+will show you the [Stress Demo](https://prozi.github.io/detect-collisions/demo/?stress) results without drawing,
+only using Detect-Collisions and with different _N_ amounts of dynamic, moving bodies.

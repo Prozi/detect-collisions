@@ -25,6 +25,7 @@ class Polygon extends sat_1.Polygon {
          */
         this.padding = 0;
         this.type = model_1.Types.Polygon;
+        this.scaleVector = { x: 1, y: 1 };
         if (!(points === null || points === void 0 ? void 0 : points.length)) {
             throw new Error("No points in polygon");
         }
@@ -53,6 +54,15 @@ class Polygon extends sat_1.Polygon {
         this.pos.y = y;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
     }
+    get scale() {
+        return this.scaleVector.x;
+    }
+    /**
+     * allow easier setting of scale
+     */
+    set scale(scale) {
+        this.setScale(scale);
+    }
     getConvex() {
         // if not line
         return this.points.length > 2
@@ -63,6 +73,7 @@ class Polygon extends sat_1.Polygon {
     setPoints(points) {
         super.setPoints(points);
         this.updateIsConvex();
+        this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
         return this;
     }
     updateConvexPolygons(convex = this.getConvex()) {
@@ -88,6 +99,23 @@ class Polygon extends sat_1.Polygon {
         this.pos.x = x;
         this.pos.y = y;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+    }
+    /**
+     * update scale
+     * @param {number} x
+     * @param {number} y
+     */
+    setScale(x, y = x) {
+        if (!this.pointsBackup) {
+            this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
+        }
+        this.scaleVector.x = x;
+        this.scaleVector.y = y;
+        this.points.forEach((point, i) => {
+            point.x = this.pointsBackup[i].x * x;
+            point.y = this.pointsBackup[i].y * y;
+        });
+        super.setPoints(this.points);
     }
     /**
      * get bbox without padding
@@ -154,6 +182,11 @@ class Polygon extends sat_1.Polygon {
         const { x, y } = this.getCentroidWithoutRotation();
         this.translate(-x, -y);
         this.setPosition(this.x + x, this.y + y);
+    }
+    rotate(angle) {
+        super.rotate(angle);
+        this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
+        return this;
     }
     /**
      * after points update set is convex

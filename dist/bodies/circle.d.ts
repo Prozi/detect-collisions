@@ -35,6 +35,7 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      */
     system?: System;
     readonly type: Types.Circle;
+    private readonly radiusBackup;
     /**
      * collider - circle
      * @param {PotentialVector} position {x, y}
@@ -51,12 +52,22 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      * updating this.pos.y by this.y = y updates AABB
      */
     set y(y: number);
+    get scale(): number;
+    /**
+     * shorthand for setScale()
+     */
+    set scale(scale: number);
     /**
      * update position
      * @param {number} x
      * @param {number} y
      */
     setPosition(x: number, y: number): void;
+    /**
+     * update scale
+     * @param {number} scale
+     */
+    setScale(scale: number): void;
     /**
      * Updates Bounding Box of collider
      */

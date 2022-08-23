@@ -73,7 +73,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     | Types.Line = Types.Polygon;
 
   private pointsBackup!: SATVector[];
-  private scaleVector: Vector = { x: 1, y: 1 };
+  private readonly scaleVector: Vector = { x: 1, y: 1 };
 
   /**
    * collider - polygon
@@ -138,7 +138,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     return this.points.length > 2
       ? quickDecomp(this.calcPoints.map(mapVectorToArray))
       : // for line and point
-      [];
+        [];
   }
 
   setPoints(points: SATVector[]): Polygon {

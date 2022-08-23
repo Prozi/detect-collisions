@@ -29,6 +29,7 @@ class Circle extends sat_1.Circle {
         this.angle = 0;
         this.type = model_1.Types.Circle;
         (0, utils_1.extendBody)(this, options);
+        this.radiusBackup = radius;
         this.updateAABB();
     }
     get x() {
@@ -53,6 +54,15 @@ class Circle extends sat_1.Circle {
         this.pos.y = y;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
     }
+    get scale() {
+        return this.r / this.radiusBackup;
+    }
+    /**
+     * shorthand for setScale()
+     */
+    set scale(scale) {
+        this.setScale(scale);
+    }
     /**
      * update position
      * @param {number} x
@@ -62,6 +72,15 @@ class Circle extends sat_1.Circle {
         var _a;
         this.pos.x = x;
         this.pos.y = y;
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+    }
+    /**
+     * update scale
+     * @param {number} scale
+     */
+    setScale(scale) {
+        var _a;
+        this.r = this.radiusBackup * scale;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
     }
     /**
