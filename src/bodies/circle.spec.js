@@ -64,4 +64,19 @@ describe("GIVEN Circle", () => {
       expect(body.isTrigger).toBe(true);
     });
   });
+
+  describe("AND you scale it", () => {
+    it("THEN you can get and set scale, scaleX, scaleY", () => {
+      const { System } = require("../../dist/");
+      const physics = new System();
+      const body = physics.createCircle({ x: 0, y: 0 }, 9);
+
+      body.scale = 4;
+      expect(body.scale).toBe(4);
+
+      body.setScale(Math.PI, 3);
+      expect(body.scaleX).toBe(Math.PI);
+      expect(body.scaleY).toBe(Math.PI);
+    });
+  });
 });

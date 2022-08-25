@@ -61,6 +61,25 @@ class Stress {
 
       // adaptive padding, when no collisions goes up to "padding" variable value
       body.padding = (body.padding + padding) / 2;
+
+      if (Math.random() < 0.05 * timeScale) {
+        body.targetScale.x = 0.5 + Math.random();
+      }
+
+      if (Math.random() < 0.05 * timeScale) {
+        body.targetScale.y = 0.5 + Math.random();
+      }
+
+      if (Math.abs(body.targetScale.x - body.scaleX) > 0.01) {
+        body.setScale(
+          body.scaleX +
+            Math.sign(body.targetScale.x - body.scaleX) * 0.02 * timeScale,
+          body.scaleY +
+            Math.sign(body.targetScale.y - body.scaleY) * 0.02 * timeScale
+        );
+      }
+
+      // as last step update position, and bounding box
       body.setPosition(
         body.x + body.directionX * timeScale,
         body.y + body.directionY * timeScale
@@ -170,6 +189,8 @@ class Stress {
     // set initial rotation angle direction
     body.rotationSpeed = (Math.random() - Math.random()) * 0.1;
     body.setAngle((random(0, 360) * Math.PI) / 180);
+
+    body.targetScale = { x: 1, y: 1 };
 
     body.directionX = Math.cos(direction);
     body.directionY = Math.sin(direction);

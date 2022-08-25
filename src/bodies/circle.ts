@@ -27,15 +27,20 @@ export class Circle extends SATCircle implements BBox, Collider {
    */
   padding = 0;
 
+  /**
+   * for compatibility reasons circle has angle
+   */
+  angle = 0;
+
   /*
    * circles are convex
    */
   isConvex = true;
 
   /**
-   * for compatibility reasons circle has angle
+   * circles are centered
    */
-  angle = 0;
+  isCentered = true;
 
   /**
    * static bodies don't move but they collide
@@ -101,8 +106,25 @@ export class Circle extends SATCircle implements BBox, Collider {
     this.system?.updateBody(this);
   }
 
+  /**
+   * allow get scale
+   */
   get scale(): number {
     return this.r / this.radiusBackup;
+  }
+
+  /**
+   * scaleX = scale in case of Circles
+   */
+  get scaleX(): number {
+    return this.scale;
+  }
+
+  /**
+   * scaleY = scale in case of Circles
+   */
+  get scaleY(): number {
+    return this.scale;
   }
 
   /**
@@ -130,8 +152,6 @@ export class Circle extends SATCircle implements BBox, Collider {
    */
   setScale(scale: number): void {
     this.r = this.radiusBackup * scale;
-
-    this.system?.updateBody(this);
   }
 
   /**

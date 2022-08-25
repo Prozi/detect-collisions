@@ -169,7 +169,9 @@ describe("GIVEN Polygon", () => {
 
       expect(collide).toBe(true);
     });
+  });
 
+  describe("AND you scale it", () => {
     it("THEN it rescales properly", () => {
       const { System } = require("../../dist/");
       const physics = new System();
@@ -214,6 +216,45 @@ describe("GIVEN Polygon", () => {
       const { minX } = polygon.getAABBAsBBox();
 
       expect(minX).not.toBe(-5);
+    });
+
+    it("THEN it rescales properly with angle", () => {
+      const { System } = require("../../dist/");
+      const physics = new System();
+      const polygon = physics.createPolygon({ x: 0, y: 0 }, [
+        { x: -10, y: -10 },
+        { x: -10, y: 10 },
+        { x: 10, y: 10 },
+        { x: 10, y: -10 },
+      ]);
+
+      // Make sure that pointsBackup is assigned
+      polygon.setScale(1);
+      // ~45deg
+      polygon.setAngle(0.7854);
+      polygon.setScale(0.5);
+
+      const { minX } = polygon.getAABBAsBBox();
+
+      expect(minX).not.toBe(-5);
+    });
+
+    it("THEN you can get and set scale, scaleX, scaleY", () => {
+      const { System } = require("../../dist/");
+      const physics = new System();
+      const polygon = physics.createPolygon({ x: 0, y: 0 }, [
+        { x: -10, y: -10 },
+        { x: -10, y: 10 },
+        { x: 10, y: 10 },
+        { x: 10, y: -10 },
+      ]);
+
+      polygon.scale = 4;
+      expect(polygon.scale).toBe(4);
+
+      polygon.setScale(2, 3);
+      expect(polygon.scaleX).toBe(2);
+      expect(polygon.scaleY).toBe(3);
     });
   });
 });

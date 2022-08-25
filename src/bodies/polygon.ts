@@ -61,6 +61,11 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   isTrigger?: boolean;
 
   /**
+   * flag to show is it centered
+   */
+  isCentered?: boolean;
+
+  /**
    * reference to collision system
    */
   system?: System;
@@ -122,6 +127,23 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     this.system?.updateBody(this);
   }
 
+  /**
+   * allow exact getting of scale x
+   */
+  get scaleX(): number {
+    return this.scaleVector.x;
+  }
+
+  /**
+   * allow exact getting of scale y
+   */
+  get scaleY(): number {
+    return this.scaleVector.y;
+  }
+
+  /**
+   * allow approx getting of scale
+   */
   get scale(): number {
     return this.scaleVector.x;
   }
@@ -144,8 +166,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   setPoints(points: SATVector[]): Polygon {
     super.setPoints(points);
     this.updateIsConvex();
-
-    this.pointsBackup = clonePointsArray(this.points);
+    this.pointsBackup = clonePointsArray(points);
 
     return this;
   }
@@ -186,10 +207,6 @@ export class Polygon extends SATPolygon implements BBox, Collider {
    * @param {number} y
    */
   setScale(x: number, y: number = x): void {
-    if (!this.pointsBackup) {
-      this.pointsBackup = clonePointsArray(this.points);
-    }
-
     this.scaleVector.x = x;
     this.scaleVector.y = y;
 
@@ -258,7 +275,6 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   getCentroidWithoutRotation(): Vector {
     // reset angle for get centroid
     const angle = this.angle;
-
     this.setAngle(0);
 
     const centroid: Vector = this.getCentroid();
@@ -273,10 +289,16 @@ export class Polygon extends SATPolygon implements BBox, Collider {
    * reCenters the box anchor
    */
   center(): void {
-    const { x, y } = this.getCentroidWithoutRotation();
+    if (this.isCentered) {
+      return;
+    }
 
+    const { x, y } = this.getCentroidWithoutRotation();
     this.translate(-x, -y);
-    this.setPosition(this.x + x, this.y + y);
+    this.pos.x += x;
+    this.pos.y += y;
+    this.isCentered = true;
+    this.pointsBackup = clonePointsArray(this.points);
   }
 
   rotate(angle: number): Polygon {
