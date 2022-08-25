@@ -19,14 +19,18 @@ class Circle extends sat_1.Circle {
          * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
          */
         this.padding = 0;
+        /**
+         * for compatibility reasons circle has angle
+         */
+        this.angle = 0;
         /*
          * circles are convex
          */
         this.isConvex = true;
         /**
-         * for compatibility reasons circle has angle
+         * circles are centered
          */
-        this.angle = 0;
+        this.isCentered = true;
         this.type = model_1.Types.Circle;
         (0, utils_1.extendBody)(this, options);
         this.radiusBackup = radius;
@@ -54,8 +58,23 @@ class Circle extends sat_1.Circle {
         this.pos.y = y;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
     }
+    /**
+     * allow get scale
+     */
     get scale() {
         return this.r / this.radiusBackup;
+    }
+    /**
+     * scaleX = scale in case of Circles
+     */
+    get scaleX() {
+        return this.scale;
+    }
+    /**
+     * scaleY = scale in case of Circles
+     */
+    get scaleY() {
+        return this.scale;
     }
     /**
      * shorthand for setScale()
@@ -79,9 +98,7 @@ class Circle extends sat_1.Circle {
      * @param {number} scale
      */
     setScale(scale) {
-        var _a;
         this.r = this.radiusBackup * scale;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
     }
     /**
      * Updates Bounding Box of collider

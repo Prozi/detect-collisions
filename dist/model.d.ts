@@ -86,13 +86,37 @@ export interface Collider {
      */
     isTrigger?: boolean;
     /**
+     * flag to show is it centered
+     */
+    isCentered?: boolean;
+    /**
      * BHV padding (defaults to 0)
      */
     padding: number;
     /**
+     * body angle
+     */
+    angle: number;
+    /**
      * collisions system reference
      */
     system?: System;
+    /**
+     * scale getter (x)
+     */
+    get scaleX(): number;
+    /**
+     * scale getter (y = x for Circle)
+     */
+    get scaleY(): number;
+    /**
+     * for setting scale
+     */
+    setScale(x: number, y?: number): void;
+    /**
+     * for setting angle
+     */
+    setAngle(angle: number): void;
     /**
      * draw the collider
      */

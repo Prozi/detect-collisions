@@ -191,14 +191,18 @@ class Circle extends sat_1.Circle {
          * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
          */
         this.padding = 0;
+        /**
+         * for compatibility reasons circle has angle
+         */
+        this.angle = 0;
         /*
          * circles are convex
          */
         this.isConvex = true;
         /**
-         * for compatibility reasons circle has angle
+         * circles are centered
          */
-        this.angle = 0;
+        this.isCentered = true;
         this.type = model_1.Types.Circle;
         (0, utils_1.extendBody)(this, options);
         this.radiusBackup = radius;
@@ -226,8 +230,23 @@ class Circle extends sat_1.Circle {
         this.pos.y = y;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
     }
+    /**
+     * allow get scale
+     */
     get scale() {
         return this.r / this.radiusBackup;
+    }
+    /**
+     * scaleX = scale in case of Circles
+     */
+    get scaleX() {
+        return this.scale;
+    }
+    /**
+     * scaleY = scale in case of Circles
+     */
+    get scaleY() {
+        return this.scale;
     }
     /**
      * shorthand for setScale()
@@ -251,9 +270,7 @@ class Circle extends sat_1.Circle {
      * @param {number} scale
      */
     setScale(scale) {
-        var _a;
         this.r = this.radiusBackup * scale;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
     }
     /**
      * Updates Bounding Box of collider
@@ -547,6 +564,21 @@ class Polygon extends sat_1.Polygon {
         this.pos.y = y;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
     }
+    /**
+     * allow exact getting of scale x
+     */
+    get scaleX() {
+        return this.scaleVector.x;
+    }
+    /**
+     * allow exact getting of scale y
+     */
+    get scaleY() {
+        return this.scaleVector.y;
+    }
+    /**
+     * allow approx getting of scale
+     */
     get scale() {
         return this.scaleVector.x;
     }
@@ -566,7 +598,7 @@ class Polygon extends sat_1.Polygon {
     setPoints(points) {
         super.setPoints(points);
         this.updateIsConvex();
-        this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
+        this.pointsBackup = (0, utils_1.clonePointsArray)(points);
         return this;
     }
     updateConvexPolygons(convex = this.getConvex()) {
@@ -599,9 +631,6 @@ class Polygon extends sat_1.Polygon {
      * @param {number} y
      */
     setScale(x, y = x) {
-        if (!this.pointsBackup) {
-            this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
-        }
         this.scaleVector.x = x;
         this.scaleVector.y = y;
         this.points.forEach((point, i) => {
@@ -672,9 +701,15 @@ class Polygon extends sat_1.Polygon {
      * reCenters the box anchor
      */
     center() {
+        if (this.isCentered) {
+            return;
+        }
         const { x, y } = this.getCentroidWithoutRotation();
         this.translate(-x, -y);
-        this.setPosition(this.x + x, this.y + y);
+        this.pos.x += x;
+        this.pos.y += y;
+        this.isCentered = true;
+        this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
     }
     rotate(angle) {
         super.rotate(angle);
@@ -3132,6 +3167,25 @@ class Stress {
 
       // adaptive padding, when no collisions goes up to "padding" variable value
       body.padding = (body.padding + padding) / 2;
+
+      if (Math.random() < 0.05 * timeScale) {
+        body.targetScale.x = 0.5 + Math.random();
+      }
+
+      if (Math.random() < 0.05 * timeScale) {
+        body.targetScale.y = 0.5 + Math.random();
+      }
+
+      if (Math.abs(body.targetScale.x - body.scaleX) > 0.01) {
+        body.setScale(
+          body.scaleX +
+            Math.sign(body.targetScale.x - body.scaleX) * 0.02 * timeScale,
+          body.scaleY +
+            Math.sign(body.targetScale.y - body.scaleY) * 0.02 * timeScale
+        );
+      }
+
+      // as last step update position, and bounding box
       body.setPosition(
         body.x + body.directionX * timeScale,
         body.y + body.directionY * timeScale
@@ -3241,6 +3295,8 @@ class Stress {
     // set initial rotation angle direction
     body.rotationSpeed = (Math.random() - Math.random()) * 0.1;
     body.setAngle((random(0, 360) * Math.PI) / 180);
+
+    body.targetScale = { x: 1, y: 1 };
 
     body.directionX = Math.cos(direction);
     body.directionY = Math.sin(direction);

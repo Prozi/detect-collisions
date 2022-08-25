@@ -54,6 +54,21 @@ class Polygon extends sat_1.Polygon {
         this.pos.y = y;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
     }
+    /**
+     * allow exact getting of scale x
+     */
+    get scaleX() {
+        return this.scaleVector.x;
+    }
+    /**
+     * allow exact getting of scale y
+     */
+    get scaleY() {
+        return this.scaleVector.y;
+    }
+    /**
+     * allow approx getting of scale
+     */
     get scale() {
         return this.scaleVector.x;
     }
@@ -73,7 +88,7 @@ class Polygon extends sat_1.Polygon {
     setPoints(points) {
         super.setPoints(points);
         this.updateIsConvex();
-        this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
+        this.pointsBackup = (0, utils_1.clonePointsArray)(points);
         return this;
     }
     updateConvexPolygons(convex = this.getConvex()) {
@@ -106,9 +121,6 @@ class Polygon extends sat_1.Polygon {
      * @param {number} y
      */
     setScale(x, y = x) {
-        if (!this.pointsBackup) {
-            this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
-        }
         this.scaleVector.x = x;
         this.scaleVector.y = y;
         this.points.forEach((point, i) => {
@@ -179,9 +191,15 @@ class Polygon extends sat_1.Polygon {
      * reCenters the box anchor
      */
     center() {
+        if (this.isCentered) {
+            return;
+        }
         const { x, y } = this.getCentroidWithoutRotation();
         this.translate(-x, -y);
-        this.setPosition(this.x + x, this.y + y);
+        this.pos.x += x;
+        this.pos.y += y;
+        this.isCentered = true;
+        this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
     }
     rotate(angle) {
         super.rotate(angle);

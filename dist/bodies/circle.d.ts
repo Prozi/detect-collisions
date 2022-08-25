@@ -17,11 +17,15 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
      */
     padding: number;
-    isConvex: boolean;
     /**
      * for compatibility reasons circle has angle
      */
     angle: number;
+    isConvex: boolean;
+    /**
+     * circles are centered
+     */
+    isCentered: boolean;
     /**
      * static bodies don't move but they collide
      */
@@ -52,7 +56,18 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      * updating this.pos.y by this.y = y updates AABB
      */
     set y(y: number);
+    /**
+     * allow get scale
+     */
     get scale(): number;
+    /**
+     * scaleX = scale in case of Circles
+     */
+    get scaleX(): number;
+    /**
+     * scaleY = scale in case of Circles
+     */
+    get scaleY(): number;
     /**
      * shorthand for setScale()
      */

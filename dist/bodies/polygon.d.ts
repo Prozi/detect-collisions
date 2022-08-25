@@ -34,6 +34,10 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      */
     isTrigger?: boolean;
     /**
+     * flag to show is it centered
+     */
+    isCentered?: boolean;
+    /**
      * reference to collision system
      */
     system?: System;
@@ -56,6 +60,17 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      * updating this.pos.y by this.y = y updates AABB
      */
     set y(y: number);
+    /**
+     * allow exact getting of scale x
+     */
+    get scaleX(): number;
+    /**
+     * allow exact getting of scale y
+     */
+    get scaleY(): number;
+    /**
+     * allow approx getting of scale
+     */
     get scale(): number;
     /**
      * allow easier setting of scale
