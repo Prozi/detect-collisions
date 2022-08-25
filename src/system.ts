@@ -183,7 +183,7 @@ export class System extends BaseSystem {
       const convexCandidates = ensureConvexPolygons(candidate);
 
       result = convexBodies.reduce(
-        (result: boolean, convexBody: SATPolygon) =>
+        (reduceResult: boolean, convexBody: SATPolygon) =>
           convexCandidates.reduce(
             (collidedAtLeastOnce: boolean, convexCandidate: SATPolygon) => {
               state.collides = testPolygonPolygon(
@@ -195,7 +195,7 @@ export class System extends BaseSystem {
               return this.collided(state) || collidedAtLeastOnce;
             },
             false
-          ) || result,
+          ) || reduceResult,
         false
       );
     } else {
@@ -220,9 +220,9 @@ export class System extends BaseSystem {
       this.response.bInA = checkAInB(candidate, body);
     } else if (!body.isConvex) {
       this.response.aInB = checkAInB(body, candidate);
-      this.response.bInA = state.bInA!; // this was set during this.collided()
+      this.response.bInA = !!state.bInA;
     } else if (!candidate.isConvex) {
-      this.response.aInB = state.aInB!; // this was set during this.collided()
+      this.response.aInB = !!state.aInB;
       this.response.bInA = checkAInB(candidate, body);
     }
 

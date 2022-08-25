@@ -114,6 +114,13 @@ export class Circle extends SATCircle implements BBox, Collider {
   }
 
   /**
+   * shorthand for setScale()
+   */
+  set scale(scale: number) {
+    this.setScale(scale);
+  }
+
+  /**
    * scaleX = scale in case of Circles
    */
   get scaleX(): number {
@@ -125,13 +132,6 @@ export class Circle extends SATCircle implements BBox, Collider {
    */
   get scaleY(): number {
     return this.scale;
-  }
-
-  /**
-   * shorthand for setScale()
-   */
-  set scale(scale: number) {
-    this.setScale(scale);
   }
 
   /**
@@ -150,7 +150,7 @@ export class Circle extends SATCircle implements BBox, Collider {
    * update scale
    * @param {number} scale
    */
-  setScale(scale: number): void {
+  setScale(scale: number, _ignoredParameter?: number): void {
     this.r = this.radiusBackup * scale;
   }
 
