@@ -65,6 +65,12 @@ class Circle extends sat_1.Circle {
         return this.r / this.radiusBackup;
     }
     /**
+     * shorthand for setScale()
+     */
+    set scale(scale) {
+        this.setScale(scale);
+    }
+    /**
      * scaleX = scale in case of Circles
      */
     get scaleX() {
@@ -75,12 +81,6 @@ class Circle extends sat_1.Circle {
      */
     get scaleY() {
         return this.scale;
-    }
-    /**
-     * shorthand for setScale()
-     */
-    set scale(scale) {
-        this.setScale(scale);
     }
     /**
      * update position
@@ -97,7 +97,7 @@ class Circle extends sat_1.Circle {
      * update scale
      * @param {number} scale
      */
-    setScale(scale) {
+    setScale(scale, _ignoredParameter) {
         this.r = this.radiusBackup * scale;
     }
     /**

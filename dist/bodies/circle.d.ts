@@ -61,6 +61,10 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      */
     get scale(): number;
     /**
+     * shorthand for setScale()
+     */
+    set scale(scale: number);
+    /**
      * scaleX = scale in case of Circles
      */
     get scaleX(): number;
@@ -68,10 +72,6 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      * scaleY = scale in case of Circles
      */
     get scaleY(): number;
-    /**
-     * shorthand for setScale()
-     */
-    set scale(scale: number);
     /**
      * update position
      * @param {number} x
@@ -82,7 +82,7 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      * update scale
      * @param {number} scale
      */
-    setScale(scale: number): void;
+    setScale(scale: number, _ignoredParameter?: number): void;
     /**
      * Updates Bounding Box of collider
      */

@@ -237,6 +237,12 @@ class Circle extends sat_1.Circle {
         return this.r / this.radiusBackup;
     }
     /**
+     * shorthand for setScale()
+     */
+    set scale(scale) {
+        this.setScale(scale);
+    }
+    /**
      * scaleX = scale in case of Circles
      */
     get scaleX() {
@@ -247,12 +253,6 @@ class Circle extends sat_1.Circle {
      */
     get scaleY() {
         return this.scale;
-    }
-    /**
-     * shorthand for setScale()
-     */
-    set scale(scale) {
-        this.setScale(scale);
     }
     /**
      * update position
@@ -269,7 +269,7 @@ class Circle extends sat_1.Circle {
      * update scale
      * @param {number} scale
      */
-    setScale(scale) {
+    setScale(scale, _ignoredParameter) {
         this.r = this.radiusBackup * scale;
     }
     /**
@@ -939,10 +939,10 @@ class System extends base_system_1.BaseSystem {
         else if (!body.isConvex || !candidate.isConvex) {
             const convexBodies = (0, utils_1.ensureConvexPolygons)(body);
             const convexCandidates = (0, utils_1.ensureConvexPolygons)(candidate);
-            result = convexBodies.reduce((result, convexBody) => convexCandidates.reduce((collidedAtLeastOnce, convexCandidate) => {
+            result = convexBodies.reduce((reduceResult, convexBody) => convexCandidates.reduce((collidedAtLeastOnce, convexCandidate) => {
                 state.collides = (0, sat_1.testPolygonPolygon)(convexBody, convexCandidate, this.response);
                 return this.collided(state) || collidedAtLeastOnce;
-            }, false) || result, false);
+            }, false) || reduceResult, false);
         }
         else {
             result = (0, sat_1.testPolygonPolygon)(body, candidate, this.response);
@@ -964,10 +964,10 @@ class System extends base_system_1.BaseSystem {
         }
         else if (!body.isConvex) {
             this.response.aInB = (0, utils_1.checkAInB)(body, candidate);
-            this.response.bInA = state.bInA; // this was set during this.collided()
+            this.response.bInA = !!state.bInA;
         }
         else if (!candidate.isConvex) {
-            this.response.aInB = state.aInB; // this was set during this.collided()
+            this.response.aInB = !!state.aInB;
             this.response.bInA = (0, utils_1.checkAInB)(candidate, body);
         }
         return result;
