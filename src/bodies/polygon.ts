@@ -19,7 +19,6 @@ import {
   extendBody,
   mapArrayToVector,
   mapVectorToArray,
-  updateAABB,
   clonePointsArray,
 } from "../utils";
 
@@ -97,8 +96,6 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     }
 
     extendBody(this, options);
-
-    this.updateAABB();
   }
 
   get x(): number {
@@ -111,7 +108,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   set x(x: number) {
     this.pos.x = x;
 
-    this.system?.updateBody(this);
+    this.system?.insert(this);
   }
 
   get y(): number {
@@ -124,7 +121,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   set y(y: number) {
     this.pos.y = y;
 
-    this.system?.updateBody(this);
+    this.system?.insert(this);
   }
 
   /**
@@ -198,7 +195,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     this.pos.x = x;
     this.pos.y = y;
 
-    this.system?.updateBody(this);
+    this.system?.insert(this);
   }
 
   /**
@@ -230,13 +227,6 @@ export class Polygon extends SATPolygon implements BBox, Collider {
       maxX: pos.x + w,
       maxY: pos.y + h,
     };
-  }
-
-  /**
-   * Updates Bounding Box of collider
-   */
-  updateAABB(bounds = this.getAABBAsBBox()): void {
-    updateAABB(this, bounds);
   }
 
   /**

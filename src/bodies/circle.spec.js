@@ -26,8 +26,7 @@ describe("GIVEN Circle", () => {
 
       expect(collisions).toBe(0);
 
-      circle.updateAABB();
-
+      physics.insert(circle);
       physics.checkAll(() => {
         collisions++;
       });

@@ -95,13 +95,6 @@ export function extendBody(body: Body, options?: BodyOptions): void {
   body.setAngle(options?.angle || 0);
 }
 
-export function updateAABB(body: Body, bounds: BBox): void {
-  body.minX = bounds.minX - body.padding;
-  body.minY = bounds.minY - body.padding;
-  body.maxX = bounds.maxX + body.padding;
-  body.maxY = bounds.maxY + body.padding;
-}
-
 export function checkAInB(a: BBox, b: BBox): boolean {
   const insideX = a.minX >= b.minX && a.maxX <= b.maxX;
   const insideY = a.minY >= b.minY && a.maxY <= b.maxY;

@@ -114,12 +114,12 @@ physics.remove(polygon);
 Collisions systems need to be updated when the bodies within them change. This includes when bodies are inserted, removed, or when their properties change (e.g. position, angle, scaling, etc.). Updating a collision system can be done by calling `update()` which should typically occur once per frame. Updating the `System` by after each position change is **required** for `System` to detect `BVH` correctly.
 
 ```typescript
-physics.updateBody(body);
+// update one body, use anytime
+physics.insert(body);
 ```
 
-Update all bodies (use 0-1 times per frame):
-
 ```typescript
+// update all bodies (use 0-1 times per frame):
 physics.update();
 ```
 

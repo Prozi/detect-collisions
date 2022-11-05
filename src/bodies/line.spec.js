@@ -21,9 +21,6 @@ describe("GIVEN Line", () => {
 
     let results = 0;
 
-    line1.updateAABB();
-    line2.updateAABB();
-
     physics.checkAll(() => {
       results++;
     });

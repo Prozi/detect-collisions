@@ -19,8 +19,7 @@ describe("GIVEN Box", () => {
 
     box.width = 110;
 
-    physics.updateBody(box);
-
+    physics.insert(box);
     physics.checkAll(() => {
       results++;
     });
@@ -46,8 +45,7 @@ describe("GIVEN Box", () => {
 
     box.height = 110;
 
-    physics.updateBody(box);
-
+    physics.insert(box);
     physics.checkAll(() => {
       results++;
     });
@@ -60,21 +58,16 @@ describe("GIVEN Box", () => {
 
     const physics = new System();
     const circle = new Circle({ x: 100, y: 100 }, 100);
-
     physics.insert(circle);
 
     const pos = { x: 400, y: 100 };
     const circle2 = new Circle(pos, 50);
-
     physics.insert(circle2);
 
     const box = new Box({ x: 400, y: 300 }, 200, 100);
-
     box.setOffset({ x: 0, y: -50 });
-    physics.insert(box);
-
     box.setAngle(5);
-    physics.updateBody(box);
+    physics.insert(box);
 
     let case1works = false;
     let case2works = false;

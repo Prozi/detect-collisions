@@ -3,12 +3,7 @@ import { Circle as SATCircle } from "sat";
 
 import { BodyOptions, Collider, PotentialVector, Types } from "../model";
 import { System } from "../system";
-import {
-  dashLineTo,
-  ensureVectorPoint,
-  extendBody,
-  updateAABB,
-} from "../utils";
+import { dashLineTo, ensureVectorPoint, extendBody } from "../utils";
 
 /**
  * collider - circle
@@ -76,8 +71,6 @@ export class Circle extends SATCircle implements BBox, Collider {
     extendBody(this, options);
 
     this.radiusBackup = radius;
-
-    this.updateAABB();
   }
 
   get x(): number {
@@ -90,7 +83,7 @@ export class Circle extends SATCircle implements BBox, Collider {
   set x(x: number) {
     this.pos.x = x;
 
-    this.system?.updateBody(this);
+    this.system?.insert(this);
   }
 
   get y(): number {
@@ -103,7 +96,7 @@ export class Circle extends SATCircle implements BBox, Collider {
   set y(y: number) {
     this.pos.y = y;
 
-    this.system?.updateBody(this);
+    this.system?.insert(this);
   }
 
   /**
@@ -143,7 +136,7 @@ export class Circle extends SATCircle implements BBox, Collider {
     this.pos.x = x;
     this.pos.y = y;
 
-    this.system?.updateBody(this);
+    this.system?.insert(this);
   }
 
   /**
@@ -164,13 +157,6 @@ export class Circle extends SATCircle implements BBox, Collider {
       maxX: this.pos.x + this.r,
       maxY: this.pos.y + this.r,
     };
-  }
-
-  /**
-   * Updates Bounding Box of collider
-   */
-  updateAABB(bounds = this.getAABBAsBBox()): void {
-    updateAABB(this, bounds);
   }
 
   /**

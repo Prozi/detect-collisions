@@ -26,8 +26,7 @@ describe("GIVEN Ellipse", () => {
 
       expect(collisions).toBe(0);
 
-      ellipse.updateAABB();
-
+      physics.insert(ellipse);
       physics.checkAll(() => {
         collisions++;
       });
@@ -61,8 +60,7 @@ describe("GIVEN Ellipse", () => {
 
       expect(collisions).toBe(0);
 
-      ellipse.updateAABB();
-
+      physics.insert(ellipse);
       physics.checkAll(() => {
         collisions++;
       });
