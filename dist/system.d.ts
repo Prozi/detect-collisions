@@ -42,7 +42,7 @@ export declare class System extends BaseSystem {
     /**
      * check do 2 objects collide
      */
-    checkCollision(body: Body, candidate: Body): boolean;
+    checkCollision(body: Body, wall: Body): boolean;
     /**
      * raycast to get collider of ray from start to end
      */

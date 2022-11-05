@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getBounceDirection = exports.ensureConvexPolygons = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = require("sat");
 const line_1 = require("./bodies/line");
+const model_1 = require("./model");
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
     const steps = Math.PI * Math.hypot(radiusX, radiusY) * 2;
     const length = Math.max(8, Math.ceil(steps / Math.max(1, step)));
@@ -192,14 +193,14 @@ exports.mapArrayToVector = mapArrayToVector;
 /**
  * replace body with array of related convex polygons
  */
-function ensureConvexPolygons(body) {
-    if (body.isConvex) {
+function ensureConvex(body) {
+    if (body.isConvex || body.type !== model_1.Types.Polygon) {
         return [body];
     }
     body.updateConvexPolygons();
     return body.convexPolygons;
 }
-exports.ensureConvexPolygons = ensureConvexPolygons;
+exports.ensureConvex = ensureConvex;
 /**
  * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
  */
