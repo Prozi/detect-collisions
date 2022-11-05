@@ -30,7 +30,7 @@ export declare function clockwise(points: Vector[]): boolean;
  */
 export declare function extendBody(body: Body, options?: BodyOptions): void;
 export declare function checkAInB(a: BBox, b: BBox): boolean;
-export declare function clonePointsArray(points: SATVector[]): SATVector[];
+export declare function clonePointsArray(points: SATVector[]): Vector[];
 /**
  * draws dashed line on canvas context
  */

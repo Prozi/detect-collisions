@@ -77,7 +77,6 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      */
     set scale(scale: number);
     getConvex(): number[][][];
-    setPoints(points: SATVector[]): Polygon;
     updateConvexPolygons(convex?: number[][][]): void;
     /**
      * update position
@@ -101,11 +100,13 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      */
     draw(context: CanvasRenderingContext2D): void;
     getCentroidWithoutRotation(): Vector;
+    setPoints(points: SATVector[]): Polygon;
+    translate(x: number, y: number): Polygon;
+    rotate(angle: number): Polygon;
     /**
      * reCenters the box anchor
      */
     center(): void;
-    rotate(angle: number): Polygon;
     /**
      * after points update set is convex
      */

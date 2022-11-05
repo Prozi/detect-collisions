@@ -84,12 +84,6 @@ class Polygon extends sat_1.Polygon {
             : // for line and point
                 [];
     }
-    setPoints(points) {
-        super.setPoints(points);
-        this.updateIsConvex();
-        this.pointsBackup = (0, utils_1.clonePointsArray)(points);
-        return this;
-    }
     updateConvexPolygons(convex = this.getConvex()) {
         convex.forEach((points, index) => {
             // lazy create
@@ -180,6 +174,22 @@ class Polygon extends sat_1.Polygon {
         this.setAngle(angle);
         return centroid;
     }
+    setPoints(points) {
+        super.setPoints(points);
+        this.updateIsConvex();
+        this.pointsBackup = (0, utils_1.clonePointsArray)(points);
+        return this;
+    }
+    translate(x, y) {
+        super.translate(x, y);
+        this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
+        return this;
+    }
+    rotate(angle) {
+        super.rotate(angle);
+        this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
+        return this;
+    }
     /**
      * reCenters the box anchor
      */
@@ -192,12 +202,6 @@ class Polygon extends sat_1.Polygon {
         this.pos.x += x;
         this.pos.y += y;
         this.isCentered = true;
-        this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
-    }
-    rotate(angle) {
-        super.rotate(angle);
-        this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
-        return this;
     }
     /**
      * after points update set is convex

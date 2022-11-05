@@ -86,7 +86,10 @@ function checkAInB(a, b) {
 }
 exports.checkAInB = checkAInB;
 function clonePointsArray(points) {
-    return Array.from(points, (_, index) => points[index].clone());
+    return points.map(({ x, y }) => ({
+        x,
+        y,
+    }));
 }
 exports.clonePointsArray = clonePointsArray;
 /**
