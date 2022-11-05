@@ -16,6 +16,10 @@ export declare class System extends BaseSystem {
      */
     insert(body: Body): RBush<Body>;
     /**
+     * @deprecated please use insert
+     */
+    updateBody(body: Body): void;
+    /**
      * update all bodies aabb
      */
     update(): void;

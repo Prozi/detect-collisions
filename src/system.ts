@@ -73,6 +73,13 @@ export class System extends BaseSystem {
   }
 
   /**
+   * @deprecated please use insert
+   */
+  updateBody(body: Body): void {
+    this.insert(body);
+  }
+
+  /**
    * update all bodies aabb
    */
   update(): void {

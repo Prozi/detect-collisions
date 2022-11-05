@@ -46,6 +46,12 @@ class System extends base_system_1.BaseSystem {
         return super.insert(body);
     }
     /**
+     * @deprecated please use insert
+     */
+    updateBody(body) {
+        this.insert(body);
+    }
+    /**
      * update all bodies aabb
      */
     update() {
