@@ -122,11 +122,7 @@ export interface Collider {
      */
     draw(context: CanvasRenderingContext2D): void;
     /**
-     * should be called only by System.updateBody
-     */
-    updateAABB(): void;
-    /**
-     * should be called only by System.updateBody
+     * should be called only by System.insert
      */
     getAABBAsBBox(): BBox;
 }

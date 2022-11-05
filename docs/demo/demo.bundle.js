@@ -206,7 +206,6 @@ class Circle extends sat_1.Circle {
         this.type = model_1.Types.Circle;
         (0, utils_1.extendBody)(this, options);
         this.radiusBackup = radius;
-        this.updateAABB();
     }
     get x() {
         return this.pos.x;
@@ -217,7 +216,7 @@ class Circle extends sat_1.Circle {
     set x(x) {
         var _a;
         this.pos.x = x;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     get y() {
         return this.pos.y;
@@ -228,7 +227,7 @@ class Circle extends sat_1.Circle {
     set y(y) {
         var _a;
         this.pos.y = y;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     /**
      * allow get scale
@@ -263,7 +262,7 @@ class Circle extends sat_1.Circle {
         var _a;
         this.pos.x = x;
         this.pos.y = y;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     /**
      * update scale
@@ -282,12 +281,6 @@ class Circle extends sat_1.Circle {
             maxX: this.pos.x + this.r,
             maxY: this.pos.y + this.r,
         };
-    }
-    /**
-     * Updates Bounding Box of collider
-     */
-    updateAABB(bounds = this.getAABBAsBBox()) {
-        (0, utils_1.updateAABB)(this, bounds);
     }
     /**
      * Draws collider on a CanvasRenderingContext2D's current path
@@ -540,7 +533,6 @@ class Polygon extends sat_1.Polygon {
             throw new Error("No points in polygon");
         }
         (0, utils_1.extendBody)(this, options);
-        this.updateAABB();
     }
     get x() {
         return this.pos.x;
@@ -551,7 +543,7 @@ class Polygon extends sat_1.Polygon {
     set x(x) {
         var _a;
         this.pos.x = x;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     get y() {
         return this.pos.y;
@@ -562,7 +554,7 @@ class Polygon extends sat_1.Polygon {
     set y(y) {
         var _a;
         this.pos.y = y;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     /**
      * allow exact getting of scale x
@@ -623,7 +615,7 @@ class Polygon extends sat_1.Polygon {
         var _a;
         this.pos.x = x;
         this.pos.y = y;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     /**
      * update scale
@@ -650,12 +642,6 @@ class Polygon extends sat_1.Polygon {
             maxX: pos.x + w,
             maxY: pos.y + h,
         };
-    }
-    /**
-     * Updates Bounding Box of collider
-     */
-    updateAABB(bounds = this.getAABBAsBBox()) {
-        (0, utils_1.updateAABB)(this, bounds);
     }
     /**
      * Draws collider on a CanvasRenderingContext2D's current path
@@ -824,25 +810,6 @@ class System extends base_system_1.BaseSystem {
         this.response = new model_1.Response();
     }
     /**
-     * update body aabb and in tree
-     */
-    updateBody(body) {
-        const bounds = body.getAABBAsBBox();
-        const update = bounds.minX < body.minX ||
-            bounds.minY < body.minY ||
-            bounds.maxX > body.maxX ||
-            bounds.maxY > body.maxY;
-        if (!update) {
-            return;
-        }
-        // old aabb needs to be removed
-        this.remove(body);
-        // then we update aabb
-        body.updateAABB(bounds);
-        // then we reinsert body to collision tree
-        this.insert(body);
-    }
-    /**
      * remove body aabb from collision tree
      */
     remove(body, equals) {
@@ -850,10 +817,28 @@ class System extends base_system_1.BaseSystem {
         return super.remove(body, equals);
     }
     /**
-     * add body aabb to collision tree
+     * update body aabb and in tree
      */
     insert(body) {
+        const bounds = body.getAABBAsBBox();
+        const update = bounds.minX < body.minX ||
+            bounds.minY < body.minY ||
+            bounds.maxX > body.maxX ||
+            bounds.maxY > body.maxY;
+        if (body.system && !update) {
+            return this;
+        }
+        // old bounding box *needs* to be removed
+        if (body.system) {
+            this.remove(body);
+        }
+        // only then we update min, max
+        body.minX = bounds.minX - body.padding;
+        body.minY = bounds.minY - body.padding;
+        body.maxX = bounds.maxX + body.padding;
+        body.maxY = bounds.maxY + body.padding;
         body.system = this;
+        // reinsert bounding box to collision tree
         return super.insert(body);
     }
     /**
@@ -863,7 +848,7 @@ class System extends base_system_1.BaseSystem {
         this.all().forEach((body) => {
             // no need to every cycle update static body aabb
             if (!body.isStatic) {
-                this.updateBody(body);
+                this.insert(body);
             }
         });
     }
@@ -878,7 +863,7 @@ class System extends base_system_1.BaseSystem {
             }
             response.a.x -= response.overlapV.x;
             response.a.y -= response.overlapV.y;
-            this.updateBody(response.a);
+            this.insert(response.a);
         });
     }
     /**
@@ -1026,7 +1011,7 @@ exports.System = System;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getBounceDirection = exports.ensureConvexPolygons = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.updateAABB = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.getBounceDirection = exports.ensureConvexPolygons = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js");
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
@@ -1105,13 +1090,6 @@ function extendBody(body, options) {
     body.setAngle((options === null || options === void 0 ? void 0 : options.angle) || 0);
 }
 exports.extendBody = extendBody;
-function updateAABB(body, bounds) {
-    body.minX = bounds.minX - body.padding;
-    body.minY = bounds.minY - body.padding;
-    body.maxX = bounds.maxX + body.padding;
-    body.maxY = bounds.maxY + body.padding;
-}
-exports.updateAABB = updateAABB;
 function checkAInB(a, b) {
     const insideX = a.minX >= b.minX && a.maxX <= b.maxX;
     const insideY = a.minY >= b.minY && a.maxY <= b.maxY;

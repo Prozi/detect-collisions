@@ -29,7 +29,6 @@ export declare function clockwise(points: Vector[]): boolean;
  * used for all types of bodies
  */
 export declare function extendBody(body: Body, options?: BodyOptions): void;
-export declare function updateAABB(body: Body, bounds: BBox): void;
 export declare function checkAInB(a: BBox, b: BBox): boolean;
 export declare function clonePointsArray(points: SATVector[]): SATVector[];
 /**

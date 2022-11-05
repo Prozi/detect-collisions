@@ -34,7 +34,6 @@ class Circle extends sat_1.Circle {
         this.type = model_1.Types.Circle;
         (0, utils_1.extendBody)(this, options);
         this.radiusBackup = radius;
-        this.updateAABB();
     }
     get x() {
         return this.pos.x;
@@ -45,7 +44,7 @@ class Circle extends sat_1.Circle {
     set x(x) {
         var _a;
         this.pos.x = x;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     get y() {
         return this.pos.y;
@@ -56,7 +55,7 @@ class Circle extends sat_1.Circle {
     set y(y) {
         var _a;
         this.pos.y = y;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     /**
      * allow get scale
@@ -91,7 +90,7 @@ class Circle extends sat_1.Circle {
         var _a;
         this.pos.x = x;
         this.pos.y = y;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     /**
      * update scale
@@ -110,12 +109,6 @@ class Circle extends sat_1.Circle {
             maxX: this.pos.x + this.r,
             maxY: this.pos.y + this.r,
         };
-    }
-    /**
-     * Updates Bounding Box of collider
-     */
-    updateAABB(bounds = this.getAABBAsBBox()) {
-        (0, utils_1.updateAABB)(this, bounds);
     }
     /**
      * Draws collider on a CanvasRenderingContext2D's current path

@@ -8,15 +8,11 @@ import { Body, RaycastResult, Response, Vector } from "./model";
 export declare class System extends BaseSystem {
     response: Response;
     /**
-     * update body aabb and in tree
-     */
-    updateBody(body: Body): void;
-    /**
      * remove body aabb from collision tree
      */
     remove(body: Body, equals?: (a: Body, b: Body) => boolean): RBush<Body>;
     /**
-     * add body aabb to collision tree
+     * update body aabb and in tree
      */
     insert(body: Body): RBush<Body>;
     /**

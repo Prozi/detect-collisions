@@ -14,25 +14,6 @@ class System extends base_system_1.BaseSystem {
         this.response = new model_1.Response();
     }
     /**
-     * update body aabb and in tree
-     */
-    updateBody(body) {
-        const bounds = body.getAABBAsBBox();
-        const update = bounds.minX < body.minX ||
-            bounds.minY < body.minY ||
-            bounds.maxX > body.maxX ||
-            bounds.maxY > body.maxY;
-        if (!update) {
-            return;
-        }
-        // old aabb needs to be removed
-        this.remove(body);
-        // then we update aabb
-        body.updateAABB(bounds);
-        // then we reinsert body to collision tree
-        this.insert(body);
-    }
-    /**
      * remove body aabb from collision tree
      */
     remove(body, equals) {
@@ -40,10 +21,28 @@ class System extends base_system_1.BaseSystem {
         return super.remove(body, equals);
     }
     /**
-     * add body aabb to collision tree
+     * update body aabb and in tree
      */
     insert(body) {
+        const bounds = body.getAABBAsBBox();
+        const update = bounds.minX < body.minX ||
+            bounds.minY < body.minY ||
+            bounds.maxX > body.maxX ||
+            bounds.maxY > body.maxY;
+        if (body.system && !update) {
+            return this;
+        }
+        // old bounding box *needs* to be removed
+        if (body.system) {
+            this.remove(body);
+        }
+        // only then we update min, max
+        body.minX = bounds.minX - body.padding;
+        body.minY = bounds.minY - body.padding;
+        body.maxX = bounds.maxX + body.padding;
+        body.maxY = bounds.maxY + body.padding;
         body.system = this;
+        // reinsert bounding box to collision tree
         return super.insert(body);
     }
     /**
@@ -53,7 +52,7 @@ class System extends base_system_1.BaseSystem {
         this.all().forEach((body) => {
             // no need to every cycle update static body aabb
             if (!body.isStatic) {
-                this.updateBody(body);
+                this.insert(body);
             }
         });
     }
@@ -68,7 +67,7 @@ class System extends base_system_1.BaseSystem {
             }
             response.a.x -= response.overlapV.x;
             response.a.y -= response.overlapV.y;
-            this.updateBody(response.a);
+            this.insert(response.a);
         });
     }
     /**

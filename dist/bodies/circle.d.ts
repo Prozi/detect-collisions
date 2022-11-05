@@ -88,10 +88,6 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      */
     getAABBAsBBox(): BBox;
     /**
-     * Updates Bounding Box of collider
-     */
-    updateAABB(bounds?: BBox): void;
-    /**
      * Draws collider on a CanvasRenderingContext2D's current path
      * @param {CanvasRenderingContext2D} context The canvas context to draw on
      */
