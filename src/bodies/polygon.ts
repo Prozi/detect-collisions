@@ -76,7 +76,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     | Types.Ellipse
     | Types.Line = Types.Polygon;
 
-  private pointsBackup!: SATVector[];
+  private pointsBackup!: Vector[];
   private readonly scaleVector: Vector = { x: 1, y: 1 };
 
   /**
@@ -158,14 +158,6 @@ export class Polygon extends SATPolygon implements BBox, Collider {
       ? quickDecomp(this.calcPoints.map(mapVectorToArray))
       : // for line and point
         [];
-  }
-
-  setPoints(points: SATVector[]): Polygon {
-    super.setPoints(points);
-    this.updateIsConvex();
-    this.pointsBackup = clonePointsArray(points);
-
-    return this;
   }
 
   updateConvexPolygons(convex: number[][][] = this.getConvex()): void {
@@ -275,6 +267,28 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     return centroid;
   }
 
+  setPoints(points: SATVector[]): Polygon {
+    super.setPoints(points);
+    this.updateIsConvex();
+    this.pointsBackup = clonePointsArray(points);
+
+    return this;
+  }
+
+  translate(x: number, y: number): Polygon {
+    super.translate(x, y);
+    this.pointsBackup = clonePointsArray(this.points);
+
+    return this;
+  }
+
+  rotate(angle: number): Polygon {
+    super.rotate(angle);
+    this.pointsBackup = clonePointsArray(this.points);
+
+    return this;
+  }
+
   /**
    * reCenters the box anchor
    */
@@ -288,14 +302,6 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     this.pos.x += x;
     this.pos.y += y;
     this.isCentered = true;
-    this.pointsBackup = clonePointsArray(this.points);
-  }
-
-  rotate(angle: number): Polygon {
-    super.rotate(angle);
-    this.pointsBackup = clonePointsArray(this.points);
-
-    return this;
   }
 
   /**
