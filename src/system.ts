@@ -1,6 +1,5 @@
-import RBush, { BBox } from "rbush";
+import RBush from "rbush";
 import {
-  Polygon as SATPolygon,
   testCircleCircle,
   testCirclePolygon,
   testPolygonCircle,
@@ -8,7 +7,9 @@ import {
 } from "sat";
 
 import { BaseSystem } from "./base-system";
+import { Circle } from "./bodies/circle";
 import { Line } from "./bodies/line";
+import { Polygon } from "./bodies/polygon";
 import {
   Body,
   CollisionState,
@@ -20,10 +21,10 @@ import {
 } from "./model";
 import {
   distance,
-  ensureConvexPolygons,
   intersectLineCircle,
   intersectLinePolygon,
   checkAInB,
+  ensureConvex,
 } from "./utils";
 
 /**
@@ -144,67 +145,48 @@ export class System extends BaseSystem {
   /**
    * check do 2 objects collide
    */
-  checkCollision(body: Body, candidate: Body): boolean {
+  checkCollision(body: Body, wall: Body): boolean {
     this.response.clear();
-
-    let result = false;
 
     const state: CollisionState = {
       collides: false,
     };
 
-    if (body.type === Types.Circle) {
-      if (candidate.type === Types.Circle) {
-        result = testCircleCircle(body, candidate, this.response);
-      } else {
-        result = ensureConvexPolygons(candidate).reduce(
-          (collidedAtLeastOnce: boolean, convexCandidate: SATPolygon) => {
-            state.collides = testCirclePolygon(
-              body,
-              convexCandidate,
-              this.response
-            );
+    let test: (
+      a: Polygon | Circle | any,
+      b: Polygon | Circle | any,
+      r: Response
+    ) => boolean;
 
-            return this.collided(state) || collidedAtLeastOnce;
-          },
-          false
-        );
-      }
-    } else if (candidate.type === Types.Circle) {
-      result = ensureConvexPolygons(body).reduce(
-        (collidedAtLeastOnce: boolean, convexBody: SATPolygon) => {
-          state.collides = testPolygonCircle(
-            convexBody,
-            candidate,
-            this.response
-          );
+    if (body.type === Types.Circle && wall.type === Types.Circle) {
+      test = testCircleCircle;
+    } else if (body.type === Types.Circle && wall.type !== Types.Circle) {
+      test = testCirclePolygon;
+    } else if (body.type !== Types.Circle && wall.type === Types.Circle) {
+      test = testPolygonCircle;
+    } else {
+      test = testPolygonPolygon;
+    }
 
-          return this.collided(state) || collidedAtLeastOnce;
-        },
-        false
+    if (body.isConvex && wall.isConvex) {
+      state.collides = test(body, wall, this.response);
+    } else if (body.isConvex && !wall.isConvex) {
+      ensureConvex(wall).forEach((convexWall: Body) =>
+        this.collided(state, test(body, convexWall, this.response))
       );
-    } else if (!body.isConvex || !candidate.isConvex) {
-      const convexBodies = ensureConvexPolygons(body);
-      const convexCandidates = ensureConvexPolygons(candidate);
-
-      result = convexBodies.reduce(
-        (reduceResult: boolean, convexBody: SATPolygon) =>
-          convexCandidates.reduce(
-            (collidedAtLeastOnce: boolean, convexCandidate: SATPolygon) => {
-              state.collides = testPolygonPolygon(
-                convexBody,
-                convexCandidate,
-                this.response
-              );
-
-              return this.collided(state) || collidedAtLeastOnce;
-            },
-            false
-          ) || reduceResult,
-        false
+    } else if (!body.isConvex && wall.isConvex) {
+      ensureConvex(body).forEach((convexBody: Body) =>
+        this.collided(state, test(convexBody, wall, this.response))
       );
     } else {
-      result = testPolygonPolygon(body, candidate, this.response);
+      const convexBodies = ensureConvex(body);
+      const convexWalls = ensureConvex(wall);
+
+      convexBodies.forEach((convexBody: Body) =>
+        convexWalls.forEach((convexWall: Body) =>
+          this.collided(state, test(convexBody, convexWall, this.response))
+        )
+      );
     }
 
     // collisionVector is set if body or candidate was concave during this.collided()
@@ -215,23 +197,23 @@ export class System extends BaseSystem {
     }
 
     // set proper response object bodies
-    if (!body.isConvex || !candidate.isConvex) {
+    if (!body.isConvex || !wall.isConvex) {
       this.response.a = body;
-      this.response.b = candidate;
+      this.response.b = wall;
     }
 
-    if (!body.isConvex && !candidate.isConvex) {
-      this.response.aInB = checkAInB(body, candidate);
-      this.response.bInA = checkAInB(candidate, body);
+    if (!body.isConvex && !wall.isConvex) {
+      this.response.aInB = checkAInB(body, wall);
+      this.response.bInA = checkAInB(wall, body);
     } else if (!body.isConvex) {
-      this.response.aInB = checkAInB(body, candidate);
+      this.response.aInB = checkAInB(body, wall);
       this.response.bInA = !!state.bInA;
-    } else if (!candidate.isConvex) {
+    } else if (!wall.isConvex) {
       this.response.aInB = !!state.aInB;
-      this.response.bInA = checkAInB(candidate, body);
+      this.response.bInA = checkAInB(wall, body);
     }
 
-    return result;
+    return state.collides;
   }
 
   /**
@@ -272,8 +254,8 @@ export class System extends BaseSystem {
     return result;
   }
 
-  private collided(state: CollisionState): boolean {
-    if (state.collides) {
+  private collided(state: CollisionState, collides: boolean): void {
+    if (collides) {
       // lazy create vector
       if (typeof state.collisionVector === "undefined") {
         state.collisionVector = new SATVector();
@@ -287,9 +269,10 @@ export class System extends BaseSystem {
     state.aInB = state.aInB || this.response.aInB;
     state.bInA = state.bInA || this.response.bInA;
 
-    // cleared response is at end recreated properly for concaves
-    this.response.clear();
+    // set state collide at least once value
+    state.collides = collides || state.collides;
 
-    return state.collides;
+    // clear for reuse
+    this.response.clear();
   }
 }

@@ -242,14 +242,14 @@ export function mapArrayToVector([x, y]: number[]): Vector {
 /**
  * replace body with array of related convex polygons
  */
-export function ensureConvexPolygons(body: Polygon): SATPolygon[] {
-  if (body.isConvex) {
+export function ensureConvex(body: Body): Body[] {
+  if (body.isConvex || body.type !== Types.Polygon) {
     return [body];
   }
 
   body.updateConvexPolygons();
 
-  return body.convexPolygons;
+  return body.convexPolygons as Body[];
 }
 
 /**
