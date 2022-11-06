@@ -309,20 +309,17 @@ only using Detect-Collisions and with different _N_ amounts of dynamic, moving b
 typical output:
 
 ```bash
-stress test with 1000 items created
-{ duration: 5000, frames: 596, fps: 119.2 }
-stress test with 2000 items created
-{ duration: 5000, frames: 600, fps: 120 }
-stress test with 4000 items created
-{ duration: 5000, frames: 609, fps: 121.8 }
-stress test with 8000 items created
-{ duration: 5000, frames: 377, fps: 75.4 }
-stress test with 16000 items created
-{ duration: 5000, frames: 197, fps: 39.4 }
-stress test with 32000 items created
-{ duration: 5000, frames: 101, fps: 20.2 }
-stress test with 64000 items created
-{ duration: 5000, frames: 47, fps: 9.4 }
-stress test with 128000 items created
-{ duration: 5000, frames: 21, fps: 4.2 }
+[
+  { value: 309, name: 'Total Frames' },
+  { value: 123, name: 'FPS / 1000 items' },
+  { value: 53, name: 'FPS / 2000 items' },
+  { value: 34, name: 'FPS / 3000 items' },
+  { value: 25, name: 'FPS / 4000 items' },
+  { value: 18, name: 'FPS / 5000 items' },
+  { value: 14, name: 'FPS / 6000 items' },
+  { value: 12, name: 'FPS / 7000 items' },
+  { value: 11, name: 'FPS / 8000 items' },
+  { value: 10, name: 'FPS / 9000 items' },
+  { value: 9, name: 'FPS / 10000 items' }
+]
 ```
