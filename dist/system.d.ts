@@ -30,11 +30,11 @@ export declare class System extends BaseSystem {
     /**
      * check one collider collisions with callback
      */
-    checkOne(body: Body, callback: (response: Response) => void): void;
+    checkOne(body: Body, callback: (response: Response) => void | boolean): void;
     /**
      * check all colliders collisions with callback
      */
-    checkAll(callback: (response: Response) => void): void;
+    checkAll(callback: (response: Response) => void | boolean): void;
     /**
      * get object potential colliders
      */

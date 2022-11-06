@@ -86,7 +86,7 @@ class System extends base_system_1.BaseSystem {
         }
         this.getPotentials(body).forEach((candidate) => {
             if (this.checkCollision(body, candidate)) {
-                callback(this.response);
+                return callback(this.response);
             }
         });
     }
