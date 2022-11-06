@@ -25,6 +25,8 @@ import {
   intersectLinePolygon,
   checkAInB,
   ensureConvex,
+  intersectAABB,
+  bodyMoved,
 } from "./utils";
 
 /**
@@ -46,14 +48,10 @@ export class System extends BaseSystem {
    * update body aabb and in tree
    */
   insert(body: Body): RBush<Body> {
-    const bounds = body.getAABBAsBBox();
-    const update =
-      bounds.minX < body.minX ||
-      bounds.minY < body.minY ||
-      bounds.maxX > body.maxX ||
-      bounds.maxY > body.maxY;
+    body.bbox = body.getAABBAsBBox();
 
-    if (body.system && !update) {
+    // allow only on first insert or if body moved
+    if (body.system && !bodyMoved(body)) {
       return this;
     }
 
@@ -63,10 +61,10 @@ export class System extends BaseSystem {
     }
 
     // only then we update min, max
-    body.minX = bounds.minX - body.padding;
-    body.minY = bounds.minY - body.padding;
-    body.maxX = bounds.maxX + body.padding;
-    body.maxY = bounds.maxY + body.padding;
+    body.minX = body.bbox.minX - body.padding;
+    body.minY = body.bbox.minY - body.padding;
+    body.maxX = body.bbox.maxX + body.padding;
+    body.maxY = body.bbox.maxY + body.padding;
     body.system = this;
 
     // reinsert bounding box to collision tree
@@ -118,7 +116,7 @@ export class System extends BaseSystem {
       return;
     }
 
-    this.getPotentials(body).forEach((candidate: Body) => {
+    this.getPotentials(body).some((candidate: Body) => {
       if (this.checkCollision(body, candidate)) {
         return callback(this.response);
       }
@@ -146,6 +144,14 @@ export class System extends BaseSystem {
    * check do 2 objects collide
    */
   checkCollision(body: Body, wall: Body): boolean {
+    // check bounding boxes without padding
+    if (
+      (body.padding || wall.padding) &&
+      !intersectAABB(body.bbox, wall.bbox)
+    ) {
+      return false;
+    }
+
     this.response.clear();
 
     const state: CollisionState = {

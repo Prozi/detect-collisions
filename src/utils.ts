@@ -95,6 +95,25 @@ export function extendBody(body: Body, options?: BodyOptions): void {
   body.setAngle(options?.angle || 0);
 }
 
+// check if body moved outside of padding
+export function bodyMoved(body: Body): boolean {
+  return (
+    body.bbox.minX < body.minX ||
+    body.bbox.minY < body.minY ||
+    body.bbox.maxX > body.maxX ||
+    body.bbox.maxY > body.maxY
+  );
+}
+
+export function intersectAABB(a: BBox, b: BBox): boolean {
+  return !(
+    b.minX > a.maxX ||
+    b.minY > a.maxY ||
+    b.maxX < a.minX ||
+    b.maxY < a.minY
+  );
+}
+
 export function checkAInB(a: BBox, b: BBox): boolean {
   const insideX = a.minX >= b.minX && a.maxX <= b.maxX;
   const insideY = a.minY >= b.minY && a.maxY <= b.maxY;

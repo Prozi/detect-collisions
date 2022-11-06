@@ -35,6 +35,11 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   maxY!: number;
 
   /**
+   * bounding box cache, without padding
+   */
+  bbox!: BBox;
+
+  /**
    * is it a convex polyon as opposed to a hollow inside (concave) polygon
    */
   isConvex!: boolean;

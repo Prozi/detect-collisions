@@ -28,16 +28,21 @@ class TestCanvas {
       this.element.appendChild(this.canvas);
     }
 
-    this.started = Date.now();
     this.fps = 0;
     this.frame = 0;
+    this.started = Date.now();
 
     loop(() => this.update());
   }
 
   update() {
     this.frame++;
-    this.fps = this.frame / ((Date.now() - this.started) / 1000);
+
+    if (this.frame === 60) {
+      this.fps = this.frame / ((Date.now() - this.started) / 1000);
+      this.frame = 0;
+      this.started = Date.now();
+    }
 
     // Clear the canvas
     this.context.fillStyle = "#000000";
@@ -59,7 +64,11 @@ class TestCanvas {
 
     // Render the FPS
     this.context.fillStyle = "#FFCC00";
-    this.context.fillText(`FPS: ${this.fps.toFixed(0)}`, 24, 48);
+    this.context.fillText(
+      `FPS: ${this.fps ? this.fps.toFixed(0) : "?"}`,
+      24,
+      48
+    );
 
     if (this.test.drawCallback) {
       this.test.drawCallback();

@@ -47,7 +47,6 @@ export class Ellipse extends Polygon {
    */
   set step(step: number) {
     this._step = step;
-
     this.setPoints(createEllipse(this._radiusX, this._radiusY, this._step));
   }
 
@@ -63,7 +62,6 @@ export class Ellipse extends Polygon {
    */
   set radiusX(radiusX: number) {
     this._radiusX = radiusX;
-
     this.setPoints(createEllipse(this._radiusX, this._radiusY, this._step));
   }
 
@@ -79,7 +77,6 @@ export class Ellipse extends Polygon {
    */
   set radiusY(radiusY: number) {
     this._radiusY = radiusY;
-
     this.setPoints(createEllipse(this._radiusX, this._radiusY, this._step));
   }
 

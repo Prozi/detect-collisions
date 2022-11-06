@@ -18,6 +18,11 @@ export class Circle extends SATCircle implements BBox, Collider {
   maxY!: number;
 
   /**
+   * bounding box cache, without padding
+   */
+  bbox!: BBox;
+
+  /**
    * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
    */
   padding = 0;

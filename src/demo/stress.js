@@ -51,23 +51,8 @@ class Stress {
     <div><b>Lines:</b> ${this.lines}</div>`;
 
     this.start = () => {
-      loop(() => {
-        this.physics.checkAll(({ a, b, overlapV }) => {
-          this.bounce(a, b, overlapV);
-
-          a.rotationSpeed = (Math.random() - Math.random()) * 0.1;
-
-          // adaptive padding, when collides, halves
-          a.padding /= 2;
-
-          a.setPosition(a.x - overlapV.x, a.y - overlapV.y);
-
-          return true;
-        });
-      });
-
       const frame = () => {
-        this.update(1, size);
+        this.update();
 
         requestAnimationFrame(frame);
       };
@@ -76,14 +61,11 @@ class Stress {
     };
   }
 
-  update(timeScale, size) {
-    const padding = size * timeScale * 0.67;
+  update() {
+    const timeScale = 0.5;
 
     this.bodies.forEach((body) => {
       body.setAngle(body.angle + body.rotationSpeed * timeScale);
-
-      // adaptive padding, when no collisions goes up to "padding" variable value
-      body.padding = (body.padding + padding) / 2;
 
       if (Math.random() < 0.05 * timeScale) {
         body.targetScale.x = 0.5 + Math.random();
@@ -108,6 +90,16 @@ class Stress {
         body.y + body.directionY * timeScale
       );
     });
+
+    // console.time("bodies separate");
+    this.physics.checkAll(({ a, b, overlapV }) => {
+      this.bounce(a, b, overlapV);
+      a.rotationSpeed = (Math.random() - Math.random()) * 0.1;
+      a.setPosition(a.x - overlapV.x, a.y - overlapV.y);
+
+      return true;
+    });
+    // console.timeEnd("bodies separate");
   }
 
   bounce(a, b, overlapV) {
@@ -136,6 +128,7 @@ class Stress {
     const direction = (random(0, 360) * Math.PI) / 180;
     const options = {
       center: true,
+      padding: size * 0.5,
     };
 
     let body;
@@ -143,7 +136,11 @@ class Stress {
 
     switch (variant) {
       case 0:
-        body = this.physics.createCircle({ x, y }, random(minSize, maxSize));
+        body = this.physics.createCircle(
+          { x, y },
+          random(minSize, maxSize),
+          options
+        );
 
         ++this.circles;
         break;
@@ -151,7 +148,7 @@ class Stress {
       case 1:
         const width = random(minSize, maxSize);
         const height = random(minSize, maxSize);
-        body = this.physics.createEllipse({ x, y }, width, height);
+        body = this.physics.createEllipse({ x, y }, width, height, 2, options);
 
         ++this.ellipses;
         break;
