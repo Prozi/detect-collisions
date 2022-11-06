@@ -831,13 +831,15 @@ class System extends base_system_1.BaseSystem {
         }
         // old bounding box *needs* to be removed
         if (body.system) {
-            this.remove(body);
+            // but we don't need to set system to undefined so super.remove
+            super.remove(body);
         }
         // only then we update min, max
         body.minX = body.bbox.minX - body.padding;
         body.minY = body.bbox.minY - body.padding;
         body.maxX = body.bbox.maxX + body.padding;
         body.maxY = body.bbox.maxY + body.padding;
+        // set system for later body.system.insert()
         body.system = this;
         // reinsert bounding box to collision tree
         return super.insert(body);
@@ -1249,6 +1251,43 @@ function getBounceDirection(body, collider) {
 }
 exports.getBounceDirection = getBounceDirection;
 //# sourceMappingURL=utils.js.map
+
+/***/ }),
+
+/***/ "./node_modules/json-stringify-safe/stringify.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/json-stringify-safe/stringify.js ***!
+  \*******************************************************/
+/***/ ((module, exports) => {
+
+exports = module.exports = stringify
+exports.getSerialize = serializer
+
+function stringify(obj, replacer, spaces, cycleReplacer) {
+  return JSON.stringify(obj, serializer(replacer, cycleReplacer), spaces)
+}
+
+function serializer(replacer, cycleReplacer) {
+  var stack = [], keys = []
+
+  if (cycleReplacer == null) cycleReplacer = function(key, value) {
+    if (stack[0] === value) return "[Circular ~]"
+    return "[Circular ~." + keys.slice(0, stack.indexOf(value)).join(".") + "]"
+  }
+
+  return function(key, value) {
+    if (stack.length > 0) {
+      var thisPos = stack.indexOf(this)
+      ~thisPos ? stack.splice(thisPos + 1) : stack.push(this)
+      ~thisPos ? keys.splice(thisPos, Infinity, key) : keys.push(key)
+      if (~stack.indexOf(value)) value = cycleReplacer.call(this, key, value)
+    }
+    else stack.push(value)
+
+    return replacer == null ? value : replacer.call(this, key, value)
+  }
+}
+
 
 /***/ }),
 
@@ -1915,6 +1954,285 @@ function scalar_eq(a,b,precision){
 function points_eq(a,b,precision){
     return scalar_eq(a[0],b[0],precision) && scalar_eq(a[1],b[1],precision);
 }
+
+
+/***/ }),
+
+/***/ "./node_modules/random-seed/index.js":
+/*!*******************************************!*\
+  !*** ./node_modules/random-seed/index.js ***!
+  \*******************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+/*
+ * random-seed
+ * https://github.com/skratchdot/random-seed
+ *
+ * This code was originally written by Steve Gibson and can be found here:
+ *
+ * https://www.grc.com/otg/uheprng.htm
+ *
+ * It was slightly modified for use in node, to pass jshint, and a few additional
+ * helper functions were added.
+ *
+ * Copyright (c) 2013 skratchdot
+ * Dual Licensed under the MIT license and the original GRC copyright/license
+ * included below.
+ */
+/*	============================================================================
+									Gibson Research Corporation
+				UHEPRNG - Ultra High Entropy Pseudo-Random Number Generator
+	============================================================================
+	LICENSE AND COPYRIGHT:  THIS CODE IS HEREBY RELEASED INTO THE PUBLIC DOMAIN
+	Gibson Research Corporation releases and disclaims ALL RIGHTS AND TITLE IN
+	THIS CODE OR ANY DERIVATIVES. Anyone may be freely use it for any purpose.
+	============================================================================
+	This is GRC's cryptographically strong PRNG (pseudo-random number generator)
+	for JavaScript. It is driven by 1536 bits of entropy, stored in an array of
+	48, 32-bit JavaScript variables.  Since many applications of this generator,
+	including ours with the "Off The Grid" Latin Square generator, may require
+	the deteriministic re-generation of a sequence of PRNs, this PRNG's initial
+	entropic state can be read and written as a static whole, and incrementally
+	evolved by pouring new source entropy into the generator's internal state.
+	----------------------------------------------------------------------------
+	ENDLESS THANKS are due Johannes Baagoe for his careful development of highly
+	robust JavaScript implementations of JS PRNGs.  This work was based upon his
+	JavaScript "Alea" PRNG which is based upon the extremely robust Multiply-
+	With-Carry (MWC) PRNG invented by George Marsaglia. MWC Algorithm References:
+	http://www.GRC.com/otg/Marsaglia_PRNGs.pdf
+	http://www.GRC.com/otg/Marsaglia_MWC_Generators.pdf
+	----------------------------------------------------------------------------
+	The quality of this algorithm's pseudo-random numbers have been verified by
+	multiple independent researchers. It handily passes the fermilab.ch tests as
+	well as the "diehard" and "dieharder" test suites.  For individuals wishing
+	to further verify the quality of this algorithm's pseudo-random numbers, a
+	256-megabyte file of this algorithm's output may be downloaded from GRC.com,
+	and a Microsoft Windows scripting host (WSH) version of this algorithm may be
+	downloaded and run from the Windows command prompt to generate unique files
+	of any size:
+	The Fermilab "ENT" tests: http://fourmilab.ch/random/
+	The 256-megabyte sample PRN file at GRC: https://www.GRC.com/otg/uheprng.bin
+	The Windows scripting host version: https://www.GRC.com/otg/wsh-uheprng.js
+	----------------------------------------------------------------------------
+	Qualifying MWC multipliers are: 187884, 686118, 898134, 1104375, 1250205,
+	1460910 and 1768863. (We use the largest one that's < 2^21)
+	============================================================================ */
+
+var stringify = __webpack_require__(/*! json-stringify-safe */ "./node_modules/json-stringify-safe/stringify.js");
+
+/*	============================================================================
+This is based upon Johannes Baagoe's carefully designed and efficient hash
+function for use with JavaScript.  It has a proven "avalanche" effect such
+that every bit of the input affects every bit of the output 50% of the time,
+which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
+============================================================================
+*/
+var Mash = function () {
+	var n = 0xefc8249d;
+	var mash = function (data) {
+		if (data) {
+			data = data.toString();
+			for (var i = 0; i < data.length; i++) {
+				n += data.charCodeAt(i);
+				var h = 0.02519603282416938 * n;
+				n = h >>> 0;
+				h -= n;
+				h *= n;
+				n = h >>> 0;
+				h -= n;
+				n += h * 0x100000000; // 2^32
+			}
+			return (n >>> 0) * 2.3283064365386963e-10; // 2^-32
+		} else {
+			n = 0xefc8249d;
+		}
+	};
+	return mash;
+};
+
+var uheprng = function (seed) {
+	return (function () {
+		var o = 48; // set the 'order' number of ENTROPY-holding 32-bit values
+		var c = 1; // init the 'carry' used by the multiply-with-carry (MWC) algorithm
+		var p = o; // init the 'phase' (max-1) of the intermediate variable pointer
+		var s = new Array(o); // declare our intermediate variables array
+		var i; // general purpose local
+		var j; // general purpose local
+		var k = 0; // general purpose local
+
+		// when our "uheprng" is initially invoked our PRNG state is initialized from the
+		// browser's own local PRNG. This is okay since although its generator might not
+		// be wonderful, it's useful for establishing large startup entropy for our usage.
+		var mash = new Mash(); // get a pointer to our high-performance "Mash" hash
+
+		// fill the array with initial mash hash values
+		for (i = 0; i < o; i++) {
+			s[i] = mash(Math.random());
+		}
+
+		// this PRIVATE (internal access only) function is the heart of the multiply-with-carry
+		// (MWC) PRNG algorithm. When called it returns a pseudo-random number in the form of a
+		// 32-bit JavaScript fraction (0.0 to <1.0) it is a PRIVATE function used by the default
+		// [0-1] return function, and by the random 'string(n)' function which returns 'n'
+		// characters from 33 to 126.
+		var rawprng = function () {
+			if (++p >= o) {
+				p = 0;
+			}
+			var t = 1768863 * s[p] + c * 2.3283064365386963e-10; // 2^-32
+			return s[p] = t - (c = t | 0);
+		};
+
+		// this EXPORTED function is the default function returned by this library.
+		// The values returned are integers in the range from 0 to range-1. We first
+		// obtain two 32-bit fractions (from rawprng) to synthesize a single high
+		// resolution 53-bit prng (0 to <1), then we multiply this by the caller's
+		// "range" param and take the "floor" to return a equally probable integer.
+		var random = function (range) {
+			return Math.floor(range * (rawprng() + (rawprng() * 0x200000 | 0) * 1.1102230246251565e-16)); // 2^-53
+		};
+
+		// this EXPORTED function 'string(n)' returns a pseudo-random string of
+		// 'n' printable characters ranging from chr(33) to chr(126) inclusive.
+		random.string = function (count) {
+			var i;
+			var s = '';
+			for (i = 0; i < count; i++) {
+				s += String.fromCharCode(33 + random(94));
+			}
+			return s;
+		};
+
+		// this PRIVATE "hash" function is used to evolve the generator's internal
+		// entropy state. It is also called by the EXPORTED addEntropy() function
+		// which is used to pour entropy into the PRNG.
+		var hash = function () {
+			var args = Array.prototype.slice.call(arguments);
+			for (i = 0; i < args.length; i++) {
+				for (j = 0; j < o; j++) {
+					s[j] -= mash(args[i]);
+					if (s[j] < 0) {
+						s[j] += 1;
+					}
+				}
+			}
+		};
+
+		// this EXPORTED "clean string" function removes leading and trailing spaces and non-printing
+		// control characters, including any embedded carriage-return (CR) and line-feed (LF) characters,
+		// from any string it is handed. this is also used by the 'hashstring' function (below) to help
+		// users always obtain the same EFFECTIVE uheprng seeding key.
+		random.cleanString = function (inStr) {
+			inStr = inStr.replace(/(^\s*)|(\s*$)/gi, ''); // remove any/all leading spaces
+			inStr = inStr.replace(/[\x00-\x1F]/gi, ''); // remove any/all control characters
+			inStr = inStr.replace(/\n /, '\n'); // remove any/all trailing spaces
+			return inStr; // return the cleaned up result
+		};
+
+		// this EXPORTED "hash string" function hashes the provided character string after first removing
+		// any leading or trailing spaces and ignoring any embedded carriage returns (CR) or Line Feeds (LF)
+		random.hashString = function (inStr) {
+			inStr = random.cleanString(inStr);
+			mash(inStr); // use the string to evolve the 'mash' state
+			for (i = 0; i < inStr.length; i++) { // scan through the characters in our string
+				k = inStr.charCodeAt(i); // get the character code at the location
+				for (j = 0; j < o; j++) { //	"mash" it into the UHEPRNG state
+					s[j] -= mash(k);
+					if (s[j] < 0) {
+						s[j] += 1;
+					}
+				}
+			}
+		};
+
+		// this EXPORTED function allows you to seed the random generator.
+		random.seed = function (seed) {
+			if (typeof seed === 'undefined' || seed === null) {
+				seed = Math.random();
+			}
+			if (typeof seed !== 'string') {
+				seed = stringify(seed, function (key, value) {
+					if (typeof value === 'function') {
+						return (value).toString();
+					}
+					return value;
+				});
+			}
+			random.initState();
+			random.hashString(seed);
+		};
+
+		// this handy exported function is used to add entropy to our uheprng at any time
+		random.addEntropy = function ( /* accept zero or more arguments */ ) {
+			var args = [];
+			for (i = 0; i < arguments.length; i++) {
+				args.push(arguments[i]);
+			}
+			hash((k++) + (new Date().getTime()) + args.join('') + Math.random());
+		};
+
+		// if we want to provide a deterministic startup context for our PRNG,
+		// but without directly setting the internal state variables, this allows
+		// us to initialize the mash hash and PRNG's internal state before providing
+		// some hashing input
+		random.initState = function () {
+			mash(); // pass a null arg to force mash hash to init
+			for (i = 0; i < o; i++) {
+				s[i] = mash(' '); // fill the array with initial mash hash values
+			}
+			c = 1; // init our multiply-with-carry carry
+			p = o; // init our phase
+		};
+
+		// we use this (optional) exported function to signal the JavaScript interpreter
+		// that we're finished using the "Mash" hash function so that it can free up the
+		// local "instance variables" is will have been maintaining.  It's not strictly
+		// necessary, of course, but it's good JavaScript citizenship.
+		random.done = function () {
+			mash = null;
+		};
+
+		// if we called "uheprng" with a seed value, then execute random.seed() before returning
+		if (typeof seed !== 'undefined') {
+			random.seed(seed);
+		}
+
+		// Returns a random integer between 0 (inclusive) and range (exclusive)
+		random.range = function (range) {
+			return random(range);
+		};
+
+		// Returns a random float between 0 (inclusive) and 1 (exclusive)
+		random.random = function () {
+			return random(Number.MAX_VALUE - 1) / Number.MAX_VALUE;
+		};
+
+		// Returns a random float between min (inclusive) and max (exclusive)
+		random.floatBetween = function (min, max) {
+			return random.random() * (max - min) + min;
+		};
+
+		// Returns a random integer between min (inclusive) and max (inclusive)
+		random.intBetween = function (min, max) {
+			return Math.floor(random.random() * (max - min + 1)) + min;
+		};
+
+		// when our main outer "uheprng" function is called, after setting up our
+		// initial variables and entropic state, we return an "instance pointer"
+		// to the internal anonymous function which can then be used to access
+		// the uheprng's various exported functions.  As with the ".done" function
+		// above, we should set the returned value to 'null' once we're finished
+		// using any of these functions.
+		return random;
+	}());
+};
+
+// Modification for use in node:
+uheprng.create = function (seed) {
+	return new uheprng(seed);
+};
+module.exports = uheprng;
 
 
 /***/ }),
@@ -3082,10 +3400,6 @@ class TestCanvas {
   }
 }
 
-function random(min, max) {
-  return Math.floor(Math.random() * max) + min;
-}
-
 function loop(callback) {
   let time = Date.now();
 
@@ -3103,8 +3417,6 @@ function loop(callback) {
 
 module.exports.TestCanvas = TestCanvas;
 
-module.exports.random = random;
-
 module.exports.loop = loop;
 
 module.exports.width = width;
@@ -3121,7 +3433,12 @@ module.exports.height = height;
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const { System, getBounceDirection } = __webpack_require__(/*! ../../dist */ "./dist/index.js");
-const { width, height, random, loop } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js");
+const { width, height } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js");
+const seededRandom = (__webpack_require__(/*! random-seed */ "./node_modules/random-seed/index.js").create)("@Prozi").random;
+
+function random(min, max) {
+  return Math.floor(seededRandom() * max) + min;
+}
 
 class Stress {
   constructor(count = 1500) {
@@ -3189,12 +3506,12 @@ class Stress {
     this.bodies.forEach((body) => {
       body.setAngle(body.angle + body.rotationSpeed * timeScale);
 
-      if (Math.random() < 0.05 * timeScale) {
-        body.targetScale.x = 0.5 + Math.random();
+      if (seededRandom() < 0.05 * timeScale) {
+        body.targetScale.x = 0.5 + seededRandom();
       }
 
-      if (Math.random() < 0.05 * timeScale) {
-        body.targetScale.y = 0.5 + Math.random();
+      if (seededRandom() < 0.05 * timeScale) {
+        body.targetScale.y = 0.5 + seededRandom();
       }
 
       if (Math.abs(body.targetScale.x - body.scaleX) > 0.01) {
@@ -3216,7 +3533,7 @@ class Stress {
     // console.time("bodies separate");
     this.physics.checkAll(({ a, b, overlapV }) => {
       this.bounce(a, b, overlapV);
-      a.rotationSpeed = (Math.random() - Math.random()) * 0.1;
+      a.rotationSpeed = (seededRandom() - seededRandom()) * 0.1;
       a.setPosition(a.x - overlapV.x, a.y - overlapV.y);
 
       return true;
@@ -3243,8 +3560,8 @@ class Stress {
   }
 
   createShape(large, size) {
-    const minSize = size * 1.0 * (large ? Math.random() + 1 : 1);
-    const maxSize = size * 1.25 * (large ? Math.random() * 2 + 1 : 1);
+    const minSize = size * 1.0 * (large ? seededRandom() + 1 : 1);
+    const maxSize = size * 1.25 * (large ? seededRandom() * 2 + 1 : 1);
     const x = random(0, width);
     const y = random(0, height);
     const direction = (random(0, 360) * Math.PI) / 180;
@@ -3316,7 +3633,7 @@ class Stress {
     }
 
     // set initial rotation angle direction
-    body.rotationSpeed = (Math.random() - Math.random()) * 0.1;
+    body.rotationSpeed = (seededRandom() - seededRandom()) * 0.1;
     body.setAngle((random(0, 360) * Math.PI) / 180);
 
     body.targetScale = { x: 1, y: 1 };

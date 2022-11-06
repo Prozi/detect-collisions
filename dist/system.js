@@ -31,13 +31,15 @@ class System extends base_system_1.BaseSystem {
         }
         // old bounding box *needs* to be removed
         if (body.system) {
-            this.remove(body);
+            // but we don't need to set system to undefined so super.remove
+            super.remove(body);
         }
         // only then we update min, max
         body.minX = body.bbox.minX - body.padding;
         body.minY = body.bbox.minY - body.padding;
         body.maxX = body.bbox.maxX + body.padding;
         body.maxY = body.bbox.maxY + body.padding;
+        // set system for later body.system.insert()
         body.system = this;
         // reinsert bounding box to collision tree
         return super.insert(body);
