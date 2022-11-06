@@ -94,6 +94,10 @@ export interface Collider {
      */
     padding: number;
     /**
+     * bounding box cache, without padding
+     */
+    bbox: BBox;
+    /**
      * body angle
      */
     angle: number;

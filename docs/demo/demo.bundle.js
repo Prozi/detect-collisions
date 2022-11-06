@@ -824,12 +824,9 @@ class System extends base_system_1.BaseSystem {
      * update body aabb and in tree
      */
     insert(body) {
-        const bounds = body.getAABBAsBBox();
-        const update = bounds.minX < body.minX ||
-            bounds.minY < body.minY ||
-            bounds.maxX > body.maxX ||
-            bounds.maxY > body.maxY;
-        if (body.system && !update) {
+        body.bbox = body.getAABBAsBBox();
+        // allow only on first insert or if body moved
+        if (body.system && !(0, utils_1.bodyMoved)(body)) {
             return this;
         }
         // old bounding box *needs* to be removed
@@ -837,10 +834,10 @@ class System extends base_system_1.BaseSystem {
             this.remove(body);
         }
         // only then we update min, max
-        body.minX = bounds.minX - body.padding;
-        body.minY = bounds.minY - body.padding;
-        body.maxX = bounds.maxX + body.padding;
-        body.maxY = bounds.maxY + body.padding;
+        body.minX = body.bbox.minX - body.padding;
+        body.minY = body.bbox.minY - body.padding;
+        body.maxX = body.bbox.maxX + body.padding;
+        body.maxY = body.bbox.maxY + body.padding;
         body.system = this;
         // reinsert bounding box to collision tree
         return super.insert(body);
@@ -884,7 +881,7 @@ class System extends base_system_1.BaseSystem {
         if (body.isStatic) {
             return;
         }
-        this.getPotentials(body).forEach((candidate) => {
+        this.getPotentials(body).some((candidate) => {
             if (this.checkCollision(body, candidate)) {
                 return callback(this.response);
             }
@@ -909,6 +906,11 @@ class System extends base_system_1.BaseSystem {
      * check do 2 objects collide
      */
     checkCollision(body, wall) {
+        // check bounding boxes without padding
+        if ((body.padding || wall.padding) &&
+            !(0, utils_1.intersectAABB)(body.bbox, wall.bbox)) {
+            return false;
+        }
         this.response.clear();
         const state = {
             collides: false,
@@ -1020,7 +1022,7 @@ exports.System = System;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js");
 const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
@@ -1100,6 +1102,21 @@ function extendBody(body, options) {
     body.setAngle((options === null || options === void 0 ? void 0 : options.angle) || 0);
 }
 exports.extendBody = extendBody;
+// check if body moved outside of padding
+function bodyMoved(body) {
+    return (body.bbox.minX < body.minX ||
+        body.bbox.minY < body.minY ||
+        body.bbox.maxX > body.maxX ||
+        body.bbox.maxY > body.maxY);
+}
+exports.bodyMoved = bodyMoved;
+function intersectAABB(a, b) {
+    return !(b.minX > a.maxX ||
+        b.minY > a.maxY ||
+        b.maxX < a.minX ||
+        b.maxY < a.minY);
+}
+exports.intersectAABB = intersectAABB;
 function checkAInB(a, b) {
     const insideX = a.minX >= b.minX && a.maxX <= b.maxX;
     const insideY = a.minY >= b.minY && a.maxY <= b.maxY;
@@ -3017,16 +3034,21 @@ class TestCanvas {
       this.element.appendChild(this.canvas);
     }
 
-    this.started = Date.now();
     this.fps = 0;
     this.frame = 0;
+    this.started = Date.now();
 
     loop(() => this.update());
   }
 
   update() {
     this.frame++;
-    this.fps = this.frame / ((Date.now() - this.started) / 1000);
+
+    if (this.frame === 60) {
+      this.fps = this.frame / ((Date.now() - this.started) / 1000);
+      this.frame = 0;
+      this.started = Date.now();
+    }
 
     // Clear the canvas
     this.context.fillStyle = "#000000";
@@ -3048,7 +3070,11 @@ class TestCanvas {
 
     // Render the FPS
     this.context.fillStyle = "#FFCC00";
-    this.context.fillText(`FPS: ${this.fps.toFixed(0)}`, 24, 48);
+    this.context.fillText(
+      `FPS: ${this.fps ? this.fps.toFixed(0) : "?"}`,
+      24,
+      48
+    );
 
     if (this.test.drawCallback) {
       this.test.drawCallback();
@@ -3147,23 +3173,8 @@ class Stress {
     <div><b>Lines:</b> ${this.lines}</div>`;
 
     this.start = () => {
-      loop(() => {
-        this.physics.checkAll(({ a, b, overlapV }) => {
-          this.bounce(a, b, overlapV);
-
-          a.rotationSpeed = (Math.random() - Math.random()) * 0.1;
-
-          // adaptive padding, when collides, halves
-          a.padding /= 2;
-
-          a.setPosition(a.x - overlapV.x, a.y - overlapV.y);
-
-          return true;
-        });
-      });
-
       const frame = () => {
-        this.update(1, size);
+        this.update();
 
         requestAnimationFrame(frame);
       };
@@ -3172,14 +3183,11 @@ class Stress {
     };
   }
 
-  update(timeScale, size) {
-    const padding = size * timeScale * 0.67;
+  update() {
+    const timeScale = 0.5;
 
     this.bodies.forEach((body) => {
       body.setAngle(body.angle + body.rotationSpeed * timeScale);
-
-      // adaptive padding, when no collisions goes up to "padding" variable value
-      body.padding = (body.padding + padding) / 2;
 
       if (Math.random() < 0.05 * timeScale) {
         body.targetScale.x = 0.5 + Math.random();
@@ -3204,6 +3212,16 @@ class Stress {
         body.y + body.directionY * timeScale
       );
     });
+
+    // console.time("bodies separate");
+    this.physics.checkAll(({ a, b, overlapV }) => {
+      this.bounce(a, b, overlapV);
+      a.rotationSpeed = (Math.random() - Math.random()) * 0.1;
+      a.setPosition(a.x - overlapV.x, a.y - overlapV.y);
+
+      return true;
+    });
+    // console.timeEnd("bodies separate");
   }
 
   bounce(a, b, overlapV) {
@@ -3232,6 +3250,7 @@ class Stress {
     const direction = (random(0, 360) * Math.PI) / 180;
     const options = {
       center: true,
+      padding: size * 0.5,
     };
 
     let body;
@@ -3239,7 +3258,11 @@ class Stress {
 
     switch (variant) {
       case 0:
-        body = this.physics.createCircle({ x, y }, random(minSize, maxSize));
+        body = this.physics.createCircle(
+          { x, y },
+          random(minSize, maxSize),
+          options
+        );
 
         ++this.circles;
         break;
@@ -3247,7 +3270,7 @@ class Stress {
       case 1:
         const width = random(minSize, maxSize);
         const height = random(minSize, maxSize);
-        body = this.physics.createEllipse({ x, y }, width, height);
+        body = this.physics.createEllipse({ x, y }, width, height, 2, options);
 
         ++this.ellipses;
         break;

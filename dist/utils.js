@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = require("sat");
 const line_1 = require("./bodies/line");
 const model_1 = require("./model");
@@ -80,6 +80,21 @@ function extendBody(body, options) {
     body.setAngle((options === null || options === void 0 ? void 0 : options.angle) || 0);
 }
 exports.extendBody = extendBody;
+// check if body moved outside of padding
+function bodyMoved(body) {
+    return (body.bbox.minX < body.minX ||
+        body.bbox.minY < body.minY ||
+        body.bbox.maxX > body.maxX ||
+        body.bbox.maxY > body.maxY);
+}
+exports.bodyMoved = bodyMoved;
+function intersectAABB(a, b) {
+    return !(b.minX > a.maxX ||
+        b.minY > a.maxY ||
+        b.maxX < a.minX ||
+        b.maxY < a.minY);
+}
+exports.intersectAABB = intersectAABB;
 function checkAInB(a, b) {
     const insideX = a.minX >= b.minX && a.maxX <= b.maxX;
     const insideY = a.minY >= b.minY && a.maxY <= b.maxY;

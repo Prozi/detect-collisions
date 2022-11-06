@@ -24,12 +24,9 @@ class System extends base_system_1.BaseSystem {
      * update body aabb and in tree
      */
     insert(body) {
-        const bounds = body.getAABBAsBBox();
-        const update = bounds.minX < body.minX ||
-            bounds.minY < body.minY ||
-            bounds.maxX > body.maxX ||
-            bounds.maxY > body.maxY;
-        if (body.system && !update) {
+        body.bbox = body.getAABBAsBBox();
+        // allow only on first insert or if body moved
+        if (body.system && !(0, utils_1.bodyMoved)(body)) {
             return this;
         }
         // old bounding box *needs* to be removed
@@ -37,10 +34,10 @@ class System extends base_system_1.BaseSystem {
             this.remove(body);
         }
         // only then we update min, max
-        body.minX = bounds.minX - body.padding;
-        body.minY = bounds.minY - body.padding;
-        body.maxX = bounds.maxX + body.padding;
-        body.maxY = bounds.maxY + body.padding;
+        body.minX = body.bbox.minX - body.padding;
+        body.minY = body.bbox.minY - body.padding;
+        body.maxX = body.bbox.maxX + body.padding;
+        body.maxY = body.bbox.maxY + body.padding;
         body.system = this;
         // reinsert bounding box to collision tree
         return super.insert(body);
@@ -84,7 +81,7 @@ class System extends base_system_1.BaseSystem {
         if (body.isStatic) {
             return;
         }
-        this.getPotentials(body).forEach((candidate) => {
+        this.getPotentials(body).some((candidate) => {
             if (this.checkCollision(body, candidate)) {
                 return callback(this.response);
             }
@@ -109,6 +106,11 @@ class System extends base_system_1.BaseSystem {
      * check do 2 objects collide
      */
     checkCollision(body, wall) {
+        // check bounding boxes without padding
+        if ((body.padding || wall.padding) &&
+            !(0, utils_1.intersectAABB)(body.bbox, wall.bbox)) {
+            return false;
+        }
         this.response.clear();
         const state = {
             collides: false,
