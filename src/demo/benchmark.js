@@ -1,47 +1,44 @@
 require("pixi-shim");
 const Stress = require("./stress");
 
-const duration = +(process.argv[2] || 3000);
+const duration = +(process.argv[2] || 1000);
+const summary = [];
 
-let totalFrames = 0;
-
-const run = (phase) => {
-  const count = 2000;
-  const test = new Stress(count);
-  console.log(`stress test with ${count} items created`);
+const run = (items) => {
+  const test = new Stress(items);
 
   let frames = 0;
   let timeout;
 
   const benchFrame = () => {
-    timeout = setTimeout(benchFrame, 1000 / 120);
     test.update();
     frames++;
+    timeout = setTimeout(benchFrame);
   };
 
-  setTimeout(() => {
-    const fps = frames / (duration / 1000);
-    totalFrames += frames;
+  benchFrame();
 
-    console.log({
-      duration: +duration.toFixed(),
-      frames,
-      totalFrames,
-      fps: +fps.toFixed(1),
+  setTimeout(() => {
+    clearTimeout(timeout);
+    test.physics.clear();
+
+    const fps = frames / (duration / 1000);
+    summary.push({
+      value: +fps.toFixed(2),
+      name: `FPS / ${items} items`,
     });
 
-    clearTimeout(timeout);
-
-    test.physics.all().forEach((body) => test.physics.remove(body));
-
-    if (phase < 3) {
-      run(phase + 1);
+    if (items < 10000) {
+      run(items + 1000);
     } else {
+      summary.unshift({
+        value: summary.reduce((sum, entry) => sum + entry.value, 0),
+        name: "Total Frames",
+      });
+      console.log(summary);
       process.exit(0);
     }
   }, duration);
-
-  benchFrame();
 };
 
-run(1);
+run(1000);

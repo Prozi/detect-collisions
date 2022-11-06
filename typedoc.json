@@ -3,9 +3,9 @@
   "out": "docs",
   "plugin": [
     "typedoc-monorepo-link-types",
-    "typedoc-plugin-resolve-crossmodule-references"
+    "typedoc-theme-oxide"
   ],
-  "theme": "default",
+  "theme": "oxide",
   "tsconfig": "./tsconfig.json",
   "name": "Detect-Collisions",
   "noMissingExports": true

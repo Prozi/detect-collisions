@@ -1,5 +1,10 @@
 const { System, getBounceDirection } = require("../../dist");
-const { width, height, random, loop } = require("./canvas");
+const { width, height } = require("./canvas");
+const seededRandom = require("random-seed").create("@Prozi").random;
+
+function random(min, max) {
+  return Math.floor(seededRandom() * max) + min;
+}
 
 class Stress {
   constructor(count = 1500) {
@@ -67,12 +72,12 @@ class Stress {
     this.bodies.forEach((body) => {
       body.setAngle(body.angle + body.rotationSpeed * timeScale);
 
-      if (Math.random() < 0.05 * timeScale) {
-        body.targetScale.x = 0.5 + Math.random();
+      if (seededRandom() < 0.05 * timeScale) {
+        body.targetScale.x = 0.5 + seededRandom();
       }
 
-      if (Math.random() < 0.05 * timeScale) {
-        body.targetScale.y = 0.5 + Math.random();
+      if (seededRandom() < 0.05 * timeScale) {
+        body.targetScale.y = 0.5 + seededRandom();
       }
 
       if (Math.abs(body.targetScale.x - body.scaleX) > 0.01) {
@@ -94,7 +99,7 @@ class Stress {
     // console.time("bodies separate");
     this.physics.checkAll(({ a, b, overlapV }) => {
       this.bounce(a, b, overlapV);
-      a.rotationSpeed = (Math.random() - Math.random()) * 0.1;
+      a.rotationSpeed = (seededRandom() - seededRandom()) * 0.1;
       a.setPosition(a.x - overlapV.x, a.y - overlapV.y);
 
       return true;
@@ -121,8 +126,8 @@ class Stress {
   }
 
   createShape(large, size) {
-    const minSize = size * 1.0 * (large ? Math.random() + 1 : 1);
-    const maxSize = size * 1.25 * (large ? Math.random() * 2 + 1 : 1);
+    const minSize = size * 1.0 * (large ? seededRandom() + 1 : 1);
+    const maxSize = size * 1.25 * (large ? seededRandom() * 2 + 1 : 1);
     const x = random(0, width);
     const y = random(0, height);
     const direction = (random(0, 360) * Math.PI) / 180;
@@ -194,7 +199,7 @@ class Stress {
     }
 
     // set initial rotation angle direction
-    body.rotationSpeed = (Math.random() - Math.random()) * 0.1;
+    body.rotationSpeed = (seededRandom() - seededRandom()) * 0.1;
     body.setAngle((random(0, 360) * Math.PI) / 180);
 
     body.targetScale = { x: 1, y: 1 };

@@ -76,10 +76,6 @@ class TestCanvas {
   }
 }
 
-function random(min, max) {
-  return Math.floor(Math.random() * max) + min;
-}
-
 function loop(callback) {
   let time = Date.now();
 
@@ -96,8 +92,6 @@ function loop(callback) {
 }
 
 module.exports.TestCanvas = TestCanvas;
-
-module.exports.random = random;
 
 module.exports.loop = loop;
 
