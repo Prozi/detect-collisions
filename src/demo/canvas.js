@@ -71,20 +71,19 @@ function random(min, max) {
   return Math.floor(Math.random() * max) + min;
 }
 
-function loop(callback, loopFn = requestAnimationFrame) {
-  let time = performance.now();
+function loop(callback) {
+  let time = Date.now();
 
   function frame() {
-    loopFn(frame);
-
-    const now = performance.now();
+    const now = Date.now();
     const timeScale = (now - time) / (1000 / 60);
-    time = now;
 
     callback(timeScale);
+
+    time = now;
   }
 
-  frame();
+  return setInterval(frame, 1000 / 60);
 }
 
 module.exports.TestCanvas = TestCanvas;

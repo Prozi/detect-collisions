@@ -112,7 +112,7 @@ export class System extends BaseSystem {
   /**
    * check one collider collisions with callback
    */
-  checkOne(body: Body, callback: (response: Response) => void): void {
+  checkOne(body: Body, callback: (response: Response) => void | boolean): void {
     // no need to check static body collision
     if (body.isStatic) {
       return;
@@ -120,7 +120,7 @@ export class System extends BaseSystem {
 
     this.getPotentials(body).forEach((candidate: Body) => {
       if (this.checkCollision(body, candidate)) {
-        callback(this.response);
+        return callback(this.response);
       }
     });
   }
@@ -128,7 +128,7 @@ export class System extends BaseSystem {
   /**
    * check all colliders collisions with callback
    */
-  checkAll(callback: (response: Response) => void): void {
+  checkAll(callback: (response: Response) => void | boolean): void {
     this.all().forEach((body: Body) => {
       this.checkOne(body, callback);
     });

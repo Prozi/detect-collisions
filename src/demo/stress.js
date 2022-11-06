@@ -2,7 +2,7 @@ const { System, getBounceDirection } = require("../../dist");
 const { width, height, random, loop } = require("./canvas");
 
 class Stress {
-  constructor(count = 1000) {
+  constructor(count = 1500) {
     const size = Math.sqrt((width * height) / (count * 50));
 
     this.physics = new System();
@@ -12,6 +12,7 @@ class Stress {
     this.circles = 0;
     this.ellipses = 0;
     this.lines = 0;
+    this.lastVariant = 0;
     this.count = count;
 
     // World bounds
@@ -49,8 +50,30 @@ class Stress {
     <div><b>Ellipses:</b> ${this.ellipses}</div>
     <div><b>Lines:</b> ${this.lines}</div>`;
 
-    this.start = () =>
-      loop((timeScale) => this.update(Math.min(1, timeScale), size));
+    this.start = () => {
+      loop(() => {
+        this.physics.checkAll(({ a, b, overlapV }) => {
+          this.bounce(a, b, overlapV);
+
+          a.rotationSpeed = (Math.random() - Math.random()) * 0.1;
+
+          // adaptive padding, when collides, halves
+          a.padding /= 2;
+
+          a.setPosition(a.x - overlapV.x, a.y - overlapV.y);
+
+          return true;
+        });
+      });
+
+      const frame = () => {
+        this.update(1, size);
+
+        requestAnimationFrame(frame);
+      };
+
+      requestAnimationFrame(frame);
+    };
   }
 
   update(timeScale, size) {
@@ -85,19 +108,6 @@ class Stress {
         body.y + body.directionY * timeScale
       );
     });
-
-    this.physics.checkAll(({ a, b, overlapV }) => {
-      a.pos.x -= overlapV.x;
-      a.pos.y -= overlapV.y;
-
-      // adaptive padding, when collides, halves
-      a.padding /= 2;
-
-      this.bounce(a, b, overlapV);
-      this.bounce(b, a, overlapV.clone().reverse());
-
-      a.rotationSpeed = (Math.random() - Math.random()) * 0.1;
-    });
   }
 
   bounce(a, b, overlapV) {
@@ -129,7 +139,7 @@ class Stress {
     };
 
     let body;
-    let variant = random(0, 5);
+    let variant = this.lastVariant++ % 5;
 
     switch (variant) {
       case 0:
