@@ -45,7 +45,7 @@ export class System extends BaseSystem {
   }
 
   /**
-   * update body aabb and in tree
+   * re-insert body into collision tree and update its aabb
    */
   insert(body: Body): RBush<Body> {
     body.bbox = body.getAABBAsBBox();
@@ -67,7 +67,7 @@ export class System extends BaseSystem {
     body.maxX = body.bbox.maxX + body.padding;
     body.maxY = body.bbox.maxY + body.padding;
 
-    // set system for later body.system.insert()
+    // set system for later body.system.updateBody(body)
     body.system = this;
 
     // reinsert bounding box to collision tree
@@ -75,7 +75,7 @@ export class System extends BaseSystem {
   }
 
   /**
-   * @deprecated please use insert
+   * alias for insert, updates body in collision tree
    */
   updateBody(body: Body): void {
     this.insert(body);
@@ -88,7 +88,7 @@ export class System extends BaseSystem {
     this.all().forEach((body: Body) => {
       // no need to every cycle update static body aabb
       if (!body.isStatic) {
-        this.insert(body);
+        this.updateBody(body);
       }
     });
   }
@@ -97,16 +97,13 @@ export class System extends BaseSystem {
    * separate (move away) colliders
    */
   separate(): void {
-    this.checkAll((response: Response) => {
+    this.checkAll(({ a, overlapV }: Response) => {
       // static bodies and triggers do not move back / separate
-      if (response.a.isTrigger) {
-        return;
+      if (a.isTrigger) {
+        return true;
       }
 
-      response.a.x -= response.overlapV.x;
-      response.a.y -= response.overlapV.y;
-
-      this.insert(response.a);
+      a.setPosition(a.x - overlapV.x, a.y - overlapV.y);
     });
   }
 

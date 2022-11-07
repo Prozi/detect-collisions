@@ -88,7 +88,7 @@ export class Circle extends SATCircle implements BBox, Collider {
   set x(x: number) {
     this.pos.x = x;
 
-    this.system?.insert(this);
+    this.system?.updateBody(this);
   }
 
   get y(): number {
@@ -101,7 +101,7 @@ export class Circle extends SATCircle implements BBox, Collider {
   set y(y: number) {
     this.pos.y = y;
 
-    this.system?.insert(this);
+    this.system?.updateBody(this);
   }
 
   /**
@@ -141,7 +141,7 @@ export class Circle extends SATCircle implements BBox, Collider {
     this.pos.x = x;
     this.pos.y = y;
 
-    this.system?.insert(this);
+    this.system?.updateBody(this);
   }
 
   /**

@@ -115,7 +115,7 @@ Collisions systems need to be updated when the bodies within them change. This i
 
 ```typescript
 // update one body, use anytime
-physics.insert(body);
+physics.updateBody(body);
 ```
 
 ```typescript
