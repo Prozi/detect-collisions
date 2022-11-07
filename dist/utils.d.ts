@@ -3,7 +3,7 @@ import { Vector as SATVector } from "sat";
 import { Circle } from "./bodies/circle";
 import { Line } from "./bodies/line";
 import { Polygon } from "./bodies/polygon";
-import { Body, BodyOptions, PotentialVector, Vector } from "./model";
+import { Body, BodyOptions, PotentialVector, TestFunction, Vector } from "./model";
 export declare function createEllipse(radiusX: number, radiusY?: number, step?: number): SATVector[];
 /**
  * creates box polygon points
@@ -59,4 +59,5 @@ export declare function ensureConvex(body: Body): Body[];
  * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
  */
 export declare function getBounceDirection(body: Vector, collider: Vector): Vector;
+export declare function getSATFunction(body: Body, wall: Body): TestFunction;
 //# sourceMappingURL=utils.d.ts.map

@@ -216,7 +216,7 @@ class Circle extends sat_1.Circle {
     set x(x) {
         var _a;
         this.pos.x = x;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     get y() {
         return this.pos.y;
@@ -227,7 +227,7 @@ class Circle extends sat_1.Circle {
     set y(y) {
         var _a;
         this.pos.y = y;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     /**
      * allow get scale
@@ -262,7 +262,7 @@ class Circle extends sat_1.Circle {
         var _a;
         this.pos.x = x;
         this.pos.y = y;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     /**
      * update scale
@@ -543,7 +543,7 @@ class Polygon extends sat_1.Polygon {
     set x(x) {
         var _a;
         this.pos.x = x;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     get y() {
         return this.pos.y;
@@ -554,7 +554,7 @@ class Polygon extends sat_1.Polygon {
     set y(y) {
         var _a;
         this.pos.y = y;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     /**
      * allow exact getting of scale x
@@ -609,7 +609,7 @@ class Polygon extends sat_1.Polygon {
         var _a;
         this.pos.x = x;
         this.pos.y = y;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     /**
      * update scale
@@ -801,7 +801,6 @@ var Types;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.System = void 0;
-const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const base_system_1 = __webpack_require__(/*! ./base-system */ "./dist/base-system.js");
 const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
 const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils.js");
@@ -812,6 +811,12 @@ class System extends base_system_1.BaseSystem {
     constructor() {
         super(...arguments);
         this.response = new model_1.Response();
+        this.state = {
+            collides: false,
+            aInB: false,
+            bInA: false,
+            overlapV: new model_1.SATVector(),
+        };
     }
     /**
      * remove body aabb from collision tree
@@ -857,7 +862,7 @@ class System extends base_system_1.BaseSystem {
         this.all().forEach((body) => {
             // no need to every cycle update static body aabb
             if (!body.isStatic) {
-                this.updateBody(body);
+                this.insert(body);
             }
         });
     }
@@ -912,60 +917,47 @@ class System extends base_system_1.BaseSystem {
             return false;
         }
         this.response.clear();
-        const state = {
-            collides: false,
-        };
-        let test;
-        if (body.type === model_1.Types.Circle && wall.type === model_1.Types.Circle) {
-            test = sat_1.testCircleCircle;
-        }
-        else if (body.type === model_1.Types.Circle && wall.type !== model_1.Types.Circle) {
-            test = sat_1.testCirclePolygon;
-        }
-        else if (body.type !== model_1.Types.Circle && wall.type === model_1.Types.Circle) {
-            test = sat_1.testPolygonCircle;
-        }
-        else {
-            test = sat_1.testPolygonPolygon;
-        }
+        const sat = (0, utils_1.getSATFunction)(body, wall);
         if (body.isConvex && wall.isConvex) {
-            state.collides = test(body, wall, this.response);
+            this.state.collides = sat(body, wall, this.response);
         }
         else if (body.isConvex && !wall.isConvex) {
-            (0, utils_1.ensureConvex)(wall).forEach((convexWall) => this.collided(state, test(body, convexWall, this.response)));
+            (0, utils_1.ensureConvex)(wall).forEach((convexWall) => {
+                this.test(sat, body, convexWall);
+            });
         }
         else if (!body.isConvex && wall.isConvex) {
-            (0, utils_1.ensureConvex)(body).forEach((convexBody) => this.collided(state, test(convexBody, wall, this.response)));
+            (0, utils_1.ensureConvex)(body).forEach((convexBody) => {
+                this.test(sat, convexBody, wall);
+            });
         }
         else {
             const convexBodies = (0, utils_1.ensureConvex)(body);
             const convexWalls = (0, utils_1.ensureConvex)(wall);
-            convexBodies.forEach((convexBody) => convexWalls.forEach((convexWall) => this.collided(state, test(convexBody, convexWall, this.response))));
-        }
-        // collisionVector is set if body or candidate was concave during this.collided()
-        if (state.collisionVector) {
-            this.response.overlapV = state.collisionVector;
-            this.response.overlapN = this.response.overlapV.clone().normalize();
-            this.response.overlap = this.response.overlapV.len();
+            convexBodies.forEach((convexBody) => {
+                convexWalls.forEach((convexWall) => {
+                    this.test(sat, convexBody, convexWall);
+                });
+            });
         }
         // set proper response object bodies
         if (!body.isConvex || !wall.isConvex) {
             this.response.a = body;
             this.response.b = wall;
+            // collisionVector is set if body or candidate was concave during this.test()
+            if (this.state.collides) {
+                this.response.overlapV = this.state.overlapV;
+                this.response.overlapN = this.response.overlapV.clone().normalize();
+                this.response.overlap = this.response.overlapV.len();
+            }
+            this.response.aInB = body.isConvex
+                ? this.state.aInB
+                : (0, utils_1.checkAInB)(body, wall);
+            this.response.bInA = wall.isConvex
+                ? this.state.bInA
+                : (0, utils_1.checkAInB)(wall, body);
         }
-        if (!body.isConvex && !wall.isConvex) {
-            this.response.aInB = (0, utils_1.checkAInB)(body, wall);
-            this.response.bInA = (0, utils_1.checkAInB)(wall, body);
-        }
-        else if (!body.isConvex) {
-            this.response.aInB = (0, utils_1.checkAInB)(body, wall);
-            this.response.bInA = !!state.bInA;
-        }
-        else if (!wall.isConvex) {
-            this.response.aInB = !!state.aInB;
-            this.response.bInA = (0, utils_1.checkAInB)(wall, body);
-        }
-        return state.collides;
+        return this.state.collides;
     }
     /**
      * raycast to get collider of ray from start to end
@@ -990,20 +982,23 @@ class System extends base_system_1.BaseSystem {
         });
         return result;
     }
-    collided(state, collides) {
+    test(sat, body, wall) {
+        const collides = sat(body, wall, this.response);
         if (collides) {
-            // lazy create vector
-            if (typeof state.collisionVector === "undefined") {
-                state.collisionVector = new model_1.SATVector();
+            // first time in loop, reset
+            if (!this.state.collides) {
+                this.state.aInB = false;
+                this.state.bInA = false;
+                this.state.overlapV = new model_1.SATVector();
             }
             // sum all collision vectors
-            state.collisionVector.add(this.response.overlapV);
+            this.state.overlapV.add(this.response.overlapV);
         }
         // aInB and bInA is kept in state for later restore
-        state.aInB = state.aInB || this.response.aInB;
-        state.bInA = state.bInA || this.response.bInA;
+        this.state.aInB = this.state.aInB || this.response.aInB;
+        this.state.bInA = this.state.bInA || this.response.bInA;
         // set state collide at least once value
-        state.collides = collides || state.collides;
+        this.state.collides = collides || this.state.collides;
         // clear for reuse
         this.response.clear();
     }
@@ -1022,7 +1017,7 @@ exports.System = System;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js");
 const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
@@ -1248,6 +1243,16 @@ function getBounceDirection(body, collider) {
     return new sat_1.Vector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
 }
 exports.getBounceDirection = getBounceDirection;
+function getSATFunction(body, wall) {
+    return body.type === model_1.Types.Circle
+        ? wall.type === model_1.Types.Circle
+            ? sat_1.testCircleCircle
+            : sat_1.testCirclePolygon
+        : wall.type === model_1.Types.Circle
+            ? sat_1.testPolygonCircle
+            : sat_1.testPolygonPolygon;
+}
+exports.getSATFunction = getSATFunction;
 //# sourceMappingURL=utils.js.map
 
 /***/ }),

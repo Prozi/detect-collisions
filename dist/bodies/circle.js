@@ -44,7 +44,7 @@ class Circle extends sat_1.Circle {
     set x(x) {
         var _a;
         this.pos.x = x;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     get y() {
         return this.pos.y;
@@ -55,7 +55,7 @@ class Circle extends sat_1.Circle {
     set y(y) {
         var _a;
         this.pos.y = y;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     /**
      * allow get scale
@@ -90,7 +90,7 @@ class Circle extends sat_1.Circle {
         var _a;
         this.pos.x = x;
         this.pos.y = y;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     /**
      * update scale

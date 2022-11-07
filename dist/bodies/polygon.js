@@ -40,7 +40,7 @@ class Polygon extends sat_1.Polygon {
     set x(x) {
         var _a;
         this.pos.x = x;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     get y() {
         return this.pos.y;
@@ -51,7 +51,7 @@ class Polygon extends sat_1.Polygon {
     set y(y) {
         var _a;
         this.pos.y = y;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     /**
      * allow exact getting of scale x
@@ -106,7 +106,7 @@ class Polygon extends sat_1.Polygon {
         var _a;
         this.pos.x = x;
         this.pos.y = y;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.updateBody(this);
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     /**
      * update scale

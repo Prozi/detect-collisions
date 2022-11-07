@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = require("sat");
 const line_1 = require("./bodies/line");
 const model_1 = require("./model");
@@ -226,4 +226,14 @@ function getBounceDirection(body, collider) {
     return new sat_1.Vector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
 }
 exports.getBounceDirection = getBounceDirection;
+function getSATFunction(body, wall) {
+    return body.type === model_1.Types.Circle
+        ? wall.type === model_1.Types.Circle
+            ? sat_1.testCircleCircle
+            : sat_1.testCirclePolygon
+        : wall.type === model_1.Types.Circle
+            ? sat_1.testPolygonCircle
+            : sat_1.testPolygonPolygon;
+}
+exports.getSATFunction = getSATFunction;
 //# sourceMappingURL=utils.js.map

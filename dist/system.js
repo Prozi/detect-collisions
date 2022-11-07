@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.System = void 0;
-const sat_1 = require("sat");
 const base_system_1 = require("./base-system");
 const model_1 = require("./model");
 const utils_1 = require("./utils");
@@ -12,6 +11,12 @@ class System extends base_system_1.BaseSystem {
     constructor() {
         super(...arguments);
         this.response = new model_1.Response();
+        this.state = {
+            collides: false,
+            aInB: false,
+            bInA: false,
+            overlapV: new model_1.SATVector(),
+        };
     }
     /**
      * remove body aabb from collision tree
@@ -57,7 +62,7 @@ class System extends base_system_1.BaseSystem {
         this.all().forEach((body) => {
             // no need to every cycle update static body aabb
             if (!body.isStatic) {
-                this.updateBody(body);
+                this.insert(body);
             }
         });
     }
@@ -112,60 +117,47 @@ class System extends base_system_1.BaseSystem {
             return false;
         }
         this.response.clear();
-        const state = {
-            collides: false,
-        };
-        let test;
-        if (body.type === model_1.Types.Circle && wall.type === model_1.Types.Circle) {
-            test = sat_1.testCircleCircle;
-        }
-        else if (body.type === model_1.Types.Circle && wall.type !== model_1.Types.Circle) {
-            test = sat_1.testCirclePolygon;
-        }
-        else if (body.type !== model_1.Types.Circle && wall.type === model_1.Types.Circle) {
-            test = sat_1.testPolygonCircle;
-        }
-        else {
-            test = sat_1.testPolygonPolygon;
-        }
+        const sat = (0, utils_1.getSATFunction)(body, wall);
         if (body.isConvex && wall.isConvex) {
-            state.collides = test(body, wall, this.response);
+            this.state.collides = sat(body, wall, this.response);
         }
         else if (body.isConvex && !wall.isConvex) {
-            (0, utils_1.ensureConvex)(wall).forEach((convexWall) => this.collided(state, test(body, convexWall, this.response)));
+            (0, utils_1.ensureConvex)(wall).forEach((convexWall) => {
+                this.test(sat, body, convexWall);
+            });
         }
         else if (!body.isConvex && wall.isConvex) {
-            (0, utils_1.ensureConvex)(body).forEach((convexBody) => this.collided(state, test(convexBody, wall, this.response)));
+            (0, utils_1.ensureConvex)(body).forEach((convexBody) => {
+                this.test(sat, convexBody, wall);
+            });
         }
         else {
             const convexBodies = (0, utils_1.ensureConvex)(body);
             const convexWalls = (0, utils_1.ensureConvex)(wall);
-            convexBodies.forEach((convexBody) => convexWalls.forEach((convexWall) => this.collided(state, test(convexBody, convexWall, this.response))));
-        }
-        // collisionVector is set if body or candidate was concave during this.collided()
-        if (state.collisionVector) {
-            this.response.overlapV = state.collisionVector;
-            this.response.overlapN = this.response.overlapV.clone().normalize();
-            this.response.overlap = this.response.overlapV.len();
+            convexBodies.forEach((convexBody) => {
+                convexWalls.forEach((convexWall) => {
+                    this.test(sat, convexBody, convexWall);
+                });
+            });
         }
         // set proper response object bodies
         if (!body.isConvex || !wall.isConvex) {
             this.response.a = body;
             this.response.b = wall;
+            // collisionVector is set if body or candidate was concave during this.test()
+            if (this.state.collides) {
+                this.response.overlapV = this.state.overlapV;
+                this.response.overlapN = this.response.overlapV.clone().normalize();
+                this.response.overlap = this.response.overlapV.len();
+            }
+            this.response.aInB = body.isConvex
+                ? this.state.aInB
+                : (0, utils_1.checkAInB)(body, wall);
+            this.response.bInA = wall.isConvex
+                ? this.state.bInA
+                : (0, utils_1.checkAInB)(wall, body);
         }
-        if (!body.isConvex && !wall.isConvex) {
-            this.response.aInB = (0, utils_1.checkAInB)(body, wall);
-            this.response.bInA = (0, utils_1.checkAInB)(wall, body);
-        }
-        else if (!body.isConvex) {
-            this.response.aInB = (0, utils_1.checkAInB)(body, wall);
-            this.response.bInA = !!state.bInA;
-        }
-        else if (!wall.isConvex) {
-            this.response.aInB = !!state.aInB;
-            this.response.bInA = (0, utils_1.checkAInB)(wall, body);
-        }
-        return state.collides;
+        return this.state.collides;
     }
     /**
      * raycast to get collider of ray from start to end
@@ -190,20 +182,23 @@ class System extends base_system_1.BaseSystem {
         });
         return result;
     }
-    collided(state, collides) {
+    test(sat, body, wall) {
+        const collides = sat(body, wall, this.response);
         if (collides) {
-            // lazy create vector
-            if (typeof state.collisionVector === "undefined") {
-                state.collisionVector = new model_1.SATVector();
+            // first time in loop, reset
+            if (!this.state.collides) {
+                this.state.aInB = false;
+                this.state.bInA = false;
+                this.state.overlapV = new model_1.SATVector();
             }
             // sum all collision vectors
-            state.collisionVector.add(this.response.overlapV);
+            this.state.overlapV.add(this.response.overlapV);
         }
         // aInB and bInA is kept in state for later restore
-        state.aInB = state.aInB || this.response.aInB;
-        state.bInA = state.bInA || this.response.bInA;
+        this.state.aInB = this.state.aInB || this.response.aInB;
+        this.state.bInA = this.state.bInA || this.response.bInA;
         // set state collide at least once value
-        state.collides = collides || state.collides;
+        this.state.collides = collides || this.state.collides;
         // clear for reuse
         this.response.clear();
     }
