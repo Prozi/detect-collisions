@@ -113,7 +113,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   set x(x: number) {
     this.pos.x = x;
 
-    this.system?.updateBody(this);
+    this.system?.insert(this);
   }
 
   get y(): number {
@@ -126,7 +126,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   set y(y: number) {
     this.pos.y = y;
 
-    this.system?.updateBody(this);
+    this.system?.insert(this);
   }
 
   /**
@@ -192,7 +192,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     this.pos.x = x;
     this.pos.y = y;
 
-    this.system?.updateBody(this);
+    this.system?.insert(this);
   }
 
   /**

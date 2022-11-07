@@ -1,10 +1,23 @@
 import { BBox } from "rbush";
-import { Polygon as SATPolygon, Vector as SATVector } from "sat";
+import {
+  testCircleCircle,
+  testCirclePolygon,
+  testPolygonCircle,
+  testPolygonPolygon,
+  Vector as SATVector,
+} from "sat";
 
 import { Circle } from "./bodies/circle";
 import { Line } from "./bodies/line";
 import { Polygon } from "./bodies/polygon";
-import { Body, BodyOptions, PotentialVector, Types, Vector } from "./model";
+import {
+  Body,
+  BodyOptions,
+  PotentialVector,
+  TestFunction,
+  Types,
+  Vector,
+} from "./model";
 
 export function createEllipse(
   radiusX: number,
@@ -280,4 +293,14 @@ export function getBounceDirection(body: Vector, collider: Vector): Vector {
   const len = v1.dot(v2.normalize()) * 2;
 
   return new SATVector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
+}
+
+export function getSATFunction(body: Body, wall: Body): TestFunction {
+  return body.type === Types.Circle
+    ? wall.type === Types.Circle
+      ? testCircleCircle
+      : testCirclePolygon
+    : wall.type === Types.Circle
+    ? testPolygonCircle
+    : testPolygonPolygon;
 }

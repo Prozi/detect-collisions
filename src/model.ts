@@ -148,7 +148,13 @@ export interface Collider {
 
 export interface CollisionState {
   collides: boolean;
-  collisionVector?: SATVector;
-  aInB?: boolean;
-  bInA?: boolean;
+  aInB: boolean;
+  bInA: boolean;
+  overlapV: SATVector;
 }
+
+export type TestFunction<T extends Body = any, Y extends Body = any> = (
+  a: T,
+  b: Y,
+  r: Response
+) => boolean;
