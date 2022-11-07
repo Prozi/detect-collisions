@@ -21,7 +21,7 @@ class System extends base_system_1.BaseSystem {
         return super.remove(body, equals);
     }
     /**
-     * update body aabb and in tree
+     * re-insert body into collision tree and update its aabb
      */
     insert(body) {
         body.bbox = body.getAABBAsBBox();
@@ -39,13 +39,13 @@ class System extends base_system_1.BaseSystem {
         body.minY = body.bbox.minY - body.padding;
         body.maxX = body.bbox.maxX + body.padding;
         body.maxY = body.bbox.maxY + body.padding;
-        // set system for later body.system.insert()
+        // set system for later body.system.updateBody(body)
         body.system = this;
         // reinsert bounding box to collision tree
         return super.insert(body);
     }
     /**
-     * @deprecated please use insert
+     * alias for insert, updates body in collision tree
      */
     updateBody(body) {
         this.insert(body);
@@ -57,7 +57,7 @@ class System extends base_system_1.BaseSystem {
         this.all().forEach((body) => {
             // no need to every cycle update static body aabb
             if (!body.isStatic) {
-                this.insert(body);
+                this.updateBody(body);
             }
         });
     }
@@ -65,14 +65,12 @@ class System extends base_system_1.BaseSystem {
      * separate (move away) colliders
      */
     separate() {
-        this.checkAll((response) => {
+        this.checkAll(({ a, overlapV }) => {
             // static bodies and triggers do not move back / separate
-            if (response.a.isTrigger) {
-                return;
+            if (a.isTrigger) {
+                return true;
             }
-            response.a.x -= response.overlapV.x;
-            response.a.y -= response.overlapV.y;
-            this.insert(response.a);
+            a.setPosition(a.x - overlapV.x, a.y - overlapV.y);
         });
     }
     /**

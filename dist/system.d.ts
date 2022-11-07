@@ -12,11 +12,11 @@ export declare class System extends BaseSystem {
      */
     remove(body: Body, equals?: (a: Body, b: Body) => boolean): RBush<Body>;
     /**
-     * update body aabb and in tree
+     * re-insert body into collision tree and update its aabb
      */
     insert(body: Body): RBush<Body>;
     /**
-     * @deprecated please use insert
+     * alias for insert, updates body in collision tree
      */
     updateBody(body: Body): void;
     /**
