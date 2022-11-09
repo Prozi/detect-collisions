@@ -116,6 +116,7 @@ class System extends base_system_1.BaseSystem {
             !(0, utils_1.intersectAABB)(body.bbox, wall.bbox)) {
             return false;
         }
+        this.state.collides = false;
         this.response.clear();
         const sat = (0, utils_1.getSATFunction)(body, wall);
         if (body.isConvex && wall.isConvex) {

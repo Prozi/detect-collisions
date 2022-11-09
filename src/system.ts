@@ -153,6 +153,7 @@ export class System extends BaseSystem {
       return false;
     }
 
+    this.state.collides = false;
     this.response.clear();
 
     const sat: TestFunction = getSATFunction(body, wall);
