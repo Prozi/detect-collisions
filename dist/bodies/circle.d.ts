@@ -1,6 +1,6 @@
 import { BBox } from "rbush";
 import { Circle as SATCircle } from "sat";
-import { BodyOptions, Collider, PotentialVector, Types } from "../model";
+import { BodyOptions, Collider, PotentialVector, SATVector, Types, Vector } from "../model";
 import { System } from "../system";
 /**
  * collider - circle
@@ -17,6 +17,14 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      * bounding box cache, without padding
      */
     bbox: BBox;
+    /**
+     * offset
+     */
+    offset: SATVector;
+    /**
+     * offset copy without angle applied
+     */
+    offsetCopy: Vector;
     /**
      * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
      */
@@ -97,9 +105,11 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      */
     draw(context: CanvasRenderingContext2D): void;
     setAngle(angle: number): void;
+    setOffset(offset: Vector): void;
     /**
      * for compatility reasons, does nothing
      */
     center(): void;
+    protected getOffsetWithAngle(): Vector;
 }
 //# sourceMappingURL=circle.d.ts.map

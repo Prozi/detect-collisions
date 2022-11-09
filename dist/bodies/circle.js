@@ -16,6 +16,10 @@ class Circle extends sat_1.Circle {
     constructor(position, radius, options) {
         super((0, utils_1.ensureVectorPoint)(position), radius);
         /**
+         * offset copy without angle applied
+         */
+        this.offsetCopy = { x: 0, y: 0 };
+        /**
          * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
          */
         this.padding = 0;
@@ -103,11 +107,14 @@ class Circle extends sat_1.Circle {
      * Updates Bounding Box of collider
      */
     getAABBAsBBox() {
+        const offset = this.getOffsetWithAngle();
+        const x = this.x + offset.x;
+        const y = this.y + offset.y;
         return {
-            minX: this.pos.x - this.r,
-            minY: this.pos.y - this.r,
-            maxX: this.pos.x + this.r,
-            maxY: this.pos.y + this.r,
+            minX: x - this.r,
+            maxX: x + this.r,
+            minY: y - this.r,
+            maxY: y + this.r,
         };
     }
     /**
@@ -115,31 +122,53 @@ class Circle extends sat_1.Circle {
      * @param {CanvasRenderingContext2D} context The canvas context to draw on
      */
     draw(context) {
-        const radius = this.r;
+        const offset = this.getOffsetWithAngle();
+        const x = this.x + offset.x;
+        const y = this.y + offset.y;
         if (this.isTrigger) {
-            const max = Math.max(8, radius);
+            const max = Math.max(8, this.r);
             for (let i = 0; i < max; i++) {
                 const arc = (i / max) * 2 * Math.PI;
                 const arcPrev = ((i - 1) / max) * 2 * Math.PI;
-                const fromX = this.pos.x + Math.cos(arcPrev) * radius;
-                const fromY = this.pos.y + Math.sin(arcPrev) * radius;
-                const toX = this.pos.x + Math.cos(arc) * radius;
-                const toY = this.pos.y + Math.sin(arc) * radius;
+                const fromX = x + Math.cos(arcPrev) * this.r;
+                const fromY = y + Math.sin(arcPrev) * this.r;
+                const toX = x + Math.cos(arc) * this.r;
+                const toY = y + Math.sin(arc) * this.r;
                 (0, utils_1.dashLineTo)(context, fromX, fromY, toX, toY);
             }
         }
         else {
-            context.moveTo(this.pos.x + radius, this.pos.y);
-            context.arc(this.pos.x, this.pos.y, radius, 0, Math.PI * 2);
+            context.moveTo(x + this.r, y);
+            context.arc(x, y, this.r, 0, Math.PI * 2);
         }
     }
     setAngle(angle) {
         this.angle = angle;
+        const { x, y } = this.getOffsetWithAngle();
+        this.offset.x = x;
+        this.offset.y = y;
+    }
+    setOffset(offset) {
+        this.offsetCopy.x = offset.x;
+        this.offsetCopy.y = offset.y;
+        const { x, y } = this.getOffsetWithAngle();
+        this.offset.x = x;
+        this.offset.y = y;
     }
     /**
      * for compatility reasons, does nothing
      */
     center() { }
+    getOffsetWithAngle() {
+        if (!this.angle) {
+            return this.offsetCopy;
+        }
+        const sin = Math.sin(this.angle);
+        const cos = Math.cos(this.angle);
+        const x = this.offsetCopy.x * cos - this.offsetCopy.y * sin;
+        const y = this.offsetCopy.x * sin + this.offsetCopy.y * cos;
+        return { x, y };
+    }
 }
 exports.Circle = Circle;
 //# sourceMappingURL=circle.js.map

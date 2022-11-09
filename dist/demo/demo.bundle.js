@@ -188,6 +188,10 @@ class Circle extends sat_1.Circle {
     constructor(position, radius, options) {
         super((0, utils_1.ensureVectorPoint)(position), radius);
         /**
+         * offset copy without angle applied
+         */
+        this.offsetCopy = { x: 0, y: 0 };
+        /**
          * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
          */
         this.padding = 0;
@@ -275,11 +279,14 @@ class Circle extends sat_1.Circle {
      * Updates Bounding Box of collider
      */
     getAABBAsBBox() {
+        const offset = this.getOffsetWithAngle();
+        const x = this.x + offset.x;
+        const y = this.y + offset.y;
         return {
-            minX: this.pos.x - this.r,
-            minY: this.pos.y - this.r,
-            maxX: this.pos.x + this.r,
-            maxY: this.pos.y + this.r,
+            minX: x - this.r,
+            maxX: x + this.r,
+            minY: y - this.r,
+            maxY: y + this.r,
         };
     }
     /**
@@ -287,31 +294,53 @@ class Circle extends sat_1.Circle {
      * @param {CanvasRenderingContext2D} context The canvas context to draw on
      */
     draw(context) {
-        const radius = this.r;
+        const offset = this.getOffsetWithAngle();
+        const x = this.x + offset.x;
+        const y = this.y + offset.y;
         if (this.isTrigger) {
-            const max = Math.max(8, radius);
+            const max = Math.max(8, this.r);
             for (let i = 0; i < max; i++) {
                 const arc = (i / max) * 2 * Math.PI;
                 const arcPrev = ((i - 1) / max) * 2 * Math.PI;
-                const fromX = this.pos.x + Math.cos(arcPrev) * radius;
-                const fromY = this.pos.y + Math.sin(arcPrev) * radius;
-                const toX = this.pos.x + Math.cos(arc) * radius;
-                const toY = this.pos.y + Math.sin(arc) * radius;
+                const fromX = x + Math.cos(arcPrev) * this.r;
+                const fromY = y + Math.sin(arcPrev) * this.r;
+                const toX = x + Math.cos(arc) * this.r;
+                const toY = y + Math.sin(arc) * this.r;
                 (0, utils_1.dashLineTo)(context, fromX, fromY, toX, toY);
             }
         }
         else {
-            context.moveTo(this.pos.x + radius, this.pos.y);
-            context.arc(this.pos.x, this.pos.y, radius, 0, Math.PI * 2);
+            context.moveTo(x + this.r, y);
+            context.arc(x, y, this.r, 0, Math.PI * 2);
         }
     }
     setAngle(angle) {
         this.angle = angle;
+        const { x, y } = this.getOffsetWithAngle();
+        this.offset.x = x;
+        this.offset.y = y;
+    }
+    setOffset(offset) {
+        this.offsetCopy.x = offset.x;
+        this.offsetCopy.y = offset.y;
+        const { x, y } = this.getOffsetWithAngle();
+        this.offset.x = x;
+        this.offset.y = y;
     }
     /**
      * for compatility reasons, does nothing
      */
     center() { }
+    getOffsetWithAngle() {
+        if (!this.angle) {
+            return this.offsetCopy;
+        }
+        const sin = Math.sin(this.angle);
+        const cos = Math.cos(this.angle);
+        const x = this.offsetCopy.x * cos - this.offsetCopy.y * sin;
+        const y = this.offsetCopy.x * sin + this.offsetCopy.y * cos;
+        return { x, y };
+    }
 }
 exports.Circle = Circle;
 //# sourceMappingURL=circle.js.map
@@ -1245,13 +1274,10 @@ function getBounceDirection(body, collider) {
 }
 exports.getBounceDirection = getBounceDirection;
 function getSATFunction(body, wall) {
-    return body.type === model_1.Types.Circle
-        ? wall.type === model_1.Types.Circle
-            ? sat_1.testCircleCircle
-            : sat_1.testCirclePolygon
-        : wall.type === model_1.Types.Circle
-            ? sat_1.testPolygonCircle
-            : sat_1.testPolygonPolygon;
+    if (body.type === model_1.Types.Circle) {
+        return wall.type === model_1.Types.Circle ? sat_1.testCircleCircle : sat_1.testCirclePolygon;
+    }
+    return wall.type === model_1.Types.Circle ? sat_1.testPolygonCircle : sat_1.testPolygonPolygon;
 }
 exports.getSATFunction = getSATFunction;
 //# sourceMappingURL=utils.js.map
@@ -3738,10 +3764,12 @@ class Tank {
 
     if (this.left) {
       this.player.setAngle(this.player.angle - 0.03 * timeScale);
+      this.physics.updateBody(this.player);
     }
 
     if (this.right) {
       this.player.setAngle(this.player.angle + 0.03 * timeScale);
+      this.physics.updateBody(this.player);
     }
   }
 
@@ -3816,14 +3844,25 @@ class Tank {
   }
 
   createPlayer(x, y, size = 13) {
-    const player = this.physics.createCircle(
-      { x: this.scaleX(x), y: this.scaleY(y) },
-      this.scaleX(size * 0.67),
-      { angle: 0.2, center: true }
-    );
+    const player =
+      Math.random() < 0.5
+        ? this.physics.createCircle(
+            { x: this.scaleX(x), y: this.scaleY(y) },
+            this.scaleX(size / 2),
+            { center: true }
+          )
+        : this.physics.createBox(
+            { x: this.scaleX(x - size / 2), y: this.scaleY(y - size / 2) },
+            this.scaleX(size),
+            this.scaleX(size),
+            { center: true }
+          );
 
     player.velocity = 0;
+    player.setOffset({ x: -this.scaleX(size / 2), y: 0 });
+    player.setAngle(0.2);
 
+    this.physics.updateBody(player);
     this.playerTurret = this.physics.createLine(
       player,
       { x: player.x + this.scaleX(20) + this.scaleY(20), y: player.y },
