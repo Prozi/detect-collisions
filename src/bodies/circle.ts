@@ -1,7 +1,14 @@
 import { BBox } from "rbush";
 import { Circle as SATCircle } from "sat";
 
-import { BodyOptions, Collider, PotentialVector, Types } from "../model";
+import {
+  BodyOptions,
+  Collider,
+  PotentialVector,
+  SATVector,
+  Types,
+  Vector,
+} from "../model";
 import { System } from "../system";
 import { dashLineTo, ensureVectorPoint, extendBody } from "../utils";
 
@@ -21,6 +28,16 @@ export class Circle extends SATCircle implements BBox, Collider {
    * bounding box cache, without padding
    */
   bbox!: BBox;
+
+  /**
+   * offset
+   */
+  offset!: SATVector;
+
+  /**
+   * offset copy without angle applied
+   */
+  offsetCopy: Vector = { x: 0, y: 0 };
 
   /**
    * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
@@ -87,7 +104,6 @@ export class Circle extends SATCircle implements BBox, Collider {
    */
   set x(x: number) {
     this.pos.x = x;
-
     this.system?.insert(this);
   }
 
@@ -100,7 +116,6 @@ export class Circle extends SATCircle implements BBox, Collider {
    */
   set y(y: number) {
     this.pos.y = y;
-
     this.system?.insert(this);
   }
 
@@ -140,7 +155,6 @@ export class Circle extends SATCircle implements BBox, Collider {
   setPosition(x: number, y: number): void {
     this.pos.x = x;
     this.pos.y = y;
-
     this.system?.insert(this);
   }
 
@@ -156,11 +170,15 @@ export class Circle extends SATCircle implements BBox, Collider {
    * Updates Bounding Box of collider
    */
   getAABBAsBBox(): BBox {
+    const offset = this.getOffsetWithAngle();
+    const x = this.x + offset.x;
+    const y = this.y + offset.y;
+
     return {
-      minX: this.pos.x - this.r,
-      minY: this.pos.y - this.r,
-      maxX: this.pos.x + this.r,
-      maxY: this.pos.y + this.r,
+      minX: x - this.r,
+      maxX: x + this.r,
+      minY: y - this.r,
+      maxY: y + this.r,
     };
   }
 
@@ -169,33 +187,61 @@ export class Circle extends SATCircle implements BBox, Collider {
    * @param {CanvasRenderingContext2D} context The canvas context to draw on
    */
   draw(context: CanvasRenderingContext2D) {
-    const radius = this.r;
+    const offset = this.getOffsetWithAngle();
+    const x = this.x + offset.x;
+    const y = this.y + offset.y;
 
     if (this.isTrigger) {
-      const max = Math.max(8, radius);
+      const max = Math.max(8, this.r);
 
       for (let i = 0; i < max; i++) {
         const arc = (i / max) * 2 * Math.PI;
         const arcPrev = ((i - 1) / max) * 2 * Math.PI;
-        const fromX = this.pos.x + Math.cos(arcPrev) * radius;
-        const fromY = this.pos.y + Math.sin(arcPrev) * radius;
-        const toX = this.pos.x + Math.cos(arc) * radius;
-        const toY = this.pos.y + Math.sin(arc) * radius;
+        const fromX = x + Math.cos(arcPrev) * this.r;
+        const fromY = y + Math.sin(arcPrev) * this.r;
+        const toX = x + Math.cos(arc) * this.r;
+        const toY = y + Math.sin(arc) * this.r;
 
         dashLineTo(context, fromX, fromY, toX, toY);
       }
     } else {
-      context.moveTo(this.pos.x + radius, this.pos.y);
-      context.arc(this.pos.x, this.pos.y, radius, 0, Math.PI * 2);
+      context.moveTo(x + this.r, y);
+      context.arc(x, y, this.r, 0, Math.PI * 2);
     }
   }
 
   setAngle(angle: number): void {
     this.angle = angle;
+
+    const { x, y } = this.getOffsetWithAngle();
+    this.offset.x = x;
+    this.offset.y = y;
+  }
+
+  setOffset(offset: Vector): void {
+    this.offsetCopy.x = offset.x;
+    this.offsetCopy.y = offset.y;
+
+    const { x, y } = this.getOffsetWithAngle();
+    this.offset.x = x;
+    this.offset.y = y;
   }
 
   /**
    * for compatility reasons, does nothing
    */
   center(): void {}
+
+  protected getOffsetWithAngle(): Vector {
+    if (!this.angle) {
+      return this.offsetCopy;
+    }
+
+    const sin = Math.sin(this.angle);
+    const cos = Math.cos(this.angle);
+    const x = this.offsetCopy.x * cos - this.offsetCopy.y * sin;
+    const y = this.offsetCopy.x * sin + this.offsetCopy.y * cos;
+
+    return { x, y };
+  }
 }

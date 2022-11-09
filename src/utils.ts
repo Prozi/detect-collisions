@@ -296,11 +296,9 @@ export function getBounceDirection(body: Vector, collider: Vector): Vector {
 }
 
 export function getSATFunction(body: Body, wall: Body): TestFunction {
-  return body.type === Types.Circle
-    ? wall.type === Types.Circle
-      ? testCircleCircle
-      : testCirclePolygon
-    : wall.type === Types.Circle
-    ? testPolygonCircle
-    : testPolygonPolygon;
+  if (body.type === Types.Circle) {
+    return wall.type === Types.Circle ? testCircleCircle : testCirclePolygon;
+  }
+
+  return wall.type === Types.Circle ? testPolygonCircle : testPolygonPolygon;
 }

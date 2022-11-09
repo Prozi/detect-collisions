@@ -76,10 +76,12 @@ class Tank {
 
     if (this.left) {
       this.player.setAngle(this.player.angle - 0.03 * timeScale);
+      this.physics.updateBody(this.player);
     }
 
     if (this.right) {
       this.player.setAngle(this.player.angle + 0.03 * timeScale);
+      this.physics.updateBody(this.player);
     }
   }
 
@@ -154,14 +156,25 @@ class Tank {
   }
 
   createPlayer(x, y, size = 13) {
-    const player = this.physics.createCircle(
-      { x: this.scaleX(x), y: this.scaleY(y) },
-      this.scaleX(size * 0.67),
-      { angle: 0.2, center: true }
-    );
+    const player =
+      Math.random() < 0.5
+        ? this.physics.createCircle(
+            { x: this.scaleX(x), y: this.scaleY(y) },
+            this.scaleX(size / 2),
+            { center: true }
+          )
+        : this.physics.createBox(
+            { x: this.scaleX(x - size / 2), y: this.scaleY(y - size / 2) },
+            this.scaleX(size),
+            this.scaleX(size),
+            { center: true }
+          );
 
     player.velocity = 0;
+    player.setOffset({ x: -this.scaleX(size / 2), y: 0 });
+    player.setAngle(0.2);
 
+    this.physics.updateBody(player);
     this.playerTurret = this.physics.createLine(
       player,
       { x: player.x + this.scaleX(20) + this.scaleY(20), y: player.y },
