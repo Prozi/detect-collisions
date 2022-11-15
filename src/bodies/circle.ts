@@ -210,12 +210,14 @@ export class Circle extends SATCircle implements BBox, Collider {
     }
   }
 
-  setAngle(angle: number): void {
+  setAngle(angle: number): Circle {
     this.angle = angle;
 
     const { x, y } = this.getOffsetWithAngle();
     this.offset.x = x;
     this.offset.y = y;
+
+    return this;
   }
 
   setOffset(offset: Vector): Circle {
