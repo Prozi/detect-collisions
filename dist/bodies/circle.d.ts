@@ -105,7 +105,7 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      */
     draw(context: CanvasRenderingContext2D): void;
     setAngle(angle: number): void;
-    setOffset(offset: Vector): void;
+    setOffset(offset: Vector): Circle;
     /**
      * for compatility reasons, does nothing
      */
