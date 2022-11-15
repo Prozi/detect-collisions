@@ -147,6 +147,7 @@ class Circle extends sat_1.Circle {
         const { x, y } = this.getOffsetWithAngle();
         this.offset.x = x;
         this.offset.y = y;
+        return this;
     }
     setOffset(offset) {
         this.offsetCopy.x = offset.x;
