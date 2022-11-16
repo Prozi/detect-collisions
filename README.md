@@ -27,7 +27,7 @@ https://prozi.github.io/detect-collisions/modules.html
 
 ## Usage
 
-### 1. Creating a System
+### 1. Create System
 
 `System` extends `RBush` so it has [all of its functionalities](https://github.com/mourner/rbush).
 
@@ -37,59 +37,77 @@ To start, create a unique collisions system:
 const physics: System = new System();
 ```
 
-### 2. Creating, Inserting, Moving, Removing Bodies
+### 2. Body Information
 
-- `Circle & Polygon` extend their respective `SAT` counterparts so they have [all of its functionalities](https://github.com/jriecken/sat-js).
-- all bodies have `x & y` properties, setting those **will** update _bounding box_
-- all bodies have `setPosition(x, y)`, using it **will** update _bounding box_
-- all bodies have `pos` with `x & y` properties, setting those **will not** update _bounding box_
-- all bodies have `angle` and `setAngle()` method to rotate (useless for `Circle` but stores value)
-- all bodies have `scale` and `setScale()` method to scale (for `Circle` takes 1 parameter, `x, y` for rest)
-- all bodies have `center()` method for centering anchor (useless for `Circle, Ellipse, Point`)
+#### 👉 each body has:
+- `setPosition(x, y)` method - calling it **updates** _bounding box_
+- `x & y` properties - setting any of those **updates** _bounding box_
+- `pos.x, pos.y` properties - setting those **doesn't** update _bounding box_
+- `angle` and `setAngle()` method - to rotate
+- `scale` and `setScale()` method - to scale (for `Circle` takes 1 parameter, `x, y` for rest)
+- `offset` and `setOffset()` method - for offset from center of body
+- `center()` method - for centering anchor (useless but available for `Circle, Ellipse, Point`)
+- `isStatic` property - if true body doesn't move
+- `isTrigger` property - if true body doesn't trigger collisions
+- `isCentered` property - if true the body is centered (true for `Circle, Ellipse`)
+- `isConvex` property - if true the body is convex (may be false only for `Polygon`)
+- `padding` property - ignores costly tree update until outside bbox with padding
+
+#### 👉 some bodies:
 - `Box` has `width & height` properties
 
----
+#### 👉 each body after inserted to system have:
+- `bbox = { minX, minY, maxX, maxY }` property - without padding
+- `minX, minY, maxX, maxY` properties - bbox plus padding
+- `system` property - to use `body.system.updateBody(body)` internally
 
-**[Circle](https://github.com/jriecken/sat-js#satcircle)** - Shape with infinite sides equidistant of radius from its center position
+#### 👉 body types:
+- **[Circle](https://github.com/jriecken/sat-js#satcircle)** - Shape with infinite sides equidistant of radius from its center position
+- **[Ellipse](https://prozi.github.io/detect-collisions/classes/Ellipse.html)** - Flattened circle (implemented as polygon)
+- **[Polygon](https://github.com/jriecken/sat-js#satpolygon)** - Shape made up of finite number of line segments
+- **[Box](https://prozi.github.io/detect-collisions/classes/Box.html)** - Rectangle (implemented as polygon)
+- **[Line](https://prozi.github.io/detect-collisions/classes/Line.html)** - Line (implemented as 2-point polygon)
+- **[Point](https://prozi.github.io/detect-collisions/classes/Point.html)** - A single coordinate (implemented as tiny box)
 
-**[Ellipse](https://prozi.github.io/detect-collisions/classes/Ellipse.html)** - Flattened circle (implemented as polygon)
+### 3. Create and insert Body
 
-**[Polygon](https://github.com/jriecken/sat-js#satpolygon)** - Shape made up of finite number of line segments
-
-**[Box](https://prozi.github.io/detect-collisions/classes/Box.html)** - Rectangle (implemented as polygon)
-
-**[Line](https://prozi.github.io/detect-collisions/classes/Line.html)** - Line (implemented as 2-point polygon)
-
-**[Point](https://prozi.github.io/detect-collisions/classes/Point.html)** - A single coordinate (implemented as tiny box)
-
----
-
-#### Create bodies:
-
-Last optional parameter for body creation is always [BodyOptions](https://prozi.github.io/detect-collisions/interfaces/BodyOptions.html):
+Last optional parameter for body creation is always [BodyOptions](https://prozi.github.io/detect-collisions/interfaces/BodyOptions.html)
 
 ```typescript
+const options: BodyOptions = {
+  angle: 0,
+  center: false,
+  isStatic: false,
+  isTrigger: false,
+  padding: 0;
+}
+```
+
+#### 👉 Only create Body
+
+```typescript
+// create with options, without insert
 const circle: Circle = new Circle(position, radius, options);
 const polygon: Polygon = new Polygon(position, points, options);
 ```
 
-#### Insert bodies to system:
+#### 👉 Only insert Body
 
 ```typescript
+// insert, without create
 physics.insert(circle);
 physics.insert(polygon);
 ```
 
-#### Create and insert to system in one step:
-
-Last optional parameter for body creation with insertion is always [BodyOptions](https://prozi.github.io/detect-collisions/interfaces/BodyOptions.html):
+#### 👉 Create and insert Body
 
 ```typescript
+// create with options, and insert
 const circle: Circle = physics.createCircle(position, radius, options);
 const polygon: Polygon = physics.createPolygon(position, points, options);
 ```
 
-#### Moving bodies:
+### 4. Move Body
 
 `setPosition`: this modifies the `element.pos.x` and `element.pos.y` and updates its bounding box in collision physics.
 
@@ -98,14 +116,14 @@ circle.setPosition(x, y);
 polygon.setPosition(x, y);
 ```
 
-#### Remove bodies from system:
+### 5. Remove Body
 
 ```typescript
 physics.remove(circle);
 physics.remove(polygon);
 ```
 
-### 3. Updating the Collisions System
+### 6. Update Body or System
 
 - After body moves, its bounding box in collision tree needs to be updated.
 
@@ -123,7 +141,7 @@ physics.updateBody(body);
 physics.update();
 ```
 
-### 4. Testing for Collisions
+### 7. Collision Detection
 
 The **preferred method** is once-in-a-gameloop checkAll and then handler:
 
@@ -161,7 +179,7 @@ if (physics.checkCollision(polygon, line)) {
 }
 ```
 
-### 5. Getting Detailed Collision Information
+#### 👉 Getting Detailed Collision Information
 
 There is often a need for detailed information about a collision in order to react to it appropriately. This information is stored inside `physics.response` object. The `Response` ([documentation](https://github.com/jriecken/sat-js#satresponse)) object has several properties set on them when a collision occurs:
 
@@ -173,7 +191,7 @@ There is often a need for detailed information about a collision in order to rea
 - `aInB` - Whether the first object is completely inside the second.
 - `bInA` - Whether the second object is completely inside the first.
 
-### 6. Negating Overlap
+#### 👉 Negating Overlap
 
 A common use-case in collision detection is negating overlap when a collision occurs (such as when a player hits a wall). This can be done using the collision information in a `Response` object (see [Getting Detailed Collision Information](#anchor-getting-detailed-collision-information)).
 
@@ -189,7 +207,7 @@ if (physics.checkCollision(player, wall)) {
 }
 ```
 
-### 7. Detecting collision after insertion
+## Detecting collision after insertion
 
 ```typescript
 // create self-destructing collider
@@ -251,7 +269,7 @@ context.stroke();
 
 ## Only using SAT
 
-Some projects may only have a need to perform SAT collision tests without broad-phase searching. This can be achieved by avoiding collision systems altogether and only using the `checkCollision()` function.
+Some projects may only have a need to perform SAT collision tests without broad-phase searching. This can be achieved by avoiding collision systems altogether and only using the `checkCollision()` function. Note that unless a use-case really requires this, I strongly advise to use the normal flow.
 
 ```typescript
 const circle: Circle = new Circle(position, radius);

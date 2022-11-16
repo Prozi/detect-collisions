@@ -8,6 +8,14 @@ import { Polygon } from "./polygon";
 export class Ellipse extends Polygon {
   readonly type: Types.Ellipse = Types.Ellipse;
 
+  /**
+   * ellipses are centered
+   */
+  isCentered = true;
+
+  /**
+   * ellipses are convex
+   */
   isConvex = true;
 
   private _radiusX: number;

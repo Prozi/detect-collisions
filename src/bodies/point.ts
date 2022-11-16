@@ -15,6 +15,4 @@ export class Point extends Box {
   constructor(position: PotentialVector, options?: BodyOptions) {
     super(ensureVectorPoint(position), 0.001, 0.001, options);
   }
-
-  center(): void {}
 }
