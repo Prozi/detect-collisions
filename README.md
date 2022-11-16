@@ -43,8 +43,8 @@ const physics: System = new System();
 - `setPosition(x, y)` method - calling it **updates** _bounding box_
 - `x & y` properties - setting any of those **updates** _bounding box_
 - `pos.x, pos.y` properties - setting those **doesn't** update _bounding box_
-- `angle` and `setAngle()` method - to rotate
-- `scale` and `setScale()` method - to scale (for `Circle` takes 1 parameter, `x, y` for rest)
+- `angle` property and `setAngle()` method - to rotate
+- `scale` property and `setScale()` method - to scale (for `Circle` takes 1 parameter, `x, y` for rest)
 - `offset` and `setOffset()` method - for offset from center of body
 - `getAABBAsBox()` method - for getting bbox even on non inserted bodies
 - `center()` method - for centering anchor (useless but available for `Circle, Ellipse`)
