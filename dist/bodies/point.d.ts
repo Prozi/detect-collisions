@@ -10,6 +10,5 @@ export declare class Point extends Box {
      * @param {PotentialVector} position {x, y}
      */
     constructor(position: PotentialVector, options?: BodyOptions);
-    center(): void;
 }
 //# sourceMappingURL=point.d.ts.map

@@ -5,6 +5,13 @@ import { Polygon } from "./polygon";
  */
 export declare class Ellipse extends Polygon {
     readonly type: Types.Ellipse;
+    /**
+     * ellipses are centered
+     */
+    isCentered: boolean;
+    /**
+     * ellipses are convex
+     */
     isConvex: boolean;
     private _radiusX;
     private _radiusY;

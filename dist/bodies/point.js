@@ -16,7 +16,6 @@ class Point extends box_1.Box {
         super((0, utils_1.ensureVectorPoint)(position), 0.001, 0.001, options);
         this.type = model_1.Types.Point;
     }
-    center() { }
 }
 exports.Point = Point;
 //# sourceMappingURL=point.js.map
