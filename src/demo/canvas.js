@@ -38,8 +38,9 @@ class TestCanvas {
   update() {
     this.frame++;
 
-    if (this.frame === 60) {
-      this.fps = this.frame / ((Date.now() - this.started) / 1000);
+    const timeDiff = Date.now() - this.started;
+    if (timeDiff >= 1000) {
+      this.fps = this.frame / (timeDiff / 1000);
       this.frame = 0;
       this.started = Date.now();
     }
