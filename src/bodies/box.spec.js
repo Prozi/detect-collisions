@@ -101,4 +101,34 @@ describe("GIVEN Box", () => {
     expect(box.x).toBe(box.width / 2);
     expect(box.y).toBe(box.height / 2);
   });
+
+  it("THEN even without inserting to system, gives collision results", () => {
+    const { Box, System } = require("../../dist/");
+
+    // initialize a collision detection system
+    const system = new System();
+
+    // bounds
+    const box = new Box({ x: 0, y: 0 }, 1024, 768);
+    const bbox = box.getAABBAsBBox();
+
+    // out of bound
+    system.createCircle({ x: -20, y: -20 }, 10);
+
+    // 3 bodies in bounds
+    system.createCircle({ x: 10, y: 10 }, 10);
+    system.createCircle({ x: 30, y: 30 }, 10);
+    system.createEllipse({ x: 10, y: 60 }, 20, 10);
+
+    // bbox is even without inserting to system
+    const potentials = system.getPotentials(bbox);
+
+    // the list of bodies colliding
+    const collisions = potentials.filter((body) =>
+      system.checkCollision(box, body)
+    );
+
+    // correct result is 3
+    expect(collisions.length).toBe(3);
+  });
 });
