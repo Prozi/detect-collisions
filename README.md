@@ -227,7 +227,9 @@ function testCollision(position: Vector, radius: number = 10): boolean {
 
 ## Concave Polygons
 
-Hollow / non-convex polygons are fully supported since v6.3.0!
+Hollow / non-convex polygons are fully supported since v6.3.0
+
+the `System.response.aInB` and `System.response.bInA` is currently because of complexity and speed reasons only checking the bounding boxes of compared bodies. for more informations relate to [this issue on github](https://github.com/Prozi/detect-collisions/issues/33) and [this merged pull request](https://github.com/Prozi/detect-collisions/pull/34)
 
 ## Rendering
 
