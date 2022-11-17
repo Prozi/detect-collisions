@@ -1,6 +1,6 @@
 # Introduction
 
-**Detect-Collisions** is TypeScript (compiled to JavaScript, fully typed) library for quickly and accurately detecting collisions between Points, Lines, Boxes, Polygons, Ellipses and Circles, also with rotation. It combines the efficiency of a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and the accuracy of the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
+**Detect-Collisions** is a fast TypeScript (transpiled to JavaScript) library for quickly and accurately detecting collisions between Points, Lines, Boxes, Polygons, Ellipses and Circles, also with rotation. It combines the efficiency of a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and the accuracy of the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
 
 [<img src="https://img.shields.io/npm/v/detect-collisions?style=for-the-badge&color=success" alt="npm version" />](https://www.npmjs.com/package/detect-collisions?activeTab=versions)
 [<img src="https://img.shields.io/npm/dw/detect-collisions.svg?style=for-the-badge&color=success" alt="npm downloads per week" />](https://www.npmjs.com/package/detect-collisions)
@@ -40,6 +40,7 @@ const physics: System = new System();
 ### 2. Body Information
 
 #### 👉 each body has:
+
 - `setPosition(x, y)` method - calling it **updates** _bounding box_
 - `x & y` properties - setting any of those **updates** _bounding box_
 - `pos.x, pos.y` properties - setting those **doesn't** update _bounding box_
@@ -55,14 +56,17 @@ const physics: System = new System();
 - `padding` property - ignores costly tree update until outside bbox with padding
 
 #### 👉 some bodies:
+
 - `Box` has `width & height` properties
 
 #### 👉 each body after inserted to system have:
+
 - `bbox = { minX, minY, maxX, maxY }` property - without padding
 - `minX, minY, maxX, maxY` properties - bbox plus padding
 - `system` property - to use `body.system.updateBody(body)` internally
 
 #### 👉 body types:
+
 - **[Circle](https://github.com/jriecken/sat-js#satcircle)** - Shape with infinite sides equidistant of radius from its center position
 - **[Ellipse](https://prozi.github.io/detect-collisions/classes/Ellipse.html)** - Flattened circle (implemented as polygon)
 - **[Polygon](https://github.com/jriecken/sat-js#satpolygon)** - Shape made up of finite number of line segments
@@ -241,9 +245,7 @@ const context = canvas.getContext("2d");
 
 context.strokeStyle = "#FFFFFF";
 context.beginPath();
-
 physics.draw(context);
-
 context.stroke();
 ```
 
@@ -252,10 +254,8 @@ Bodies can be individually drawn as well.
 ```typescript
 context.strokeStyle = "#FFFFFF";
 context.beginPath();
-
 polygon.draw(context);
 circle.draw(context);
-
 context.stroke();
 ```
 
@@ -264,9 +264,7 @@ The BVH can also be drawn to help test [Bounding Volume Hierarchy](https://en.wi
 ```typescript
 context.strokeStyle = "#FFFFFF";
 context.beginPath();
-
 physics.drawBVH(context);
-
 context.stroke();
 ```
 
@@ -325,7 +323,7 @@ $ yarn benchmark [miliseconds=1000]
 ```
 
 will show you the [Stress Demo](https://prozi.github.io/detect-collisions/demo/?stress) results without drawing,
-only using Detect-Collisions and with different _N_ amounts of dynamic, moving bodies. fps cap is at 120.
+only using Detect-Collisions and with different _N_ amounts of dynamic, moving bodies
 
 typical output:
 
