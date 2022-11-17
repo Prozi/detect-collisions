@@ -317,9 +317,10 @@ There is no perfect solution. How collisions are handled depends on the project.
 ## Benchmark
 
 ```bash
-$ yarn add detect-collisions
-$ cd node_modules/detect-collisions
-$ yarn benchmark [miliseconds=1000]
+$ git clone https://github.com/Prozi/detect-collisions.git
+$ cd detect-collisions
+$ yarn
+$ yarn benchmark [milliseconds=1000]
 ```
 
 will show you the [Stress Demo](https://prozi.github.io/detect-collisions/demo/?stress) results without drawing,
