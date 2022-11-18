@@ -279,9 +279,8 @@ class Circle extends sat_1.Circle {
      * Updates Bounding Box of collider
      */
     getAABBAsBBox() {
-        const offset = this.getOffsetWithAngle();
-        const x = this.x + offset.x;
-        const y = this.y + offset.y;
+        const x = this.x + this.offset.x;
+        const y = this.y + this.offset.y;
         return {
             minX: x - this.r,
             maxX: x + this.r,
@@ -294,9 +293,8 @@ class Circle extends sat_1.Circle {
      * @param {CanvasRenderingContext2D} context The canvas context to draw on
      */
     draw(context) {
-        const offset = this.getOffsetWithAngle();
-        const x = this.x + offset.x;
-        const y = this.y + offset.y;
+        const x = this.x + this.offset.x;
+        const y = this.y + this.offset.y;
         if (this.isTrigger) {
             const max = Math.max(8, this.r);
             for (let i = 0; i < max; i++) {

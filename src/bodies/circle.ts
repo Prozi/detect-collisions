@@ -170,9 +170,8 @@ export class Circle extends SATCircle implements BBox, Collider {
    * Updates Bounding Box of collider
    */
   getAABBAsBBox(): BBox {
-    const offset = this.getOffsetWithAngle();
-    const x = this.x + offset.x;
-    const y = this.y + offset.y;
+    const x = this.x + this.offset.x;
+    const y = this.y + this.offset.y;
 
     return {
       minX: x - this.r,
@@ -187,9 +186,8 @@ export class Circle extends SATCircle implements BBox, Collider {
    * @param {CanvasRenderingContext2D} context The canvas context to draw on
    */
   draw(context: CanvasRenderingContext2D) {
-    const offset = this.getOffsetWithAngle();
-    const x = this.x + offset.x;
-    const y = this.y + offset.y;
+    const x = this.x + this.offset.x;
+    const y = this.y + this.offset.y;
 
     if (this.isTrigger) {
       const max = Math.max(8, this.r);
