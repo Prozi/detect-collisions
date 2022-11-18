@@ -18,6 +18,7 @@ code,
   line-height: 1.75;
   margin: 1px;
   border: none !important;
+  background: var(--code-background);
 }
 
 pre,
