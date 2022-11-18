@@ -15,20 +15,17 @@ code,
 .tsd-signature {
   font-family: "Source Code Pro", "Courier New", Courier, monospace;
   padding: 0 0.5em;
-  border-radius: 5px;
   line-height: 1.75;
-  border: 1px dashed var(--color-accent);
+  margin: 1px;
+  border: none !important;
 }
 
-pre {
-  display: block;
-  padding: 0.5em;
-  margin: 1em 0;
-}
-
+pre,
 .tsd-signature {
-  border: 1px dashed var(--color-accent) !important;
-  background: var(--code-background);
+  display: block;
+  padding: 0.75em 1em;
+  margin: 1em 0;
+  border-radius: 6px;
 }
 
 pre code {
@@ -38,4 +35,5 @@ pre code {
 
 code {
   display: inline-block;
+  border-radius: 4px;
 }
