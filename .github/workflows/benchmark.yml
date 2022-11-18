@@ -25,10 +25,10 @@ jobs:
         working-directory: ./
 
     steps:
-      - uses: actions/checkout
+      - uses: actions/checkout@v3
 
       - name: Setting up Node.js
-        uses: actions/setup-node
+        uses: actions/setup-node@v3
         with:
           node-version: 16
 
