@@ -2,12 +2,12 @@ name: Detect Collisions
 
 on:
   push:
-    branches: [main, develop, "*_stable"]
+    branches: [master, develop]
     paths:
       - "src/**"
       - ".github/workflows/benchmarks.yml"
   pull_request:
-    branches: [main, develop, "*_stable"]
+    branches: [master, develop]
     paths:
       - "src/**"
       - ".github/workflows/benchmarks.yml"
