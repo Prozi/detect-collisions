@@ -1,11 +1,8 @@
 {
   "entryPoints": ["src/index.ts"],
   "out": "docs",
-  "plugin": [
-    "typedoc-monorepo-link-types",
-    "typedoc-theme-oxide"
-  ],
-  "theme": "oxide",
+  "plugin": ["typedoc-monorepo-link-types"],
+  "theme": "default",
   "tsconfig": "./tsconfig.json",
   "name": "Detect-Collisions",
   "noMissingExports": true
