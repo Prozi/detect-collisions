@@ -11,7 +11,7 @@
     "dev:demo": "webpack serve --port 4200",
     "build:demo": "webpack",
     "prebuild:docs": "rimraf docs",
-    "build:docs": "typedoc",
+    "build:docs": "typedoc --customCss typedoc.css",
     "postbuild:docs": "npm run docs-from-master && cp -r dist/demo docs",
     "docs": "npm run build:docs && chef-express docs --debug",
     "docs-from-master": "for f in `find docs -name *.html`; do sed -r -i 's_/blob/[^/]+/_/blob/master/_g' $f; done",

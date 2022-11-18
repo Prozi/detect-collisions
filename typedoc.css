@@ -1,0 +1,41 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro&family=Source+Code+Pro&display=swap");
+
+body,
+p {
+  font-family: "Source Sans Pro", Arial, Helvetica, sans-serif;
+  font-size: 18px;
+}
+
+h4 {
+  margin: 1rem 0;
+}
+
+pre,
+code,
+.tsd-signature {
+  font-family: "Source Code Pro", "Courier New", Courier, monospace;
+  padding: 0 0.5em;
+  border-radius: 5px;
+  line-height: 1.75;
+  border: 1px dashed var(--color-accent);
+}
+
+pre {
+  display: block;
+  padding: 0.5em;
+  margin: 1em 0;
+}
+
+.tsd-signature {
+  border: 1px dashed var(--color-accent) !important;
+  background: var(--code-background);
+}
+
+pre code {
+  padding: 0;
+  border: none;
+}
+
+code {
+  display: inline-block;
+}
