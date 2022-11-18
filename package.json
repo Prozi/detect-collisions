@@ -86,37 +86,5 @@
   "resolutions": {
     "minimist": "^1.2.6",
     "terser": "^5.14.2"
-  },
-  "editions": [
-    {
-      "description": "Source + ESNext + Import",
-      "entry": "index.js",
-      "directory": "source",
-      "syntaxes": [
-        "javascript",
-        "esnext",
-        "require",
-        "arrows",
-        "getset",
-        "const",
-        "let",
-        "classes",
-        "defaults",
-        "spread",
-        "rest",
-        "destructuring",
-        "template strings"
-      ]
-    },
-    {
-      "description": "Compiled + ES2015 + Require",
-      "entry": "index.js",
-      "directory": "es2015",
-      "syntaxes": [
-        "javascript",
-        "es2015",
-        "require"
-      ]
-    }
-  ]
+  }
 }
