@@ -33,5 +33,5 @@ jobs:
           node-version: 16
 
       - run: |
-          npm ci
+          npm install
           npm run bench
