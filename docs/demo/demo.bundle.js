@@ -276,7 +276,7 @@ class Circle extends sat_1.Circle {
         this.r = this.radiusBackup * scale;
     }
     /**
-     * Updates Bounding Box of collider
+     * get body bounding box, without padding
      */
     getAABBAsBBox() {
         const x = this.x + this.offset.x;
@@ -661,7 +661,7 @@ class Polygon extends sat_1.Polygon {
         super.setPoints(this.points);
     }
     /**
-     * get bbox without padding
+     * get body bounding box, without padding
      */
     getAABBAsBBox() {
         const { pos, w, h } = this.getAABBAsBox();

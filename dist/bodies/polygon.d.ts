@@ -95,7 +95,7 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      */
     setScale(x: number, y?: number): void;
     /**
-     * get bbox without padding
+     * get body bounding box, without padding
      */
     getAABBAsBBox(): BBox;
     /**

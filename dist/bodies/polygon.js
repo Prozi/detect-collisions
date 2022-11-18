@@ -123,7 +123,7 @@ class Polygon extends sat_1.Polygon {
         super.setPoints(this.points);
     }
     /**
-     * get bbox without padding
+     * get body bounding box, without padding
      */
     getAABBAsBBox() {
         const { pos, w, h } = this.getAABBAsBox();

@@ -213,7 +213,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   }
 
   /**
-   * get bbox without padding
+   * get body bounding box, without padding
    */
   getAABBAsBBox(): BBox {
     const { pos, w, h } = (this as unknown as GetAABBAsBox).getAABBAsBox();

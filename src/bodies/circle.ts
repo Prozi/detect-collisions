@@ -167,7 +167,7 @@ export class Circle extends SATCircle implements BBox, Collider {
   }
 
   /**
-   * Updates Bounding Box of collider
+   * get body bounding box, without padding
    */
   getAABBAsBBox(): BBox {
     const x = this.x + this.offset.x;
