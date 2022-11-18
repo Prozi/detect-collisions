@@ -2476,6 +2476,11 @@
   "resolved" "https://registry.npmjs.org/human-signals/-/human-signals-2.1.0.tgz"
   "version" "2.1.0"
 
+"husky@^8.0.2":
+  "integrity" "sha512-Tkv80jtvbnkK3mYWxPZePGFpQ/tT3HNSs/sasF9P2YfkMezDl3ON37YN6jUUI4eTg5LcyVynlb6r4eyvOmspvg=="
+  "resolved" "https://registry.npmjs.org/husky/-/husky-8.0.2.tgz"
+  "version" "8.0.2"
+
 "iconv-lite@0.4.24":
   "integrity" "sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA=="
   "resolved" "https://registry.npmjs.org/iconv-lite/-/iconv-lite-0.4.24.tgz"
@@ -4375,10 +4380,10 @@
   dependencies:
     "cheerio" "^1.0.0-rc.11"
 
-"typedoc@^0.22.17", "typedoc@0.23.x":
-  "integrity" "sha512-NK9RlLhRUGMvc6Rw5USEYgT4DVAUFk7IF7Q6MYfpJ88KnTZP7EneEa4RcP+tX1auAcz7QT1Iy0bUSZBYYHdoyA=="
-  "resolved" "https://registry.npmjs.org/typedoc/-/typedoc-0.22.18.tgz"
-  "version" "0.22.18"
+"typedoc@^0.22.17", "typedoc@0.22.17", "typedoc@0.23.x":
+  "integrity" "sha512-h6+uXHVVCPDaANzjwzdsj9aePBjZiBTpiMpBBeyh1zcN2odVsDCNajz8zyKnixF93HJeGpl34j/70yoEE5BfNg=="
+  "resolved" "https://registry.npmjs.org/typedoc/-/typedoc-0.22.17.tgz"
+  "version" "0.22.17"
   dependencies:
     "glob" "^8.0.3"
     "lunr" "^2.3.9"

@@ -37,7 +37,7 @@ export interface BodyOptions {
 /**
  * system.raycast(from, to) result
  */
-export type RaycastResult = {
+export declare type RaycastResult = {
     point: Vector;
     collider: Body;
 } | null;
@@ -68,7 +68,7 @@ export interface GetAABBAsBox {
 /**
  * generic body union type
  */
-export type Body = Point | Line | Ellipse | Circle | Box | Polygon;
+export declare type Body = Point | Line | Ellipse | Circle | Box | Polygon;
 /**
  * commonly used
  */
@@ -136,5 +136,5 @@ export interface CollisionState {
     bInA: boolean;
     overlapV: SATVector;
 }
-export type TestFunction<T extends Body = any, Y extends Body = any> = (a: T, b: Y, r: Response) => boolean;
+export declare type TestFunction<T extends Body = any, Y extends Body = any> = (a: T, b: Y, r: Response) => boolean;
 //# sourceMappingURL=model.d.ts.map
