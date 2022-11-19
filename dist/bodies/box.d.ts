@@ -10,9 +10,6 @@ export declare class Box extends Polygon {
     protected _height: number;
     /**
      * collider - box
-     * @param {PotentialVector} position {x, y}
-     * @param {number} width
-     * @param {number} height
      */
     constructor(position: PotentialVector, width: number, height: number, options?: BodyOptions);
     /**

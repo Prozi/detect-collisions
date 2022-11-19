@@ -20,14 +20,16 @@
     "test": "jest --silent --verbose --forceExit",
     "format": "prettier --write ./src",
     "lint": "tslint --project tsconfig.json 'src/**/*.ts' --fix",
-    "build-and-test": "npm run format && npm run build && npm run test",
+    "test-and-build": "npm run test && npm run format && npm run build",
     "build-for-github": "npm run build:demo && npm run build:docs",
-    "precommit": "npm run lint;npm run build-and-test && npm run build-for-github"
+    "precommit": "npm run lint && npm run test-and-build && npm run build-for-github"
   },
   "repository": "git://github.com/Prozi/detect-collisions.git",
   "files": [
     "dist/*.*",
-    "dist/bodies/*.*"
+    "dist/bodies/*.*",
+    "dist/system/*.*",
+    "dist/utils/*.*"
   ],
   "keywords": [
     "javascript",

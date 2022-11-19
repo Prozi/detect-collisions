@@ -10,7 +10,8 @@ import {
   Vector,
 } from "../model";
 import { System } from "../system";
-import { dashLineTo, ensureVectorPoint, extendBody } from "../utils";
+import { ensureVectorPoint, extendBody } from "../utils";
+import { dashLineTo, drawCircle } from "../utils/draw-utils";
 
 /**
  * collider - circle
@@ -80,8 +81,6 @@ export class Circle extends SATCircle implements BBox, Collider {
 
   /**
    * collider - circle
-   * @param {PotentialVector} position {x, y}
-   * @param {number} radius
    */
   constructor(
     position: PotentialVector,
@@ -149,8 +148,6 @@ export class Circle extends SATCircle implements BBox, Collider {
 
   /**
    * update position
-   * @param {number} x
-   * @param {number} y
    */
   setPosition(x: number, y: number): void {
     this.pos.x = x;
@@ -160,7 +157,6 @@ export class Circle extends SATCircle implements BBox, Collider {
 
   /**
    * update scale
-   * @param {number} scale
    */
   setScale(scale: number, _ignoredParameter?: number): void {
     this.r = this.radiusBackup * scale;
@@ -183,29 +179,9 @@ export class Circle extends SATCircle implements BBox, Collider {
 
   /**
    * Draws collider on a CanvasRenderingContext2D's current path
-   * @param {CanvasRenderingContext2D} context The canvas context to draw on
    */
-  draw(context: CanvasRenderingContext2D) {
-    const x = this.x + this.offset.x;
-    const y = this.y + this.offset.y;
-
-    if (this.isTrigger) {
-      const max = Math.max(8, this.r);
-
-      for (let i = 0; i < max; i++) {
-        const arc = (i / max) * 2 * Math.PI;
-        const arcPrev = ((i - 1) / max) * 2 * Math.PI;
-        const fromX = x + Math.cos(arcPrev) * this.r;
-        const fromY = y + Math.sin(arcPrev) * this.r;
-        const toX = x + Math.cos(arc) * this.r;
-        const toY = y + Math.sin(arc) * this.r;
-
-        dashLineTo(context, fromX, fromY, toX, toY);
-      }
-    } else {
-      context.moveTo(x + this.r, y);
-      context.arc(x, y, this.r, 0, Math.PI * 2);
-    }
+  draw(context: CanvasRenderingContext2D): void {
+    drawCircle(this, context);
   }
 
   setAngle(angle: number): Circle {
@@ -232,7 +208,9 @@ export class Circle extends SATCircle implements BBox, Collider {
   /**
    * for compatility reasons, does nothing
    */
-  center(): void {}
+  center(): void {
+    return;
+  }
 
   protected getOffsetWithAngle(): Vector {
     if (!this.angle) {

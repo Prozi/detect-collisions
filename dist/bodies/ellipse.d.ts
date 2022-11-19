@@ -18,10 +18,6 @@ export declare class Ellipse extends Polygon {
     protected _step: number;
     /**
      * collider - ellipse
-     * @param {PotentialVector} position {x, y}
-     * @param {number} radiusX
-     * @param {number} radiusY defaults to radiusX
-     * @param {number} step precision division >= 1px
      */
     constructor(position: PotentialVector, radiusX: number, radiusY?: number, step?: number, options?: BodyOptions);
     /**

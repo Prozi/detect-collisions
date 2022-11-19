@@ -24,10 +24,6 @@ export class Ellipse extends Polygon {
 
   /**
    * collider - ellipse
-   * @param {PotentialVector} position {x, y}
-   * @param {number} radiusX
-   * @param {number} radiusY defaults to radiusX
-   * @param {number} step precision division >= 1px
    */
   constructor(
     position: PotentialVector,
@@ -91,10 +87,14 @@ export class Ellipse extends Polygon {
   /**
    * do not attempt to use Polygon.center()
    */
-  center(): void {}
+  center(): void {
+    return;
+  }
 
   /**
    * do not attempt to use Polygon.updateIsConvex()
    */
-  protected updateIsConvex(): void {}
+  protected updateIsConvex(): void {
+    return;
+  }
 }

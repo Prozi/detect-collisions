@@ -2,7 +2,7 @@ require("pixi-shim");
 
 describe("GIVEN Line", () => {
   it("THEN without constructor values it throws", () => {
-    const { Line } = require("../../dist");
+    const { Line } = require("../..");
 
     const case1 = () => new Line({});
 
@@ -10,7 +10,7 @@ describe("GIVEN Line", () => {
   });
 
   it("THEN two lines collide", () => {
-    const { System, Line } = require("../../dist");
+    const { System, Line } = require("../..");
 
     const physics = new System();
     const line1 = new Line({ x: -10, y: -10 }, { x: 10, y: 10 });

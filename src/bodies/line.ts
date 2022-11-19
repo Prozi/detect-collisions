@@ -13,8 +13,6 @@ export class Line extends Polygon {
 
   /**
    * collider - line from start to end
-   * @param {Vector} start {x, y}
-   * @param {Vector} end {x, y}
    */
   constructor(start: Vector, end: Vector, options?: BodyOptions) {
     super(
@@ -57,5 +55,7 @@ export class Line extends Polygon {
   /**
    * do not attempt to use Polygon.updateIsConvex()
    */
-  protected updateIsConvex(): void {}
+  protected updateIsConvex(): void {
+    return;
+  }
 }

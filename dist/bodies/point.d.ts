@@ -7,7 +7,6 @@ export declare class Point extends Box {
     readonly type: Types.Point;
     /**
      * collider - point (very tiny box)
-     * @param {PotentialVector} position {x, y}
      */
     constructor(position: PotentialVector, options?: BodyOptions);
 }

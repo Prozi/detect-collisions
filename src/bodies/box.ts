@@ -15,9 +15,6 @@ export class Box extends Polygon {
 
   /**
    * collider - box
-   * @param {PotentialVector} position {x, y}
-   * @param {number} width
-   * @param {number} height
    */
   constructor(
     position: PotentialVector,
@@ -66,5 +63,7 @@ export class Box extends Polygon {
   /**
    * do not attempt to use Polygon.updateIsConvex()
    */
-  protected updateIsConvex(): void {}
+  protected updateIsConvex(): void {
+    return;
+  }
 }

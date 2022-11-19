@@ -1,7 +1,7 @@
 /// <reference types="sat" />
 import RBush from "rbush";
 import { BaseSystem } from "./base-system";
-import { Body, CollisionState, RaycastResult, Response, TestFunction, Vector } from "./model";
+import { Body, CollisionState, RaycastResult, Response, TestFunction, Vector } from "../model";
 /**
  * collision system
  */

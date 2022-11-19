@@ -54,8 +54,6 @@ export declare class Circle extends SATCircle implements BBox, Collider {
     protected readonly radiusBackup: number;
     /**
      * collider - circle
-     * @param {PotentialVector} position {x, y}
-     * @param {number} radius
      */
     constructor(position: PotentialVector, radius: number, options?: BodyOptions);
     get x(): number;
@@ -86,13 +84,10 @@ export declare class Circle extends SATCircle implements BBox, Collider {
     get scaleY(): number;
     /**
      * update position
-     * @param {number} x
-     * @param {number} y
      */
     setPosition(x: number, y: number): void;
     /**
      * update scale
-     * @param {number} scale
      */
     setScale(scale: number, _ignoredParameter?: number): void;
     /**
@@ -101,7 +96,6 @@ export declare class Circle extends SATCircle implements BBox, Collider {
     getAABBAsBBox(): BBox;
     /**
      * Draws collider on a CanvasRenderingContext2D's current path
-     * @param {CanvasRenderingContext2D} context The canvas context to draw on
      */
     draw(context: CanvasRenderingContext2D): void;
     setAngle(angle: number): Circle;

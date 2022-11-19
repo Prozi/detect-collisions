@@ -1,10 +1,10 @@
-import { Box } from "./bodies/box";
-import { Circle } from "./bodies/circle";
-import { Ellipse } from "./bodies/ellipse";
-import { Line } from "./bodies/line";
-import { Point } from "./bodies/point";
-import { Polygon } from "./bodies/polygon";
-import { Body, BodyOptions, Data, PotentialVector, RBush, Vector } from "./model";
+import { Box } from "../bodies/box";
+import { Circle } from "../bodies/circle";
+import { Ellipse } from "../bodies/ellipse";
+import { Line } from "../bodies/line";
+import { Point } from "../bodies/point";
+import { Polygon } from "../bodies/polygon";
+import { Body, BodyOptions, Data, PotentialVector, RBush, Vector } from "../model";
 /**
  * very base collision system
  */
@@ -12,13 +12,7 @@ export declare class BaseSystem extends RBush<Body> implements Data {
     data: {
         children: Body[];
     };
-    /**
-     * draw bodies
-     */
     draw(context: CanvasRenderingContext2D): void;
-    /**
-     * draw hierarchy
-     */
     drawBVH(context: CanvasRenderingContext2D): void;
     /**
      * create point at position with options and add to system

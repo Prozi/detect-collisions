@@ -10,9 +10,6 @@ const polygon_1 = require("./polygon");
 class Box extends polygon_1.Polygon {
     /**
      * collider - box
-     * @param {PotentialVector} position {x, y}
-     * @param {number} width
-     * @param {number} height
      */
     constructor(position, width, height, options) {
         super(position, (0, utils_1.createBox)(width, height), options);
@@ -50,7 +47,9 @@ class Box extends polygon_1.Polygon {
     /**
      * do not attempt to use Polygon.updateIsConvex()
      */
-    updateIsConvex() { }
+    updateIsConvex() {
+        return;
+    }
 }
 exports.Box = Box;
 //# sourceMappingURL=box.js.map

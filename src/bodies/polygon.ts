@@ -13,7 +13,6 @@ import {
 } from "../model";
 import { System } from "../system";
 import {
-  dashLineTo,
   ensurePolygonPoints,
   ensureVectorPoint,
   extendBody,
@@ -21,6 +20,7 @@ import {
   mapVectorToArray,
   clonePointsArray,
 } from "../utils";
+import { drawPolygon } from "../utils/draw-utils";
 
 /**
  * collider - polygon
@@ -40,7 +40,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   bbox!: BBox;
 
   /**
-   * is it a convex polyon as opposed to a hollow inside (concave) polygon
+   * is it a convex polygon as opposed to a hollow inside (concave) polygon
    */
   isConvex!: boolean;
 
@@ -86,8 +86,6 @@ export class Polygon extends SATPolygon implements BBox, Collider {
 
   /**
    * collider - polygon
-   * @param {PotentialVector} position {x, y}
-   * @param {PotentialVector[]} points
    */
   constructor(
     position: PotentialVector,
@@ -157,36 +155,8 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     this.setScale(scale);
   }
 
-  getConvex(): number[][][] {
-    // if not line
-    return this.points.length > 2
-      ? quickDecomp(this.calcPoints.map(mapVectorToArray))
-      : // for line and point
-        [];
-  }
-
-  updateConvexPolygons(convex: number[][][] = this.getConvex()): void {
-    convex.forEach((points: number[][], index: number) => {
-      // lazy create
-      if (!this.convexPolygons[index]) {
-        this.convexPolygons[index] = new SATPolygon();
-      }
-
-      this.convexPolygons[index].pos.x = this.x;
-      this.convexPolygons[index].pos.y = this.y;
-      this.convexPolygons[index].setPoints(
-        ensurePolygonPoints(points.map(mapArrayToVector))
-      );
-    });
-
-    // trim array length
-    this.convexPolygons.length = convex.length;
-  }
-
   /**
    * update position
-   * @param {number} x
-   * @param {number} y
    */
   setPosition(x: number, y: number): void {
     this.pos.x = x;
@@ -197,8 +167,6 @@ export class Polygon extends SATPolygon implements BBox, Collider {
 
   /**
    * update scale
-   * @param {number} x
-   * @param {number} y
    */
   setScale(x: number, y: number = x): void {
     this.scaleVector.x = x;
@@ -228,35 +196,9 @@ export class Polygon extends SATPolygon implements BBox, Collider {
 
   /**
    * Draws collider on a CanvasRenderingContext2D's current path
-   * @param {CanvasRenderingContext2D} context The canvas context to draw on
    */
   draw(context: CanvasRenderingContext2D): void {
-    const points: Vector[] = [...this.calcPoints, this.calcPoints[0]];
-
-    points.forEach((point: Vector, index: number) => {
-      const toX = this.x + point.x;
-      const toY = this.y + point.y;
-      const prev =
-        this.calcPoints[index - 1] ||
-        this.calcPoints[this.calcPoints.length - 1];
-
-      if (!index) {
-        if (this.calcPoints.length === 1) {
-          context.arc(toX, toY, 1, 0, Math.PI * 2);
-        } else {
-          context.moveTo(toX, toY);
-        }
-      } else if (this.calcPoints.length > 1) {
-        if (this.isTrigger) {
-          const fromX = this.x + prev.x;
-          const fromY = this.y + prev.y;
-
-          dashLineTo(context, fromX, fromY, toX, toY);
-        } else {
-          context.lineTo(toX, toY);
-        }
-      }
-    });
+    drawPolygon(this, context);
   }
 
   getCentroidWithoutRotation(): Vector {
@@ -307,6 +249,32 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     this.pos.x += x;
     this.pos.y += y;
     this.isCentered = true;
+  }
+
+  getConvex(): number[][][] {
+    // if not line
+    return this.points.length > 2
+      ? quickDecomp(this.calcPoints.map(mapVectorToArray))
+      : // for line and point
+        [];
+  }
+
+  updateConvexPolygons(convex: number[][][] = this.getConvex()): void {
+    convex.forEach((points: number[][], index: number) => {
+      // lazy create
+      if (!this.convexPolygons[index]) {
+        this.convexPolygons[index] = new SATPolygon();
+      }
+
+      this.convexPolygons[index].pos.x = this.x;
+      this.convexPolygons[index].pos.y = this.y;
+      this.convexPolygons[index].setPoints(
+        ensurePolygonPoints(points.map(mapArrayToVector))
+      );
+    });
+
+    // trim array length
+    this.convexPolygons.length = convex.length;
   }
 
   /**
