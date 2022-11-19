@@ -252,7 +252,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   }
 
   getConvex(): number[][][] {
-    if ((this.type && this.type !== Types.Polygon) || this.points.length <= 2) {
+    if ((this.type && this.type !== Types.Polygon) || this.points.length <= 3) {
       return [];
     }
 

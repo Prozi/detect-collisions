@@ -150,7 +150,7 @@ class Polygon extends sat_1.Polygon {
         this.isCentered = true;
     }
     getConvex() {
-        if ((this.type && this.type !== model_1.Types.Polygon) || this.points.length <= 2) {
+        if ((this.type && this.type !== model_1.Types.Polygon) || this.points.length <= 3) {
             return [];
         }
         return (0, poly_decomp_1.quickDecomp)(this.calcPoints.map(utils_1.mapVectorToArray));
