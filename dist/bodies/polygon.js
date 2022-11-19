@@ -79,7 +79,6 @@ class Polygon extends sat_1.Polygon {
         this.pos.x = x;
         this.pos.y = y;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
-        return this;
     }
     /**
      * update scale
@@ -92,7 +91,6 @@ class Polygon extends sat_1.Polygon {
             point.y = this.pointsBackup[i].y * y;
         });
         super.setPoints(this.points);
-        return this;
     }
     /**
      * get body bounding box, without padding

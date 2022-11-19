@@ -271,13 +271,32 @@ class Circle extends sat_1.Circle {
         this.pos.x = x;
         this.pos.y = y;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
-        return this;
     }
     /**
      * update scale
      */
     setScale(scale, _ignoredParameter) {
         this.r = this.radiusBackup * scale;
+    }
+    /**
+     * set rotation
+     */
+    setAngle(angle) {
+        this.angle = angle;
+        const { x, y } = this.getOffsetWithAngle();
+        this.offset.x = x;
+        this.offset.y = y;
+        return this;
+    }
+    /**
+     * set offset from center
+     */
+    setOffset(offset) {
+        this.offsetCopy.x = offset.x;
+        this.offsetCopy.y = offset.y;
+        const { x, y } = this.getOffsetWithAngle();
+        this.offset.x = x;
+        this.offset.y = y;
         return this;
     }
     /**
@@ -315,27 +334,6 @@ class Circle extends sat_1.Circle {
             context.moveTo(x + this.r, y);
             context.arc(x, y, this.r, 0, Math.PI * 2);
         }
-    }
-    /**
-     * set rotation
-     */
-    setAngle(angle) {
-        this.angle = angle;
-        const { x, y } = this.getOffsetWithAngle();
-        this.offset.x = x;
-        this.offset.y = y;
-        return this;
-    }
-    /**
-     * set offset from center
-     */
-    setOffset(offset) {
-        this.offsetCopy.x = offset.x;
-        this.offsetCopy.y = offset.y;
-        const { x, y } = this.getOffsetWithAngle();
-        this.offset.x = x;
-        this.offset.y = y;
-        return this;
     }
     /**
      * for compatility reasons, does nothing
@@ -643,7 +641,6 @@ class Polygon extends sat_1.Polygon {
         this.pos.x = x;
         this.pos.y = y;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
-        return this;
     }
     /**
      * update scale
@@ -656,7 +653,6 @@ class Polygon extends sat_1.Polygon {
             point.y = this.pointsBackup[i].y * y;
         });
         super.setPoints(this.points);
-        return this;
     }
     /**
      * get body bounding box, without padding

@@ -160,19 +160,42 @@ export class Circle extends SATCircle implements BBox, Collider {
   /**
    * update position
    */
-  setPosition(x: number, y: number): Circle {
+  setPosition(x: number, y: number): void {
     this.pos.x = x;
     this.pos.y = y;
     this.system?.insert(this);
-
-    return this;
   }
 
   /**
    * update scale
    */
-  setScale(scale: number, _ignoredParameter?: number): Circle {
+  setScale(scale: number, _ignoredParameter?: number): void {
     this.r = this.radiusBackup * scale;
+  }
+
+  /**
+   * set rotation
+   */
+  setAngle(angle: number): Circle {
+    this.angle = angle;
+
+    const { x, y } = this.getOffsetWithAngle();
+    this.offset.x = x;
+    this.offset.y = y;
+
+    return this;
+  }
+
+  /**
+   * set offset from center
+   */
+  setOffset(offset: Vector): Circle {
+    this.offsetCopy.x = offset.x;
+    this.offsetCopy.y = offset.y;
+
+    const { x, y } = this.getOffsetWithAngle();
+    this.offset.x = x;
+    this.offset.y = y;
 
     return this;
   }
@@ -216,33 +239,6 @@ export class Circle extends SATCircle implements BBox, Collider {
       context.moveTo(x + this.r, y);
       context.arc(x, y, this.r, 0, Math.PI * 2);
     }
-  }
-
-  /**
-   * set rotation
-   */
-  setAngle(angle: number): Circle {
-    this.angle = angle;
-
-    const { x, y } = this.getOffsetWithAngle();
-    this.offset.x = x;
-    this.offset.y = y;
-
-    return this;
-  }
-
-  /**
-   * set offset from center
-   */
-  setOffset(offset: Vector): Circle {
-    this.offsetCopy.x = offset.x;
-    this.offsetCopy.y = offset.y;
-
-    const { x, y } = this.getOffsetWithAngle();
-    this.offset.x = x;
-    this.offset.y = y;
-
-    return this;
   }
 
   /**

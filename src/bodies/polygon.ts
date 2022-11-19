@@ -156,18 +156,16 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   /**
    * update position
    */
-  setPosition(x: number, y: number): Polygon {
+  setPosition(x: number, y: number): void {
     this.pos.x = x;
     this.pos.y = y;
     this.system?.insert(this);
-
-    return this;
   }
 
   /**
    * update scale
    */
-  setScale(x: number, y: number = x): Polygon {
+  setScale(x: number, y: number = x): void {
     this.scaleVector.x = x;
     this.scaleVector.y = y;
 
@@ -177,8 +175,6 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     });
 
     super.setPoints(this.points);
-
-    return this;
   }
 
   /**

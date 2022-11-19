@@ -81,11 +81,11 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
     /**
      * update position
      */
-    setPosition(x: number, y: number): Polygon;
+    setPosition(x: number, y: number): void;
     /**
      * update scale
      */
-    setScale(x: number, y?: number): Polygon;
+    setScale(x: number, y?: number): void;
     /**
      * get body bounding box, without padding
      */

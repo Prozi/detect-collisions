@@ -116,19 +116,19 @@ export interface Collider {
     /**
      * update position
      */
-    setPosition(x: number, y: number): Body;
+    setPosition(x: number, y: number): void;
     /**
      * for setting scale
      */
-    setScale(x: number, y?: number): Body;
+    setScale(x: number, y?: number): void;
     /**
      * for setting angle
      */
-    setAngle(angle: number): Body | SATPolygon;
+    setAngle(angle: number): Circle | SATPolygon;
     /**
      * for setting offset from center
      */
-    setOffset(offset: Vector): Body | SATPolygon;
+    setOffset(offset: Vector): Circle | SATPolygon;
     /**
      * draw the collider
      */

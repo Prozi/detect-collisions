@@ -97,19 +97,11 @@ export declare class Circle extends SATCircle implements BBox, Collider {
     /**
      * update position
      */
-    setPosition(x: number, y: number): Circle;
+    setPosition(x: number, y: number): void;
     /**
      * update scale
      */
-    setScale(scale: number, _ignoredParameter?: number): Circle;
-    /**
-     * get body bounding box, without padding
-     */
-    getAABBAsBBox(): BBox;
-    /**
-     * Draws collider on a CanvasRenderingContext2D's current path
-     */
-    draw(context: CanvasRenderingContext2D): void;
+    setScale(scale: number, _ignoredParameter?: number): void;
     /**
      * set rotation
      */
@@ -118,6 +110,14 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      * set offset from center
      */
     setOffset(offset: Vector): Circle;
+    /**
+     * get body bounding box, without padding
+     */
+    getAABBAsBBox(): BBox;
+    /**
+     * Draws collider on a CanvasRenderingContext2D's current path
+     */
+    draw(context: CanvasRenderingContext2D): void;
     /**
      * for compatility reasons, does nothing
      */
