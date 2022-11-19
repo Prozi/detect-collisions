@@ -136,5 +136,5 @@ export interface CollisionState {
     bInA: boolean;
     overlapV: SATVector;
 }
-export type TestFunction<T extends Body = any, Y extends Body = any> = (a: T, b: Y, r: Response) => boolean;
+export type TestFunction<T extends Body = Circle | Polygon, Y extends Body = Circle | Polygon> = (a: T, b: Y, r: Response) => boolean;
 //# sourceMappingURL=model.d.ts.map

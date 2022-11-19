@@ -1281,9 +1281,9 @@ function getBounceDirection(body, collider) {
 exports.getBounceDirection = getBounceDirection;
 function getSATFunction(body, wall) {
     if (body.type === model_1.Types.Circle) {
-        return wall.type === model_1.Types.Circle ? sat_1.testCircleCircle : sat_1.testCirclePolygon;
+        return (wall.type === model_1.Types.Circle ? sat_1.testCircleCircle : sat_1.testCirclePolygon);
     }
-    return wall.type === model_1.Types.Circle ? sat_1.testPolygonCircle : sat_1.testPolygonPolygon;
+    return (wall.type === model_1.Types.Circle ? sat_1.testPolygonCircle : sat_1.testPolygonPolygon);
 }
 exports.getSATFunction = getSATFunction;
 //# sourceMappingURL=utils.js.map

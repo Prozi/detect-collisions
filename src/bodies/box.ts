@@ -10,8 +10,8 @@ export class Box extends Polygon {
 
   isConvex = true;
 
-  private _width: number;
-  private _height: number;
+  protected _width: number;
+  protected _height: number;
 
   /**
    * collider - box

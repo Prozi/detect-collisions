@@ -46,8 +46,8 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      */
     system?: System;
     readonly type: Types.Polygon | Types.Box | Types.Point | Types.Ellipse | Types.Line;
-    private pointsBackup;
-    private readonly scaleVector;
+    protected pointsBackup: Vector[];
+    protected readonly scaleVector: Vector;
     /**
      * collider - polygon
      * @param {PotentialVector} position {x, y}

@@ -18,9 +18,9 @@ export class Ellipse extends Polygon {
    */
   isConvex = true;
 
-  private _radiusX: number;
-  private _radiusY: number;
-  private _step: number;
+  protected _radiusX: number;
+  protected _radiusY: number;
+  protected _step: number;
 
   /**
    * collider - ellipse

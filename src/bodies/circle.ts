@@ -76,7 +76,7 @@ export class Circle extends SATCircle implements BBox, Collider {
 
   readonly type: Types.Circle = Types.Circle;
 
-  private readonly radiusBackup: number;
+  protected readonly radiusBackup: number;
 
   /**
    * collider - circle
