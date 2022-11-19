@@ -5,7 +5,13 @@ import { Polygon } from "./polygon";
  * collider - line
  */
 export declare class Line extends Polygon {
+    /**
+     * line type
+     */
     readonly type: Types.Line;
+    /**
+     * line is convex
+     */
     isConvex: boolean;
     /**
      * collider - line from start to end

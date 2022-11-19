@@ -11,7 +11,13 @@ const raycast_utils_1 = require("../utils/raycast-utils");
 class System extends base_system_1.BaseSystem {
     constructor() {
         super(...arguments);
+        /**
+         * the last collision result
+         */
         this.response = new model_1.Response();
+        /**
+         * reusable inner state - for non convex polygons collisions
+         */
         this.state = {
             collides: false,
             aInB: false,
@@ -167,6 +173,9 @@ class System extends base_system_1.BaseSystem {
     raycast(start, end, allowCollider = () => true) {
         return (0, raycast_utils_1.raycast)(this, start, end, allowCollider);
     }
+    /**
+     * update inner state function - for non convex polygons collisions
+     */
     test(sat, body, wall) {
         const collides = sat(body, wall, this.response);
         if (collides) {

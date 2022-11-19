@@ -109,10 +109,16 @@ class Circle extends sat_1.Circle {
          * circles are centered
          */
         this.isCentered = true;
+        /**
+         * circle type
+         */
         this.type = model_1.Types.Circle;
         (0, utils_1.extendBody)(this, options);
         this.radiusBackup = radius;
     }
+    /**
+     * get this.pos.x
+     */
     get x() {
         return this.pos.x;
     }
@@ -124,6 +130,9 @@ class Circle extends sat_1.Circle {
         this.pos.x = x;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
+    /**
+     * get this.pos.y
+     */
     get y() {
         return this.pos.y;
     }
@@ -193,6 +202,9 @@ class Circle extends sat_1.Circle {
     draw(context) {
         (0, draw_utils_1.drawCircle)(this, context);
     }
+    /**
+     * set rotation
+     */
     setAngle(angle) {
         this.angle = angle;
         const { x, y } = this.getOffsetWithAngle();
@@ -200,6 +212,9 @@ class Circle extends sat_1.Circle {
         this.offset.y = y;
         return this;
     }
+    /**
+     * set offset from center
+     */
     setOffset(offset) {
         this.offsetCopy.x = offset.x;
         this.offsetCopy.y = offset.y;
@@ -214,6 +229,9 @@ class Circle extends sat_1.Circle {
     center() {
         return;
     }
+    /**
+     * internal for getting offset with applied angle
+     */
     getOffsetWithAngle() {
         if (!this.angle) {
             return this.offsetCopy;
@@ -252,6 +270,9 @@ class Ellipse extends polygon_1.Polygon {
      */
     constructor(position, radiusX, radiusY = radiusX, step = (radiusX + radiusY) / Math.PI, options) {
         super(position, (0, utils_1.createEllipse)(radiusX, radiusY, step), options);
+        /**
+         * ellipse type
+         */
         this.type = model_1.Types.Ellipse;
         /**
          * ellipses are centered
@@ -347,7 +368,13 @@ class Line extends polygon_1.Polygon {
             { x: 0, y: 0 },
             { x: end.x - start.x, y: end.y - start.y },
         ], options);
+        /**
+         * line type
+         */
         this.type = model_1.Types.Line;
+        /**
+         * line is convex
+         */
         this.isConvex = true;
         if (this.calcPoints.length === 1 || !end) {
             console.error({ start, end });
@@ -403,6 +430,9 @@ class Point extends box_1.Box {
      */
     constructor(position, options) {
         super((0, utils_1.ensureVectorPoint)(position), 0.001, 0.001, options);
+        /**
+         * point type
+         */
         this.type = model_1.Types.Point;
     }
 }
@@ -700,9 +730,15 @@ const draw_utils_1 = __webpack_require__(/*! ../utils/draw-utils */ "./dist/util
  * very base collision system
  */
 class BaseSystem extends model_1.RBush {
+    /**
+     * draw bodies of system on context
+     */
     draw(context) {
         (0, draw_utils_1.draw)(this, context);
     }
+    /**
+     * draw bounding volume hierarchy of system on context
+     */
     drawBVH(context) {
         (0, draw_utils_1.drawBVH)(this, context);
     }
@@ -808,7 +844,13 @@ const raycast_utils_1 = __webpack_require__(/*! ../utils/raycast-utils */ "./dis
 class System extends base_system_1.BaseSystem {
     constructor() {
         super(...arguments);
+        /**
+         * the last collision result
+         */
         this.response = new model_1.Response();
+        /**
+         * reusable inner state - for non convex polygons collisions
+         */
         this.state = {
             collides: false,
             aInB: false,
@@ -964,6 +1006,9 @@ class System extends base_system_1.BaseSystem {
     raycast(start, end, allowCollider = () => true) {
         return (0, raycast_utils_1.raycast)(this, start, end, allowCollider);
     }
+    /**
+     * update inner state function - for non convex polygons collisions
+     */
     test(sat, body, wall) {
         const collides = sat(body, wall, this.response);
         if (collides) {

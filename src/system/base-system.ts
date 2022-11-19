@@ -20,11 +20,17 @@ import { draw, drawBVH } from "../utils/draw-utils";
 export class BaseSystem extends RBush<Body> implements Data {
   data!: { children: Body[] };
 
-  draw(context: CanvasRenderingContext2D) {
+  /**
+   * draw bodies of system on context
+   */
+  draw(context: CanvasRenderingContext2D): void {
     draw(this, context);
   }
 
-  drawBVH(context: CanvasRenderingContext2D) {
+  /**
+   * draw bounding volume hierarchy of system on context
+   */
+  drawBVH(context: CanvasRenderingContext2D): void {
     drawBVH(this, context);
   }
 

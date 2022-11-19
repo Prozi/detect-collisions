@@ -4,6 +4,9 @@ import { Box } from "./box";
  * collider - point (very tiny box)
  */
 export declare class Point extends Box {
+    /**
+     * point type
+     */
     readonly type: Types.Point;
     /**
      * collider - point (very tiny box)

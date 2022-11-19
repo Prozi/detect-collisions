@@ -4,6 +4,9 @@ import { Polygon } from "./polygon";
  * collider - ellipse
  */
 export declare class Ellipse extends Polygon {
+    /**
+     * ellipse type
+     */
     readonly type: Types.Ellipse;
     /**
      * ellipses are centered
@@ -13,6 +16,9 @@ export declare class Ellipse extends Polygon {
      * ellipses are convex
      */
     isConvex: boolean;
+    /**
+     * inner initial params save
+     */
     protected _radiusX: number;
     protected _radiusY: number;
     protected _step: number;

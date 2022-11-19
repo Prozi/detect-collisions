@@ -50,17 +50,29 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      * reference to collision system
      */
     system?: System;
+    /**
+     * circle type
+     */
     readonly type: Types.Circle;
+    /**
+     * saved initial radius - internal
+     */
     protected readonly radiusBackup: number;
     /**
      * collider - circle
      */
     constructor(position: PotentialVector, radius: number, options?: BodyOptions);
+    /**
+     * get this.pos.x
+     */
     get x(): number;
     /**
      * updating this.pos.x by this.x = x updates AABB
      */
     set x(x: number);
+    /**
+     * get this.pos.y
+     */
     get y(): number;
     /**
      * updating this.pos.y by this.y = y updates AABB
@@ -98,12 +110,21 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      * Draws collider on a CanvasRenderingContext2D's current path
      */
     draw(context: CanvasRenderingContext2D): void;
+    /**
+     * set rotation
+     */
     setAngle(angle: number): Circle;
+    /**
+     * set offset from center
+     */
     setOffset(offset: Vector): Circle;
     /**
      * for compatility reasons, does nothing
      */
     center(): void;
+    /**
+     * internal for getting offset with applied angle
+     */
     protected getOffsetWithAngle(): Vector;
 }
 //# sourceMappingURL=circle.d.ts.map

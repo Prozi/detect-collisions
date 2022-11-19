@@ -12,7 +12,13 @@ export declare class BaseSystem extends RBush<Body> implements Data {
     data: {
         children: Body[];
     };
+    /**
+     * draw bodies of system on context
+     */
     draw(context: CanvasRenderingContext2D): void;
+    /**
+     * draw bounding volume hierarchy of system on context
+     */
     drawBVH(context: CanvasRenderingContext2D): void;
     /**
      * create point at position with options and add to system

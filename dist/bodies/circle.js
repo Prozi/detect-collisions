@@ -34,10 +34,16 @@ class Circle extends sat_1.Circle {
          * circles are centered
          */
         this.isCentered = true;
+        /**
+         * circle type
+         */
         this.type = model_1.Types.Circle;
         (0, utils_1.extendBody)(this, options);
         this.radiusBackup = radius;
     }
+    /**
+     * get this.pos.x
+     */
     get x() {
         return this.pos.x;
     }
@@ -49,6 +55,9 @@ class Circle extends sat_1.Circle {
         this.pos.x = x;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
+    /**
+     * get this.pos.y
+     */
     get y() {
         return this.pos.y;
     }
@@ -118,6 +127,9 @@ class Circle extends sat_1.Circle {
     draw(context) {
         (0, draw_utils_1.drawCircle)(this, context);
     }
+    /**
+     * set rotation
+     */
     setAngle(angle) {
         this.angle = angle;
         const { x, y } = this.getOffsetWithAngle();
@@ -125,6 +137,9 @@ class Circle extends sat_1.Circle {
         this.offset.y = y;
         return this;
     }
+    /**
+     * set offset from center
+     */
     setOffset(offset) {
         this.offsetCopy.x = offset.x;
         this.offsetCopy.y = offset.y;
@@ -139,6 +154,9 @@ class Circle extends sat_1.Circle {
     center() {
         return;
     }
+    /**
+     * internal for getting offset with applied angle
+     */
     getOffsetWithAngle() {
         if (!this.angle) {
             return this.offsetCopy;

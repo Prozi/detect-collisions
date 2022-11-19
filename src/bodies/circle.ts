@@ -75,8 +75,14 @@ export class Circle extends SATCircle implements BBox, Collider {
    */
   system?: System;
 
+  /**
+   * circle type
+   */
   readonly type: Types.Circle = Types.Circle;
 
+  /**
+   * saved initial radius - internal
+   */
   protected readonly radiusBackup: number;
 
   /**
@@ -94,6 +100,9 @@ export class Circle extends SATCircle implements BBox, Collider {
     this.radiusBackup = radius;
   }
 
+  /**
+   * get this.pos.x
+   */
   get x(): number {
     return this.pos.x;
   }
@@ -106,6 +115,9 @@ export class Circle extends SATCircle implements BBox, Collider {
     this.system?.insert(this);
   }
 
+  /**
+   * get this.pos.y
+   */
   get y(): number {
     return this.pos.y;
   }
@@ -184,6 +196,9 @@ export class Circle extends SATCircle implements BBox, Collider {
     drawCircle(this, context);
   }
 
+  /**
+   * set rotation
+   */
   setAngle(angle: number): Circle {
     this.angle = angle;
 
@@ -194,6 +209,9 @@ export class Circle extends SATCircle implements BBox, Collider {
     return this;
   }
 
+  /**
+   * set offset from center
+   */
   setOffset(offset: Vector): Circle {
     this.offsetCopy.x = offset.x;
     this.offsetCopy.y = offset.y;
@@ -212,6 +230,9 @@ export class Circle extends SATCircle implements BBox, Collider {
     return;
   }
 
+  /**
+   * internal for getting offset with applied angle
+   */
   protected getOffsetWithAngle(): Vector {
     if (!this.angle) {
       return this.offsetCopy;

@@ -23,8 +23,14 @@ import { raycast } from "../utils/raycast-utils";
  * collision system
  */
 export class System extends BaseSystem {
+  /**
+   * the last collision result
+   */
   response: Response = new Response();
 
+  /**
+   * reusable inner state - for non convex polygons collisions
+   */
   protected state: CollisionState = {
     collides: false,
     aInB: false,
@@ -209,6 +215,9 @@ export class System extends BaseSystem {
     return raycast(this, start, end, allowCollider);
   }
 
+  /**
+   * update inner state function - for non convex polygons collisions
+   */
   protected test(sat: TestFunction, body: Body, wall: Body): void {
     const collides = sat(body, wall, this.response);
 

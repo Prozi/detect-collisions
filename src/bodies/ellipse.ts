@@ -6,6 +6,9 @@ import { Polygon } from "./polygon";
  * collider - ellipse
  */
 export class Ellipse extends Polygon {
+  /**
+   * ellipse type
+   */
   readonly type: Types.Ellipse = Types.Ellipse;
 
   /**
@@ -18,6 +21,9 @@ export class Ellipse extends Polygon {
    */
   isConvex = true;
 
+  /**
+   * inner initial params save
+   */
   protected _radiusX: number;
   protected _radiusY: number;
   protected _step: number;

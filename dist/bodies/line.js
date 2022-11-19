@@ -16,7 +16,13 @@ class Line extends polygon_1.Polygon {
             { x: 0, y: 0 },
             { x: end.x - start.x, y: end.y - start.y },
         ], options);
+        /**
+         * line type
+         */
         this.type = model_1.Types.Line;
+        /**
+         * line is convex
+         */
         this.isConvex = true;
         if (this.calcPoints.length === 1 || !end) {
             console.error({ start, end });

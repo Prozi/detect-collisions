@@ -13,6 +13,9 @@ class Point extends box_1.Box {
      */
     constructor(position, options) {
         super((0, utils_1.ensureVectorPoint)(position), 0.001, 0.001, options);
+        /**
+         * point type
+         */
         this.type = model_1.Types.Point;
     }
 }

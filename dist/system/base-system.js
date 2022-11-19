@@ -13,9 +13,15 @@ const draw_utils_1 = require("../utils/draw-utils");
  * very base collision system
  */
 class BaseSystem extends model_1.RBush {
+    /**
+     * draw bodies of system on context
+     */
     draw(context) {
         (0, draw_utils_1.draw)(this, context);
     }
+    /**
+     * draw bounding volume hierarchy of system on context
+     */
     drawBVH(context) {
         (0, draw_utils_1.drawBVH)(this, context);
     }
