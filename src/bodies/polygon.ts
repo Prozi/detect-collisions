@@ -45,7 +45,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   isConvex!: boolean;
 
   /**
-   * optimization for above
+   * optimization for convex polygons
    */
   convexPolygons: SATPolygon[] = [];
 
@@ -128,14 +128,14 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   }
 
   /**
-   * allow exact getting of scale x
+   * allow exact getting of scale x - use setScale(x, y) to set
    */
   get scaleX(): number {
     return this.scaleVector.x;
   }
 
   /**
-   * allow exact getting of scale y
+   * allow exact getting of scale y - use setScale(x, y) to set
    */
   get scaleY(): number {
     return this.scaleVector.y;

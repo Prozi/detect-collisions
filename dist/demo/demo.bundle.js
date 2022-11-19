@@ -466,7 +466,7 @@ class Polygon extends sat_1.Polygon {
     constructor(position, points, options) {
         super((0, utils_1.ensureVectorPoint)(position), (0, utils_1.ensurePolygonPoints)(points));
         /**
-         * optimization for above
+         * optimization for convex polygons
          */
         this.convexPolygons = [];
         /**
@@ -503,13 +503,13 @@ class Polygon extends sat_1.Polygon {
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     /**
-     * allow exact getting of scale x
+     * allow exact getting of scale x - use setScale(x, y) to set
      */
     get scaleX() {
         return this.scaleVector.x;
     }
     /**
-     * allow exact getting of scale y
+     * allow exact getting of scale y - use setScale(x, y) to set
      */
     get scaleY() {
         return this.scaleVector.y;

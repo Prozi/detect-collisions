@@ -22,7 +22,7 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      */
     isConvex: boolean;
     /**
-     * optimization for above
+     * optimization for convex polygons
      */
     convexPolygons: SATPolygon[];
     /**
@@ -63,11 +63,11 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      */
     set y(y: number);
     /**
-     * allow exact getting of scale x
+     * allow exact getting of scale x - use setScale(x, y) to set
      */
     get scaleX(): number;
     /**
-     * allow exact getting of scale y
+     * allow exact getting of scale y - use setScale(x, y) to set
      */
     get scaleY(): number;
     /**
