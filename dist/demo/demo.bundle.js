@@ -466,10 +466,6 @@ class Polygon extends sat_1.Polygon {
     constructor(position, points, options) {
         super((0, utils_1.ensureVectorPoint)(position), (0, utils_1.ensurePolygonPoints)(points));
         /**
-         * optimization for convex polygons
-         */
-        this.convexPolygons = [];
-        /**
          * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
          */
         this.padding = 0;
@@ -604,13 +600,18 @@ class Polygon extends sat_1.Polygon {
         this.isCentered = true;
     }
     getConvex() {
-        // if not line
-        return this.points.length > 2
-            ? (0, poly_decomp_1.quickDecomp)(this.calcPoints.map(utils_1.mapVectorToArray))
-            : // for line and point
-                [];
+        if ((this.type && this.type !== model_1.Types.Polygon) || this.points.length <= 2) {
+            return [];
+        }
+        return (0, poly_decomp_1.quickDecomp)(this.calcPoints.map(utils_1.mapVectorToArray));
     }
     updateConvexPolygons(convex = this.getConvex()) {
+        if (this.isConvex) {
+            return;
+        }
+        if (!this.convexPolygons) {
+            this.convexPolygons = [];
+        }
         convex.forEach((points, index) => {
             // lazy create
             if (!this.convexPolygons[index]) {
@@ -631,6 +632,7 @@ class Polygon extends sat_1.Polygon {
         const convex = this.getConvex();
         // everything with empty array or one element array
         this.isConvex = convex.length <= 1;
+        this.updateConvexPolygons(convex);
     }
 }
 exports.Polygon = Polygon;
@@ -1419,7 +1421,6 @@ function ensureConvex(body) {
     if (body.isConvex || body.type !== model_1.Types.Polygon) {
         return [body];
     }
-    body.updateConvexPolygons();
     return body.convexPolygons;
 }
 exports.ensureConvex = ensureConvex;

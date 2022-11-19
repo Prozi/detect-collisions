@@ -7,7 +7,7 @@ const expectToBeNear = (value, check, tolerance = 1) => {
 
 describe("GIVEN System", () => {
   it("THEN you can change position within tree", () => {
-    const { System } = require("../..");
+    const { System } = require("../../src");
 
     const physics = new System();
     const circle = physics.createCircle({ x: 0, y: 0 }, 10);
@@ -25,7 +25,7 @@ describe("GIVEN System", () => {
 
   describe("WHEN raycast is called", () => {
     it("THEN works correctly on Ellipse", () => {
-      const { System } = require("../..");
+      const { System } = require("../../src");
 
       const physics = new System();
 
@@ -38,7 +38,7 @@ describe("GIVEN System", () => {
     });
 
     it("THEN works correctly on Box", () => {
-      const { System } = require("../..");
+      const { System } = require("../../src");
 
       const physics = new System();
 
@@ -50,7 +50,7 @@ describe("GIVEN System", () => {
     });
 
     it("THEN works correctly on Polygon", () => {
-      const { System } = require("../..");
+      const { System } = require("../../src");
 
       const physics = new System();
 
@@ -68,7 +68,7 @@ describe("GIVEN System", () => {
     });
 
     it("THEN works correctly on Line", () => {
-      const { System } = require("../..");
+      const { System } = require("../../src");
 
       const physics = new System();
 
@@ -81,7 +81,7 @@ describe("GIVEN System", () => {
     });
 
     it("THEN works correctly on Point", () => {
-      const { System } = require("../..");
+      const { System } = require("../../src");
 
       const physics = new System();
 
@@ -94,7 +94,7 @@ describe("GIVEN System", () => {
     });
 
     it("THEN works correctly on Circle", () => {
-      const { System } = require("../..");
+      const { System } = require("../../src");
 
       const physics = new System();
 
@@ -107,7 +107,7 @@ describe("GIVEN System", () => {
     });
 
     it("THEN circle inside concave polygon have correct aInB, bInA", () => {
-      const { System } = require("../..");
+      const { System } = require("../../src");
       const physics = new System();
       const concave = physics.createPolygon({ x: 0, y: 0 }, [
         { x: -11.25, y: -6.76 },
@@ -132,7 +132,7 @@ describe("GIVEN System", () => {
     });
 
     it("THEN concave polygon inside circle have correct aInB, bInA", () => {
-      const { System } = require("../..");
+      const { System } = require("../../src");
       const physics = new System();
       const concave = physics.createPolygon({ x: 0, y: 0 }, [
         { x: -11.25, y: -6.76 },
@@ -157,7 +157,7 @@ describe("GIVEN System", () => {
     });
 
     it("THEN concave polygon inside concave polygon have correct aInB, bInA", () => {
-      const { System } = require("../..");
+      const { System } = require("../../src");
       const physics = new System();
       const concave = physics.createPolygon({ x: 0, y: 0 }, [
         { x: -11.25, y: -6.76 },

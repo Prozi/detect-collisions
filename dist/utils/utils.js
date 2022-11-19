@@ -128,7 +128,6 @@ function ensureConvex(body) {
     if (body.isConvex || body.type !== model_1.Types.Polygon) {
         return [body];
     }
-    body.updateConvexPolygons();
     return body.convexPolygons;
 }
 exports.ensureConvex = ensureConvex;

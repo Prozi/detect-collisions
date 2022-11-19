@@ -47,7 +47,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   /**
    * optimization for convex polygons
    */
-  convexPolygons: SATPolygon[] = [];
+  convexPolygons!: SATPolygon[];
 
   /**
    * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
@@ -252,14 +252,22 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   }
 
   getConvex(): number[][][] {
-    // if not line
-    return this.points.length > 2
-      ? quickDecomp(this.calcPoints.map(mapVectorToArray))
-      : // for line and point
-        [];
+    if ((this.type && this.type !== Types.Polygon) || this.points.length <= 2) {
+      return [];
+    }
+
+    return quickDecomp(this.calcPoints.map(mapVectorToArray));
   }
 
   updateConvexPolygons(convex: number[][][] = this.getConvex()): void {
+    if (this.isConvex) {
+      return;
+    }
+
+    if (!this.convexPolygons) {
+      this.convexPolygons = [];
+    }
+
     convex.forEach((points: number[][], index: number) => {
       // lazy create
       if (!this.convexPolygons[index]) {
@@ -285,5 +293,6 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     const convex = this.getConvex();
     // everything with empty array or one element array
     this.isConvex = convex.length <= 1;
+    this.updateConvexPolygons(convex);
   }
 }

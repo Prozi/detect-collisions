@@ -160,8 +160,6 @@ export function ensureConvex(body: Body): Body[] {
     return [body];
   }
 
-  body.updateConvexPolygons();
-
   return body.convexPolygons as Body[];
 }
 

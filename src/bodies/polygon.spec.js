@@ -2,7 +2,7 @@ require("pixi-shim");
 
 describe("GIVEN Polygon", () => {
   it("THEN you need at least one point to create", () => {
-    const { Polygon } = require("../../dist/");
+    const { Polygon } = require("../../src");
 
     const nullParams = () => new Polygon({});
     const zeroParams = () => new Polygon({}, []);
@@ -14,7 +14,7 @@ describe("GIVEN Polygon", () => {
   });
 
   it("THEN you can set position by setting x & y", () => {
-    const { Polygon } = require("../../dist/");
+    const { Polygon } = require("../../src");
 
     const poly = new Polygon({}, [{}]);
 
@@ -26,7 +26,7 @@ describe("GIVEN Polygon", () => {
   });
 
   it("THEN you can set position by setPosition()", () => {
-    const { Polygon } = require("../../dist/");
+    const { Polygon } = require("../../src");
 
     const poly = new Polygon({}, [{}]);
 
@@ -38,7 +38,7 @@ describe("GIVEN Polygon", () => {
 
   describe("AND you set options", () => {
     it("THEN the parameters are set", () => {
-      const { System } = require("../../dist/");
+      const { System } = require("../../src");
       const physics = new System();
       const body = physics.createPolygon({}, [{}], {
         isStatic: true,
@@ -75,7 +75,7 @@ describe("GIVEN Polygon", () => {
 
   describe("AND has clockwise points", () => {
     it("THEN it collides properly", () => {
-      const { System } = require("../../dist/");
+      const { System } = require("../../src");
       const physics = new System();
       const circle = physics.createCircle(
         {
@@ -99,7 +99,7 @@ describe("GIVEN Polygon", () => {
 
   describe("AND has counter-clockwise points", () => {
     it("THEN it collides properly", () => {
-      const { System } = require("../../dist/");
+      const { System } = require("../../src");
       const physics = new System();
       const circle = physics.createCircle(
         {
@@ -123,7 +123,7 @@ describe("GIVEN Polygon", () => {
 
   describe("AND is concave (not convex) polygon", () => {
     it("THEN it collides properly", () => {
-      const { System } = require("../../dist/");
+      const { System } = require("../../src");
       const physics = new System();
       const concave = physics.createPolygon({ x: 0, y: 0 }, [
         { x: 190, y: 147 },
@@ -147,7 +147,7 @@ describe("GIVEN Polygon", () => {
     });
 
     it("THEN it collides properly", () => {
-      const { System } = require("../../dist/");
+      const { System } = require("../../src");
       const physics = new System();
       const concave = physics.createPolygon({ x: 0, y: 0 }, [
         { x: -11.25, y: -6.76 },
@@ -173,7 +173,7 @@ describe("GIVEN Polygon", () => {
 
   describe("AND you scale it", () => {
     it("THEN it rescales properly", () => {
-      const { System } = require("../../dist/");
+      const { System } = require("../../src");
       const physics = new System();
       const polygon = physics.createPolygon({ x: 0, y: 0 }, [
         { x: -10, y: -10 },
@@ -198,7 +198,7 @@ describe("GIVEN Polygon", () => {
     });
 
     it("THEN it rescales properly with rotation", () => {
-      const { System } = require("../../dist/");
+      const { System } = require("../../src");
       const physics = new System();
       const polygon = physics.createPolygon({ x: 0, y: 0 }, [
         { x: -10, y: -10 },
@@ -219,7 +219,7 @@ describe("GIVEN Polygon", () => {
     });
 
     it("THEN it rescales properly with angle", () => {
-      const { System } = require("../../dist/");
+      const { System } = require("../../src");
       const physics = new System();
       const polygon = physics.createPolygon({ x: 0, y: 0 }, [
         { x: -10, y: -10 },
@@ -240,7 +240,7 @@ describe("GIVEN Polygon", () => {
     });
 
     it("THEN you can get and set scale, scaleX, scaleY", () => {
-      const { System } = require("../../dist/");
+      const { System } = require("../../src");
       const physics = new System();
       const polygon = physics.createPolygon({ x: 0, y: 0 }, [
         { x: -10, y: -10 },

@@ -1,4 +1,4 @@
-const { Line, Circle, getBounceDirection } = require("../..");
+const { Line, Circle, getBounceDirection } = require("../../src");
 const {
   intersectLineLine,
   intersectLineCircle,
