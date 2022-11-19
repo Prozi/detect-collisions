@@ -1,29 +1,37 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BaseSystem = void 0;
-const box_1 = require("../bodies/box");
-const circle_1 = require("../bodies/circle");
-const ellipse_1 = require("../bodies/ellipse");
-const line_1 = require("../bodies/line");
-const point_1 = require("../bodies/point");
-const polygon_1 = require("../bodies/polygon");
-const model_1 = require("../model");
-const draw_utils_1 = require("../utils/draw-utils");
+const box_1 = require("./bodies/box");
+const circle_1 = require("./bodies/circle");
+const ellipse_1 = require("./bodies/ellipse");
+const line_1 = require("./bodies/line");
+const point_1 = require("./bodies/point");
+const polygon_1 = require("./bodies/polygon");
+const model_1 = require("./model");
+const utils_1 = require("./utils");
 /**
  * very base collision system
  */
 class BaseSystem extends model_1.RBush {
     /**
-     * draw bodies of system on context
+     * draw bodies
      */
     draw(context) {
-        (0, draw_utils_1.draw)(this, context);
+        this.all().forEach((body) => {
+            body.draw(context);
+        });
     }
     /**
-     * draw bounding volume hierarchy of system on context
+     * draw hierarchy
      */
     drawBVH(context) {
-        (0, draw_utils_1.drawBVH)(this, context);
+        [...this.all(), ...this.data.children].forEach(({ minX, maxX, minY, maxY }) => {
+            polygon_1.Polygon.prototype.draw.call({
+                x: minX,
+                y: minY,
+                calcPoints: (0, utils_1.createBox)(maxX - minX, maxY - minY),
+            }, context);
+        });
     }
     /**
      * create point at position with options and add to system

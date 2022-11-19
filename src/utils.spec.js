@@ -1,8 +1,10 @@
-const { Line, Circle, getBounceDirection } = require("../../src");
 const {
+  Line,
+  Circle,
   intersectLineLine,
   intersectLineCircle,
-} = require("../utils/raycast-utils");
+  getBounceDirection,
+} = require("../");
 
 describe("GIVEN Utils", () => {
   it("THEN intersectLineLine should work", () => {

@@ -1,9 +1,9 @@
-import { Box } from "../bodies/box";
-import { Circle } from "../bodies/circle";
-import { Ellipse } from "../bodies/ellipse";
-import { Line } from "../bodies/line";
-import { Point } from "../bodies/point";
-import { Polygon } from "../bodies/polygon";
+import { Box } from "./bodies/box";
+import { Circle } from "./bodies/circle";
+import { Ellipse } from "./bodies/ellipse";
+import { Line } from "./bodies/line";
+import { Point } from "./bodies/point";
+import { Polygon } from "./bodies/polygon";
 import {
   Body,
   BodyOptions,
@@ -11,8 +11,8 @@ import {
   PotentialVector,
   RBush,
   Vector,
-} from "../model";
-import { draw, drawBVH } from "../utils/draw-utils";
+} from "./model";
+import { createBox } from "./utils";
 
 /**
  * very base collision system
@@ -21,17 +21,30 @@ export class BaseSystem extends RBush<Body> implements Data {
   data!: { children: Body[] };
 
   /**
-   * draw bodies of system on context
+   * draw bodies
    */
   draw(context: CanvasRenderingContext2D): void {
-    draw(this, context);
+    this.all().forEach((body: Body) => {
+      body.draw(context);
+    });
   }
 
   /**
-   * draw bounding volume hierarchy of system on context
+   * draw hierarchy
    */
   drawBVH(context: CanvasRenderingContext2D): void {
-    drawBVH(this, context);
+    [...this.all(), ...this.data.children].forEach(
+      ({ minX, maxX, minY, maxY }: Body) => {
+        Polygon.prototype.draw.call(
+          {
+            x: minX,
+            y: minY,
+            calcPoints: createBox(maxX - minX, maxY - minY),
+          },
+          context
+        );
+      }
+    );
   }
 
   /**

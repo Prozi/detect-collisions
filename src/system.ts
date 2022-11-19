@@ -1,6 +1,7 @@
 import RBush from "rbush";
 
 import { BaseSystem } from "./base-system";
+import { Line } from "./bodies/line";
 import {
   Body,
   CollisionState,
@@ -8,16 +9,19 @@ import {
   Response,
   SATVector,
   TestFunction,
+  Types,
   Vector,
-} from "../model";
+} from "./model";
 import {
+  distance,
+  intersectLineCircle,
+  intersectLinePolygon,
   checkAInB,
   ensureConvex,
   intersectAABB,
   bodyMoved,
   getSATFunction,
-} from "../utils";
-import { raycast } from "../utils/raycast-utils";
+} from "./utils";
 
 /**
  * collision system
@@ -212,7 +216,34 @@ export class System extends BaseSystem {
     end: Vector,
     allowCollider: (testCollider: Body) => boolean = () => true
   ): RaycastResult {
-    return raycast(this, start, end, allowCollider);
+    let minDistance = Infinity;
+    let result: RaycastResult = null;
+
+    const ray: Line = this.createLine(start, end);
+    const colliders: Body[] = this.getPotentials(ray).filter(
+      (potential: Body) =>
+        allowCollider(potential) && this.checkCollision(ray, potential)
+    );
+
+    this.remove(ray);
+
+    colliders.forEach((collider: Body) => {
+      const points: Vector[] =
+        collider.type === Types.Circle
+          ? intersectLineCircle(ray, collider)
+          : intersectLinePolygon(ray, collider);
+
+      points.forEach((point: Vector) => {
+        const pointDistance: number = distance(start, point);
+
+        if (pointDistance < minDistance) {
+          minDistance = pointDistance;
+          result = { point, collider };
+        }
+      });
+    });
+
+    return result;
   }
 
   /**

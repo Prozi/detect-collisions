@@ -5,7 +5,6 @@ const poly_decomp_1 = require("poly-decomp");
 const sat_1 = require("sat");
 const model_1 = require("../model");
 const utils_1 = require("../utils");
-const draw_utils_1 = require("../utils/draw-utils");
 /**
  * collider - polygon
  */
@@ -109,7 +108,31 @@ class Polygon extends sat_1.Polygon {
      * Draws collider on a CanvasRenderingContext2D's current path
      */
     draw(context) {
-        (0, draw_utils_1.drawPolygon)(this, context);
+        const points = [...this.calcPoints, this.calcPoints[0]];
+        points.forEach((point, index) => {
+            const toX = this.x + point.x;
+            const toY = this.y + point.y;
+            const prev = this.calcPoints[index - 1] ||
+                this.calcPoints[this.calcPoints.length - 1];
+            if (!index) {
+                if (this.calcPoints.length === 1) {
+                    context.arc(toX, toY, 1, 0, Math.PI * 2);
+                }
+                else {
+                    context.moveTo(toX, toY);
+                }
+            }
+            else if (this.calcPoints.length > 1) {
+                if (this.isTrigger) {
+                    const fromX = this.x + prev.x;
+                    const fromY = this.y + prev.y;
+                    (0, utils_1.dashLineTo)(context, fromX, fromY, toX, toY);
+                }
+                else {
+                    context.lineTo(toX, toY);
+                }
+            }
+        });
     }
     getCentroidWithoutRotation() {
         // reset angle for get centroid

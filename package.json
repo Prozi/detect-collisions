@@ -23,14 +23,12 @@
     "lint": "tslint --project tsconfig.json 'src/**/*.ts' --fix",
     "test-and-build": "npm run test && npm run format && npm run build",
     "build-for-github": "npm run build:demo && npm run build:docs",
-    "precommit": "npm run lint && npm run test-and-build && npm run build-for-github"
+    "precommit": "npm run lint;npm run test-and-build && npm run build-for-github"
   },
   "repository": "git://github.com/Prozi/detect-collisions.git",
   "files": [
     "dist/*.*",
-    "dist/bodies/*.*",
-    "dist/system/*.*",
-    "dist/utils/*.*"
+    "dist/bodies/*.*"
   ],
   "keywords": [
     "javascript",

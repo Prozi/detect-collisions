@@ -18,7 +18,7 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      */
     bbox: BBox;
     /**
-     * is it a convex polygon as opposed to a hollow inside (concave) polygon
+     * is it a convex polgyon as opposed to a hollow inside (concave) polygon
      */
     isConvex: boolean;
     /**
@@ -103,7 +103,7 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      */
     center(): void;
     getConvex(): number[][][];
-    updateConvexPolygons(convex?: number[][][]): void;
+    protected updateConvexPolygons(convex?: number[][][]): void;
     /**
      * after points update set is convex
      */
