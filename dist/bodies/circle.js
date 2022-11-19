@@ -100,12 +100,14 @@ class Circle extends sat_1.Circle {
         this.pos.x = x;
         this.pos.y = y;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
+        return this;
     }
     /**
      * update scale
      */
     setScale(scale, _ignoredParameter) {
         this.r = this.radiusBackup * scale;
+        return this;
     }
     /**
      * get body bounding box, without padding

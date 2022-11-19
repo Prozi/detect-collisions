@@ -1,5 +1,5 @@
 import { BBox, default as RBush } from "rbush";
-import { Response, Vector as SATVector } from "sat";
+import { Response, Vector as SATVector, Polygon as SATPolygon } from "sat";
 import { Box } from "./bodies/box";
 import { Circle } from "./bodies/circle";
 import { Ellipse } from "./bodies/ellipse";
@@ -114,19 +114,31 @@ export interface Collider {
      */
     get scaleY(): number;
     /**
+     * update position
+     */
+    setPosition(x: number, y: number): Body;
+    /**
      * for setting scale
      */
-    setScale(x: number, y?: number): void;
+    setScale(x: number, y?: number): Body | SATPolygon;
     /**
      * for setting angle
      */
-    setAngle(angle: number): void;
+    setAngle(angle: number): Body | SATPolygon;
+    /**
+     * for setting offset from center
+     */
+    setOffset(offset: Vector): Body | SATPolygon;
     /**
      * draw the collider
      */
     draw(context: CanvasRenderingContext2D): void;
     /**
-     * should be called only by System.insert
+     * center the body anchor
+     */
+    center(): void;
+    /**
+     * return bounding box without padding
      */
     getAABBAsBBox(): BBox;
 }

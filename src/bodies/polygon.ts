@@ -110,7 +110,6 @@ export class Polygon extends SATPolygon implements BBox, Collider {
    */
   set x(x: number) {
     this.pos.x = x;
-
     this.system?.insert(this);
   }
 
@@ -123,7 +122,6 @@ export class Polygon extends SATPolygon implements BBox, Collider {
    */
   set y(y: number) {
     this.pos.y = y;
-
     this.system?.insert(this);
   }
 
@@ -158,17 +156,18 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   /**
    * update position
    */
-  setPosition(x: number, y: number): void {
+  setPosition(x: number, y: number): Polygon {
     this.pos.x = x;
     this.pos.y = y;
-
     this.system?.insert(this);
+
+    return this;
   }
 
   /**
    * update scale
    */
-  setScale(x: number, y: number = x): void {
+  setScale(x: number, y: number = x): Polygon {
     this.scaleVector.x = x;
     this.scaleVector.y = y;
 
@@ -178,6 +177,8 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     });
 
     super.setPoints(this.points);
+
+    return this;
   }
 
   /**
@@ -227,12 +228,12 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   }
 
   getCentroidWithoutRotation(): Vector {
-    // reset angle for get centroid
+    // keep angle copy
     const angle = this.angle;
+    // reset angle for get centroid
     this.setAngle(0);
-
+    // get centroid
     const centroid: Vector = this.getCentroid();
-
     // revert angle change
     this.setAngle(angle);
 
@@ -262,7 +263,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   }
 
   /**
-   * reCenters the box anchor
+   * center the box anchor
    */
   center(): void {
     if (this.isCentered) {
@@ -276,7 +277,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     this.isCentered = true;
   }
 
-  getConvex(): number[][][] {
+  protected getConvex(): number[][][] {
     if ((this.type && this.type !== Types.Polygon) || this.points.length <= 3) {
       return [];
     }

@@ -160,17 +160,21 @@ export class Circle extends SATCircle implements BBox, Collider {
   /**
    * update position
    */
-  setPosition(x: number, y: number): void {
+  setPosition(x: number, y: number): Circle {
     this.pos.x = x;
     this.pos.y = y;
     this.system?.insert(this);
+
+    return this;
   }
 
   /**
    * update scale
    */
-  setScale(scale: number, _ignoredParameter?: number): void {
+  setScale(scale: number, _ignoredParameter?: number): Circle {
     this.r = this.radiusBackup * scale;
+
+    return this;
   }
 
   /**

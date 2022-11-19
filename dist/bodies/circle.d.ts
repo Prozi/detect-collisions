@@ -97,11 +97,11 @@ export declare class Circle extends SATCircle implements BBox, Collider {
     /**
      * update position
      */
-    setPosition(x: number, y: number): void;
+    setPosition(x: number, y: number): Circle;
     /**
      * update scale
      */
-    setScale(scale: number, _ignoredParameter?: number): void;
+    setScale(scale: number, _ignoredParameter?: number): Circle;
     /**
      * get body bounding box, without padding
      */

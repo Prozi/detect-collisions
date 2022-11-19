@@ -271,12 +271,14 @@ class Circle extends sat_1.Circle {
         this.pos.x = x;
         this.pos.y = y;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
+        return this;
     }
     /**
      * update scale
      */
     setScale(scale, _ignoredParameter) {
         this.r = this.radiusBackup * scale;
+        return this;
     }
     /**
      * get body bounding box, without padding
@@ -641,6 +643,7 @@ class Polygon extends sat_1.Polygon {
         this.pos.x = x;
         this.pos.y = y;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
+        return this;
     }
     /**
      * update scale
@@ -653,6 +656,7 @@ class Polygon extends sat_1.Polygon {
             point.y = this.pointsBackup[i].y * y;
         });
         super.setPoints(this.points);
+        return this;
     }
     /**
      * get body bounding box, without padding
@@ -697,9 +701,11 @@ class Polygon extends sat_1.Polygon {
         });
     }
     getCentroidWithoutRotation() {
-        // reset angle for get centroid
+        // keep angle copy
         const angle = this.angle;
+        // reset angle for get centroid
         this.setAngle(0);
+        // get centroid
         const centroid = this.getCentroid();
         // revert angle change
         this.setAngle(angle);
@@ -722,7 +728,7 @@ class Polygon extends sat_1.Polygon {
         return this;
     }
     /**
-     * reCenters the box anchor
+     * center the box anchor
      */
     center() {
         if (this.isCentered) {
