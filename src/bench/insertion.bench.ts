@@ -1,17 +1,17 @@
+/* tslint:disable-next-line:no-implicit-dependencies */
 import { Bench } from "tinybench";
 import { Circle } from "../bodies/circle";
 import { Polygon } from "../bodies/polygon";
 import { SATVector } from "../model";
 import { System } from "../system";
 
-const InsertionBenchmark = new Bench({});
-
-let nonoverlappingBodies: Circle[] = [];
-let nonoverlappingTriangles: Polygon[] = [];
-let nonoverlappingRectangles: Polygon[] = [];
-let overlappingBodies: Circle[] = [];
-let overlappingTriangles: Polygon[] = [];
-let overlappingRectangles: Polygon[] = [];
+const insertionBenchmark = new Bench({});
+const nonoverlappingBodies: Circle[] = [];
+const nonoverlappingTriangles: Polygon[] = [];
+const nonoverlappingRectangles: Polygon[] = [];
+const overlappingBodies: Circle[] = [];
+const overlappingTriangles: Polygon[] = [];
+const overlappingRectangles: Polygon[] = [];
 
 const BODY_COUNT = 1000;
 
@@ -50,13 +50,14 @@ for (let ndx = 0; ndx < BODY_COUNT; ndx++) {
   );
 }
 
-InsertionBenchmark.add("non overlapping circles", () => {
-  const uut = new System(BODY_COUNT);
+insertionBenchmark
+  .add("non overlapping circles", () => {
+    const uut = new System(BODY_COUNT);
 
-  for (let ndx = 0; ndx < BODY_COUNT; ndx++) {
-    uut.insert(nonoverlappingBodies[ndx]);
-  }
-})
+    for (let ndx = 0; ndx < BODY_COUNT; ndx++) {
+      uut.insert(nonoverlappingBodies[ndx]);
+    }
+  })
   .add("overlapping circles", () => {
     const uut = new System(BODY_COUNT);
 
@@ -93,17 +94,22 @@ InsertionBenchmark.add("non overlapping circles", () => {
     }
   });
 
-(async () => {
-  await InsertionBenchmark.run();
-
-  console.table(
-    InsertionBenchmark.tasks.map(({ name, result }) => ({
-      "Task Name": name,
-      "Average Time (s)": parseFloat((result?.mean ?? 0 * 1000).toFixed(3)),
-      "Standard Deviation (s)": parseFloat((result?.sd ?? 0 * 1000).toFixed(3)),
-      hz: parseFloat((result?.hz ?? 0).toFixed(3)),
-      "p99 (s)": parseFloat((result?.p99 ?? 0 * 1000).toFixed(3)),
-      "p995 (s)": parseFloat((result?.p995 ?? 0 * 1000).toFixed(3)),
-    }))
-  );
-})();
+insertionBenchmark
+  .run()
+  .then(() => {
+    console.table(
+      insertionBenchmark.tasks.map(({ name, result }) => ({
+        "Task Name": name,
+        "Average Time (s)": parseFloat((result?.mean ?? 0 * 1000).toFixed(3)),
+        "Standard Deviation (s)": parseFloat(
+          (result?.sd ?? 0 * 1000).toFixed(3)
+        ),
+        hz: parseFloat((result?.hz ?? 0).toFixed(3)),
+        "p99 (s)": parseFloat((result?.p99 ?? 0 * 1000).toFixed(3)),
+        "p995 (s)": parseFloat((result?.p995 ?? 0 * 1000).toFixed(3)),
+      }))
+    );
+  })
+  .catch((err) => {
+    console.warn(err.message || err);
+  });
