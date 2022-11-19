@@ -329,17 +329,20 @@ only using Detect-Collisions and with different _N_ amounts of dynamic, moving b
 typical output:
 
 ```bash
-[
-  { value: 309, name: 'Total Frames' },
-  { value: 123, name: 'FPS / 1000 items' },
-  { value: 53, name: 'FPS / 2000 items' },
-  { value: 34, name: 'FPS / 3000 items' },
-  { value: 25, name: 'FPS / 4000 items' },
-  { value: 18, name: 'FPS / 5000 items' },
-  { value: 14, name: 'FPS / 6000 items' },
-  { value: 12, name: 'FPS / 7000 items' },
-  { value: 11, name: 'FPS / 8000 items' },
-  { value: 10, name: 'FPS / 9000 items' },
-  { value: 9, name: 'FPS / 10000 items' }
-]
+┌─────────┬───────┬─────────────────────┐
+│ (index) │ value │        name         │
+├─────────┼───────┼─────────────────────┤
+│    0    │  317  │   'Total Frames'    │
+│    1    │  124  │ 'FPS / 1000 items'  │
+│    2    │  57   │ 'FPS / 2000 items'  │
+│    3    │  34   │ 'FPS / 3000 items'  │
+│    4    │  24   │ 'FPS / 4000 items'  │
+│    5    │  22   │ 'FPS / 5000 items'  │
+│    6    │  15   │ 'FPS / 6000 items'  │
+│    7    │  13   │ 'FPS / 7000 items'  │
+│    8    │  10   │ 'FPS / 8000 items'  │
+│    9    │   9   │ 'FPS / 9000 items'  │
+│   10    │   9   │ 'FPS / 10000 items' │
+└─────────┴───────┴─────────────────────┘
+Done in 14.58s.
 ```
