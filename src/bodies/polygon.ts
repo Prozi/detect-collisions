@@ -4,7 +4,7 @@ import { Polygon as SATPolygon } from "sat";
 
 import {
   BodyOptions,
-  IBody,
+  Collider,
   GetAABBAsBox,
   PotentialVector,
   SATVector,
@@ -25,13 +25,25 @@ import {
 /**
  * collider - polygon
  */
-export class Polygon extends SATPolygon implements BBox, IBody {
+export class Polygon extends SATPolygon implements BBox, Collider {
   /**
-   * bbox parameters
+   * minimum x bound of body
    */
   minX!: number;
+
+  /**
+   * maximum x bound of body
+   */
   maxX!: number;
+
+  /**
+   * minimum y bound of body
+   */
   minY!: number;
+
+  /**
+   * maximum y bound of body
+   */
   maxY!: number;
 
   /**
@@ -74,6 +86,9 @@ export class Polygon extends SATPolygon implements BBox, IBody {
    */
   system?: System;
 
+  /**
+   * type of body
+   */
   readonly type:
     | Types.Polygon
     | Types.Box
@@ -81,7 +96,14 @@ export class Polygon extends SATPolygon implements BBox, IBody {
     | Types.Ellipse
     | Types.Line = Types.Polygon;
 
+  /**
+   * backup of points used for scaling
+   */
   protected pointsBackup!: Vector[];
+
+  /**
+   * scale vector represents {x, y} scale of body
+   */
   protected readonly scaleVector: Vector = { x: 1, y: 1 };
 
   /**
@@ -223,6 +245,9 @@ export class Polygon extends SATPolygon implements BBox, IBody {
     });
   }
 
+  /**
+   * get body centroid without applied angle
+   */
   getCentroidWithoutRotation(): Vector {
     // keep angle copy
     const angle = this.angle;
@@ -236,6 +261,9 @@ export class Polygon extends SATPolygon implements BBox, IBody {
     return centroid;
   }
 
+  /**
+   * sets polygon points to new array of vectors
+   */
   setPoints(points: SATVector[]): Polygon {
     super.setPoints(points);
     this.updateIsConvex();
@@ -244,6 +272,9 @@ export class Polygon extends SATPolygon implements BBox, IBody {
     return this;
   }
 
+  /**
+   * translates polygon points in x, y direction
+   */
   translate(x: number, y: number): Polygon {
     super.translate(x, y);
     this.pointsBackup = clonePointsArray(this.points);
@@ -251,6 +282,9 @@ export class Polygon extends SATPolygon implements BBox, IBody {
     return this;
   }
 
+  /**
+   * rotates polygon points by angle
+   */
   rotate(angle: number): Polygon {
     super.rotate(angle);
     this.pointsBackup = clonePointsArray(this.points);
@@ -273,6 +307,9 @@ export class Polygon extends SATPolygon implements BBox, IBody {
     this.isCentered = true;
   }
 
+  /**
+   * returns body split into convex polygons, or empty array for convex bodies
+   */
   protected getConvex(): number[][][] {
     if ((this.type && this.type !== Types.Polygon) || this.points.length <= 3) {
       return [];
@@ -281,6 +318,9 @@ export class Polygon extends SATPolygon implements BBox, IBody {
     return quickDecomp(this.calcPoints.map(mapVectorToArray));
   }
 
+  /**
+   * updates convex polygons cache in body
+   */
   protected updateConvexPolygons(
     convex: number[][][] = this.getConvex()
   ): void {

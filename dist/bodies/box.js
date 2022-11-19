@@ -13,7 +13,13 @@ class Box extends polygon_1.Polygon {
      */
     constructor(position, width, height, options) {
         super(position, (0, utils_1.createBox)(width, height), options);
+        /**
+         * type of body
+         */
         this.type = model_1.Types.Box;
+        /**
+         * boxes are convex
+         */
         this.isConvex = true;
         this._width = width;
         this._height = height;

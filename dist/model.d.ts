@@ -72,7 +72,7 @@ export type Body = Point | Line | Ellipse | Circle | Box | Polygon;
 /**
  * each body contains those regardless of type
  */
-export interface IBody {
+export interface Collider {
     /**
      * type of collider
      */

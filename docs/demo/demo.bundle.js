@@ -119,7 +119,13 @@ class Box extends polygon_1.Polygon {
      */
     constructor(position, width, height, options) {
         super(position, (0, utils_1.createBox)(width, height), options);
+        /**
+         * type of body
+         */
         this.type = model_1.Types.Box;
+        /**
+         * boxes are convex
+         */
         this.isConvex = true;
         this._width = width;
         this._height = height;
@@ -580,7 +586,13 @@ class Polygon extends sat_1.Polygon {
          * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
          */
         this.padding = 0;
+        /**
+         * type of body
+         */
         this.type = model_1.Types.Polygon;
+        /**
+         * scale vector represents {x, y} scale of body
+         */
         this.scaleVector = { x: 1, y: 1 };
         if (!(points === null || points === void 0 ? void 0 : points.length)) {
             throw new Error("No points in polygon");
@@ -696,6 +708,9 @@ class Polygon extends sat_1.Polygon {
             }
         });
     }
+    /**
+     * get body centroid without applied angle
+     */
     getCentroidWithoutRotation() {
         // keep angle copy
         const angle = this.angle;
@@ -707,17 +722,26 @@ class Polygon extends sat_1.Polygon {
         this.setAngle(angle);
         return centroid;
     }
+    /**
+     * sets polygon points to new array of vectors
+     */
     setPoints(points) {
         super.setPoints(points);
         this.updateIsConvex();
         this.pointsBackup = (0, utils_1.clonePointsArray)(points);
         return this;
     }
+    /**
+     * translates polygon points in x, y direction
+     */
     translate(x, y) {
         super.translate(x, y);
         this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
         return this;
     }
+    /**
+     * rotates polygon points by angle
+     */
     rotate(angle) {
         super.rotate(angle);
         this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
@@ -736,12 +760,18 @@ class Polygon extends sat_1.Polygon {
         this.pos.y += y;
         this.isCentered = true;
     }
+    /**
+     * returns body split into convex polygons, or empty array for convex bodies
+     */
     getConvex() {
         if ((this.type && this.type !== model_1.Types.Polygon) || this.points.length <= 3) {
             return [];
         }
         return (0, poly_decomp_1.quickDecomp)(this.calcPoints.map(utils_1.mapVectorToArray));
     }
+    /**
+     * updates convex polygons cache in body
+     */
     updateConvexPolygons(convex = this.getConvex()) {
         if (this.isConvex) {
             return;

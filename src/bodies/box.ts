@@ -6,11 +6,24 @@ import { Polygon } from "./polygon";
  * collider - box
  */
 export class Box extends Polygon {
+  /**
+   * type of body
+   */
   readonly type: Types.Box | Types.Point = Types.Box;
 
+  /**
+   * boxes are convex
+   */
   isConvex = true;
 
+  /**
+   * inner width
+   */
   protected _width: number;
+
+  /**
+   * inner height
+   */
   protected _height: number;
 
   /**

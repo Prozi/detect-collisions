@@ -1,17 +1,26 @@
 import { BBox } from "rbush";
 import { Polygon as SATPolygon } from "sat";
-import { BodyOptions, IBody, PotentialVector, SATVector, Types, Vector } from "../model";
+import { BodyOptions, Collider, PotentialVector, SATVector, Types, Vector } from "../model";
 import { System } from "../system";
 /**
  * collider - polygon
  */
-export declare class Polygon extends SATPolygon implements BBox, IBody {
+export declare class Polygon extends SATPolygon implements BBox, Collider {
     /**
-     * bbox parameters
+     * minimum x bound of body
      */
     minX: number;
+    /**
+     * maximum x bound of body
+     */
     maxX: number;
+    /**
+     * minimum y bound of body
+     */
     minY: number;
+    /**
+     * maximum y bound of body
+     */
     maxY: number;
     /**
      * bounding box cache, without padding
@@ -45,8 +54,17 @@ export declare class Polygon extends SATPolygon implements BBox, IBody {
      * reference to collision system
      */
     system?: System;
+    /**
+     * type of body
+     */
     readonly type: Types.Polygon | Types.Box | Types.Point | Types.Ellipse | Types.Line;
+    /**
+     * backup of points used for scaling
+     */
     protected pointsBackup: Vector[];
+    /**
+     * scale vector represents {x, y} scale of body
+     */
     protected readonly scaleVector: Vector;
     /**
      * collider - polygon
@@ -94,15 +112,33 @@ export declare class Polygon extends SATPolygon implements BBox, IBody {
      * Draws collider on a CanvasRenderingContext2D's current path
      */
     draw(context: CanvasRenderingContext2D): void;
+    /**
+     * get body centroid without applied angle
+     */
     getCentroidWithoutRotation(): Vector;
+    /**
+     * sets polygon points to new array of vectors
+     */
     setPoints(points: SATVector[]): Polygon;
+    /**
+     * translates polygon points in x, y direction
+     */
     translate(x: number, y: number): Polygon;
+    /**
+     * rotates polygon points by angle
+     */
     rotate(angle: number): Polygon;
     /**
      * center the box anchor
      */
     center(): void;
+    /**
+     * returns body split into convex polygons, or empty array for convex bodies
+     */
     protected getConvex(): number[][][];
+    /**
+     * updates convex polygons cache in body
+     */
     protected updateConvexPolygons(convex?: number[][][]): void;
     /**
      * after points update set is convex
