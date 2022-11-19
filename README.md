@@ -47,7 +47,7 @@ const physics: System = new System();
 - `angle` property and `setAngle()` method - to rotate
 - `scale` property and `setScale()` method - to scale (for `Circle` takes 1 parameter, `x, y` for rest)
 - `offset` and `setOffset()` method - for offset from center of body
-- `getAABBAsBox()` method - for getting bbox even on non inserted bodies
+- `getAABBAsBBox()` method - for getting bbox even on non inserted bodies
 - `center()` method - for centering anchor (useless but available for `Circle, Ellipse`)
 - `isStatic` property - if true body doesn't move
 - `isTrigger` property - if true body doesn't trigger collisions
