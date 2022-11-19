@@ -133,7 +133,7 @@ export interface Collider {
   /**
    * for setting scale
    */
-  setScale(x: number, y?: number): Body | SATPolygon;
+  setScale(x: number, y?: number): Body;
 
   /**
    * for setting angle
