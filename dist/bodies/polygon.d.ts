@@ -1,11 +1,11 @@
 import { BBox } from "rbush";
 import { Polygon as SATPolygon } from "sat";
-import { BodyOptions, Collider, PotentialVector, SATVector, Types, Vector } from "../model";
+import { BodyOptions, IBody, PotentialVector, SATVector, Types, Vector } from "../model";
 import { System } from "../system";
 /**
  * collider - polygon
  */
-export declare class Polygon extends SATPolygon implements BBox, Collider {
+export declare class Polygon extends SATPolygon implements BBox, IBody {
     /**
      * bbox parameters
      */

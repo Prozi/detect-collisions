@@ -72,9 +72,9 @@ export interface GetAABBAsBox {
 export type Body = Point | Line | Ellipse | Circle | Box | Polygon;
 
 /**
- * commonly used
+ * each body contains those regardless of type
  */
-export interface Collider {
+export interface IBody {
   /**
    * type of collider
    */
@@ -96,6 +96,11 @@ export interface Collider {
   isCentered?: boolean;
 
   /**
+   * flag to show is it a convex body or non convex polygon
+   */
+  isConvex: boolean;
+
+  /**
    * BHV padding (defaults to 0)
    */
   padding: number;
@@ -104,6 +109,11 @@ export interface Collider {
    * bounding box cache, without padding
    */
   bbox: BBox;
+
+  /**
+   * each body may have offset from center
+   */
+  offset: SATVector;
 
   /**
    * body angle

@@ -3,7 +3,7 @@ import { Circle as SATCircle } from "sat";
 
 import {
   BodyOptions,
-  Collider,
+  IBody,
   PotentialVector,
   SATVector,
   Types,
@@ -15,7 +15,7 @@ import { dashLineTo, ensureVectorPoint, extendBody } from "../utils";
 /**
  * collider - circle
  */
-export class Circle extends SATCircle implements BBox, Collider {
+export class Circle extends SATCircle implements BBox, IBody {
   /**
    * bbox parameters
    */

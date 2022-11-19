@@ -1,11 +1,11 @@
 import { BBox } from "rbush";
 import { Circle as SATCircle } from "sat";
-import { BodyOptions, Collider, PotentialVector, SATVector, Types, Vector } from "../model";
+import { BodyOptions, IBody, PotentialVector, SATVector, Types, Vector } from "../model";
 import { System } from "../system";
 /**
  * collider - circle
  */
-export declare class Circle extends SATCircle implements BBox, Collider {
+export declare class Circle extends SATCircle implements BBox, IBody {
     /**
      * bbox parameters
      */

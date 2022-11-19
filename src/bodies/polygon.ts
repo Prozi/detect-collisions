@@ -4,7 +4,7 @@ import { Polygon as SATPolygon } from "sat";
 
 import {
   BodyOptions,
-  Collider,
+  IBody,
   GetAABBAsBox,
   PotentialVector,
   SATVector,
@@ -25,7 +25,7 @@ import {
 /**
  * collider - polygon
  */
-export class Polygon extends SATPolygon implements BBox, Collider {
+export class Polygon extends SATPolygon implements BBox, IBody {
   /**
    * bbox parameters
    */
