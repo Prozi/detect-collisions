@@ -9,7 +9,7 @@ import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
 import { System } from "./system";
 
-export { RBush, BBox, Response, SATVector };
+export { RBush, BBox, Response, SATVector, SATPolygon };
 
 /**
  * types
