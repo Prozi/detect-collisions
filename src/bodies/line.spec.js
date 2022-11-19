@@ -2,7 +2,7 @@ require("pixi-shim");
 
 describe("GIVEN Line", () => {
   it("THEN without constructor values it throws", () => {
-    const { Line } = require("../../dist");
+    const { Line } = require("../../src");
 
     const case1 = () => new Line({});
 
@@ -10,7 +10,7 @@ describe("GIVEN Line", () => {
   });
 
   it("THEN two lines collide", () => {
-    const { System, Line } = require("../../dist");
+    const { System, Line } = require("../../src");
 
     const physics = new System();
     const line1 = new Line({ x: -10, y: -10 }, { x: 10, y: 10 });
@@ -30,7 +30,7 @@ describe("GIVEN Line", () => {
 
   describe("AND you set options", () => {
     it("THEN the parameters are set", () => {
-      const { System } = require("../../dist/");
+      const { System } = require("../../src");
       const physics = new System();
       const body = physics.createLine(
         { x: 0, y: 0 },

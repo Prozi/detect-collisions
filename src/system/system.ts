@@ -1,7 +1,6 @@
 import RBush from "rbush";
 
 import { BaseSystem } from "./base-system";
-import { Line } from "./bodies/line";
 import {
   Body,
   CollisionState,
@@ -9,26 +8,29 @@ import {
   Response,
   SATVector,
   TestFunction,
-  Types,
   Vector,
-} from "./model";
+} from "../model";
 import {
-  distance,
-  intersectLineCircle,
-  intersectLinePolygon,
   checkAInB,
   ensureConvex,
   intersectAABB,
   bodyMoved,
   getSATFunction,
-} from "./utils";
+} from "../utils";
+import { raycast } from "../utils/raycast-utils";
 
 /**
  * collision system
  */
 export class System extends BaseSystem {
+  /**
+   * the last collision result
+   */
   response: Response = new Response();
 
+  /**
+   * reusable inner state - for non convex polygons collisions
+   */
   protected state: CollisionState = {
     collides: false,
     aInB: false,
@@ -210,36 +212,12 @@ export class System extends BaseSystem {
     end: Vector,
     allowCollider: (testCollider: Body) => boolean = () => true
   ): RaycastResult {
-    let minDistance = Infinity;
-    let result: RaycastResult = null;
-
-    const ray: Line = this.createLine(start, end);
-    const colliders: Body[] = this.getPotentials(ray).filter(
-      (potential: Body) =>
-        allowCollider(potential) && this.checkCollision(ray, potential)
-    );
-
-    this.remove(ray);
-
-    colliders.forEach((collider: Body) => {
-      const points: Vector[] =
-        collider.type === Types.Circle
-          ? intersectLineCircle(ray, collider)
-          : intersectLinePolygon(ray, collider);
-
-      points.forEach((point: Vector) => {
-        const pointDistance: number = distance(start, point);
-
-        if (pointDistance < minDistance) {
-          minDistance = pointDistance;
-          result = { point, collider };
-        }
-      });
-    });
-
-    return result;
+    return raycast(this, start, end, allowCollider);
   }
 
+  /**
+   * update inner state function - for non convex polygons collisions
+   */
   protected test(sat: TestFunction, body: Body, wall: Body): void {
     const collides = sat(body, wall, this.response);
 

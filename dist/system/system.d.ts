@@ -1,12 +1,18 @@
 /// <reference types="sat" />
 import RBush from "rbush";
 import { BaseSystem } from "./base-system";
-import { Body, CollisionState, RaycastResult, Response, TestFunction, Vector } from "./model";
+import { Body, CollisionState, RaycastResult, Response, TestFunction, Vector } from "../model";
 /**
  * collision system
  */
 export declare class System extends BaseSystem {
+    /**
+     * the last collision result
+     */
     response: Response;
+    /**
+     * reusable inner state - for non convex polygons collisions
+     */
     protected state: CollisionState;
     /**
      * remove body aabb from collision tree
@@ -48,6 +54,9 @@ export declare class System extends BaseSystem {
      * raycast to get collider of ray from start to end
      */
     raycast(start: Vector, end: Vector, allowCollider?: (testCollider: Body) => boolean): RaycastResult;
+    /**
+     * update inner state function - for non convex polygons collisions
+     */
     protected test(sat: TestFunction, body: Body, wall: Body): void;
 }
 //# sourceMappingURL=system.d.ts.map

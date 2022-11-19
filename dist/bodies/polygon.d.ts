@@ -18,11 +18,11 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      */
     bbox: BBox;
     /**
-     * is it a convex polyon as opposed to a hollow inside (concave) polygon
+     * is it a convex polygon as opposed to a hollow inside (concave) polygon
      */
     isConvex: boolean;
     /**
-     * optimization for above
+     * optimization for convex polygons
      */
     convexPolygons: SATPolygon[];
     /**
@@ -46,12 +46,10 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      */
     system?: System;
     readonly type: Types.Polygon | Types.Box | Types.Point | Types.Ellipse | Types.Line;
-    private pointsBackup;
-    private readonly scaleVector;
+    protected pointsBackup: Vector[];
+    protected readonly scaleVector: Vector;
     /**
      * collider - polygon
-     * @param {PotentialVector} position {x, y}
-     * @param {PotentialVector[]} points
      */
     constructor(position: PotentialVector, points: PotentialVector[], options?: BodyOptions);
     get x(): number;
@@ -65,11 +63,11 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      */
     set y(y: number);
     /**
-     * allow exact getting of scale x
+     * allow exact getting of scale x - use setScale(x, y) to set
      */
     get scaleX(): number;
     /**
-     * allow exact getting of scale y
+     * allow exact getting of scale y - use setScale(x, y) to set
      */
     get scaleY(): number;
     /**
@@ -80,27 +78,20 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      * allow easier setting of scale
      */
     set scale(scale: number);
-    getConvex(): number[][][];
-    updateConvexPolygons(convex?: number[][][]): void;
     /**
      * update position
-     * @param {number} x
-     * @param {number} y
      */
     setPosition(x: number, y: number): void;
     /**
      * update scale
-     * @param {number} x
-     * @param {number} y
      */
     setScale(x: number, y?: number): void;
     /**
-     * get bbox without padding
+     * get body bounding box, without padding
      */
     getAABBAsBBox(): BBox;
     /**
      * Draws collider on a CanvasRenderingContext2D's current path
-     * @param {CanvasRenderingContext2D} context The canvas context to draw on
      */
     draw(context: CanvasRenderingContext2D): void;
     getCentroidWithoutRotation(): Vector;
@@ -111,6 +102,8 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      * reCenters the box anchor
      */
     center(): void;
+    getConvex(): number[][][];
+    updateConvexPolygons(convex?: number[][][]): void;
     /**
      * after points update set is convex
      */

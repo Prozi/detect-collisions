@@ -1,102 +1,6 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./dist/base-system.js":
-/*!*****************************!*\
-  !*** ./dist/base-system.js ***!
-  \*****************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.BaseSystem = void 0;
-const box_1 = __webpack_require__(/*! ./bodies/box */ "./dist/bodies/box.js");
-const circle_1 = __webpack_require__(/*! ./bodies/circle */ "./dist/bodies/circle.js");
-const ellipse_1 = __webpack_require__(/*! ./bodies/ellipse */ "./dist/bodies/ellipse.js");
-const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js");
-const point_1 = __webpack_require__(/*! ./bodies/point */ "./dist/bodies/point.js");
-const polygon_1 = __webpack_require__(/*! ./bodies/polygon */ "./dist/bodies/polygon.js");
-const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
-const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils.js");
-/**
- * very base collision system
- */
-class BaseSystem extends model_1.RBush {
-    /**
-     * draw bodies
-     */
-    draw(context) {
-        this.all().forEach((body) => {
-            body.draw(context);
-        });
-    }
-    /**
-     * draw hierarchy
-     */
-    drawBVH(context) {
-        [...this.all(), ...this.data.children].forEach(({ minX, maxX, minY, maxY }) => {
-            polygon_1.Polygon.prototype.draw.call({
-                x: minX,
-                y: minY,
-                calcPoints: (0, utils_1.createBox)(maxX - minX, maxY - minY),
-            }, context);
-        });
-    }
-    /**
-     * create point at position with options and add to system
-     */
-    createPoint(position, options) {
-        const point = new point_1.Point(position, options);
-        this.insert(point);
-        return point;
-    }
-    /**
-     * create line at position with options and add to system
-     */
-    createLine(start, end, options) {
-        const line = new line_1.Line(start, end, options);
-        this.insert(line);
-        return line;
-    }
-    /**
-     * create circle at position with options and add to system
-     */
-    createCircle(position, radius, options) {
-        const circle = new circle_1.Circle(position, radius, options);
-        this.insert(circle);
-        return circle;
-    }
-    /**
-     * create box at position with options and add to system
-     */
-    createBox(position, width, height, options) {
-        const box = new box_1.Box(position, width, height, options);
-        this.insert(box);
-        return box;
-    }
-    /**
-     * create ellipse at position with options and add to system
-     */
-    createEllipse(position, radiusX, radiusY = radiusX, step, options) {
-        const ellipse = new ellipse_1.Ellipse(position, radiusX, radiusY, step, options);
-        this.insert(ellipse);
-        return ellipse;
-    }
-    /**
-     * create polygon at position with options and add to system
-     */
-    createPolygon(position, points, options) {
-        const polygon = new polygon_1.Polygon(position, points, options);
-        this.insert(polygon);
-        return polygon;
-    }
-}
-exports.BaseSystem = BaseSystem;
-//# sourceMappingURL=base-system.js.map
-
-/***/ }),
-
 /***/ "./dist/bodies/box.js":
 /*!****************************!*\
   !*** ./dist/bodies/box.js ***!
@@ -108,7 +12,7 @@ exports.BaseSystem = BaseSystem;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Box = void 0;
 const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
-const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils/index.js");
 const polygon_1 = __webpack_require__(/*! ./polygon */ "./dist/bodies/polygon.js");
 /**
  * collider - box
@@ -116,9 +20,6 @@ const polygon_1 = __webpack_require__(/*! ./polygon */ "./dist/bodies/polygon.js
 class Box extends polygon_1.Polygon {
     /**
      * collider - box
-     * @param {PotentialVector} position {x, y}
-     * @param {number} width
-     * @param {number} height
      */
     constructor(position, width, height, options) {
         super(position, (0, utils_1.createBox)(width, height), options);
@@ -156,7 +57,9 @@ class Box extends polygon_1.Polygon {
     /**
      * do not attempt to use Polygon.updateIsConvex()
      */
-    updateIsConvex() { }
+    updateIsConvex() {
+        return;
+    }
 }
 exports.Box = Box;
 //# sourceMappingURL=box.js.map
@@ -175,15 +78,14 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Circle = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
-const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils/index.js");
+const draw_utils_1 = __webpack_require__(/*! ../utils/draw-utils */ "./dist/utils/draw-utils.js");
 /**
  * collider - circle
  */
 class Circle extends sat_1.Circle {
     /**
      * collider - circle
-     * @param {PotentialVector} position {x, y}
-     * @param {number} radius
      */
     constructor(position, radius, options) {
         super((0, utils_1.ensureVectorPoint)(position), radius);
@@ -207,10 +109,16 @@ class Circle extends sat_1.Circle {
          * circles are centered
          */
         this.isCentered = true;
+        /**
+         * circle type
+         */
         this.type = model_1.Types.Circle;
         (0, utils_1.extendBody)(this, options);
         this.radiusBackup = radius;
     }
+    /**
+     * get this.pos.x
+     */
     get x() {
         return this.pos.x;
     }
@@ -222,6 +130,9 @@ class Circle extends sat_1.Circle {
         this.pos.x = x;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
+    /**
+     * get this.pos.y
+     */
     get y() {
         return this.pos.y;
     }
@@ -259,8 +170,6 @@ class Circle extends sat_1.Circle {
     }
     /**
      * update position
-     * @param {number} x
-     * @param {number} y
      */
     setPosition(x, y) {
         var _a;
@@ -270,18 +179,16 @@ class Circle extends sat_1.Circle {
     }
     /**
      * update scale
-     * @param {number} scale
      */
     setScale(scale, _ignoredParameter) {
         this.r = this.radiusBackup * scale;
     }
     /**
-     * Updates Bounding Box of collider
+     * get body bounding box, without padding
      */
     getAABBAsBBox() {
-        const offset = this.getOffsetWithAngle();
-        const x = this.x + offset.x;
-        const y = this.y + offset.y;
+        const x = this.x + this.offset.x;
+        const y = this.y + this.offset.y;
         return {
             minX: x - this.r,
             maxX: x + this.r,
@@ -291,29 +198,13 @@ class Circle extends sat_1.Circle {
     }
     /**
      * Draws collider on a CanvasRenderingContext2D's current path
-     * @param {CanvasRenderingContext2D} context The canvas context to draw on
      */
     draw(context) {
-        const offset = this.getOffsetWithAngle();
-        const x = this.x + offset.x;
-        const y = this.y + offset.y;
-        if (this.isTrigger) {
-            const max = Math.max(8, this.r);
-            for (let i = 0; i < max; i++) {
-                const arc = (i / max) * 2 * Math.PI;
-                const arcPrev = ((i - 1) / max) * 2 * Math.PI;
-                const fromX = x + Math.cos(arcPrev) * this.r;
-                const fromY = y + Math.sin(arcPrev) * this.r;
-                const toX = x + Math.cos(arc) * this.r;
-                const toY = y + Math.sin(arc) * this.r;
-                (0, utils_1.dashLineTo)(context, fromX, fromY, toX, toY);
-            }
-        }
-        else {
-            context.moveTo(x + this.r, y);
-            context.arc(x, y, this.r, 0, Math.PI * 2);
-        }
+        (0, draw_utils_1.drawCircle)(this, context);
     }
+    /**
+     * set rotation
+     */
     setAngle(angle) {
         this.angle = angle;
         const { x, y } = this.getOffsetWithAngle();
@@ -321,6 +212,9 @@ class Circle extends sat_1.Circle {
         this.offset.y = y;
         return this;
     }
+    /**
+     * set offset from center
+     */
     setOffset(offset) {
         this.offsetCopy.x = offset.x;
         this.offsetCopy.y = offset.y;
@@ -332,7 +226,12 @@ class Circle extends sat_1.Circle {
     /**
      * for compatility reasons, does nothing
      */
-    center() { }
+    center() {
+        return;
+    }
+    /**
+     * internal for getting offset with applied angle
+     */
     getOffsetWithAngle() {
         if (!this.angle) {
             return this.offsetCopy;
@@ -360,7 +259,7 @@ exports.Circle = Circle;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Ellipse = void 0;
 const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
-const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils/index.js");
 const polygon_1 = __webpack_require__(/*! ./polygon */ "./dist/bodies/polygon.js");
 /**
  * collider - ellipse
@@ -368,13 +267,12 @@ const polygon_1 = __webpack_require__(/*! ./polygon */ "./dist/bodies/polygon.js
 class Ellipse extends polygon_1.Polygon {
     /**
      * collider - ellipse
-     * @param {PotentialVector} position {x, y}
-     * @param {number} radiusX
-     * @param {number} radiusY defaults to radiusX
-     * @param {number} step precision division >= 1px
      */
     constructor(position, radiusX, radiusY = radiusX, step = (radiusX + radiusY) / Math.PI, options) {
         super(position, (0, utils_1.createEllipse)(radiusX, radiusY, step), options);
+        /**
+         * ellipse type
+         */
         this.type = model_1.Types.Ellipse;
         /**
          * ellipses are centered
@@ -430,11 +328,15 @@ class Ellipse extends polygon_1.Polygon {
     /**
      * do not attempt to use Polygon.center()
      */
-    center() { }
+    center() {
+        return;
+    }
     /**
      * do not attempt to use Polygon.updateIsConvex()
      */
-    updateIsConvex() { }
+    updateIsConvex() {
+        return;
+    }
 }
 exports.Ellipse = Ellipse;
 //# sourceMappingURL=ellipse.js.map
@@ -460,15 +362,19 @@ const polygon_1 = __webpack_require__(/*! ./polygon */ "./dist/bodies/polygon.js
 class Line extends polygon_1.Polygon {
     /**
      * collider - line from start to end
-     * @param {Vector} start {x, y}
-     * @param {Vector} end {x, y}
      */
     constructor(start, end, options) {
         super(start, [
             { x: 0, y: 0 },
             { x: end.x - start.x, y: end.y - start.y },
         ], options);
+        /**
+         * line type
+         */
         this.type = model_1.Types.Line;
+        /**
+         * line is convex
+         */
         this.isConvex = true;
         if (this.calcPoints.length === 1 || !end) {
             console.error({ start, end });
@@ -493,7 +399,9 @@ class Line extends polygon_1.Polygon {
     /**
      * do not attempt to use Polygon.updateIsConvex()
      */
-    updateIsConvex() { }
+    updateIsConvex() {
+        return;
+    }
 }
 exports.Line = Line;
 //# sourceMappingURL=line.js.map
@@ -511,7 +419,7 @@ exports.Line = Line;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Point = void 0;
 const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
-const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils/index.js");
 const box_1 = __webpack_require__(/*! ./box */ "./dist/bodies/box.js");
 /**
  * collider - point (very tiny box)
@@ -519,10 +427,12 @@ const box_1 = __webpack_require__(/*! ./box */ "./dist/bodies/box.js");
 class Point extends box_1.Box {
     /**
      * collider - point (very tiny box)
-     * @param {PotentialVector} position {x, y}
      */
     constructor(position, options) {
         super((0, utils_1.ensureVectorPoint)(position), 0.001, 0.001, options);
+        /**
+         * point type
+         */
         this.type = model_1.Types.Point;
     }
 }
@@ -544,22 +454,17 @@ exports.Polygon = void 0;
 const poly_decomp_1 = __webpack_require__(/*! poly-decomp */ "./node_modules/poly-decomp/src/index.js");
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
-const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils/index.js");
+const draw_utils_1 = __webpack_require__(/*! ../utils/draw-utils */ "./dist/utils/draw-utils.js");
 /**
  * collider - polygon
  */
 class Polygon extends sat_1.Polygon {
     /**
      * collider - polygon
-     * @param {PotentialVector} position {x, y}
-     * @param {PotentialVector[]} points
      */
     constructor(position, points, options) {
         super((0, utils_1.ensureVectorPoint)(position), (0, utils_1.ensurePolygonPoints)(points));
-        /**
-         * optimization for above
-         */
-        this.convexPolygons = [];
         /**
          * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
          */
@@ -594,13 +499,13 @@ class Polygon extends sat_1.Polygon {
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     /**
-     * allow exact getting of scale x
+     * allow exact getting of scale x - use setScale(x, y) to set
      */
     get scaleX() {
         return this.scaleVector.x;
     }
     /**
-     * allow exact getting of scale y
+     * allow exact getting of scale y - use setScale(x, y) to set
      */
     get scaleY() {
         return this.scaleVector.y;
@@ -617,30 +522,8 @@ class Polygon extends sat_1.Polygon {
     set scale(scale) {
         this.setScale(scale);
     }
-    getConvex() {
-        // if not line
-        return this.points.length > 2
-            ? (0, poly_decomp_1.quickDecomp)(this.calcPoints.map(utils_1.mapVectorToArray))
-            : // for line and point
-                [];
-    }
-    updateConvexPolygons(convex = this.getConvex()) {
-        convex.forEach((points, index) => {
-            // lazy create
-            if (!this.convexPolygons[index]) {
-                this.convexPolygons[index] = new sat_1.Polygon();
-            }
-            this.convexPolygons[index].pos.x = this.x;
-            this.convexPolygons[index].pos.y = this.y;
-            this.convexPolygons[index].setPoints((0, utils_1.ensurePolygonPoints)(points.map(utils_1.mapArrayToVector)));
-        });
-        // trim array length
-        this.convexPolygons.length = convex.length;
-    }
     /**
      * update position
-     * @param {number} x
-     * @param {number} y
      */
     setPosition(x, y) {
         var _a;
@@ -650,8 +533,6 @@ class Polygon extends sat_1.Polygon {
     }
     /**
      * update scale
-     * @param {number} x
-     * @param {number} y
      */
     setScale(x, y = x) {
         this.scaleVector.x = x;
@@ -663,7 +544,7 @@ class Polygon extends sat_1.Polygon {
         super.setPoints(this.points);
     }
     /**
-     * get bbox without padding
+     * get body bounding box, without padding
      */
     getAABBAsBBox() {
         const { pos, w, h } = this.getAABBAsBox();
@@ -676,34 +557,9 @@ class Polygon extends sat_1.Polygon {
     }
     /**
      * Draws collider on a CanvasRenderingContext2D's current path
-     * @param {CanvasRenderingContext2D} context The canvas context to draw on
      */
     draw(context) {
-        const points = [...this.calcPoints, this.calcPoints[0]];
-        points.forEach((point, index) => {
-            const toX = this.x + point.x;
-            const toY = this.y + point.y;
-            const prev = this.calcPoints[index - 1] ||
-                this.calcPoints[this.calcPoints.length - 1];
-            if (!index) {
-                if (this.calcPoints.length === 1) {
-                    context.arc(toX, toY, 1, 0, Math.PI * 2);
-                }
-                else {
-                    context.moveTo(toX, toY);
-                }
-            }
-            else if (this.calcPoints.length > 1) {
-                if (this.isTrigger) {
-                    const fromX = this.x + prev.x;
-                    const fromY = this.y + prev.y;
-                    (0, utils_1.dashLineTo)(context, fromX, fromY, toX, toY);
-                }
-                else {
-                    context.lineTo(toX, toY);
-                }
-            }
-        });
+        (0, draw_utils_1.drawPolygon)(this, context);
     }
     getCentroidWithoutRotation() {
         // reset angle for get centroid
@@ -743,6 +599,31 @@ class Polygon extends sat_1.Polygon {
         this.pos.y += y;
         this.isCentered = true;
     }
+    getConvex() {
+        if ((this.type && this.type !== model_1.Types.Polygon) || this.points.length <= 2) {
+            return [];
+        }
+        return (0, poly_decomp_1.quickDecomp)(this.calcPoints.map(utils_1.mapVectorToArray));
+    }
+    updateConvexPolygons(convex = this.getConvex()) {
+        if (this.isConvex) {
+            return;
+        }
+        if (!this.convexPolygons) {
+            this.convexPolygons = [];
+        }
+        convex.forEach((points, index) => {
+            // lazy create
+            if (!this.convexPolygons[index]) {
+                this.convexPolygons[index] = new sat_1.Polygon();
+            }
+            this.convexPolygons[index].pos.x = this.x;
+            this.convexPolygons[index].pos.y = this.y;
+            this.convexPolygons[index].setPoints((0, utils_1.ensurePolygonPoints)(points.map(utils_1.mapArrayToVector)));
+        });
+        // trim array length
+        this.convexPolygons.length = convex.length;
+    }
     /**
      * after points update set is convex
      */
@@ -751,6 +632,7 @@ class Polygon extends sat_1.Polygon {
         const convex = this.getConvex();
         // everything with empty array or one element array
         this.isConvex = convex.length <= 1;
+        this.updateConvexPolygons(convex);
     }
 }
 exports.Polygon = Polygon;
@@ -788,8 +670,8 @@ __exportStar(__webpack_require__(/*! ./bodies/polygon */ "./dist/bodies/polygon.
 __exportStar(__webpack_require__(/*! ./bodies/box */ "./dist/bodies/box.js"), exports);
 __exportStar(__webpack_require__(/*! ./bodies/point */ "./dist/bodies/point.js"), exports);
 __exportStar(__webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js"), exports);
-__exportStar(__webpack_require__(/*! ./system */ "./dist/system.js"), exports);
-__exportStar(__webpack_require__(/*! ./utils */ "./dist/utils.js"), exports);
+__exportStar(__webpack_require__(/*! ./system */ "./dist/system/index.js"), exports);
+__exportStar(__webpack_require__(/*! ./utils */ "./dist/utils/index.js"), exports);
 //# sourceMappingURL=index.js.map
 
 /***/ }),
@@ -828,26 +710,149 @@ var Types;
 
 /***/ }),
 
-/***/ "./dist/system.js":
-/*!************************!*\
-  !*** ./dist/system.js ***!
-  \************************/
+/***/ "./dist/system/base-system.js":
+/*!************************************!*\
+  !*** ./dist/system/base-system.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.BaseSystem = void 0;
+const box_1 = __webpack_require__(/*! ../bodies/box */ "./dist/bodies/box.js");
+const circle_1 = __webpack_require__(/*! ../bodies/circle */ "./dist/bodies/circle.js");
+const ellipse_1 = __webpack_require__(/*! ../bodies/ellipse */ "./dist/bodies/ellipse.js");
+const line_1 = __webpack_require__(/*! ../bodies/line */ "./dist/bodies/line.js");
+const point_1 = __webpack_require__(/*! ../bodies/point */ "./dist/bodies/point.js");
+const polygon_1 = __webpack_require__(/*! ../bodies/polygon */ "./dist/bodies/polygon.js");
+const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
+const draw_utils_1 = __webpack_require__(/*! ../utils/draw-utils */ "./dist/utils/draw-utils.js");
+/**
+ * very base collision system
+ */
+class BaseSystem extends model_1.RBush {
+    /**
+     * draw bodies of system on context
+     */
+    draw(context) {
+        (0, draw_utils_1.draw)(this, context);
+    }
+    /**
+     * draw bounding volume hierarchy of system on context
+     */
+    drawBVH(context) {
+        (0, draw_utils_1.drawBVH)(this, context);
+    }
+    /**
+     * create point at position with options and add to system
+     */
+    createPoint(position, options) {
+        const point = new point_1.Point(position, options);
+        this.insert(point);
+        return point;
+    }
+    /**
+     * create line at position with options and add to system
+     */
+    createLine(start, end, options) {
+        const line = new line_1.Line(start, end, options);
+        this.insert(line);
+        return line;
+    }
+    /**
+     * create circle at position with options and add to system
+     */
+    createCircle(position, radius, options) {
+        const circle = new circle_1.Circle(position, radius, options);
+        this.insert(circle);
+        return circle;
+    }
+    /**
+     * create box at position with options and add to system
+     */
+    createBox(position, width, height, options) {
+        const box = new box_1.Box(position, width, height, options);
+        this.insert(box);
+        return box;
+    }
+    /**
+     * create ellipse at position with options and add to system
+     */
+    createEllipse(position, radiusX, radiusY = radiusX, step, options) {
+        const ellipse = new ellipse_1.Ellipse(position, radiusX, radiusY, step, options);
+        this.insert(ellipse);
+        return ellipse;
+    }
+    /**
+     * create polygon at position with options and add to system
+     */
+    createPolygon(position, points, options) {
+        const polygon = new polygon_1.Polygon(position, points, options);
+        this.insert(polygon);
+        return polygon;
+    }
+}
+exports.BaseSystem = BaseSystem;
+//# sourceMappingURL=base-system.js.map
+
+/***/ }),
+
+/***/ "./dist/system/index.js":
+/*!******************************!*\
+  !*** ./dist/system/index.js ***!
+  \******************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(/*! ./system */ "./dist/system/system.js"), exports);
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+
+/***/ "./dist/system/system.js":
+/*!*******************************!*\
+  !*** ./dist/system/system.js ***!
+  \*******************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.System = void 0;
-const base_system_1 = __webpack_require__(/*! ./base-system */ "./dist/base-system.js");
-const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
-const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils.js");
+const base_system_1 = __webpack_require__(/*! ./base-system */ "./dist/system/base-system.js");
+const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
+const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils/index.js");
+const raycast_utils_1 = __webpack_require__(/*! ../utils/raycast-utils */ "./dist/utils/raycast-utils.js");
 /**
  * collision system
  */
 class System extends base_system_1.BaseSystem {
     constructor() {
         super(...arguments);
+        /**
+         * the last collision result
+         */
         this.response = new model_1.Response();
+        /**
+         * reusable inner state - for non convex polygons collisions
+         */
         this.state = {
             collides: false,
             aInB: false,
@@ -1001,25 +1006,11 @@ class System extends base_system_1.BaseSystem {
      * raycast to get collider of ray from start to end
      */
     raycast(start, end, allowCollider = () => true) {
-        let minDistance = Infinity;
-        let result = null;
-        const ray = this.createLine(start, end);
-        const colliders = this.getPotentials(ray).filter((potential) => allowCollider(potential) && this.checkCollision(ray, potential));
-        this.remove(ray);
-        colliders.forEach((collider) => {
-            const points = collider.type === model_1.Types.Circle
-                ? (0, utils_1.intersectLineCircle)(ray, collider)
-                : (0, utils_1.intersectLinePolygon)(ray, collider);
-            points.forEach((point) => {
-                const pointDistance = (0, utils_1.distance)(start, point);
-                if (pointDistance < minDistance) {
-                    minDistance = pointDistance;
-                    result = { point, collider };
-                }
-            });
-        });
-        return result;
+        return (0, raycast_utils_1.raycast)(this, start, end, allowCollider);
     }
+    /**
+     * update inner state function - for non convex polygons collisions
+     */
     test(sat, body, wall) {
         const collides = sat(body, wall, this.response);
         if (collides) {
@@ -1046,19 +1037,265 @@ exports.System = System;
 
 /***/ }),
 
-/***/ "./dist/utils.js":
-/*!***********************!*\
-  !*** ./dist/utils.js ***!
-  \***********************/
+/***/ "./dist/utils/draw-utils.js":
+/*!**********************************!*\
+  !*** ./dist/utils/draw-utils.js ***!
+  \**********************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.drawCircle = exports.drawPolygon = exports.drawBVH = exports.draw = exports.dashLineTo = void 0;
+const polygon_1 = __webpack_require__(/*! ../bodies/polygon */ "./dist/bodies/polygon.js");
+const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils/utils.js");
+/**
+ * draws dashed line on canvas context
+ */
+function dashLineTo(context, fromX, fromY, toX, toY, dash = 2, gap = 4) {
+    const xDiff = toX - fromX;
+    const yDiff = toY - fromY;
+    const arc = Math.atan2(yDiff, xDiff);
+    const offsetX = Math.cos(arc);
+    const offsetY = Math.sin(arc);
+    let posX = fromX;
+    let posY = fromY;
+    let dist = Math.hypot(xDiff, yDiff);
+    while (dist > 0) {
+        const step = Math.min(dist, dash);
+        context.moveTo(posX, posY);
+        context.lineTo(posX + offsetX * step, posY + offsetY * step);
+        posX += offsetX * (dash + gap);
+        posY += offsetY * (dash + gap);
+        dist -= dash + gap;
+    }
+}
+exports.dashLineTo = dashLineTo;
+/**
+ * draw bodies
+ */
+function draw(system, context) {
+    system.all().forEach((body) => {
+        body.draw(context);
+    });
+}
+exports.draw = draw;
+/**
+ * draw hierarchy
+ */
+function drawBVH(system, context) {
+    [...system.all(), ...system.data.children].forEach(({ minX, maxX, minY, maxY }) => {
+        polygon_1.Polygon.prototype.draw.call({
+            x: minX,
+            y: minY,
+            calcPoints: (0, utils_1.createBox)(maxX - minX, maxY - minY),
+        }, context);
+    });
+}
+exports.drawBVH = drawBVH;
+/**
+ * draw polygon helper function
+ */
+function drawPolygon(polygon, context) {
+    const points = [...polygon.calcPoints, polygon.calcPoints[0]];
+    points.forEach((point, index) => {
+        const toX = polygon.x + point.x;
+        const toY = polygon.y + point.y;
+        const prev = polygon.calcPoints[index - 1] ||
+            polygon.calcPoints[polygon.calcPoints.length - 1];
+        if (!index) {
+            if (polygon.calcPoints.length === 1) {
+                context.arc(toX, toY, 1, 0, Math.PI * 2);
+            }
+            else {
+                context.moveTo(toX, toY);
+            }
+        }
+        else if (polygon.calcPoints.length > 1) {
+            if (polygon.isTrigger) {
+                const fromX = polygon.x + prev.x;
+                const fromY = polygon.y + prev.y;
+                dashLineTo(context, fromX, fromY, toX, toY);
+            }
+            else {
+                context.lineTo(toX, toY);
+            }
+        }
+    });
+}
+exports.drawPolygon = drawPolygon;
+/**
+ * draw circle helper function
+ */
+function drawCircle(circle, context) {
+    const x = circle.x + circle.offset.x;
+    const y = circle.y + circle.offset.y;
+    if (circle.isTrigger) {
+        const max = Math.max(8, circle.r);
+        for (let i = 0; i < max; i++) {
+            const arc = (i / max) * 2 * Math.PI;
+            const arcPrev = ((i - 1) / max) * 2 * Math.PI;
+            const fromX = x + Math.cos(arcPrev) * circle.r;
+            const fromY = y + Math.sin(arcPrev) * circle.r;
+            const toX = x + Math.cos(arc) * circle.r;
+            const toY = y + Math.sin(arc) * circle.r;
+            dashLineTo(context, fromX, fromY, toX, toY);
+        }
+    }
+    else {
+        context.moveTo(x + circle.r, y);
+        context.arc(x, y, circle.r, 0, Math.PI * 2);
+    }
+}
+exports.drawCircle = drawCircle;
+//# sourceMappingURL=draw-utils.js.map
+
+/***/ }),
+
+/***/ "./dist/utils/index.js":
+/*!*****************************!*\
+  !*** ./dist/utils/index.js ***!
+  \*****************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__webpack_require__(/*! ./utils */ "./dist/utils/utils.js"), exports);
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+
+/***/ "./dist/utils/raycast-utils.js":
+/*!*************************************!*\
+  !*** ./dist/utils/raycast-utils.js ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.raycast = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = void 0;
+const line_1 = __webpack_require__(/*! ../bodies/line */ "./dist/bodies/line.js");
+const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
+const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils/utils.js");
+// https://stackoverflow.com/questions/37224912/circle-line-segment-collision
+function intersectLineCircle(line, circle) {
+    const v1 = { x: line.end.x - line.start.x, y: line.end.y - line.start.y };
+    const v2 = { x: line.start.x - circle.pos.x, y: line.start.y - circle.pos.y };
+    const b = (v1.x * v2.x + v1.y * v2.y) * -2;
+    const c = (v1.x * v1.x + v1.y * v1.y) * 2;
+    const d = Math.sqrt(b * b - (v2.x * v2.x + v2.y * v2.y - circle.r * circle.r) * c * 2);
+    if (isNaN(d)) {
+        // no intercept
+        return [];
+    }
+    const u1 = (b - d) / c; // these represent the unit distance of point one and two on the line
+    const u2 = (b + d) / c;
+    const results = []; // return array
+    if (u1 <= 1 && u1 >= 0) {
+        // add point if on the line segment
+        results.push({ x: line.start.x + v1.x * u1, y: line.start.y + v1.y * u1 });
+    }
+    if (u2 <= 1 && u2 >= 0) {
+        // second add point if on the line segment
+        results.push({ x: line.start.x + v1.x * u2, y: line.start.y + v1.y * u2 });
+    }
+    return results;
+}
+exports.intersectLineCircle = intersectLineCircle;
+// https://stackoverflow.com/questions/9043805/test-if-two-lines-intersect-javascript-function
+function intersectLineLine(line1, line2) {
+    const dX = line1.end.x - line1.start.x;
+    const dY = line1.end.y - line1.start.y;
+    const determinant = dX * (line2.end.y - line2.start.y) - (line2.end.x - line2.start.x) * dY;
+    if (determinant === 0) {
+        return null;
+    }
+    const lambda = ((line2.end.y - line2.start.y) * (line2.end.x - line1.start.x) +
+        (line2.start.x - line2.end.x) * (line2.end.y - line1.start.y)) /
+        determinant;
+    const gamma = ((line1.start.y - line1.end.y) * (line2.end.x - line1.start.x) +
+        dX * (line2.end.y - line1.start.y)) /
+        determinant;
+    // check if there is an intersection
+    if (!(lambda >= 0 && lambda <= 1) || !(gamma >= 0 && gamma <= 1)) {
+        return null;
+    }
+    return { x: line1.start.x + lambda * dX, y: line1.start.y + lambda * dY };
+}
+exports.intersectLineLine = intersectLineLine;
+/**
+ * check if line (ray) intersects polygon
+ */
+function intersectLinePolygon(line, polygon) {
+    return polygon.calcPoints
+        .map((to, index) => {
+        const from = index
+            ? polygon.calcPoints[index - 1]
+            : polygon.calcPoints[polygon.calcPoints.length - 1];
+        const side = new line_1.Line({ x: from.x + polygon.pos.x, y: from.y + polygon.pos.y }, { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y });
+        return intersectLineLine(line, side);
+    })
+        .filter((test) => !!test);
+}
+exports.intersectLinePolygon = intersectLinePolygon;
+/**
+ * raycast to get collider of ray from start to end
+ */
+function raycast(system, start, end, allowCollider = () => true) {
+    let minDistance = Infinity;
+    let result = null;
+    const ray = system.createLine(start, end);
+    const colliders = system
+        .getPotentials(ray)
+        .filter((potential) => allowCollider(potential) && system.checkCollision(ray, potential));
+    system.remove(ray);
+    colliders.forEach((collider) => {
+        const points = collider.type === model_1.Types.Circle
+            ? intersectLineCircle(ray, collider)
+            : intersectLinePolygon(ray, collider);
+        points.forEach((point) => {
+            const pointDistance = (0, utils_1.distance)(start, point);
+            if (pointDistance < minDistance) {
+                minDistance = pointDistance;
+                result = { point, collider };
+            }
+        });
+    });
+    return result;
+}
+exports.raycast = raycast;
+//# sourceMappingURL=raycast-utils.js.map
+
+/***/ }),
+
+/***/ "./dist/utils/utils.js":
+/*!*****************************!*\
+  !*** ./dist/utils/utils.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
-const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js");
-const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
+const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
     const steps = Math.PI * Math.hypot(radiusX, radiusY) * 2;
     const length = Math.max(8, Math.ceil(steps / Math.max(1, step)));
@@ -1164,89 +1401,6 @@ function clonePointsArray(points) {
 }
 exports.clonePointsArray = clonePointsArray;
 /**
- * draws dashed line on canvas context
- */
-function dashLineTo(context, fromX, fromY, toX, toY, dash = 2, gap = 4) {
-    const xDiff = toX - fromX;
-    const yDiff = toY - fromY;
-    const arc = Math.atan2(yDiff, xDiff);
-    const offsetX = Math.cos(arc);
-    const offsetY = Math.sin(arc);
-    let posX = fromX;
-    let posY = fromY;
-    let dist = Math.hypot(xDiff, yDiff);
-    while (dist > 0) {
-        const step = Math.min(dist, dash);
-        context.moveTo(posX, posY);
-        context.lineTo(posX + offsetX * step, posY + offsetY * step);
-        posX += offsetX * (dash + gap);
-        posY += offsetY * (dash + gap);
-        dist -= dash + gap;
-    }
-}
-exports.dashLineTo = dashLineTo;
-// https://stackoverflow.com/questions/37224912/circle-line-segment-collision
-function intersectLineCircle(line, circle) {
-    const v1 = { x: line.end.x - line.start.x, y: line.end.y - line.start.y };
-    const v2 = { x: line.start.x - circle.pos.x, y: line.start.y - circle.pos.y };
-    const b = (v1.x * v2.x + v1.y * v2.y) * -2;
-    const c = (v1.x * v1.x + v1.y * v1.y) * 2;
-    const d = Math.sqrt(b * b - (v2.x * v2.x + v2.y * v2.y - circle.r * circle.r) * c * 2);
-    if (isNaN(d)) {
-        // no intercept
-        return [];
-    }
-    const u1 = (b - d) / c; // these represent the unit distance of point one and two on the line
-    const u2 = (b + d) / c;
-    const results = []; // return array
-    if (u1 <= 1 && u1 >= 0) {
-        // add point if on the line segment
-        results.push({ x: line.start.x + v1.x * u1, y: line.start.y + v1.y * u1 });
-    }
-    if (u2 <= 1 && u2 >= 0) {
-        // second add point if on the line segment
-        results.push({ x: line.start.x + v1.x * u2, y: line.start.y + v1.y * u2 });
-    }
-    return results;
-}
-exports.intersectLineCircle = intersectLineCircle;
-// https://stackoverflow.com/questions/9043805/test-if-two-lines-intersect-javascript-function
-function intersectLineLine(line1, line2) {
-    const dX = line1.end.x - line1.start.x;
-    const dY = line1.end.y - line1.start.y;
-    const determinant = dX * (line2.end.y - line2.start.y) - (line2.end.x - line2.start.x) * dY;
-    if (determinant === 0) {
-        return null;
-    }
-    const lambda = ((line2.end.y - line2.start.y) * (line2.end.x - line1.start.x) +
-        (line2.start.x - line2.end.x) * (line2.end.y - line1.start.y)) /
-        determinant;
-    const gamma = ((line1.start.y - line1.end.y) * (line2.end.x - line1.start.x) +
-        dX * (line2.end.y - line1.start.y)) /
-        determinant;
-    // check if there is an intersection
-    if (!(lambda >= 0 && lambda <= 1) || !(gamma >= 0 && gamma <= 1)) {
-        return null;
-    }
-    return { x: line1.start.x + lambda * dX, y: line1.start.y + lambda * dY };
-}
-exports.intersectLineLine = intersectLineLine;
-/**
- * check if line (ray) intersects polygon
- */
-function intersectLinePolygon(line, polygon) {
-    return polygon.calcPoints
-        .map((to, index) => {
-        const from = index
-            ? polygon.calcPoints[index - 1]
-            : polygon.calcPoints[polygon.calcPoints.length - 1];
-        const side = new line_1.Line({ x: from.x + polygon.pos.x, y: from.y + polygon.pos.y }, { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y });
-        return intersectLineLine(line, side);
-    })
-        .filter((test) => !!test);
-}
-exports.intersectLinePolygon = intersectLinePolygon;
-/**
  * change format from poly-decomp to SAT.js
  */
 function mapVectorToArray({ x, y }) {
@@ -1267,7 +1421,6 @@ function ensureConvex(body) {
     if (body.isConvex || body.type !== model_1.Types.Polygon) {
         return [body];
     }
-    body.updateConvexPolygons();
     return body.convexPolygons;
 }
 exports.ensureConvex = ensureConvex;
@@ -1283,9 +1436,9 @@ function getBounceDirection(body, collider) {
 exports.getBounceDirection = getBounceDirection;
 function getSATFunction(body, wall) {
     if (body.type === model_1.Types.Circle) {
-        return wall.type === model_1.Types.Circle ? sat_1.testCircleCircle : sat_1.testCirclePolygon;
+        return (wall.type === model_1.Types.Circle ? sat_1.testCircleCircle : sat_1.testCirclePolygon);
     }
-    return wall.type === model_1.Types.Circle ? sat_1.testPolygonCircle : sat_1.testPolygonPolygon;
+    return (wall.type === model_1.Types.Circle ? sat_1.testPolygonCircle : sat_1.testPolygonPolygon);
 }
 exports.getSATFunction = getSATFunction;
 //# sourceMappingURL=utils.js.map

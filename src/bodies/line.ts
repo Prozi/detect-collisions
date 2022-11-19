@@ -7,14 +7,18 @@ import { Polygon } from "./polygon";
  * collider - line
  */
 export class Line extends Polygon {
+  /**
+   * line type
+   */
   readonly type: Types.Line = Types.Line;
 
+  /**
+   * line is convex
+   */
   isConvex = true;
 
   /**
    * collider - line from start to end
-   * @param {Vector} start {x, y}
-   * @param {Vector} end {x, y}
    */
   constructor(start: Vector, end: Vector, options?: BodyOptions) {
     super(
@@ -57,5 +61,7 @@ export class Line extends Polygon {
   /**
    * do not attempt to use Polygon.updateIsConvex()
    */
-  protected updateIsConvex(): void {}
+  protected updateIsConvex(): void {
+    return;
+  }
 }

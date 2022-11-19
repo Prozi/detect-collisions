@@ -10,15 +10,19 @@ const polygon_1 = require("./polygon");
 class Line extends polygon_1.Polygon {
     /**
      * collider - line from start to end
-     * @param {Vector} start {x, y}
-     * @param {Vector} end {x, y}
      */
     constructor(start, end, options) {
         super(start, [
             { x: 0, y: 0 },
             { x: end.x - start.x, y: end.y - start.y },
         ], options);
+        /**
+         * line type
+         */
         this.type = model_1.Types.Line;
+        /**
+         * line is convex
+         */
         this.isConvex = true;
         if (this.calcPoints.length === 1 || !end) {
             console.error({ start, end });
@@ -43,7 +47,9 @@ class Line extends polygon_1.Polygon {
     /**
      * do not attempt to use Polygon.updateIsConvex()
      */
-    updateIsConvex() { }
+    updateIsConvex() {
+        return;
+    }
 }
 exports.Line = Line;
 //# sourceMappingURL=line.js.map

@@ -2,7 +2,7 @@ require("pixi-shim");
 
 describe("GIVEN Point", () => {
   it("THEN without constructor values, initializes with (0, 0)", () => {
-    const { Point } = require("../../dist/");
+    const { Point } = require("../../src");
 
     const point = new Point();
 
@@ -12,7 +12,7 @@ describe("GIVEN Point", () => {
 
   describe("AND you set options", () => {
     it("THEN the parameters are set", () => {
-      const { System } = require("../../dist/");
+      const { System } = require("../../src");
       const physics = new System();
       const body = physics.createPoint(
         { x: 0, y: 0 },

@@ -6,13 +6,10 @@ import { Polygon } from "./polygon";
 export declare class Box extends Polygon {
     readonly type: Types.Box | Types.Point;
     isConvex: boolean;
-    private _width;
-    private _height;
+    protected _width: number;
+    protected _height: number;
     /**
      * collider - box
-     * @param {PotentialVector} position {x, y}
-     * @param {number} width
-     * @param {number} height
      */
     constructor(position: PotentialVector, width: number, height: number, options?: BodyOptions);
     /**

@@ -6,11 +6,13 @@ import { Box } from "./box";
  * collider - point (very tiny box)
  */
 export class Point extends Box {
+  /**
+   * point type
+   */
   readonly type: Types.Point = Types.Point;
 
   /**
    * collider - point (very tiny box)
-   * @param {PotentialVector} position {x, y}
    */
   constructor(position: PotentialVector, options?: BodyOptions) {
     super(ensureVectorPoint(position), 0.001, 0.001, options);

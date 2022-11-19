@@ -10,10 +10,12 @@ const box_1 = require("./box");
 class Point extends box_1.Box {
     /**
      * collider - point (very tiny box)
-     * @param {PotentialVector} position {x, y}
      */
     constructor(position, options) {
         super((0, utils_1.ensureVectorPoint)(position), 0.001, 0.001, options);
+        /**
+         * point type
+         */
         this.type = model_1.Types.Point;
     }
 }

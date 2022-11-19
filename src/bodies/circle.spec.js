@@ -3,7 +3,7 @@ require("pixi-shim");
 describe("GIVEN Circle", () => {
   describe("AND you adjust radius", () => {
     it("THEN it gives correct collision results", () => {
-      const { System } = require("../../dist/");
+      const { System } = require("../../src");
 
       const physics = new System();
       const circle = physics.createCircle({ x: 0, y: 0 }, 10);
@@ -37,7 +37,7 @@ describe("GIVEN Circle", () => {
 
   describe("AND two circles perfectly overlap", () => {
     it("THEN they give correct collision results", () => {
-      const { System } = require("../../dist/");
+      const { System } = require("../../src");
       const physics = new System();
 
       physics.createCircle({ x: 0, y: 0 }, 10);
@@ -52,7 +52,7 @@ describe("GIVEN Circle", () => {
 
   describe("AND you set options", () => {
     it("THEN the parameters are set", () => {
-      const { System } = require("../../dist/");
+      const { System } = require("../../src");
       const physics = new System();
       const body = physics.createCircle({}, 10, {
         isStatic: true,
@@ -66,7 +66,7 @@ describe("GIVEN Circle", () => {
 
   describe("AND you scale it", () => {
     it("THEN you can get and set scale, scaleX, scaleY", () => {
-      const { System } = require("../../dist/");
+      const { System } = require("../../src");
       const physics = new System();
       const body = physics.createCircle({ x: 0, y: 0 }, 9);
 

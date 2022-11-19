@@ -2,15 +2,22 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.System = void 0;
 const base_system_1 = require("./base-system");
-const model_1 = require("./model");
-const utils_1 = require("./utils");
+const model_1 = require("../model");
+const utils_1 = require("../utils");
+const raycast_utils_1 = require("../utils/raycast-utils");
 /**
  * collision system
  */
 class System extends base_system_1.BaseSystem {
     constructor() {
         super(...arguments);
+        /**
+         * the last collision result
+         */
         this.response = new model_1.Response();
+        /**
+         * reusable inner state - for non convex polygons collisions
+         */
         this.state = {
             collides: false,
             aInB: false,
@@ -164,25 +171,11 @@ class System extends base_system_1.BaseSystem {
      * raycast to get collider of ray from start to end
      */
     raycast(start, end, allowCollider = () => true) {
-        let minDistance = Infinity;
-        let result = null;
-        const ray = this.createLine(start, end);
-        const colliders = this.getPotentials(ray).filter((potential) => allowCollider(potential) && this.checkCollision(ray, potential));
-        this.remove(ray);
-        colliders.forEach((collider) => {
-            const points = collider.type === model_1.Types.Circle
-                ? (0, utils_1.intersectLineCircle)(ray, collider)
-                : (0, utils_1.intersectLinePolygon)(ray, collider);
-            points.forEach((point) => {
-                const pointDistance = (0, utils_1.distance)(start, point);
-                if (pointDistance < minDistance) {
-                    minDistance = pointDistance;
-                    result = { point, collider };
-                }
-            });
-        });
-        return result;
+        return (0, raycast_utils_1.raycast)(this, start, end, allowCollider);
     }
+    /**
+     * update inner state function - for non convex polygons collisions
+     */
     test(sat, body, wall) {
         const collides = sat(body, wall, this.response);
         if (collides) {

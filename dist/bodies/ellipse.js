@@ -10,13 +10,12 @@ const polygon_1 = require("./polygon");
 class Ellipse extends polygon_1.Polygon {
     /**
      * collider - ellipse
-     * @param {PotentialVector} position {x, y}
-     * @param {number} radiusX
-     * @param {number} radiusY defaults to radiusX
-     * @param {number} step precision division >= 1px
      */
     constructor(position, radiusX, radiusY = radiusX, step = (radiusX + radiusY) / Math.PI, options) {
         super(position, (0, utils_1.createEllipse)(radiusX, radiusY, step), options);
+        /**
+         * ellipse type
+         */
         this.type = model_1.Types.Ellipse;
         /**
          * ellipses are centered
@@ -72,11 +71,15 @@ class Ellipse extends polygon_1.Polygon {
     /**
      * do not attempt to use Polygon.center()
      */
-    center() { }
+    center() {
+        return;
+    }
     /**
      * do not attempt to use Polygon.updateIsConvex()
      */
-    updateIsConvex() { }
+    updateIsConvex() {
+        return;
+    }
 }
 exports.Ellipse = Ellipse;
 //# sourceMappingURL=ellipse.js.map

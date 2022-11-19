@@ -3,7 +3,7 @@ require("pixi-shim");
 describe("GIVEN Ellipse", () => {
   describe("AND you adjust radiusX", () => {
     it("THEN it gives correct collision results", () => {
-      const { System } = require("../../dist/");
+      const { System } = require("../../src");
 
       const physics = new System();
       const ellipse = physics.createEllipse({ x: 0, y: 0 }, 10, 30);
@@ -37,7 +37,7 @@ describe("GIVEN Ellipse", () => {
 
   describe("AND you adjust radiusY", () => {
     it("THEN it gives correct collision results", () => {
-      const { System } = require("../../dist/");
+      const { System } = require("../../src");
 
       const physics = new System();
       const ellipse = physics.createEllipse({ x: 0, y: 0 }, 30, 10);
@@ -71,7 +71,7 @@ describe("GIVEN Ellipse", () => {
 
   describe("AND two ellipses perfectly overlap", () => {
     it("THEN they give correct collision results", () => {
-      const { System } = require("../../dist/");
+      const { System } = require("../../src");
 
       const physics = new System();
 
@@ -86,7 +86,7 @@ describe("GIVEN Ellipse", () => {
 
   describe("AND you set options", () => {
     it("THEN the parameters are set", () => {
-      const { System } = require("../../dist/");
+      const { System } = require("../../src");
       const physics = new System();
       const body = physics.createEllipse({}, 10, 10, 1, {
         isStatic: true,

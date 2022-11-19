@@ -6,6 +6,9 @@ import { Polygon } from "./polygon";
  * collider - ellipse
  */
 export class Ellipse extends Polygon {
+  /**
+   * ellipse type
+   */
   readonly type: Types.Ellipse = Types.Ellipse;
 
   /**
@@ -18,16 +21,15 @@ export class Ellipse extends Polygon {
    */
   isConvex = true;
 
-  private _radiusX: number;
-  private _radiusY: number;
-  private _step: number;
+  /**
+   * inner initial params save
+   */
+  protected _radiusX: number;
+  protected _radiusY: number;
+  protected _step: number;
 
   /**
    * collider - ellipse
-   * @param {PotentialVector} position {x, y}
-   * @param {number} radiusX
-   * @param {number} radiusY defaults to radiusX
-   * @param {number} step precision division >= 1px
    */
   constructor(
     position: PotentialVector,
@@ -91,10 +93,14 @@ export class Ellipse extends Polygon {
   /**
    * do not attempt to use Polygon.center()
    */
-  center(): void {}
+  center(): void {
+    return;
+  }
 
   /**
    * do not attempt to use Polygon.updateIsConvex()
    */
-  protected updateIsConvex(): void {}
+  protected updateIsConvex(): void {
+    return;
+  }
 }

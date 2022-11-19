@@ -2,7 +2,7 @@ require("pixi-shim");
 
 describe("GIVEN Box", () => {
   it("THEN changing width works correctly", () => {
-    const { System } = require("../../dist/");
+    const { System } = require("../../src");
 
     const physics = new System();
     const box = physics.createBox({}, 90, 100);
@@ -28,7 +28,7 @@ describe("GIVEN Box", () => {
   });
 
   it("THEN changing height works correctly", () => {
-    const { System } = require("../../dist/");
+    const { System } = require("../../src");
 
     const physics = new System();
     const box = physics.createBox({}, 100, 90);
@@ -54,7 +54,7 @@ describe("GIVEN Box", () => {
   });
 
   it("THEN getPotentials works with Box with angle", () => {
-    const { System, Circle, Box } = require("../../dist/");
+    const { System, Circle, Box } = require("../../src");
 
     const physics = new System();
     const circle = new Circle({ x: 100, y: 100 }, 100);
@@ -90,7 +90,7 @@ describe("GIVEN Box", () => {
   });
 
   it("THEN center() works correctly", () => {
-    const { Box } = require("../../dist/");
+    const { Box } = require("../../src");
 
     const box = new Box({}, 100, 100);
 
@@ -103,7 +103,7 @@ describe("GIVEN Box", () => {
   });
 
   it("THEN even without inserting to system, gives collision results", () => {
-    const { Box, System } = require("../../dist/");
+    const { Box, System } = require("../../src");
 
     // initialize a collision detection system
     const system = new System();

@@ -4,14 +4,13 @@ exports.Circle = void 0;
 const sat_1 = require("sat");
 const model_1 = require("../model");
 const utils_1 = require("../utils");
+const draw_utils_1 = require("../utils/draw-utils");
 /**
  * collider - circle
  */
 class Circle extends sat_1.Circle {
     /**
      * collider - circle
-     * @param {PotentialVector} position {x, y}
-     * @param {number} radius
      */
     constructor(position, radius, options) {
         super((0, utils_1.ensureVectorPoint)(position), radius);
@@ -35,10 +34,16 @@ class Circle extends sat_1.Circle {
          * circles are centered
          */
         this.isCentered = true;
+        /**
+         * circle type
+         */
         this.type = model_1.Types.Circle;
         (0, utils_1.extendBody)(this, options);
         this.radiusBackup = radius;
     }
+    /**
+     * get this.pos.x
+     */
     get x() {
         return this.pos.x;
     }
@@ -50,6 +55,9 @@ class Circle extends sat_1.Circle {
         this.pos.x = x;
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
+    /**
+     * get this.pos.y
+     */
     get y() {
         return this.pos.y;
     }
@@ -87,8 +95,6 @@ class Circle extends sat_1.Circle {
     }
     /**
      * update position
-     * @param {number} x
-     * @param {number} y
      */
     setPosition(x, y) {
         var _a;
@@ -98,18 +104,16 @@ class Circle extends sat_1.Circle {
     }
     /**
      * update scale
-     * @param {number} scale
      */
     setScale(scale, _ignoredParameter) {
         this.r = this.radiusBackup * scale;
     }
     /**
-     * Updates Bounding Box of collider
+     * get body bounding box, without padding
      */
     getAABBAsBBox() {
-        const offset = this.getOffsetWithAngle();
-        const x = this.x + offset.x;
-        const y = this.y + offset.y;
+        const x = this.x + this.offset.x;
+        const y = this.y + this.offset.y;
         return {
             minX: x - this.r,
             maxX: x + this.r,
@@ -119,29 +123,13 @@ class Circle extends sat_1.Circle {
     }
     /**
      * Draws collider on a CanvasRenderingContext2D's current path
-     * @param {CanvasRenderingContext2D} context The canvas context to draw on
      */
     draw(context) {
-        const offset = this.getOffsetWithAngle();
-        const x = this.x + offset.x;
-        const y = this.y + offset.y;
-        if (this.isTrigger) {
-            const max = Math.max(8, this.r);
-            for (let i = 0; i < max; i++) {
-                const arc = (i / max) * 2 * Math.PI;
-                const arcPrev = ((i - 1) / max) * 2 * Math.PI;
-                const fromX = x + Math.cos(arcPrev) * this.r;
-                const fromY = y + Math.sin(arcPrev) * this.r;
-                const toX = x + Math.cos(arc) * this.r;
-                const toY = y + Math.sin(arc) * this.r;
-                (0, utils_1.dashLineTo)(context, fromX, fromY, toX, toY);
-            }
-        }
-        else {
-            context.moveTo(x + this.r, y);
-            context.arc(x, y, this.r, 0, Math.PI * 2);
-        }
+        (0, draw_utils_1.drawCircle)(this, context);
     }
+    /**
+     * set rotation
+     */
     setAngle(angle) {
         this.angle = angle;
         const { x, y } = this.getOffsetWithAngle();
@@ -149,6 +137,9 @@ class Circle extends sat_1.Circle {
         this.offset.y = y;
         return this;
     }
+    /**
+     * set offset from center
+     */
     setOffset(offset) {
         this.offsetCopy.x = offset.x;
         this.offsetCopy.y = offset.y;
@@ -160,7 +151,12 @@ class Circle extends sat_1.Circle {
     /**
      * for compatility reasons, does nothing
      */
-    center() { }
+    center() {
+        return;
+    }
+    /**
+     * internal for getting offset with applied angle
+     */
     getOffsetWithAngle() {
         if (!this.angle) {
             return this.offsetCopy;
