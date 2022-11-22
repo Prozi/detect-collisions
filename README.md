@@ -1,4 +1,4 @@
-# Introduction
+# Detect-Collisions
 
 [<img src="https://img.shields.io/npm/v/detect-collisions?style=flat-square&color=success" alt="npm version" />](https://www.npmjs.com/package/detect-collisions?activeTab=versions)
 [<img src="https://img.shields.io/npm/dw/detect-collisions.svg?style=flat-square&color=success" alt="npm downloads per week" />](https://www.npmjs.com/package/detect-collisions)
@@ -6,7 +6,9 @@
 [<img src="https://img.shields.io/circleci/build/github/Prozi/detect-collisions/master?style=flat-square" alt="build status" />](https://app.circleci.com/pipelines/github/Prozi/detect-collisions)
 [<img src="https://img.shields.io/npm/l/detect-collisions.svg?style=flat-square&color=success" alt="license: MIT" />](https://github.com/Prozi/detect-collisions/blob/master/LICENSE)
 
-**Detect-Collisions** is a fast TypeScript library for detecting collisions between bodies: Points, Lines, Boxes, Polygons, Ellipses and Circles, and for Raycasting. All bodies can have offset, rotation, bounding box padding, be static (non moving) or be trigger bodies (non colliding).
+## Introduction
+
+It is a fast TypeScript library for detecting collisions between bodies: Points, Lines, Boxes, Polygons, Ellipses and Circles, and for Raycasting. All bodies can have offset, rotation, scale, bounding box padding, be static (non moving) or be trigger bodies (non colliding).
 
 This library combines:
 
