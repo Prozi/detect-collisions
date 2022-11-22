@@ -23,7 +23,7 @@ This library combines:
 ## Installation
 
 ```bash
-$ npm run detect-collisions
+$ npm install detect-collisions
 ```
 
 ## API Documentation
