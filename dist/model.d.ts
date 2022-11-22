@@ -49,7 +49,7 @@ export interface PotentialVector {
     y?: number;
 }
 /**
- * { x, y } vector
+ * x, y vector
  */
 export interface Vector extends PotentialVector {
     x: number;

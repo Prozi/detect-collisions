@@ -52,7 +52,7 @@ export interface PotentialVector {
 }
 
 /**
- * { x, y } vector
+ * x, y vector
  */
 export interface Vector extends PotentialVector {
   x: number;

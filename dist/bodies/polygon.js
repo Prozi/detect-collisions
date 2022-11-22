@@ -23,7 +23,7 @@ class Polygon extends sat_1.Polygon {
          */
         this.type = model_1.Types.Polygon;
         /**
-         * scale vector represents {x, y} scale of body
+         * scale Vector of body
          */
         this.scaleVector = { x: 1, y: 1 };
         if (!(points === null || points === void 0 ? void 0 : points.length)) {

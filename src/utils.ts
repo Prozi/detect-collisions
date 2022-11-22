@@ -71,7 +71,7 @@ export function ensurePolygonPoints(points: PotentialVector[]): SATVector[] {
 }
 
 /**
- * get distance between two {x, y} points
+ * get distance between two Vector points
  */
 export function distance(a: Vector, b: Vector): number {
   return Math.hypot(a.x - b.x, a.y - b.y);

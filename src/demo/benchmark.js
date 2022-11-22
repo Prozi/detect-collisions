@@ -33,7 +33,7 @@ const run = (items) => {
     } else {
       summary.unshift({
         value: summary.reduce((sum, entry) => sum + entry.value, 0),
-        name: "Total Frames",
+        name: "Total FPS",
       });
       console.table(summary);
       process.exit(0);

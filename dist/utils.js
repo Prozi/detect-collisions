@@ -48,7 +48,7 @@ function ensurePolygonPoints(points) {
 }
 exports.ensurePolygonPoints = ensurePolygonPoints;
 /**
- * get distance between two {x, y} points
+ * get distance between two Vector points
  */
 function distance(a, b) {
     return Math.hypot(a.x - b.x, a.y - b.y);

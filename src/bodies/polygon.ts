@@ -102,7 +102,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   protected pointsBackup!: Vector[];
 
   /**
-   * scale vector represents {x, y} scale of body
+   * scale Vector of body
    */
   protected readonly scaleVector: Vector = { x: 1, y: 1 };
 

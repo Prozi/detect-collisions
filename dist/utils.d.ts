@@ -18,7 +18,7 @@ export declare function ensureVectorPoint(point?: PotentialVector): SATVector;
  */
 export declare function ensurePolygonPoints(points: PotentialVector[]): SATVector[];
 /**
- * get distance between two {x, y} points
+ * get distance between two Vector points
  */
 export declare function distance(a: Vector, b: Vector): number;
 /**
