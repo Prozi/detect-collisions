@@ -1,24 +1,27 @@
 # Introduction
 
-**Detect-Collisions** is a fast TypeScript (transpiled to JavaScript) library - for quickly and accurately detecting collisions between Points, Lines, Boxes, Polygons, Ellipses and Circles, also with rotation. It combines the efficiency of a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and the accuracy of the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
+[<img src="https://img.shields.io/npm/v/detect-collisions?style=flat&color=success" alt="npm version" />](https://www.npmjs.com/package/detect-collisions?activeTab=versions)
+[<img src="https://img.shields.io/npm/dw/detect-collisions.svg?style=flat&color=success" alt="npm downloads per week" />](https://www.npmjs.com/package/detect-collisions)
+[<img src="https://img.shields.io/snyk/vulnerabilities/github/Prozi/detect-collisions?style=flat" alt="vulnerabilities" />](https://snyk.io/test/github/Prozi/detect-collisions)
+[<img src="https://img.shields.io/circleci/build/github/Prozi/detect-collisions/master?style=flat" alt="build status" />](https://app.circleci.com/pipelines/github/Prozi/detect-collisions)
+[<img src="https://img.shields.io/npm/l/detect-collisions.svg?style=flat&color=success" alt="license: MIT" />](https://github.com/Prozi/detect-collisions/blob/master/LICENSE)
 
-[<img src="https://img.shields.io/npm/v/detect-collisions?style=for-the-badge&color=success" alt="npm version" />](https://www.npmjs.com/package/detect-collisions?activeTab=versions)
-[<img src="https://img.shields.io/npm/dw/detect-collisions.svg?style=for-the-badge&color=success" alt="npm downloads per week" />](https://www.npmjs.com/package/detect-collisions)
-[<img src="https://img.shields.io/circleci/build/github/Prozi/detect-collisions/master?style=for-the-badge" alt="build status" />](https://app.circleci.com/pipelines/github/Prozi/detect-collisions)
+**Detect-Collisions** is a fast TypeScript library for detecting collisions between bodies: Points, Lines, Boxes, Polygons, Ellipses and Circles, and for Raycasting. All bodies can have offset, rotation, bounding box padding, be static (non moving) or be trigger bodies (non colliding).
 
-[<img src="https://img.shields.io/npm/l/detect-collisions.svg?style=for-the-badge&color=success" alt="license: MIT" />](https://github.com/Prozi/detect-collisions/blob/master/LICENSE)
-[<img src="https://img.shields.io/npm/types/typescript?style=for-the-badge&color=success" alt="typescript" />](https://github.com/Prozi/detect-collisions/blob/master/package.json#L6)
-[<img src="https://img.shields.io/snyk/vulnerabilities/github/Prozi/detect-collisions?style=for-the-badge" alt="vulnerabilities" />](https://snyk.io/test/github/Prozi/detect-collisions)
+This library combines the:
+
+- efficiency of [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and
+- the accuracy of [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
 
 ## Demos
 
 - [Tank](https://prozi.github.io/detect-collisions/demo/)
 - [Stress Test](https://prozi.github.io/detect-collisions/demo/?stress)
 
-## Install
+## Installation
 
 ```bash
-$ yarn add detect-collisions
+$ npm run detect-collisions
 ```
 
 ## API Documentation
