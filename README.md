@@ -8,10 +8,10 @@
 
 **Detect-Collisions** is a fast TypeScript library for detecting collisions between bodies: Points, Lines, Boxes, Polygons, Ellipses and Circles, and for Raycasting. All bodies can have offset, rotation, bounding box padding, be static (non moving) or be trigger bodies (non colliding).
 
-This library combines the:
+This library combines:
 
 - efficiency of [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and
-- the accuracy of [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
+- accuracy of [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
 
 ## Demos
 
