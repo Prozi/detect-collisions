@@ -1,10 +1,10 @@
 # Introduction
 
-[<img src="https://img.shields.io/npm/v/detect-collisions?style=flat&color=success" alt="npm version" />](https://www.npmjs.com/package/detect-collisions?activeTab=versions)
-[<img src="https://img.shields.io/npm/dw/detect-collisions.svg?style=flat&color=success" alt="npm downloads per week" />](https://www.npmjs.com/package/detect-collisions)
-[<img src="https://img.shields.io/snyk/vulnerabilities/github/Prozi/detect-collisions?style=flat" alt="vulnerabilities" />](https://snyk.io/test/github/Prozi/detect-collisions)
-[<img src="https://img.shields.io/circleci/build/github/Prozi/detect-collisions/master?style=flat" alt="build status" />](https://app.circleci.com/pipelines/github/Prozi/detect-collisions)
-[<img src="https://img.shields.io/npm/l/detect-collisions.svg?style=flat&color=success" alt="license: MIT" />](https://github.com/Prozi/detect-collisions/blob/master/LICENSE)
+[<img src="https://img.shields.io/npm/v/detect-collisions?style=flat-square&color=success" alt="npm version" />](https://www.npmjs.com/package/detect-collisions?activeTab=versions)
+[<img src="https://img.shields.io/npm/dw/detect-collisions.svg?style=flat-square&color=success" alt="npm downloads per week" />](https://www.npmjs.com/package/detect-collisions)
+[<img src="https://img.shields.io/snyk/vulnerabilities/github/Prozi/detect-collisions?style=flat-square" alt="vulnerabilities" />](https://snyk.io/test/github/Prozi/detect-collisions)
+[<img src="https://img.shields.io/circleci/build/github/Prozi/detect-collisions/master?style=flat-square" alt="build status" />](https://app.circleci.com/pipelines/github/Prozi/detect-collisions)
+[<img src="https://img.shields.io/npm/l/detect-collisions.svg?style=flat-square&color=success" alt="license: MIT" />](https://github.com/Prozi/detect-collisions/blob/master/LICENSE)
 
 **Detect-Collisions** is a fast TypeScript library for detecting collisions between bodies: Points, Lines, Boxes, Polygons, Ellipses and Circles, and for Raycasting. All bodies can have offset, rotation, bounding box padding, be static (non moving) or be trigger bodies (non colliding).
 
