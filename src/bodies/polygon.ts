@@ -181,6 +181,10 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   setPosition(x: number, y: number): void {
     this.pos.x = x;
     this.pos.y = y;
+    this.convexPolygons?.forEach((polygon: SATPolygon) => {
+      polygon.pos.x = x;
+      polygon.pos.y = y;
+    });
     this.system?.insert(this);
   }
 
