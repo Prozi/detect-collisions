@@ -40,6 +40,7 @@ class Polygon extends sat_1.Polygon {
     set x(x) {
         var _a;
         this.pos.x = x;
+        this.updateConvexPolygonPositions();
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     get y() {
@@ -51,6 +52,7 @@ class Polygon extends sat_1.Polygon {
     set y(y) {
         var _a;
         this.pos.y = y;
+        this.updateConvexPolygonPositions();
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     /**
@@ -84,6 +86,7 @@ class Polygon extends sat_1.Polygon {
         var _a;
         this.pos.x = x;
         this.pos.y = y;
+        this.updateConvexPolygonPositions();
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
     /**
@@ -191,6 +194,17 @@ class Polygon extends sat_1.Polygon {
         this.pos.x += x;
         this.pos.y += y;
         this.isCentered = true;
+    }
+    /**
+     * update the position of the decomposed convex polygons (if any), called
+     * after the position of the body has changed
+     */
+    updateConvexPolygonPositions() {
+        var _a;
+        (_a = this.convexPolygons) === null || _a === void 0 ? void 0 : _a.forEach((polygon) => {
+            polygon.pos.x = this.pos.x;
+            polygon.pos.y = this.pos.y;
+        });
     }
     /**
      * returns body split into convex polygons, or empty array for convex bodies

@@ -188,17 +188,6 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   }
 
   /**
-   * update the position of the decomposed convex polygons (if any), called
-   * after the position of the body has changed
-   */
-  protected updateConvexPolygonPositions() {
-    this.convexPolygons?.forEach((polygon: SATPolygon) => {
-      polygon.pos.x = this.pos.x;
-      polygon.pos.y = this.pos.y;
-    });
-  }
-
-  /**
    * update scale
    */
   setScale(x: number, y: number = x): void {
@@ -319,6 +308,17 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     this.pos.x += x;
     this.pos.y += y;
     this.isCentered = true;
+  }
+
+  /**
+   * update the position of the decomposed convex polygons (if any), called
+   * after the position of the body has changed
+   */
+  protected updateConvexPolygonPositions() {
+    this.convexPolygons?.forEach((polygon: SATPolygon) => {
+      polygon.pos.x = this.pos.x;
+      polygon.pos.y = this.pos.y;
+    });
   }
 
   /**

@@ -88,6 +88,7 @@
 <a href="Point.html#setPosition" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>set<wbr/>Position</span></a>
 <a href="Point.html#setScale" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>set<wbr/>Scale</span></a>
 <a href="Point.html#translate" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>translate</span></a>
+<a href="Point.html#updateConvexPolygonPositions" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>update<wbr/>Convex<wbr/>Polygon<wbr/>Positions</span></a>
 <a href="Point.html#updateConvexPolygons" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>update<wbr/>Convex<wbr/>Polygons</span></a>
 <a href="Point.html#updateIsConvex" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>update<wbr/>Is<wbr/>Convex</span></a>
 </div></section></div></details></section></section>
@@ -331,7 +332,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <p>Inherited from Box.scale</p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L167">src/bodies/polygon.ts:167</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L169">src/bodies/polygon.ts:169</a></li></ul></aside></li>
 <li class="tsd-signature" id="scale.scale-2"><span class="tsd-signature-symbol">set</span> scale<span class="tsd-signature-symbol">(</span>scale<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>allow easier setting of scale</p>
@@ -344,7 +345,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Inherited from Box.scale</p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L174">src/bodies/polygon.ts:174</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L176">src/bodies/polygon.ts:176</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><a id="scaleX" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>scaleX</span><a href="#scaleX" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited">
@@ -355,7 +356,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <p>Inherited from Box.scaleX</p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L153">src/bodies/polygon.ts:153</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L155">src/bodies/polygon.ts:155</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><a id="scaleY" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>scaleY</span><a href="#scaleY" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited">
@@ -366,7 +367,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <p>Inherited from Box.scaleY</p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L160">src/bodies/polygon.ts:160</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L162">src/bodies/polygon.ts:162</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><a id="width" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>width</span><a href="#width" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited">
@@ -421,7 +422,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <p>Inherited from Box.y</p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L138">src/bodies/polygon.ts:138</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L139">src/bodies/polygon.ts:139</a></li></ul></aside></li>
 <li class="tsd-signature" id="y.y-2"><span class="tsd-signature-symbol">set</span> y<span class="tsd-signature-symbol">(</span>y<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>updating this.pos.y by this.y = y updates AABB</p>
@@ -434,7 +435,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Inherited from Box.y</p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L145">src/bodies/polygon.ts:145</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L146">src/bodies/polygon.ts:146</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="center" class="tsd-anchor"></a>
@@ -447,7 +448,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="Box.html">Box</a>.<a href="Box.html#center">center</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L298">src/bodies/polygon.ts:298</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L301">src/bodies/polygon.ts:301</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="draw" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>draw</span><a href="#draw" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -463,7 +464,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="Box.html">Box</a>.<a href="Box.html#draw">draw</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L219">src/bodies/polygon.ts:219</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L222">src/bodies/polygon.ts:222</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="getAABB" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>getAABB</span><a href="#getAABB" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
@@ -483,7 +484,7 @@
 <h4 class="tsd-returns-title">Returns <a href="../interfaces/BBox.html" class="tsd-signature-type" data-tsd-kind="Interface">BBox</a></h4><aside class="tsd-sources">
 <p>Inherited from <a href="Box.html">Box</a>.<a href="Box.html#getAABBAsBBox">getAABBAsBBox</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L205">src/bodies/polygon.ts:205</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L208">src/bodies/polygon.ts:208</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="getCentroid" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Centroid</span><a href="#getCentroid" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
@@ -503,7 +504,7 @@
 <h4 class="tsd-returns-title">Returns <a href="../interfaces/Vector.html" class="tsd-signature-type" data-tsd-kind="Interface">Vector</a></h4><aside class="tsd-sources">
 <p>Inherited from <a href="Box.html">Box</a>.<a href="Box.html#getCentroidWithoutRotation">getCentroidWithoutRotation</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L251">src/bodies/polygon.ts:251</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L254">src/bodies/polygon.ts:254</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a id="getConvex" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>get<wbr/>Convex</span><a href="#getConvex" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited">
@@ -514,7 +515,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="Box.html">Box</a>.<a href="Box.html#getConvex">getConvex</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L313">src/bodies/polygon.ts:313</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L327">src/bodies/polygon.ts:327</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="rotate" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>rotate</span><a href="#rotate" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -530,7 +531,7 @@
 <h4 class="tsd-returns-title">Returns <a href="Polygon.html" class="tsd-signature-type" data-tsd-kind="Class">Polygon</a></h4><aside class="tsd-sources">
 <p>Inherited from <a href="Box.html">Box</a>.<a href="Box.html#rotate">rotate</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L288">src/bodies/polygon.ts:288</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L291">src/bodies/polygon.ts:291</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="setAngle" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Angle</span><a href="#setAngle" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
@@ -578,7 +579,7 @@
 <h4 class="tsd-returns-title">Returns <a href="Polygon.html" class="tsd-signature-type" data-tsd-kind="Class">Polygon</a></h4><aside class="tsd-sources">
 <p>Inherited from <a href="Box.html">Box</a>.<a href="Box.html#setPoints">setPoints</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L267">src/bodies/polygon.ts:267</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L270">src/bodies/polygon.ts:270</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="setPosition" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Position</span><a href="#setPosition" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -596,7 +597,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="Box.html">Box</a>.<a href="Box.html#setPosition">setPosition</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L181">src/bodies/polygon.ts:181</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L183">src/bodies/polygon.ts:183</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="setScale" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Scale</span><a href="#setScale" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -614,7 +615,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="Box.html">Box</a>.<a href="Box.html#setScale">setScale</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L190">src/bodies/polygon.ts:190</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L193">src/bodies/polygon.ts:193</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a id="translate" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>translate</span><a href="#translate" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited">
@@ -632,7 +633,19 @@
 <h4 class="tsd-returns-title">Returns <a href="Polygon.html" class="tsd-signature-type" data-tsd-kind="Class">Polygon</a></h4><aside class="tsd-sources">
 <p>Inherited from <a href="Box.html">Box</a>.<a href="Box.html#translate">translate</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L278">src/bodies/polygon.ts:278</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L281">src/bodies/polygon.ts:281</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a id="updateConvexPolygonPositions" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>update<wbr/>Convex<wbr/>Polygon<wbr/>Positions</span><a href="#updateConvexPolygonPositions" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited">
+<li class="tsd-signature tsd-anchor-link" id="updateConvexPolygonPositions.updateConvexPolygonPositions-1">update<wbr/>Convex<wbr/>Polygon<wbr/>Positions<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#updateConvexPolygonPositions.updateConvexPolygonPositions-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>update the position of the decomposed convex polygons (if any), called
+after the position of the body has changed</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<p>Inherited from <a href="Box.html">Box</a>.<a href="Box.html#updateConvexPolygonPositions">updateConvexPolygonPositions</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L317">src/bodies/polygon.ts:317</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a id="updateConvexPolygons" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>update<wbr/>Convex<wbr/>Polygons</span><a href="#updateConvexPolygons" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited">
@@ -648,7 +661,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Inherited from <a href="Box.html">Box</a>.<a href="Box.html#updateConvexPolygons">updateConvexPolygons</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L324">src/bodies/polygon.ts:324</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L338">src/bodies/polygon.ts:338</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a id="updateIsConvex" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>update<wbr/>Is<wbr/>Convex</span><a href="#updateIsConvex" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited">
@@ -731,6 +744,7 @@
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="Point.html#setPosition" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>set<wbr/>Position</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="Point.html#setScale" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>set<wbr/>Scale</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><a href="Point.html#translate" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>translate</a></li>
+<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a href="Point.html#updateConvexPolygonPositions" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>update<wbr/>Convex<wbr/>Polygon<wbr/>Positions</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a href="Point.html#updateConvexPolygons" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>update<wbr/>Convex<wbr/>Polygons</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited"><a href="Point.html#updateIsConvex" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>update<wbr/>Is<wbr/>Convex</a></li></ul></li></ul></nav></div></div>
 <div class="container tsd-generator">

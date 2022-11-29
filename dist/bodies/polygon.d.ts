@@ -133,6 +133,11 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      */
     center(): void;
     /**
+     * update the position of the decomposed convex polygons (if any), called
+     * after the position of the body has changed
+     */
+    protected updateConvexPolygonPositions(): void;
+    /**
      * returns body split into convex polygons, or empty array for convex bodies
      */
     protected getConvex(): number[][][];

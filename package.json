@@ -1,6 +1,6 @@
 {
   "name": "detect-collisions",
-  "version": "6.6.7",
+  "version": "6.6.8",
   "description": "2d collision detection for Points, Lines, Boxes, Polygons, Ellipses and Circles (with SAT and BVH)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -70,7 +70,7 @@
     "husky": "^8.0.2",
     "jest": "^29.3.1",
     "pixi-shim": "^2.4.0",
-    "prettier": "^2.7.1",
+    "prettier": "^2.8.0",
     "random-seed": "^0.3.0",
     "rimraf": "^3.0.2",
     "tinybench": "^2.3.1",
