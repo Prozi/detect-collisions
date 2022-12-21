@@ -13,13 +13,13 @@ import {
 } from "../model";
 import { System } from "../system";
 import {
-  dashLineTo,
   ensurePolygonPoints,
   ensureVectorPoint,
   extendBody,
   mapArrayToVector,
   mapVectorToArray,
   clonePointsArray,
+  drawPolygon,
 } from "../utils";
 
 /**
@@ -219,33 +219,8 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   /**
    * Draws collider on a CanvasRenderingContext2D's current path
    */
-  draw(context: CanvasRenderingContext2D): void {
-    const points: Vector[] = [...this.calcPoints, this.calcPoints[0]];
-
-    points.forEach((point: Vector, index: number) => {
-      const toX = this.x + point.x;
-      const toY = this.y + point.y;
-      const prev =
-        this.calcPoints[index - 1] ||
-        this.calcPoints[this.calcPoints.length - 1];
-
-      if (!index) {
-        if (this.calcPoints.length === 1) {
-          context.arc(toX, toY, 1, 0, Math.PI * 2);
-        } else {
-          context.moveTo(toX, toY);
-        }
-      } else if (this.calcPoints.length > 1) {
-        if (this.isTrigger) {
-          const fromX = this.x + prev.x;
-          const fromY = this.y + prev.y;
-
-          dashLineTo(context, fromX, fromY, toX, toY);
-        } else {
-          context.lineTo(toX, toY);
-        }
-      }
-    });
+  draw(context: CanvasRenderingContext2D) {
+    drawPolygon(context, this, this.isTrigger);
   }
 
   /**

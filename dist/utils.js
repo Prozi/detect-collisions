@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.drawPolygon = exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = require("sat");
 const line_1 = require("./bodies/line");
 const model_1 = require("./model");
@@ -232,4 +232,30 @@ function getSATFunction(body, wall) {
     return (wall.type === model_1.Types.Circle ? sat_1.testPolygonCircle : sat_1.testPolygonPolygon);
 }
 exports.getSATFunction = getSATFunction;
+function drawPolygon(context, { pos, calcPoints }, isTrigger = false) {
+    [...calcPoints, calcPoints[0]].forEach((point, index) => {
+        const toX = pos.x + point.x;
+        const toY = pos.y + point.y;
+        const prev = calcPoints[index - 1] || calcPoints[calcPoints.length - 1];
+        if (!index) {
+            if (calcPoints.length === 1) {
+                context.arc(toX, toY, 1, 0, Math.PI * 2);
+            }
+            else {
+                context.moveTo(toX, toY);
+            }
+        }
+        else if (calcPoints.length > 1) {
+            if (isTrigger) {
+                const fromX = pos.x + prev.x;
+                const fromY = pos.y + prev.y;
+                dashLineTo(context, fromX, fromY, toX, toY);
+            }
+            else {
+                context.lineTo(toX, toY);
+            }
+        }
+    });
+}
+exports.drawPolygon = drawPolygon;
 //# sourceMappingURL=utils.js.map

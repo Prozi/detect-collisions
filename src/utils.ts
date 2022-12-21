@@ -14,6 +14,7 @@ import {
   Body,
   BodyOptions,
   PotentialVector,
+  SATPolygon,
   TestFunction,
   Types,
   Vector,
@@ -303,4 +304,33 @@ export function getSATFunction(body: Body, wall: Body): TestFunction {
   return (
     wall.type === Types.Circle ? testPolygonCircle : testPolygonPolygon
   ) as TestFunction;
+}
+
+export function drawPolygon(
+  context: CanvasRenderingContext2D,
+  { pos, calcPoints }: Polygon | SATPolygon,
+  isTrigger = false
+): void {
+  [...calcPoints, calcPoints[0]].forEach((point: Vector, index: number) => {
+    const toX = pos.x + point.x;
+    const toY = pos.y + point.y;
+    const prev = calcPoints[index - 1] || calcPoints[calcPoints.length - 1];
+
+    if (!index) {
+      if (calcPoints.length === 1) {
+        context.arc(toX, toY, 1, 0, Math.PI * 2);
+      } else {
+        context.moveTo(toX, toY);
+      }
+    } else if (calcPoints.length > 1) {
+      if (isTrigger) {
+        const fromX = pos.x + prev.x;
+        const fromY = pos.y + prev.y;
+
+        dashLineTo(context, fromX, fromY, toX, toY);
+      } else {
+        context.lineTo(toX, toY);
+      }
+    }
+  });
 }

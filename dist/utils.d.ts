@@ -3,7 +3,7 @@ import { Vector as SATVector } from "sat";
 import { Circle } from "./bodies/circle";
 import { Line } from "./bodies/line";
 import { Polygon } from "./bodies/polygon";
-import { Body, BodyOptions, PotentialVector, TestFunction, Vector } from "./model";
+import { Body, BodyOptions, PotentialVector, SATPolygon, TestFunction, Vector } from "./model";
 export declare function createEllipse(radiusX: number, radiusY?: number, step?: number): SATVector[];
 /**
  * creates box polygon points
@@ -60,4 +60,5 @@ export declare function ensureConvex(body: Body): Body[];
  */
 export declare function getBounceDirection(body: Vector, collider: Vector): Vector;
 export declare function getSATFunction(body: Body, wall: Body): TestFunction;
+export declare function drawPolygon(context: CanvasRenderingContext2D, { pos, calcPoints }: Polygon | SATPolygon, isTrigger?: boolean): void;
 //# sourceMappingURL=utils.d.ts.map

@@ -685,31 +685,7 @@ class Polygon extends sat_1.Polygon {
      * Draws collider on a CanvasRenderingContext2D's current path
      */
     draw(context) {
-        const points = [...this.calcPoints, this.calcPoints[0]];
-        points.forEach((point, index) => {
-            const toX = this.x + point.x;
-            const toY = this.y + point.y;
-            const prev = this.calcPoints[index - 1] ||
-                this.calcPoints[this.calcPoints.length - 1];
-            if (!index) {
-                if (this.calcPoints.length === 1) {
-                    context.arc(toX, toY, 1, 0, Math.PI * 2);
-                }
-                else {
-                    context.moveTo(toX, toY);
-                }
-            }
-            else if (this.calcPoints.length > 1) {
-                if (this.isTrigger) {
-                    const fromX = this.x + prev.x;
-                    const fromY = this.y + prev.y;
-                    (0, utils_1.dashLineTo)(context, fromX, fromY, toX, toY);
-                }
-                else {
-                    context.lineTo(toX, toY);
-                }
-            }
-        });
+        (0, utils_1.drawPolygon)(context, this, this.isTrigger);
     }
     /**
      * get body centroid without applied angle
@@ -1128,7 +1104,7 @@ exports.System = System;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.drawPolygon = exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js");
 const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
@@ -1360,6 +1336,32 @@ function getSATFunction(body, wall) {
     return (wall.type === model_1.Types.Circle ? sat_1.testPolygonCircle : sat_1.testPolygonPolygon);
 }
 exports.getSATFunction = getSATFunction;
+function drawPolygon(context, { pos, calcPoints }, isTrigger = false) {
+    [...calcPoints, calcPoints[0]].forEach((point, index) => {
+        const toX = pos.x + point.x;
+        const toY = pos.y + point.y;
+        const prev = calcPoints[index - 1] || calcPoints[calcPoints.length - 1];
+        if (!index) {
+            if (calcPoints.length === 1) {
+                context.arc(toX, toY, 1, 0, Math.PI * 2);
+            }
+            else {
+                context.moveTo(toX, toY);
+            }
+        }
+        else if (calcPoints.length > 1) {
+            if (isTrigger) {
+                const fromX = pos.x + prev.x;
+                const fromY = pos.y + prev.y;
+                dashLineTo(context, fromX, fromY, toX, toY);
+            }
+            else {
+                context.lineTo(toX, toY);
+            }
+        }
+    });
+}
+exports.drawPolygon = drawPolygon;
 //# sourceMappingURL=utils.js.map
 
 /***/ }),
@@ -3775,6 +3777,199 @@ class Tank {
     this.physics = new System();
     this.bodies = [];
     this.player = this.createPlayer(400, 300);
+
+    this.createPolygon(
+      300,
+      300,
+      [
+        {
+          x: 970,
+          y: 270.5033381761426,
+        },
+        {
+          x: 970.0000000000001,
+          y: 420.5033381761426,
+        },
+        {
+          x: 969.0000000000001,
+          y: 420.5033381761426,
+        },
+        {
+          x: 969.0000000000001,
+          y: 530,
+        },
+        {
+          x: 968.7287983217848,
+          y: 530,
+        },
+        {
+          x: 968.7287983217848,
+          y: 531,
+        },
+        {
+          x: 878.7287983217848,
+          y: 531,
+        },
+        {
+          x: 878.7287983217848,
+          y: 530,
+        },
+        {
+          x: 844.9555134337561,
+          y: 530,
+        },
+        {
+          x: 844.9555134337561,
+          y: 531,
+        },
+        {
+          x: 764.9555134337561,
+          y: 531,
+        },
+        {
+          x: 764.9555134337561,
+          y: 530,
+        },
+        {
+          x: 657.0000000000007,
+          y: 530,
+        },
+        {
+          x: 578.5920793286247,
+          y: 451.59207932862427,
+        },
+        {
+          x: 564.4499437048937,
+          y: 465.73421495235533,
+        },
+        {
+          x: 507.8814012099698,
+          y: 409.1656724574315,
+        },
+        {
+          x: 522.0235368337007,
+          y: 395.0235368337006,
+        },
+        {
+          x: 472,
+          y: 345,
+        },
+        {
+          x: 472,
+          y: 344,
+        },
+        {
+          x: 471,
+          y: 344,
+        },
+        {
+          x: 470,
+          y: 343,
+        },
+        {
+          x: 469,
+          y: 344,
+        },
+        {
+          x: 371.93498193881544,
+          y: 344,
+        },
+        {
+          x: 371.93498193881544,
+          y: 345,
+        },
+        {
+          x: 291.93498193881544,
+          y: 345,
+        },
+        {
+          x: 291.93498193881544,
+          y: 344,
+        },
+        {
+          x: 263.00000000000006,
+          y: 344,
+        },
+        {
+          x: 263,
+          y: 225,
+        },
+        {
+          x: 262,
+          y: 225,
+        },
+        {
+          x: 262,
+          y: 75,
+        },
+        {
+          x: 263,
+          y: 75,
+        },
+        {
+          x: 263,
+          y: 70,
+        },
+        {
+          x: 289.2059369307241,
+          y: 70,
+        },
+        {
+          x: 289.2059369307241,
+          y: 50,
+        },
+        {
+          x: 379.2059369307241,
+          y: 50,
+        },
+        {
+          x: 379.2059369307241,
+          y: 70,
+        },
+        {
+          x: 538.640166274238,
+          y: 69.99999999999997,
+        },
+        {
+          x: 538.640166274238,
+          y: 67.99999999999997,
+        },
+        {
+          x: 618.640166274238,
+          y: 68.00000000000001,
+        },
+        {
+          x: 618.640166274238,
+          y: 70.00000000000001,
+        },
+        {
+          x: 823.2657226785277,
+          y: 69.99999999999997,
+        },
+        {
+          x: 823.2657226785277,
+          y: 67.99999999999997,
+        },
+        {
+          x: 913.2657226785277,
+          y: 67.99999999999996,
+        },
+        {
+          x: 913.2657226785277,
+          y: 69.99999999999996,
+        },
+        {
+          x: 969,
+          y: 69.99999999999994,
+        },
+        {
+          x: 969,
+          y: 270.5033381761426,
+        },
+      ]
+        .map(mapVectorToArray)
+        .map(([x, y]) => [x * 0.3, y * 0.3])
+    );
 
     this.createPolygon(
       300,

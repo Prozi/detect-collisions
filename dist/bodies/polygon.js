@@ -117,31 +117,7 @@ class Polygon extends sat_1.Polygon {
      * Draws collider on a CanvasRenderingContext2D's current path
      */
     draw(context) {
-        const points = [...this.calcPoints, this.calcPoints[0]];
-        points.forEach((point, index) => {
-            const toX = this.x + point.x;
-            const toY = this.y + point.y;
-            const prev = this.calcPoints[index - 1] ||
-                this.calcPoints[this.calcPoints.length - 1];
-            if (!index) {
-                if (this.calcPoints.length === 1) {
-                    context.arc(toX, toY, 1, 0, Math.PI * 2);
-                }
-                else {
-                    context.moveTo(toX, toY);
-                }
-            }
-            else if (this.calcPoints.length > 1) {
-                if (this.isTrigger) {
-                    const fromX = this.x + prev.x;
-                    const fromY = this.y + prev.y;
-                    (0, utils_1.dashLineTo)(context, fromX, fromY, toX, toY);
-                }
-                else {
-                    context.lineTo(toX, toY);
-                }
-            }
-        });
+        (0, utils_1.drawPolygon)(context, this, this.isTrigger);
     }
     /**
      * get body centroid without applied angle
