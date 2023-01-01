@@ -248,10 +248,10 @@ export function intersectLinePolygon(line: Line, polygon: Polygon): Vector[] {
       const from: Vector = index
         ? polygon.calcPoints[index - 1]
         : polygon.calcPoints[polygon.calcPoints.length - 1];
-      const side: Line = new Line(
-        { x: from.x + polygon.pos.x, y: from.y + polygon.pos.y },
-        { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y }
-      );
+      const side: Line = {
+        start: { x: from.x + polygon.pos.x, y: from.y + polygon.pos.y },
+        end: { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y },
+      } as Line;
 
       return intersectLineLine(line, side);
     })
@@ -308,10 +308,12 @@ export function getSATFunction(body: Body, wall: Body): TestFunction {
 
 export function drawPolygon(
   context: CanvasRenderingContext2D,
-  { pos, calcPoints }: Polygon | SATPolygon,
+  { pos, calcPoints }: Pick<Polygon | SATPolygon, "pos" | "calcPoints">,
   isTrigger = false
 ): void {
-  [...calcPoints, calcPoints[0]].forEach((point: Vector, index: number) => {
+  const loopPoints = [...calcPoints, calcPoints[0]];
+
+  loopPoints.forEach((point: Vector, index: number) => {
     const toX = pos.x + point.x;
     const toY = pos.y + point.y;
     const prev = calcPoints[index - 1] || calcPoints[calcPoints.length - 1];

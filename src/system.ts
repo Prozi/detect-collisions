@@ -42,6 +42,8 @@ export class System extends BaseSystem {
     overlapV: new SATVector(),
   };
 
+  private ray!: Line;
+
   /**
    * remove body aabb from collision tree
    */
@@ -219,19 +221,27 @@ export class System extends BaseSystem {
     let minDistance = Infinity;
     let result: RaycastResult = null;
 
-    const ray: Line = this.createLine(start, end);
-    const colliders: Body[] = this.getPotentials(ray).filter(
+    if (!this.ray) {
+      this.ray = new Line(start, end, { isTrigger: true });
+    } else {
+      this.ray.start = start;
+      this.ray.end = end;
+    }
+
+    this.insert(this.ray);
+
+    const colliders: Body[] = this.getPotentials(this.ray).filter(
       (potential: Body) =>
-        allowCollider(potential) && this.checkCollision(ray, potential)
+        allowCollider(potential) && this.checkCollision(this.ray, potential)
     );
 
-    this.remove(ray);
+    this.remove(this.ray);
 
     colliders.forEach((collider: Body) => {
       const points: Vector[] =
         collider.type === Types.Circle
-          ? intersectLineCircle(ray, collider)
-          : intersectLinePolygon(ray, collider);
+          ? intersectLineCircle(this.ray, collider)
+          : intersectLinePolygon(this.ray, collider);
 
       points.forEach((point: Vector) => {
         const pointDistance: number = distance(start, point);
