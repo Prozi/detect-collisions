@@ -28,6 +28,24 @@ describe("GIVEN Line", () => {
     expect(results).toBeGreaterThan(0);
   });
 
+  it("THEN you can set and get start and end", () => {
+    const { System } = require("../../src");
+    const physics = new System();
+
+    const start = { x: 13, y: 13 };
+    const end = { x: 69, y: 69 };
+    const line = physics.createLine(start, end);
+
+    expect(line.start).toStrictEqual(start);
+    expect(line.end).toStrictEqual(end);
+
+    line.start = { x: 10, y: 10 };
+    expect(line.start).toStrictEqual({ x: 10, y: 10 });
+
+    line.end = { x: 99, y: 99 };
+    expect(line.end).toStrictEqual({ x: 99, y: 99 });
+  });
+
   describe("AND you set options", () => {
     it("THEN the parameters are set", () => {
       const { System } = require("../../src");

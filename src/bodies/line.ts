@@ -44,11 +44,22 @@ export class Line extends Polygon {
     };
   }
 
+  set start({ x, y }: Vector) {
+    this.x = x;
+    this.y = y;
+  }
+
   get end(): Vector {
     return {
       x: this.x + this.calcPoints[1].x,
       y: this.y + this.calcPoints[1].y,
     };
+  }
+
+  set end({ x, y }: Vector) {
+    this.points[1].x = x - this.start.x;
+    this.points[1].y = y - this.start.y;
+    this.setPoints(this.points);
   }
 
   getCentroid(): SATVector {
