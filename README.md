@@ -38,8 +38,8 @@ https://prozi.github.io/detect-collisions/modules.html
 
 To start, create a unique collisions system:
 
-```typescript
-const physics: System = new System();
+```javascript
+const physics = new System();
 ```
 
 ### 2. Body Information
@@ -83,8 +83,8 @@ const physics: System = new System();
 
 Last optional parameter for body creation is always [BodyOptions](https://prozi.github.io/detect-collisions/interfaces/BodyOptions.html)
 
-```typescript
-const options: BodyOptions = {
+```javascript
+const options = {
   angle: 0,
   center: false,
   isStatic: false,
@@ -95,15 +95,15 @@ const options: BodyOptions = {
 
 #### 👉 Only create Body
 
-```typescript
+```javascript
 // create with options, without insert
-const circle: Circle = new Circle(position, radius, options);
-const polygon: Polygon = new Polygon(position, points, options);
+const circle = new Circle(position, radius, options);
+const polygon = new Polygon(position, points, options);
 ```
 
 #### 👉 Only insert Body
 
-```typescript
+```javascript
 // insert, without create
 physics.insert(circle);
 physics.insert(polygon);
@@ -111,24 +111,24 @@ physics.insert(polygon);
 
 #### 👉 Create and insert Body
 
-```typescript
+```javascript
 // create with options, and insert
-const circle: Circle = physics.createCircle(position, radius, options);
-const polygon: Polygon = physics.createPolygon(position, points, options);
+const circle = physics.createCircle(position, radius, options);
+const polygon = physics.createPolygon(position, points, options);
 ```
 
 ### 4. Move Body
 
 `setPosition`: this modifies the `element.pos.x` and `element.pos.y` and updates its bounding box in collision physics.
 
-```typescript
+```javascript
 circle.setPosition(x, y);
 polygon.setPosition(x, y);
 ```
 
 ### 5. Remove Body
 
-```typescript
+```javascript
 physics.remove(circle);
 physics.remove(polygon);
 ```
@@ -141,12 +141,12 @@ physics.remove(polygon);
 
 Collisions systems need to be updated when the bodies within them change. This includes when bodies are inserted, removed, or when their properties change (e.g. position, angle, scaling, etc.). Updating a collision system can be done by calling `update()` which should typically occur once per frame. Updating the `System` by after each position change is **required** for `System` to detect `BVH` correctly.
 
-```typescript
+```javascript
 // update one body, use anytime
 physics.updateBody(body);
 ```
 
-```typescript
+```javascript
 // update all bodies (use 0-1 times per frame):
 physics.update();
 ```
@@ -155,26 +155,26 @@ physics.update();
 
 The **preferred method** is once-in-a-gameloop checkAll and then handler:
 
-```typescript
+```javascript
 physics.checkAll(handleCollisions);
 ```
 
 If you really need to check one body then use:
 
-```typescript
+```javascript
 physics.checkOne(body, handleCollisions);
 ```
 
 When testing for collisions on a body, it is generally recommended that a broad-phase search be performed first by calling `getPotentials(body)` in order to quickly rule out bodies that are too far away to collide. **Detect-Collisions** uses a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for its broad-phase search. Calling `getPotentials(body)` on a body traverses the BVH and builds a list of potential collision candidates. Skipping the broad-phase search is not recommended. When testing for collisions against large numbers of bodies, performing a broad-phase search using a BVH is _much_ more efficient.
 
-```typescript
-const potentials: Body[] = physics.getPotentials(body);
+```javascript
+const potentials = physics.getPotentials(body);
 ```
 
 Once a list of potential collisions is acquired, loop through them and perform a narrow-phase collision test using `checkCollision()`. **Detect-Collisions** uses the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for its narrow-phase collision tests.
 
-```typescript
-physics.getPotentials(body).forEach((collider: Body) => {
+```javascript
+physics.getPotentials(body).forEach((collider) => {
   if (physics.checkCollision(body, collider)) {
     handleCollisions(physics.response);
   }
@@ -183,7 +183,7 @@ physics.getPotentials(body).forEach((collider: Body) => {
 
 It is also possible to skip the broad-phase search entirely and call `checkCollision()` directly on two bodies.
 
-```typescript
+```javascript
 if (physics.checkCollision(polygon, line)) {
   console.log("Collision detected!", physics.response);
 }
@@ -209,9 +209,9 @@ The three most useful properties on a `Response` object are `overlapV`, `a`, and
 
 These values can be used to "push" one body out of another using the minimum distance required. More simply, subtracting this vector from the source body's position will cause the bodies to no longer collide. Here's an example:
 
-```typescript
+```javascript
 if (physics.checkCollision(player, wall)) {
-  const { overlapV }: Response = physics.response;
+  const { overlapV } = physics.response;
 
   player.setPosition(player.x - overlapV.x, player.y - overlapV.y);
 }
@@ -219,19 +219,19 @@ if (physics.checkCollision(player, wall)) {
 
 ## Detecting collision after insertion
 
-```typescript
+```javascript
 // create self-destructing collider
-function testCollision(position: Vector, radius: number = 10): boolean {
-  const circle: Circle = physics.createCircle(position, radius);
-  const potentials: Body[] = physics.getPotentials(circle);
-  const collided: boolean = potentials.some((body: Body) =>
+const testCollision = ({ x, y }, radius = 10) => {
+  const circle = physics.createCircle({ x, y }, radius);
+  const potentials = physics.getPotentials(circle);
+  const collided = potentials.some((body) =>
     physics.checkCollision(circle, body)
   );
 
   physics.remove(circle);
 
   return collided;
-}
+};
 ```
 
 ## Concave Polygons
@@ -244,7 +244,7 @@ the `System.response.aInB` and `System.response.bInA` is currently because of co
 
 For debugging, it is often useful to be able to visualize the collision bodies. All of the bodies in a Collision system can be drawn to a `<canvas>` element by calling `draw()` and passing in the canvas' 2D context.
 
-```typescript
+```javascript
 const canvas = document.createElement("canvas");
 const context = canvas.getContext("2d");
 
@@ -256,7 +256,7 @@ context.stroke();
 
 Bodies can be individually drawn as well.
 
-```typescript
+```javascript
 context.strokeStyle = "#FFFFFF";
 context.beginPath();
 polygon.draw(context);
@@ -266,7 +266,7 @@ context.stroke();
 
 The BVH can also be drawn to help test [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy).
 
-```typescript
+```javascript
 context.strokeStyle = "#FFFFFF";
 context.beginPath();
 physics.drawBVH(context);
@@ -277,12 +277,12 @@ context.stroke();
 
 Some projects may only have a need to perform SAT collision tests without broad-phase searching. This can be achieved by avoiding collision systems altogether and only using the `checkCollision()` function. Note that unless a use-case really requires this, I strongly advise to use the normal flow.
 
-```typescript
-const circle: Circle = new Circle(position, radius);
-const polygon: Polygon = new Polygon(position, points);
+```javascript
+const circle = new Circle(position, radius);
+const polygon = new Polygon(position, points);
 
 if (physics.checkCollision(polygon, circle)) {
-  console.log(physics.result);
+  console.log(physics.response);
 }
 ```
 
@@ -290,10 +290,10 @@ if (physics.checkCollision(polygon, circle)) {
 
 To get raycast information use
 
-```typescript
-const start: Vector = { x: 0, y: 0 };
-const end: Vector = { x: 0, y: -10 };
-const hit: RaycastResult = physics.raycast(start, end);
+```javascript
+const start = { x: 0, y: 0 };
+const end = { x: 0, y: -10 };
+const hit = physics.raycast(start, end);
 
 if (hit) {
   const { point, collider } = hit;
