@@ -310,7 +310,7 @@ class Tank {
 
   handleCollisions() {
     this.physics.checkAll(({ a, b, overlapV }) => {
-      if (a === this.playerTurret || b === this.playerTurret) {
+      if (a.isTrigger || b.isTrigger) {
         return;
       }
 
