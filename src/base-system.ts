@@ -10,9 +10,10 @@ import {
   Data,
   PotentialVector,
   RBush,
+  SATVector,
   Vector,
 } from "./model";
-import { createBox } from "./utils";
+import { createBox, drawPolygon } from "./utils";
 
 /**
  * very base collision system
@@ -34,15 +35,11 @@ export class BaseSystem extends RBush<Body> implements Data {
    */
   drawBVH(context: CanvasRenderingContext2D): void {
     [...this.all(), ...this.data.children].forEach(
-      ({ minX, maxX, minY, maxY }: Body) => {
-        Polygon.prototype.draw.call(
-          {
-            x: minX,
-            y: minY,
-            calcPoints: createBox(maxX - minX, maxY - minY),
-          },
-          context
-        );
+      ({ minX: x, maxX, minY: y, maxY }: Body) => {
+        drawPolygon(context, {
+          pos: { x, y } as SATVector,
+          calcPoints: createBox(maxX - x, maxY - y),
+        });
       }
     );
   }
