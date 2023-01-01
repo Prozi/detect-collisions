@@ -14,6 +14,7 @@ export declare class System extends BaseSystem {
      * reusable inner state - for non convex polygons collisions
      */
     protected state: CollisionState;
+    private ray;
     /**
      * remove body aabb from collision tree
      */

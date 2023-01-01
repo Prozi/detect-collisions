@@ -25,12 +25,11 @@ class BaseSystem extends model_1.RBush {
      * draw hierarchy
      */
     drawBVH(context) {
-        [...this.all(), ...this.data.children].forEach(({ minX, maxX, minY, maxY }) => {
-            polygon_1.Polygon.prototype.draw.call({
-                x: minX,
-                y: minY,
-                calcPoints: (0, utils_1.createBox)(maxX - minX, maxY - minY),
-            }, context);
+        [...this.all(), ...this.data.children].forEach(({ minX: x, maxX, minY: y, maxY }) => {
+            (0, utils_1.drawPolygon)(context, {
+                pos: { x, y },
+                calcPoints: (0, utils_1.createBox)(maxX - x, maxY - y),
+            });
         });
     }
     /**

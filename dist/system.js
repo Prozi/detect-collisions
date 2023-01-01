@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.System = void 0;
 const base_system_1 = require("./base-system");
+const line_1 = require("./bodies/line");
 const model_1 = require("./model");
 const utils_1 = require("./utils");
 /**
@@ -172,13 +173,20 @@ class System extends base_system_1.BaseSystem {
     raycast(start, end, allowCollider = () => true) {
         let minDistance = Infinity;
         let result = null;
-        const ray = this.createLine(start, end);
-        const colliders = this.getPotentials(ray).filter((potential) => allowCollider(potential) && this.checkCollision(ray, potential));
-        this.remove(ray);
+        if (!this.ray) {
+            this.ray = new line_1.Line(start, end, { isTrigger: true });
+        }
+        else {
+            this.ray.start = start;
+            this.ray.end = end;
+        }
+        this.insert(this.ray);
+        const colliders = this.getPotentials(this.ray).filter((potential) => allowCollider(potential) && this.checkCollision(this.ray, potential));
+        this.remove(this.ray);
         colliders.forEach((collider) => {
             const points = collider.type === model_1.Types.Circle
-                ? (0, utils_1.intersectLineCircle)(ray, collider)
-                : (0, utils_1.intersectLinePolygon)(ray, collider);
+                ? (0, utils_1.intersectLineCircle)(this.ray, collider)
+                : (0, utils_1.intersectLinePolygon)(this.ray, collider);
             points.forEach((point) => {
                 const pointDistance = (0, utils_1.distance)(start, point);
                 if (pointDistance < minDistance) {

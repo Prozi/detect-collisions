@@ -60,5 +60,5 @@ export declare function ensureConvex(body: Body): Body[];
  */
 export declare function getBounceDirection(body: Vector, collider: Vector): Vector;
 export declare function getSATFunction(body: Body, wall: Body): TestFunction;
-export declare function drawPolygon(context: CanvasRenderingContext2D, { pos, calcPoints }: Polygon | SATPolygon, isTrigger?: boolean): void;
+export declare function drawPolygon(context: CanvasRenderingContext2D, { pos, calcPoints }: Pick<Polygon | SATPolygon, "pos" | "calcPoints">, isTrigger?: boolean): void;
 //# sourceMappingURL=utils.d.ts.map

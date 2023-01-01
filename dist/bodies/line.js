@@ -35,11 +35,20 @@ class Line extends polygon_1.Polygon {
             y: this.y + this.calcPoints[0].y,
         };
     }
+    set start({ x, y }) {
+        this.x = x;
+        this.y = y;
+    }
     get end() {
         return {
             x: this.x + this.calcPoints[1].x,
             y: this.y + this.calcPoints[1].y,
         };
+    }
+    set end({ x, y }) {
+        this.points[1].x = x - this.start.x;
+        this.points[1].y = y - this.start.y;
+        this.setPoints(this.points);
     }
     getCentroid() {
         return new sat_1.Vector((this.end.x - this.start.x) / 2, (this.end.y - this.start.y) / 2);

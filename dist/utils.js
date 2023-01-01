@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.drawPolygon = exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = require("sat");
-const line_1 = require("./bodies/line");
 const model_1 = require("./model");
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
     const steps = Math.PI * Math.hypot(radiusX, radiusY) * 2;
@@ -185,7 +184,10 @@ function intersectLinePolygon(line, polygon) {
         const from = index
             ? polygon.calcPoints[index - 1]
             : polygon.calcPoints[polygon.calcPoints.length - 1];
-        const side = new line_1.Line({ x: from.x + polygon.pos.x, y: from.y + polygon.pos.y }, { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y });
+        const side = {
+            start: { x: from.x + polygon.pos.x, y: from.y + polygon.pos.y },
+            end: { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y },
+        };
         return intersectLineLine(line, side);
     })
         .filter((test) => !!test);
@@ -233,7 +235,8 @@ function getSATFunction(body, wall) {
 }
 exports.getSATFunction = getSATFunction;
 function drawPolygon(context, { pos, calcPoints }, isTrigger = false) {
-    [...calcPoints, calcPoints[0]].forEach((point, index) => {
+    const loopPoints = [...calcPoints, calcPoints[0]];
+    loopPoints.forEach((point, index) => {
         const toX = pos.x + point.x;
         const toY = pos.y + point.y;
         const prev = calcPoints[index - 1] || calcPoints[calcPoints.length - 1];

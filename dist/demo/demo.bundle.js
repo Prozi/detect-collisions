@@ -35,12 +35,11 @@ class BaseSystem extends model_1.RBush {
      * draw hierarchy
      */
     drawBVH(context) {
-        [...this.all(), ...this.data.children].forEach(({ minX, maxX, minY, maxY }) => {
-            polygon_1.Polygon.prototype.draw.call({
-                x: minX,
-                y: minY,
-                calcPoints: (0, utils_1.createBox)(maxX - minX, maxY - minY),
-            }, context);
+        [...this.all(), ...this.data.children].forEach(({ minX: x, maxX, minY: y, maxY }) => {
+            (0, utils_1.drawPolygon)(context, {
+                pos: { x, y },
+                calcPoints: (0, utils_1.createBox)(maxX - x, maxY - y),
+            });
         });
     }
     /**
@@ -505,11 +504,20 @@ class Line extends polygon_1.Polygon {
             y: this.y + this.calcPoints[0].y,
         };
     }
+    set start({ x, y }) {
+        this.x = x;
+        this.y = y;
+    }
     get end() {
         return {
             x: this.x + this.calcPoints[1].x,
             y: this.y + this.calcPoints[1].y,
         };
+    }
+    set end({ x, y }) {
+        this.points[1].x = x - this.start.x;
+        this.points[1].y = y - this.start.y;
+        this.setPoints(this.points);
     }
     getCentroid() {
         return new sat_1.Vector((this.end.x - this.start.x) / 2, (this.end.y - this.start.y) / 2);
@@ -879,6 +887,7 @@ var Types;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.System = void 0;
 const base_system_1 = __webpack_require__(/*! ./base-system */ "./dist/base-system.js");
+const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js");
 const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
 const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils.js");
 /**
@@ -1049,13 +1058,20 @@ class System extends base_system_1.BaseSystem {
     raycast(start, end, allowCollider = () => true) {
         let minDistance = Infinity;
         let result = null;
-        const ray = this.createLine(start, end);
-        const colliders = this.getPotentials(ray).filter((potential) => allowCollider(potential) && this.checkCollision(ray, potential));
-        this.remove(ray);
+        if (!this.ray) {
+            this.ray = new line_1.Line(start, end, { isTrigger: true });
+        }
+        else {
+            this.ray.start = start;
+            this.ray.end = end;
+        }
+        this.insert(this.ray);
+        const colliders = this.getPotentials(this.ray).filter((potential) => allowCollider(potential) && this.checkCollision(this.ray, potential));
+        this.remove(this.ray);
         colliders.forEach((collider) => {
             const points = collider.type === model_1.Types.Circle
-                ? (0, utils_1.intersectLineCircle)(ray, collider)
-                : (0, utils_1.intersectLinePolygon)(ray, collider);
+                ? (0, utils_1.intersectLineCircle)(this.ray, collider)
+                : (0, utils_1.intersectLinePolygon)(this.ray, collider);
             points.forEach((point) => {
                 const pointDistance = (0, utils_1.distance)(start, point);
                 if (pointDistance < minDistance) {
@@ -1106,7 +1122,6 @@ exports.System = System;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.drawPolygon = exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
-const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js");
 const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
     const steps = Math.PI * Math.hypot(radiusX, radiusY) * 2;
@@ -1289,7 +1304,10 @@ function intersectLinePolygon(line, polygon) {
         const from = index
             ? polygon.calcPoints[index - 1]
             : polygon.calcPoints[polygon.calcPoints.length - 1];
-        const side = new line_1.Line({ x: from.x + polygon.pos.x, y: from.y + polygon.pos.y }, { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y });
+        const side = {
+            start: { x: from.x + polygon.pos.x, y: from.y + polygon.pos.y },
+            end: { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y },
+        };
         return intersectLineLine(line, side);
     })
         .filter((test) => !!test);
@@ -1337,7 +1355,8 @@ function getSATFunction(body, wall) {
 }
 exports.getSATFunction = getSATFunction;
 function drawPolygon(context, { pos, calcPoints }, isTrigger = false) {
-    [...calcPoints, calcPoints[0]].forEach((point, index) => {
+    const loopPoints = [...calcPoints, calcPoints[0]];
+    loopPoints.forEach((point, index) => {
         const toX = pos.x + point.x;
         const toY = pos.y + point.y;
         const prev = calcPoints[index - 1] || calcPoints[calcPoints.length - 1];
@@ -4081,7 +4100,7 @@ class Tank {
 
   handleCollisions() {
     this.physics.checkAll(({ a, b, overlapV }) => {
-      if (a === this.playerTurret || b === this.playerTurret) {
+      if (a.isTrigger || b.isTrigger) {
         return;
       }
 
