@@ -1,3 +1,4 @@
+import { Polygon as DecompPolygon } from "poly-decomp";
 import { BBox } from "rbush";
 import { Polygon as SATPolygon } from "sat";
 import { BodyOptions, Collider, PotentialVector, SATVector, Types, Vector } from "../model";
@@ -140,11 +141,11 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
     /**
      * returns body split into convex polygons, or empty array for convex bodies
      */
-    protected getConvex(): number[][][];
+    protected getConvex(): DecompPolygon[];
     /**
      * updates convex polygons cache in body
      */
-    protected updateConvexPolygons(convex?: number[][][]): void;
+    protected updateConvexPolygons(convex?: DecompPolygon[]): void;
     /**
      * after points update set is convex
      */

@@ -261,14 +261,14 @@ export function intersectLinePolygon(line: Line, polygon: Polygon): Vector[] {
 /**
  * change format from poly-decomp to SAT.js
  */
-export function mapVectorToArray({ x, y }: Vector): number[] {
+export function mapVectorToArray({ x, y }: Vector): [number, number] {
   return [x, y];
 }
 
 /**
  * change format from SAT.js to poly-decomp
  */
-export function mapArrayToVector([x, y]: number[]): Vector {
+export function mapArrayToVector([x, y]: [number, number]): Vector {
   return { x, y };
 }
 

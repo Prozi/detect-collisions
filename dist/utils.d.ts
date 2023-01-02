@@ -46,11 +46,11 @@ export declare function intersectLinePolygon(line: Line, polygon: Polygon): Vect
 /**
  * change format from poly-decomp to SAT.js
  */
-export declare function mapVectorToArray({ x, y }: Vector): number[];
+export declare function mapVectorToArray({ x, y }: Vector): [number, number];
 /**
  * change format from SAT.js to poly-decomp
  */
-export declare function mapArrayToVector([x, y]: number[]): Vector;
+export declare function mapArrayToVector([x, y]: [number, number]): Vector;
 /**
  * replace body with array of related convex polygons
  */

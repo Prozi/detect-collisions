@@ -1,4 +1,4 @@
-import { quickDecomp } from "poly-decomp";
+import { quickDecomp, Polygon as DecompPolygon } from "poly-decomp";
 import { BBox } from "rbush";
 import { Polygon as SATPolygon } from "sat";
 
@@ -299,7 +299,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   /**
    * returns body split into convex polygons, or empty array for convex bodies
    */
-  protected getConvex(): number[][][] {
+  protected getConvex(): DecompPolygon[] {
     if ((this.type && this.type !== Types.Polygon) || this.points.length <= 3) {
       return [];
     }
@@ -311,7 +311,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
    * updates convex polygons cache in body
    */
   protected updateConvexPolygons(
-    convex: number[][][] = this.getConvex()
+    convex: DecompPolygon[] = this.getConvex()
   ): void {
     if (this.isConvex) {
       return;
@@ -321,7 +321,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
       this.convexPolygons = [];
     }
 
-    convex.forEach((points: number[][], index: number) => {
+    convex.forEach((points: DecompPolygon, index: number) => {
       // lazy create
       if (!this.convexPolygons[index]) {
         this.convexPolygons[index] = new SATPolygon();
