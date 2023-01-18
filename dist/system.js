@@ -227,7 +227,7 @@ class System extends base_system_1.BaseSystem {
                 children[index] = Object.assign(this.bodies[body.uid], body);
             }
         }, data);
-        this.data = data;
+        super.fromJSON(data);
         return this;
     }
     /**

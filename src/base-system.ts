@@ -27,7 +27,7 @@ export class BaseSystem extends RBush<Body> implements Data {
    */
   draw(context: CanvasRenderingContext2D): void {
     this.all().forEach((body: Body) => {
-      body.draw(context)
+      body.draw(context);
     });
   }
 

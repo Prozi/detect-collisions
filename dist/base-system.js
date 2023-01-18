@@ -18,13 +18,7 @@ class BaseSystem extends model_1.RBush {
      */
     draw(context) {
         this.all().forEach((body) => {
-            switch (body.type) {
-                case "Circle":
-                    circle_1.Circle.prototype.draw.call(body, context);
-                    break;
-                default:
-                    polygon_1.Polygon.prototype.draw.call(body, context);
-            }
+            body.draw(context);
         });
     }
     /**
