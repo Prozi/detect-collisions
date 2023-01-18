@@ -28,13 +28,7 @@ class BaseSystem extends model_1.RBush {
      */
     draw(context) {
         this.all().forEach((body) => {
-            switch (body.type) {
-                case "Circle":
-                    circle_1.Circle.prototype.draw.call(body, context);
-                    break;
-                default:
-                    polygon_1.Polygon.prototype.draw.call(body, context);
-            }
+            body.draw(context);
         });
     }
     /**
@@ -927,9 +921,6 @@ class System extends base_system_1.BaseSystem {
             overlapV: new model_1.SATVector(),
         };
     }
-    all() {
-        return Object.values(this.bodies);
-    }
     /**
      * remove body aabb from collision tree
      */
@@ -1001,8 +992,8 @@ class System extends base_system_1.BaseSystem {
         if (body.isStatic) {
             return;
         }
-        this.getPotentials(body).some((candidate) => {
-            if (this.checkCollision(body, candidate)) {
+        this.search(body).some((candidate) => {
+            if (candidate !== body && this.checkCollision(body, candidate)) {
                 return callback(this.response);
             }
         });
@@ -1017,6 +1008,7 @@ class System extends base_system_1.BaseSystem {
     }
     /**
      * get object potential colliders
+     * @deprecated
      */
     getPotentials(body) {
         // filter here is required as collides with self
@@ -1089,9 +1081,10 @@ class System extends base_system_1.BaseSystem {
             this.ray.end = end;
         }
         this.insert(this.ray);
-        const colliders = this.getPotentials(this.ray).filter((potential) => allowCollider(potential) && this.checkCollision(this.ray, potential));
-        this.remove(this.ray);
-        colliders.forEach((collider) => {
+        this.checkOne(this.ray, ({ b: collider }) => {
+            if (!allowCollider(collider)) {
+                return false;
+            }
             const points = collider.type === model_1.Types.Circle
                 ? (0, utils_1.intersectLineCircle)(this.ray, collider)
                 : (0, utils_1.intersectLinePolygon)(this.ray, collider);
@@ -1103,7 +1096,13 @@ class System extends base_system_1.BaseSystem {
                 }
             });
         });
+        this.remove(this.ray);
         return result;
+    }
+    clear() {
+        super.clear();
+        this.bodies = {};
+        return this;
     }
     /**
      * used to find body deep inside data with finder function returning boolean found or not
@@ -1125,10 +1124,10 @@ class System extends base_system_1.BaseSystem {
     fromJSON(data) {
         this.traverse((body, children, index) => {
             if (this.bodies[body.uid]) {
-                children[index] = Object.assign(this.bodies[body.uid], body);
+                this.bodies[body.uid] = children[index] = Object.assign(this.bodies[body.uid], body);
             }
         }, data);
-        this.data = data;
+        super.fromJSON(data);
         return this;
     }
     /**

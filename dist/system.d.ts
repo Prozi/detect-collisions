@@ -16,7 +16,6 @@ export declare class System extends BaseSystem {
      */
     protected state: CollisionState;
     private ray;
-    all(): Body[];
     /**
      * remove body aabb from collision tree
      */
@@ -47,6 +46,7 @@ export declare class System extends BaseSystem {
     checkAll(callback: (response: Response) => void | boolean): void;
     /**
      * get object potential colliders
+     * @deprecated
      */
     getPotentials(body: Body): Body[];
     /**
@@ -57,6 +57,7 @@ export declare class System extends BaseSystem {
      * raycast to get collider of ray from start to end
      */
     raycast(start: Vector, end: Vector, allowCollider?: (testCollider: Body) => boolean): RaycastResult;
+    clear(): this;
     /**
      * used to find body deep inside data with finder function returning boolean found or not
      */
