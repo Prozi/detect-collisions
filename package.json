@@ -9,7 +9,7 @@
     "build": "tsc",
     "benchmark": "npm run build && node src/demo/benchmark.js",
     "bench": "npm run build && node ./dist/bench/index.js",
-    "dev": "webpack serve --port 4200",
+    "dev": "npm run build && webpack serve --port 4200",
     "build:demo": "webpack",
     "prebuild:docs": "rimraf docs",
     "build:docs": "typedoc --customCss typedoc.css",

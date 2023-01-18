@@ -48,10 +48,6 @@ export class System extends BaseSystem {
 
   private ray!: Line;
 
-  all(): Body[] {
-    return Object.values(this.bodies);
-  }
-
   /**
    * remove body aabb from collision tree
    */
@@ -137,8 +133,8 @@ export class System extends BaseSystem {
       return;
     }
 
-    this.getPotentials(body).some((candidate: Body) => {
-      if (this.checkCollision(body, candidate)) {
+    this.search(body).some((candidate: Body) => {
+      if (candidate !== body && this.checkCollision(body, candidate)) {
         return callback(this.response);
       }
     });
@@ -155,6 +151,7 @@ export class System extends BaseSystem {
 
   /**
    * get object potential colliders
+   * @deprecated
    */
   getPotentials(body: Body): Body[] {
     // filter here is required as collides with self
@@ -242,14 +239,11 @@ export class System extends BaseSystem {
 
     this.insert(this.ray);
 
-    const colliders: Body[] = this.getPotentials(this.ray).filter(
-      (potential: Body) =>
-        allowCollider(potential) && this.checkCollision(this.ray, potential)
-    );
+    this.checkOne(this.ray, ({ b: collider }) => {
+      if (!allowCollider(collider)) {
+        return false;
+      }
 
-    this.remove(this.ray);
-
-    colliders.forEach((collider: Body) => {
       const points: Vector[] =
         collider.type === Types.Circle
           ? intersectLineCircle(this.ray, collider)
@@ -265,7 +259,16 @@ export class System extends BaseSystem {
       });
     });
 
+    this.remove(this.ray);
+
     return result;
+  }
+
+  clear() {
+    super.clear();
+    this.bodies = {};
+
+    return this;
   }
 
   /**
@@ -294,7 +297,10 @@ export class System extends BaseSystem {
   fromJSON(data: ChildrenData): RBush<Body> {
     this.traverse((body, children, index) => {
       if (this.bodies[body.uid]) {
-        children[index] = Object.assign(this.bodies[body.uid], body);
+        this.bodies[body.uid] = children[index] = Object.assign(
+          this.bodies[body.uid],
+          body
+        );
       }
     }, data);
 

@@ -165,23 +165,7 @@ If you really need to check one body then use:
 physics.checkOne(body, handleCollisions);
 ```
 
-When testing for collisions on a body, it is generally recommended that a broad-phase search be performed first by calling `getPotentials(body)` in order to quickly rule out bodies that are too far away to collide. **Detect-Collisions** uses a [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for its broad-phase search. Calling `getPotentials(body)` on a body traverses the BVH and builds a list of potential collision candidates. Skipping the broad-phase search is not recommended. When testing for collisions against large numbers of bodies, performing a broad-phase search using a BVH is _much_ more efficient.
-
-```javascript
-const potentials = physics.getPotentials(body);
-```
-
-Once a list of potential collisions is acquired, loop through them and perform a narrow-phase collision test using `checkCollision()`. **Detect-Collisions** uses the [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for its narrow-phase collision tests.
-
-```javascript
-physics.getPotentials(body).forEach((collider) => {
-  if (physics.checkCollision(body, collider)) {
-    handleCollisions(physics.response);
-  }
-});
-```
-
-It is also possible to skip the broad-phase search entirely and call `checkCollision()` directly on two bodies.
+It is possible to skip the broad-phase search entirely and call `checkCollision()` directly on two bodies.
 
 ```javascript
 if (physics.checkCollision(polygon, line)) {
