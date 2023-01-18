@@ -7,10 +7,10 @@ import { Polygon } from "./bodies/polygon";
 import {
   Body,
   BodyOptions,
+  ChildrenData,
   Data,
   PotentialVector,
   RBush,
-  SATVector,
   Vector,
 } from "./model";
 import { createBox, drawPolygon } from "./utils";
@@ -19,7 +19,7 @@ import { createBox, drawPolygon } from "./utils";
  * very base collision system
  */
 export class BaseSystem extends RBush<Body> implements Data {
-  data!: { children: Body[] };
+  data!: ChildrenData;
 
   /**
    * draw bodies
@@ -37,7 +37,7 @@ export class BaseSystem extends RBush<Body> implements Data {
     [...this.all(), ...this.data.children].forEach(
       ({ minX: x, maxX, minY: y, maxY }: Body) => {
         drawPolygon(context, {
-          pos: { x, y } as SATVector,
+          pos: { x, y },
           calcPoints: createBox(maxX - x, maxY - y),
         });
       }

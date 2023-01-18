@@ -197,4 +197,20 @@ describe("GIVEN System", () => {
       expect(physics.response.bInA).toBe(true);
     });
   });
+
+  describe("THEN JSON.stringify(system.toJSON()) doesn't throw", () => {
+    const { System } = require("..");
+    const physics = new System();
+
+    physics.createCircle({}, 10);
+    physics.createPolygon({}, [
+      { x: 10, y: 10 },
+      { x: 20, y: 20 },
+      { x: 30, y: 10 },
+    ]);
+
+    const stringify = () => JSON.parse(JSON.stringify(physics.toJSON()));
+
+    expect(stringify).not.toThrow();
+  });
 });

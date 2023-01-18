@@ -23,11 +23,15 @@ export enum Types {
   Polygon = "Polygon",
 }
 
+export interface ChildrenData {
+  children: Body[];
+}
+
 /**
  * for use of private function of sat.js
  */
 export interface Data {
-  data: { children: Body[] };
+  data: ChildrenData;
 }
 
 export interface BodyOptions {

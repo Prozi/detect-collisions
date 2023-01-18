@@ -20,6 +20,7 @@ import {
   mapVectorToArray,
   clonePointsArray,
   drawPolygon,
+  toJSON,
 } from "../utils";
 
 /**
@@ -283,6 +284,10 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     this.pos.x += x;
     this.pos.y += y;
     this.isCentered = true;
+  }
+
+  toJSON(): Partial<Polygon> {
+    return toJSON(this);
   }
 
   /**

@@ -4,6 +4,7 @@ import { BaseSystem } from "./base-system";
 import { Line } from "./bodies/line";
 import {
   Body,
+  ChildrenData,
   CollisionState,
   RaycastResult,
   Response,
@@ -254,6 +255,16 @@ export class System extends BaseSystem {
     });
 
     return result;
+  }
+
+  fromJSON(data: ChildrenData): RBush<Body> {
+    super.fromJSON(data);
+
+    this.all().forEach((body) => {
+      body.system = this;
+    });
+
+    return this;
   }
 
   /**

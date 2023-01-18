@@ -96,7 +96,6 @@
     "object-literal-sort-keys": false,
     "prefer-const": true,
     "trailing-comma": [true, { "multiline": "never", "singleline": "never" }],
-
     "align": [true, "parameters", "statements"],
     "array-type": [true, "array"],
     "arrow-parens": [true, "ban-single-arg-parens"],
@@ -166,7 +165,7 @@
       "check-typecast",
       "check-preblock"
     ],
-    "max-file-line-count": [true, 300],
+    "max-file-line-count": [true, 400],
     "ban-comma-operator": true,
     "no-duplicate-switch-case": true,
     "no-implicit-dependencies": true,

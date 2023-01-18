@@ -210,7 +210,10 @@ export function intersectLineCircle(line: Line, circle: Circle): Vector[] {
 }
 
 // https://stackoverflow.com/questions/9043805/test-if-two-lines-intersect-javascript-function
-export function intersectLineLine(line1: Line, line2: Line): Vector | null {
+export function intersectLineLine(
+  line1: Pick<Line, "start" | "end">,
+  line2: Pick<Line, "start" | "end">
+): Vector | null {
   const dX: number = line1.end.x - line1.start.x;
   const dY: number = line1.end.y - line1.start.y;
 
@@ -248,10 +251,10 @@ export function intersectLinePolygon(line: Line, polygon: Polygon): Vector[] {
       const from: Vector = index
         ? polygon.calcPoints[index - 1]
         : polygon.calcPoints[polygon.calcPoints.length - 1];
-      const side: Line = {
+      const side = {
         start: { x: from.x + polygon.pos.x, y: from.y + polygon.pos.y },
         end: { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y },
-      } as Line;
+      };
 
       return intersectLineLine(line, side);
     })
@@ -308,7 +311,10 @@ export function getSATFunction(body: Body, wall: Body): TestFunction {
 
 export function drawPolygon(
   context: CanvasRenderingContext2D,
-  { pos, calcPoints }: Pick<Polygon | SATPolygon, "pos" | "calcPoints">,
+  {
+    pos,
+    calcPoints,
+  }: Pick<Polygon | SATPolygon, "calcPoints"> & { pos: Vector },
   isTrigger = false
 ): void {
   const loopPoints = [...calcPoints, calcPoints[0]];
@@ -335,4 +341,21 @@ export function drawPolygon(
       }
     }
   });
+}
+
+export function toJSON<T extends {} = Body>(object: T): Partial<T> {
+  return Object.entries(object).reduce(
+    (prev: Partial<T>, [key, value]: [string, unknown]) => {
+      // having system inside body would cause circular json
+      if (key !== "system") {
+        return {
+          ...prev,
+          [key]: value,
+        };
+      }
+
+      return prev;
+    },
+    {}
+  );
 }

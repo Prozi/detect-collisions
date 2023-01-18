@@ -10,7 +10,7 @@ import {
   Vector,
 } from "../model";
 import { System } from "../system";
-import { dashLineTo, ensureVectorPoint, extendBody } from "../utils";
+import { dashLineTo, ensureVectorPoint, extendBody, toJSON } from "../utils";
 
 /**
  * collider - circle
@@ -258,6 +258,10 @@ export class Circle extends SATCircle implements BBox, Collider {
    */
   center(): void {
     return;
+  }
+
+  toJSON(): Partial<Circle> {
+    return toJSON(this);
   }
 
   /**
