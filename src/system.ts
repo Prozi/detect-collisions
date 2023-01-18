@@ -6,6 +6,7 @@ import {
   Body,
   ChildrenData,
   CollisionState,
+  Leaf,
   RaycastResult,
   Response,
   SATVector,
@@ -33,6 +34,8 @@ export class System extends BaseSystem {
    */
   response: Response = new Response();
 
+  bodies: Record<string, Body> = {};
+
   /**
    * reusable inner state - for non convex polygons collisions
    */
@@ -45,10 +48,17 @@ export class System extends BaseSystem {
 
   private ray!: Line;
 
+  all(): Body[] {
+    return Object.values(this.bodies);
+  }
+
   /**
    * remove body aabb from collision tree
    */
   remove(body: Body, equals?: (a: Body, b: Body) => boolean): RBush<Body> {
+    if (body.system) {
+      delete body.system.bodies[body.uid];
+    }
     body.system = undefined;
 
     return super.remove(body, equals);
@@ -67,8 +77,7 @@ export class System extends BaseSystem {
 
     // old bounding box *needs* to be removed
     if (body.system) {
-      // but we don't need to set system to undefined so super.remove
-      super.remove(body);
+      body.system.remove(body);
     }
 
     // only then we update min, max
@@ -79,6 +88,8 @@ export class System extends BaseSystem {
 
     // set system for later body.system.updateBody(body)
     body.system = this;
+
+    this.bodies[body.uid] = body;
 
     // reinsert bounding box to collision tree
     return super.insert(body);
@@ -257,12 +268,37 @@ export class System extends BaseSystem {
     return result;
   }
 
-  fromJSON(data: ChildrenData): RBush<Body> {
-    super.fromJSON(data);
+  /**
+   * used to find body deep inside data with finder function returning boolean found or not
+   */
+  traverse(
+    find: (child: Leaf, children: Leaf[], index: number) => boolean | void,
+    { children }: { children?: Leaf[] } = this.data
+  ): Body | undefined {
+    return children?.find((body, index) => {
+      if (!body) {
+        return false;
+      }
 
-    this.all().forEach((body) => {
-      body.system = this;
+      if (body.type && find(body, children, index)) {
+        return true;
+      }
+
+      // if callback returns true, ends forEach
+      if (body.children) {
+        this.traverse(find, body);
+      }
     });
+  }
+
+  fromJSON(data: ChildrenData): RBush<Body> {
+    this.traverse((body, children, index) => {
+      if (this.bodies[body.uid]) {
+        children[index] = Object.assign(this.bodies[body.uid], body);
+      }
+    }, data);
+
+    this.data = data;
 
     return this;
   }

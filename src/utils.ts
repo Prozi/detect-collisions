@@ -346,7 +346,6 @@ export function drawPolygon(
 export function toJSON<T extends {} = Body>(object: T): Partial<T> {
   return Object.entries(object).reduce(
     (prev: Partial<T>, [key, value]: [string, unknown]) => {
-      // having system inside body would cause circular json
       if (key !== "system") {
         return {
           ...prev,
@@ -358,4 +357,10 @@ export function toJSON<T extends {} = Body>(object: T): Partial<T> {
     },
     {}
   );
+}
+
+let id = 0;
+
+export function generateId(): string {
+  return (++id).toString(36);
 }

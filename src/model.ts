@@ -23,8 +23,12 @@ export enum Types {
   Polygon = "Polygon",
 }
 
+export type Leaf = Body & {
+  children?: Leaf[];
+};
+
 export interface ChildrenData {
-  children: Body[];
+  children: Leaf[];
 }
 
 /**
@@ -83,6 +87,11 @@ export interface Collider {
    * type of collider
    */
   readonly type: Types;
+
+  /**
+   * unique id for toJSON and fromJSON
+   */
+  uid: string;
 
   /**
    * is the collider non moving

@@ -172,7 +172,7 @@
     "no-return-await": true,
     "no-unnecessary-class": ["allow-empty-class", "allow-static-only"],
     "newline-per-chained-call": false,
-    "no-dynamic-delete": true,
+    "no-dynamic-delete": false,
     "prefer-readonly": true,
     "prefer-while": true,
     "typeof-compare": false

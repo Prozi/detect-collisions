@@ -10,7 +10,13 @@ import {
   Vector,
 } from "../model";
 import { System } from "../system";
-import { dashLineTo, ensureVectorPoint, extendBody, toJSON } from "../utils";
+import {
+  dashLineTo,
+  ensureVectorPoint,
+  extendBody,
+  generateId,
+  toJSON,
+} from "../utils";
 
 /**
  * collider - circle
@@ -87,6 +93,11 @@ export class Circle extends SATCircle implements BBox, Collider {
   system?: System;
 
   /**
+   * unique id for toJSON and fromJSON
+   */
+  uid: string;
+
+  /**
    * circle type
    */
   readonly type: Types.Circle = Types.Circle;
@@ -109,6 +120,7 @@ export class Circle extends SATCircle implements BBox, Collider {
     extendBody(this, options);
 
     this.radiusBackup = radius;
+    this.uid = generateId();
   }
 
   /**
@@ -216,8 +228,8 @@ export class Circle extends SATCircle implements BBox, Collider {
    * get body bounding box, without padding
    */
   getAABBAsBBox(): BBox {
-    const x = this.x + this.offset.x;
-    const y = this.y + this.offset.y;
+    const x = this.pos.x + this.offset.x;
+    const y = this.pos.y + this.offset.y;
 
     return {
       minX: x - this.r,
@@ -231,8 +243,8 @@ export class Circle extends SATCircle implements BBox, Collider {
    * Draws collider on a CanvasRenderingContext2D's current path
    */
   draw(context: CanvasRenderingContext2D) {
-    const x = this.x + this.offset.x;
-    const y = this.y + this.offset.y;
+    const x = this.pos.x + this.offset.x;
+    const y = this.pos.y + this.offset.y;
 
     if (this.isTrigger) {
       const max = Math.max(8, this.r);

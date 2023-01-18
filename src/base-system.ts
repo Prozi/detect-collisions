@@ -9,6 +9,7 @@ import {
   BodyOptions,
   ChildrenData,
   Data,
+  Leaf,
   PotentialVector,
   RBush,
   Vector,
@@ -26,7 +27,14 @@ export class BaseSystem extends RBush<Body> implements Data {
    */
   draw(context: CanvasRenderingContext2D): void {
     this.all().forEach((body: Body) => {
-      body.draw(context);
+      switch (body.type) {
+        case "Circle":
+          Circle.prototype.draw.call(body, context);
+          break;
+
+        default:
+          Polygon.prototype.draw.call(body, context);
+      }
     });
   }
 
@@ -34,14 +42,16 @@ export class BaseSystem extends RBush<Body> implements Data {
    * draw hierarchy
    */
   drawBVH(context: CanvasRenderingContext2D): void {
-    [...this.all(), ...this.data.children].forEach(
-      ({ minX: x, maxX, minY: y, maxY }: Body) => {
-        drawPolygon(context, {
-          pos: { x, y },
-          calcPoints: createBox(maxX - x, maxY - y),
-        });
-      }
-    );
+    const drawChildren = ({ minX: x, maxX, minY: y, maxY, children }: Leaf) => {
+      drawPolygon(context, {
+        pos: { x, y },
+        calcPoints: createBox(maxX - x, maxY - y),
+      });
+
+      children?.forEach(drawChildren);
+    };
+
+    this.data.children.forEach(drawChildren);
   }
 
   /**

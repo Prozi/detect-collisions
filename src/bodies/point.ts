@@ -1,5 +1,5 @@
 import { BodyOptions, PotentialVector, Types } from "../model";
-import { ensureVectorPoint } from "../utils";
+import { ensureVectorPoint, generateId } from "../utils";
 import { Box } from "./box";
 
 /**

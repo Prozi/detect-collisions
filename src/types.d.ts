@@ -15,3 +15,7 @@ declare module "poly-decomp" {
     precision: number
   ): void;
 }
+
+declare module "random-seed" {
+  export function create(name: string): { random(): number };
+}
