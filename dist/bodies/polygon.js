@@ -171,6 +171,9 @@ class Polygon extends sat_1.Polygon {
         this.pos.y += y;
         this.isCentered = true;
     }
+    toJSON() {
+        return (0, utils_1.toJSON)(this);
+    }
     /**
      * update the position of the decomposed convex polygons (if any), called
      * after the position of the body has changed

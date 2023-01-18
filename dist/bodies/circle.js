@@ -170,6 +170,9 @@ class Circle extends sat_1.Circle {
     center() {
         return;
     }
+    toJSON() {
+        return (0, utils_1.toJSON)(this);
+    }
     /**
      * internal for getting offset with applied angle
      */

@@ -133,6 +133,7 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      * center the box anchor
      */
     center(): void;
+    toJSON(): Partial<Polygon>;
     /**
      * update the position of the decomposed convex polygons (if any), called
      * after the position of the body has changed

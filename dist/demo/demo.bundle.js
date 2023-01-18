@@ -346,6 +346,9 @@ class Circle extends sat_1.Circle {
     center() {
         return;
     }
+    toJSON() {
+        return (0, utils_1.toJSON)(this);
+    }
     /**
      * internal for getting offset with applied angle
      */
@@ -747,6 +750,9 @@ class Polygon extends sat_1.Polygon {
         this.pos.y += y;
         this.isCentered = true;
     }
+    toJSON() {
+        return (0, utils_1.toJSON)(this);
+    }
     /**
      * update the position of the decomposed convex polygons (if any), called
      * after the position of the body has changed
@@ -1082,6 +1088,13 @@ class System extends base_system_1.BaseSystem {
         });
         return result;
     }
+    fromJSON(data) {
+        super.fromJSON(data);
+        this.all().forEach((body) => {
+            body.system = this;
+        });
+        return this;
+    }
     /**
      * update inner state function - for non convex polygons collisions
      */
@@ -1120,7 +1133,7 @@ exports.System = System;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.drawPolygon = exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.toJSON = exports.drawPolygon = exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
@@ -1354,7 +1367,7 @@ function getSATFunction(body, wall) {
     return (wall.type === model_1.Types.Circle ? sat_1.testPolygonCircle : sat_1.testPolygonPolygon);
 }
 exports.getSATFunction = getSATFunction;
-function drawPolygon(context, { pos, calcPoints }, isTrigger = false) {
+function drawPolygon(context, { pos, calcPoints, }, isTrigger = false) {
     const loopPoints = [...calcPoints, calcPoints[0]];
     loopPoints.forEach((point, index) => {
         const toX = pos.x + point.x;
@@ -1381,6 +1394,16 @@ function drawPolygon(context, { pos, calcPoints }, isTrigger = false) {
     });
 }
 exports.drawPolygon = drawPolygon;
+function toJSON(object) {
+    return Object.entries(object).reduce((prev, [key, value]) => {
+        // having system inside body would cause circular json
+        if (key !== "system") {
+            return Object.assign(Object.assign({}, prev), { [key]: value });
+        }
+        return prev;
+    }, {});
+}
+exports.toJSON = toJSON;
 //# sourceMappingURL=utils.js.map
 
 /***/ }),
@@ -3564,7 +3587,7 @@ module.exports.height = height;
   \****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const { System, getBounceDirection } = __webpack_require__(/*! ../../dist */ "./dist/index.js");
+const { System, getBounceDirection } = __webpack_require__(/*! ../.. */ "./dist/index.js");
 const { width, height } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js");
 const seededRandom = (__webpack_require__(/*! random-seed */ "./node_modules/random-seed/index.js").create)("@Prozi").random;
 
@@ -3788,7 +3811,7 @@ module.exports = Stress;
   \**************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const { System, mapVectorToArray } = __webpack_require__(/*! ../../dist */ "./dist/index.js");
+const { System, mapVectorToArray } = __webpack_require__(/*! ../.. */ "./dist/index.js");
 const { width, height, loop } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js");
 
 class Tank {

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.drawPolygon = exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.toJSON = exports.drawPolygon = exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = require("sat");
 const model_1 = require("./model");
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
@@ -234,7 +234,7 @@ function getSATFunction(body, wall) {
     return (wall.type === model_1.Types.Circle ? sat_1.testPolygonCircle : sat_1.testPolygonPolygon);
 }
 exports.getSATFunction = getSATFunction;
-function drawPolygon(context, { pos, calcPoints }, isTrigger = false) {
+function drawPolygon(context, { pos, calcPoints, }, isTrigger = false) {
     const loopPoints = [...calcPoints, calcPoints[0]];
     loopPoints.forEach((point, index) => {
         const toX = pos.x + point.x;
@@ -261,4 +261,14 @@ function drawPolygon(context, { pos, calcPoints }, isTrigger = false) {
     });
 }
 exports.drawPolygon = drawPolygon;
+function toJSON(object) {
+    return Object.entries(object).reduce((prev, [key, value]) => {
+        // having system inside body would cause circular json
+        if (key !== "system") {
+            return Object.assign(Object.assign({}, prev), { [key]: value });
+        }
+        return prev;
+    }, {});
+}
+exports.toJSON = toJSON;
 //# sourceMappingURL=utils.js.map

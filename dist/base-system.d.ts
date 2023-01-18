@@ -4,14 +4,12 @@ import { Ellipse } from "./bodies/ellipse";
 import { Line } from "./bodies/line";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
-import { Body, BodyOptions, Data, PotentialVector, RBush, Vector } from "./model";
+import { Body, BodyOptions, ChildrenData, Data, PotentialVector, RBush, Vector } from "./model";
 /**
  * very base collision system
  */
 export declare class BaseSystem extends RBush<Body> implements Data {
-    data: {
-        children: Body[];
-    };
+    data: ChildrenData;
     /**
      * draw bodies
      */

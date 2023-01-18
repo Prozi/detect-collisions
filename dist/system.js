@@ -197,6 +197,13 @@ class System extends base_system_1.BaseSystem {
         });
         return result;
     }
+    fromJSON(data) {
+        super.fromJSON(data);
+        this.all().forEach((body) => {
+            body.system = this;
+        });
+        return this;
+    }
     /**
      * update inner state function - for non convex polygons collisions
      */

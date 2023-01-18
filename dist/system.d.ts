@@ -1,7 +1,7 @@
 /// <reference types="sat" />
 import RBush from "rbush";
 import { BaseSystem } from "./base-system";
-import { Body, CollisionState, RaycastResult, Response, TestFunction, Vector } from "./model";
+import { Body, ChildrenData, CollisionState, RaycastResult, Response, TestFunction, Vector } from "./model";
 /**
  * collision system
  */
@@ -55,6 +55,7 @@ export declare class System extends BaseSystem {
      * raycast to get collider of ray from start to end
      */
     raycast(start: Vector, end: Vector, allowCollider?: (testCollider: Body) => boolean): RaycastResult;
+    fromJSON(data: ChildrenData): RBush<Body>;
     /**
      * update inner state function - for non convex polygons collisions
      */

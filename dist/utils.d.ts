@@ -38,7 +38,7 @@ export declare function clonePointsArray(points: SATVector[]): Vector[];
  */
 export declare function dashLineTo(context: CanvasRenderingContext2D, fromX: number, fromY: number, toX: number, toY: number, dash?: number, gap?: number): void;
 export declare function intersectLineCircle(line: Line, circle: Circle): Vector[];
-export declare function intersectLineLine(line1: Line, line2: Line): Vector | null;
+export declare function intersectLineLine(line1: Pick<Line, "start" | "end">, line2: Pick<Line, "start" | "end">): Vector | null;
 /**
  * check if line (ray) intersects polygon
  */
@@ -60,5 +60,8 @@ export declare function ensureConvex(body: Body): Body[];
  */
 export declare function getBounceDirection(body: Vector, collider: Vector): Vector;
 export declare function getSATFunction(body: Body, wall: Body): TestFunction;
-export declare function drawPolygon(context: CanvasRenderingContext2D, { pos, calcPoints }: Pick<Polygon | SATPolygon, "pos" | "calcPoints">, isTrigger?: boolean): void;
+export declare function drawPolygon(context: CanvasRenderingContext2D, { pos, calcPoints, }: Pick<Polygon | SATPolygon, "calcPoints"> & {
+    pos: Vector;
+}, isTrigger?: boolean): void;
+export declare function toJSON<T extends {} = Body>(object: T): Partial<T>;
 //# sourceMappingURL=utils.d.ts.map
