@@ -56,6 +56,10 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      */
     system?: System;
     /**
+     * unique id for toJSON and fromJSON
+     */
+    uid: string;
+    /**
      * type of body
      */
     readonly type: Types.Polygon | Types.Box | Types.Point | Types.Ellipse | Types.Line;

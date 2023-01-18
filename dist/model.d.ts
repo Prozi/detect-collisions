@@ -19,8 +19,11 @@ export declare enum Types {
     Point = "Point",
     Polygon = "Polygon"
 }
+export type Leaf = Body & {
+    children?: Leaf[];
+};
 export interface ChildrenData {
-    children: Body[];
+    children: Leaf[];
 }
 /**
  * for use of private function of sat.js
@@ -78,6 +81,10 @@ export interface Collider {
      * type of collider
      */
     readonly type: Types;
+    /**
+     * unique id for toJSON and fromJSON
+     */
+    uid: string;
     /**
      * is the collider non moving
      */

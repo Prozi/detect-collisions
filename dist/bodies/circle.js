@@ -39,6 +39,7 @@ class Circle extends sat_1.Circle {
         this.type = model_1.Types.Circle;
         (0, utils_1.extendBody)(this, options);
         this.radiusBackup = radius;
+        this.uid = (0, utils_1.generateId)();
     }
     /**
      * get this.pos.x
@@ -132,8 +133,8 @@ class Circle extends sat_1.Circle {
      * get body bounding box, without padding
      */
     getAABBAsBBox() {
-        const x = this.x + this.offset.x;
-        const y = this.y + this.offset.y;
+        const x = this.pos.x + this.offset.x;
+        const y = this.pos.y + this.offset.y;
         return {
             minX: x - this.r,
             maxX: x + this.r,
@@ -145,8 +146,8 @@ class Circle extends sat_1.Circle {
      * Draws collider on a CanvasRenderingContext2D's current path
      */
     draw(context) {
-        const x = this.x + this.offset.x;
-        const y = this.y + this.offset.y;
+        const x = this.pos.x + this.offset.x;
+        const y = this.pos.y + this.offset.y;
         if (this.isTrigger) {
             const max = Math.max(8, this.r);
             for (let i = 0; i < max; i++) {

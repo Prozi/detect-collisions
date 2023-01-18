@@ -15,6 +15,7 @@ class System extends base_system_1.BaseSystem {
          * the last collision result
          */
         this.response = new model_1.Response();
+        this.bodies = {};
         /**
          * reusable inner state - for non convex polygons collisions
          */
@@ -25,10 +26,16 @@ class System extends base_system_1.BaseSystem {
             overlapV: new model_1.SATVector(),
         };
     }
+    all() {
+        return Object.values(this.bodies);
+    }
     /**
      * remove body aabb from collision tree
      */
     remove(body, equals) {
+        if (body.system) {
+            delete body.system.bodies[body.uid];
+        }
         body.system = undefined;
         return super.remove(body, equals);
     }
@@ -43,8 +50,7 @@ class System extends base_system_1.BaseSystem {
         }
         // old bounding box *needs* to be removed
         if (body.system) {
-            // but we don't need to set system to undefined so super.remove
-            super.remove(body);
+            body.system.remove(body);
         }
         // only then we update min, max
         body.minX = body.bbox.minX - body.padding;
@@ -53,6 +59,7 @@ class System extends base_system_1.BaseSystem {
         body.maxY = body.bbox.maxY + body.padding;
         // set system for later body.system.updateBody(body)
         body.system = this;
+        this.bodies[body.uid] = body;
         // reinsert bounding box to collision tree
         return super.insert(body);
     }
@@ -197,11 +204,30 @@ class System extends base_system_1.BaseSystem {
         });
         return result;
     }
-    fromJSON(data) {
-        super.fromJSON(data);
-        this.all().forEach((body) => {
-            body.system = this;
+    /**
+     * used to find body deep inside data with finder function returning boolean found or not
+     */
+    traverse(find, { children } = this.data) {
+        return children === null || children === void 0 ? void 0 : children.find((body, index) => {
+            if (!body) {
+                return false;
+            }
+            if (body.type && find(body, children, index)) {
+                return true;
+            }
+            // if callback returns true, ends forEach
+            if (body.children) {
+                this.traverse(find, body);
+            }
         });
+    }
+    fromJSON(data) {
+        this.traverse((body, children, index) => {
+            if (this.bodies[body.uid]) {
+                children[index] = Object.assign(this.bodies[body.uid], body);
+            }
+        }, data);
+        this.data = data;
         return this;
     }
     /**

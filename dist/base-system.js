@@ -18,19 +18,27 @@ class BaseSystem extends model_1.RBush {
      */
     draw(context) {
         this.all().forEach((body) => {
-            body.draw(context);
+            switch (body.type) {
+                case "Circle":
+                    circle_1.Circle.prototype.draw.call(body, context);
+                    break;
+                default:
+                    polygon_1.Polygon.prototype.draw.call(body, context);
+            }
         });
     }
     /**
      * draw hierarchy
      */
     drawBVH(context) {
-        [...this.all(), ...this.data.children].forEach(({ minX: x, maxX, minY: y, maxY }) => {
+        const drawChildren = ({ minX: x, maxX, minY: y, maxY, children }) => {
             (0, utils_1.drawPolygon)(context, {
                 pos: { x, y },
                 calcPoints: (0, utils_1.createBox)(maxX - x, maxY - y),
             });
-        });
+            children === null || children === void 0 ? void 0 : children.forEach(drawChildren);
+        };
+        this.data.children.forEach(drawChildren);
     }
     /**
      * create point at position with options and add to system

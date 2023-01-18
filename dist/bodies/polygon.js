@@ -30,6 +30,7 @@ class Polygon extends sat_1.Polygon {
             throw new Error("No points in polygon");
         }
         (0, utils_1.extendBody)(this, options);
+        this.uid = (0, utils_1.generateId)();
     }
     get x() {
         return this.pos.x;
@@ -209,8 +210,8 @@ class Polygon extends sat_1.Polygon {
             if (!this.convexPolygons[index]) {
                 this.convexPolygons[index] = new sat_1.Polygon();
             }
-            this.convexPolygons[index].pos.x = this.x;
-            this.convexPolygons[index].pos.y = this.y;
+            this.convexPolygons[index].pos.x = this.pos.x;
+            this.convexPolygons[index].pos.y = this.pos.y;
             this.convexPolygons[index].setPoints((0, utils_1.ensurePolygonPoints)(points.map(utils_1.mapArrayToVector)));
         });
         // trim array length

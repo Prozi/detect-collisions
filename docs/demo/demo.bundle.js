@@ -28,19 +28,27 @@ class BaseSystem extends model_1.RBush {
      */
     draw(context) {
         this.all().forEach((body) => {
-            body.draw(context);
+            switch (body.type) {
+                case "Circle":
+                    circle_1.Circle.prototype.draw.call(body, context);
+                    break;
+                default:
+                    polygon_1.Polygon.prototype.draw.call(body, context);
+            }
         });
     }
     /**
      * draw hierarchy
      */
     drawBVH(context) {
-        [...this.all(), ...this.data.children].forEach(({ minX: x, maxX, minY: y, maxY }) => {
+        const drawChildren = ({ minX: x, maxX, minY: y, maxY, children }) => {
             (0, utils_1.drawPolygon)(context, {
                 pos: { x, y },
                 calcPoints: (0, utils_1.createBox)(maxX - x, maxY - y),
             });
-        });
+            children === null || children === void 0 ? void 0 : children.forEach(drawChildren);
+        };
+        this.data.children.forEach(drawChildren);
     }
     /**
      * create point at position with options and add to system
@@ -215,6 +223,7 @@ class Circle extends sat_1.Circle {
         this.type = model_1.Types.Circle;
         (0, utils_1.extendBody)(this, options);
         this.radiusBackup = radius;
+        this.uid = (0, utils_1.generateId)();
     }
     /**
      * get this.pos.x
@@ -308,8 +317,8 @@ class Circle extends sat_1.Circle {
      * get body bounding box, without padding
      */
     getAABBAsBBox() {
-        const x = this.x + this.offset.x;
-        const y = this.y + this.offset.y;
+        const x = this.pos.x + this.offset.x;
+        const y = this.pos.y + this.offset.y;
         return {
             minX: x - this.r,
             maxX: x + this.r,
@@ -321,8 +330,8 @@ class Circle extends sat_1.Circle {
      * Draws collider on a CanvasRenderingContext2D's current path
      */
     draw(context) {
-        const x = this.x + this.offset.x;
-        const y = this.y + this.offset.y;
+        const x = this.pos.x + this.offset.x;
+        const y = this.pos.y + this.offset.y;
         if (this.isTrigger) {
             const max = Math.max(8, this.r);
             for (let i = 0; i < max; i++) {
@@ -609,6 +618,7 @@ class Polygon extends sat_1.Polygon {
             throw new Error("No points in polygon");
         }
         (0, utils_1.extendBody)(this, options);
+        this.uid = (0, utils_1.generateId)();
     }
     get x() {
         return this.pos.x;
@@ -788,8 +798,8 @@ class Polygon extends sat_1.Polygon {
             if (!this.convexPolygons[index]) {
                 this.convexPolygons[index] = new sat_1.Polygon();
             }
-            this.convexPolygons[index].pos.x = this.x;
-            this.convexPolygons[index].pos.y = this.y;
+            this.convexPolygons[index].pos.x = this.pos.x;
+            this.convexPolygons[index].pos.y = this.pos.y;
             this.convexPolygons[index].setPoints((0, utils_1.ensurePolygonPoints)(points.map(utils_1.mapArrayToVector)));
         });
         // trim array length
@@ -906,6 +916,7 @@ class System extends base_system_1.BaseSystem {
          * the last collision result
          */
         this.response = new model_1.Response();
+        this.bodies = {};
         /**
          * reusable inner state - for non convex polygons collisions
          */
@@ -916,10 +927,16 @@ class System extends base_system_1.BaseSystem {
             overlapV: new model_1.SATVector(),
         };
     }
+    all() {
+        return Object.values(this.bodies);
+    }
     /**
      * remove body aabb from collision tree
      */
     remove(body, equals) {
+        if (body.system) {
+            delete body.system.bodies[body.uid];
+        }
         body.system = undefined;
         return super.remove(body, equals);
     }
@@ -934,8 +951,7 @@ class System extends base_system_1.BaseSystem {
         }
         // old bounding box *needs* to be removed
         if (body.system) {
-            // but we don't need to set system to undefined so super.remove
-            super.remove(body);
+            body.system.remove(body);
         }
         // only then we update min, max
         body.minX = body.bbox.minX - body.padding;
@@ -944,6 +960,7 @@ class System extends base_system_1.BaseSystem {
         body.maxY = body.bbox.maxY + body.padding;
         // set system for later body.system.updateBody(body)
         body.system = this;
+        this.bodies[body.uid] = body;
         // reinsert bounding box to collision tree
         return super.insert(body);
     }
@@ -1088,11 +1105,30 @@ class System extends base_system_1.BaseSystem {
         });
         return result;
     }
-    fromJSON(data) {
-        super.fromJSON(data);
-        this.all().forEach((body) => {
-            body.system = this;
+    /**
+     * used to find body deep inside data with finder function returning boolean found or not
+     */
+    traverse(find, { children } = this.data) {
+        return children === null || children === void 0 ? void 0 : children.find((body, index) => {
+            if (!body) {
+                return false;
+            }
+            if (body.type && find(body, children, index)) {
+                return true;
+            }
+            // if callback returns true, ends forEach
+            if (body.children) {
+                this.traverse(find, body);
+            }
         });
+    }
+    fromJSON(data) {
+        this.traverse((body, children, index) => {
+            if (this.bodies[body.uid]) {
+                children[index] = Object.assign(this.bodies[body.uid], body);
+            }
+        }, data);
+        this.data = data;
         return this;
     }
     /**
@@ -1133,7 +1169,7 @@ exports.System = System;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.toJSON = exports.drawPolygon = exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.generateId = exports.toJSON = exports.drawPolygon = exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
@@ -1396,7 +1432,6 @@ function drawPolygon(context, { pos, calcPoints, }, isTrigger = false) {
 exports.drawPolygon = drawPolygon;
 function toJSON(object) {
     return Object.entries(object).reduce((prev, [key, value]) => {
-        // having system inside body would cause circular json
         if (key !== "system") {
             return Object.assign(Object.assign({}, prev), { [key]: value });
         }
@@ -1404,6 +1439,11 @@ function toJSON(object) {
     }, {});
 }
 exports.toJSON = toJSON;
+let id = 0;
+function generateId() {
+    return (++id).toString(36);
+}
+exports.generateId = generateId;
 //# sourceMappingURL=utils.js.map
 
 /***/ }),
