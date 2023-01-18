@@ -7,7 +7,7 @@ function random(min, max) {
 }
 
 class Stress {
-  constructor(count = 1500) {
+  constructor(count = 2000) {
     const size = Math.sqrt((width * height) / (count * 50));
 
     this.physics = new System();
@@ -101,8 +101,6 @@ class Stress {
       this.bounce(a, b, overlapV);
       a.rotationSpeed = (seededRandom() - seededRandom()) * 0.1;
       a.setPosition(a.x - overlapV.x, a.y - overlapV.y);
-
-      return true;
     });
     // console.timeEnd("bodies separate");
   }

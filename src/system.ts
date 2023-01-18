@@ -127,13 +127,16 @@ export class System extends BaseSystem {
   /**
    * check one collider collisions with callback
    */
-  checkOne(body: Body, callback: (response: Response) => void | boolean): void {
+  checkOne(
+    body: Body,
+    callback: (response: Response) => void | boolean
+  ): boolean {
     // no need to check static body collision
     if (body.isStatic) {
-      return;
+      return false;
     }
 
-    this.search(body).some((candidate: Body) => {
+    return this.search(body).some((candidate: Body) => {
       if (candidate !== body && this.checkCollision(body, candidate)) {
         return callback(this.response);
       }
@@ -143,15 +146,15 @@ export class System extends BaseSystem {
   /**
    * check all colliders collisions with callback
    */
-  checkAll(callback: (response: Response) => void | boolean): void {
-    this.all().forEach((body: Body) => {
-      this.checkOne(body, callback);
+  checkAll(callback: (response: Response) => void | boolean): boolean {
+    return this.all().some((body: Body) => {
+      return this.checkOne(body, callback);
     });
   }
 
   /**
    * get object potential colliders
-   * @deprecated
+   * @deprecated because it's slower to use than checkOne() or checkAll()
    */
   getPotentials(body: Body): Body[] {
     // filter here is required as collides with self
@@ -162,38 +165,39 @@ export class System extends BaseSystem {
    * check do 2 objects collide
    */
   checkCollision(body: Body, wall: Body): boolean {
-    // check bounding boxes without padding
-    if (
-      (body.padding || wall.padding) &&
-      !intersectAABB(body.bbox, wall.bbox)
-    ) {
+    // check real bounding boxes (without padding)
+    if (body.bbox && wall.bbox && !intersectAABB(body.bbox, wall.bbox)) {
       return false;
     }
 
-    this.state.collides = false;
-    this.response.clear();
-
+    // proceed to sat.js checking
     const sat: TestFunction = getSATFunction(body, wall);
 
     if (body.isConvex && wall.isConvex) {
       this.state.collides = sat(body, wall, this.response);
-    } else if (body.isConvex && !wall.isConvex) {
-      ensureConvex(wall).forEach((convexWall: Body) => {
-        this.test(sat, body, convexWall);
-      });
-    } else if (!body.isConvex && wall.isConvex) {
-      ensureConvex(body).forEach((convexBody: Body) => {
-        this.test(sat, convexBody, wall);
-      });
     } else {
-      const convexBodies = ensureConvex(body);
-      const convexWalls = ensureConvex(wall);
+      // this is required for this.test() to have clean state
+      this.state.collides = false;
+      this.response.clear();
 
-      convexBodies.forEach((convexBody: Body) => {
-        convexWalls.forEach((convexWall: Body) => {
-          this.test(sat, convexBody, convexWall);
+      if (body.isConvex && !wall.isConvex) {
+        ensureConvex(wall).forEach((convexWall: Body) => {
+          this.test(sat, body, convexWall);
         });
-      });
+      } else if (!body.isConvex && wall.isConvex) {
+        ensureConvex(body).forEach((convexBody: Body) => {
+          this.test(sat, convexBody, wall);
+        });
+      } else {
+        const convexBodies = ensureConvex(body);
+        const convexWalls = ensureConvex(wall);
+
+        convexBodies.forEach((convexBody: Body) => {
+          convexWalls.forEach((convexWall: Body) => {
+            this.test(sat, convexBody, convexWall);
+          });
+        });
+      }
     }
 
     // set proper response object bodies

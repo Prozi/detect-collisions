@@ -990,9 +990,9 @@ class System extends base_system_1.BaseSystem {
     checkOne(body, callback) {
         // no need to check static body collision
         if (body.isStatic) {
-            return;
+            return false;
         }
-        this.search(body).some((candidate) => {
+        return this.search(body).some((candidate) => {
             if (candidate !== body && this.checkCollision(body, candidate)) {
                 return callback(this.response);
             }
@@ -1002,13 +1002,13 @@ class System extends base_system_1.BaseSystem {
      * check all colliders collisions with callback
      */
     checkAll(callback) {
-        this.all().forEach((body) => {
-            this.checkOne(body, callback);
+        return this.all().some((body) => {
+            return this.checkOne(body, callback);
         });
     }
     /**
      * get object potential colliders
-     * @deprecated
+     * @deprecated because it's slower to use than checkOne() or checkAll()
      */
     getPotentials(body) {
         // filter here is required as collides with self
@@ -1018,35 +1018,38 @@ class System extends base_system_1.BaseSystem {
      * check do 2 objects collide
      */
     checkCollision(body, wall) {
-        // check bounding boxes without padding
-        if ((body.padding || wall.padding) &&
-            !(0, utils_1.intersectAABB)(body.bbox, wall.bbox)) {
+        // check real bounding boxes (without padding)
+        if (body.bbox && wall.bbox && !(0, utils_1.intersectAABB)(body.bbox, wall.bbox)) {
             return false;
         }
-        this.state.collides = false;
-        this.response.clear();
+        // proceed to sat.js checking
         const sat = (0, utils_1.getSATFunction)(body, wall);
         if (body.isConvex && wall.isConvex) {
             this.state.collides = sat(body, wall, this.response);
         }
-        else if (body.isConvex && !wall.isConvex) {
-            (0, utils_1.ensureConvex)(wall).forEach((convexWall) => {
-                this.test(sat, body, convexWall);
-            });
-        }
-        else if (!body.isConvex && wall.isConvex) {
-            (0, utils_1.ensureConvex)(body).forEach((convexBody) => {
-                this.test(sat, convexBody, wall);
-            });
-        }
         else {
-            const convexBodies = (0, utils_1.ensureConvex)(body);
-            const convexWalls = (0, utils_1.ensureConvex)(wall);
-            convexBodies.forEach((convexBody) => {
-                convexWalls.forEach((convexWall) => {
-                    this.test(sat, convexBody, convexWall);
+            // this is required for this.test() to have clean state
+            this.state.collides = false;
+            this.response.clear();
+            if (body.isConvex && !wall.isConvex) {
+                (0, utils_1.ensureConvex)(wall).forEach((convexWall) => {
+                    this.test(sat, body, convexWall);
                 });
-            });
+            }
+            else if (!body.isConvex && wall.isConvex) {
+                (0, utils_1.ensureConvex)(body).forEach((convexBody) => {
+                    this.test(sat, convexBody, wall);
+                });
+            }
+            else {
+                const convexBodies = (0, utils_1.ensureConvex)(body);
+                const convexWalls = (0, utils_1.ensureConvex)(wall);
+                convexBodies.forEach((convexBody) => {
+                    convexWalls.forEach((convexWall) => {
+                        this.test(sat, convexBody, convexWall);
+                    });
+                });
+            }
         }
         // set proper response object bodies
         if (!body.isConvex || !wall.isConvex) {
@@ -3635,7 +3638,7 @@ function random(min, max) {
 }
 
 class Stress {
-  constructor(count = 1500) {
+  constructor(count = 2000) {
     const size = Math.sqrt((width * height) / (count * 50));
 
     this.physics = new System();
@@ -3729,8 +3732,6 @@ class Stress {
       this.bounce(a, b, overlapV);
       a.rotationSpeed = (seededRandom() - seededRandom()) * 0.1;
       a.setPosition(a.x - overlapV.x, a.y - overlapV.y);
-
-      return true;
     });
     // console.timeEnd("bodies separate");
   }

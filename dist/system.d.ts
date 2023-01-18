@@ -39,14 +39,14 @@ export declare class System extends BaseSystem {
     /**
      * check one collider collisions with callback
      */
-    checkOne(body: Body, callback: (response: Response) => void | boolean): void;
+    checkOne(body: Body, callback: (response: Response) => void | boolean): boolean;
     /**
      * check all colliders collisions with callback
      */
-    checkAll(callback: (response: Response) => void | boolean): void;
+    checkAll(callback: (response: Response) => void | boolean): boolean;
     /**
      * get object potential colliders
-     * @deprecated
+     * @deprecated because it's slower to use than checkOne() or checkAll()
      */
     getPotentials(body: Body): Body[];
     /**
