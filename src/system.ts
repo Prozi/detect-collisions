@@ -298,7 +298,7 @@ export class System extends BaseSystem {
       }
     }, data);
 
-    this.data = data;
+    super.fromJSON(data);
 
     return this;
   }

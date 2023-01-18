@@ -27,14 +27,7 @@ export class BaseSystem extends RBush<Body> implements Data {
    */
   draw(context: CanvasRenderingContext2D): void {
     this.all().forEach((body: Body) => {
-      switch (body.type) {
-        case "Circle":
-          Circle.prototype.draw.call(body, context);
-          break;
-
-        default:
-          Polygon.prototype.draw.call(body, context);
-      }
+      body.draw(context)
     });
   }
 
