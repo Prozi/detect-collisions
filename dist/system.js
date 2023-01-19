@@ -129,13 +129,12 @@ class System extends base_system_1.BaseSystem {
         }
         // proceed to sat.js checking
         const sat = (0, utils_1.getSATFunction)(body, wall);
+        this.state.collides = false;
+        this.response.clear();
         if (body.isConvex && wall.isConvex) {
             this.state.collides = sat(body, wall, this.response);
         }
         else {
-            // this is required for this.test() to have clean state
-            this.state.collides = false;
-            this.response.clear();
             if (body.isConvex && !wall.isConvex) {
                 (0, utils_1.ensureConvex)(wall).forEach((convexWall) => {
                     this.test(sat, body, convexWall);
