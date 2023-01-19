@@ -84,7 +84,7 @@ class System extends base_system_1.BaseSystem {
         this.checkAll(({ a, overlapV }) => {
             // static bodies and triggers do not move back / separate
             if (a.isTrigger) {
-                return true;
+                return false;
             }
             a.setPosition(a.x - overlapV.x, a.y - overlapV.y);
         });
