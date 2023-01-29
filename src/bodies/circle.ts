@@ -10,13 +10,7 @@ import {
   Vector,
 } from "../model";
 import { System } from "../system";
-import {
-  dashLineTo,
-  ensureVectorPoint,
-  extendBody,
-  generateId,
-  toJSON,
-} from "../utils";
+import { dashLineTo, ensureVectorPoint, extendBody } from "../utils";
 
 /**
  * collider - circle
@@ -93,11 +87,6 @@ export class Circle extends SATCircle implements BBox, Collider {
   system?: System;
 
   /**
-   * unique id for toJSON and fromJSON
-   */
-  uid: string;
-
-  /**
    * circle type
    */
   readonly type: Types.Circle = Types.Circle;
@@ -120,7 +109,6 @@ export class Circle extends SATCircle implements BBox, Collider {
     extendBody(this, options);
 
     this.radiusBackup = radius;
-    this.uid = generateId();
   }
 
   /**
@@ -270,10 +258,6 @@ export class Circle extends SATCircle implements BBox, Collider {
    */
   center(): void {
     return;
-  }
-
-  toJSON(): Partial<Circle> {
-    return toJSON(this);
   }
 
   /**

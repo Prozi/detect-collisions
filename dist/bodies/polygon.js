@@ -30,7 +30,6 @@ class Polygon extends sat_1.Polygon {
             throw new Error("No points in polygon");
         }
         (0, utils_1.extendBody)(this, options);
-        this.uid = (0, utils_1.generateId)();
     }
     get x() {
         return this.pos.x;
@@ -171,9 +170,6 @@ class Polygon extends sat_1.Polygon {
         this.pos.x += x;
         this.pos.y += y;
         this.isCentered = true;
-    }
-    toJSON() {
-        return (0, utils_1.toJSON)(this);
     }
     /**
      * update the position of the decomposed convex polygons (if any), called

@@ -63,6 +63,4 @@ export declare function getSATFunction(body: Body, wall: Body): TestFunction;
 export declare function drawPolygon(context: CanvasRenderingContext2D, { pos, calcPoints, }: Pick<Polygon | SATPolygon, "calcPoints"> & {
     pos: Vector;
 }, isTrigger?: boolean): void;
-export declare function toJSON<T extends {} = Body>(object: T): Partial<T>;
-export declare function generateId(): string;
 //# sourceMappingURL=utils.d.ts.map

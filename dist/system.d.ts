@@ -1,7 +1,7 @@
 /// <reference types="sat" />
 import RBush from "rbush";
 import { BaseSystem } from "./base-system";
-import { Body, ChildrenData, CollisionState, Leaf, RaycastResult, Response, TestFunction, Vector } from "./model";
+import { Body, CollisionState, Leaf, RaycastResult, Response, TestFunction, Vector } from "./model";
 /**
  * collision system
  */
@@ -10,7 +10,6 @@ export declare class System extends BaseSystem {
      * the last collision result
      */
     response: Response;
-    bodies: Record<string, Body>;
     /**
      * reusable inner state - for non convex polygons collisions
      */
@@ -57,14 +56,12 @@ export declare class System extends BaseSystem {
      * raycast to get collider of ray from start to end
      */
     raycast(start: Vector, end: Vector, allowCollider?: (testCollider: Body) => boolean): RaycastResult;
-    clear(): this;
     /**
      * used to find body deep inside data with finder function returning boolean found or not
      */
     traverse(find: (child: Leaf, children: Leaf[], index: number) => boolean | void, { children }?: {
         children?: Leaf[];
     }): Body | undefined;
-    fromJSON(data: ChildrenData): RBush<Body>;
     /**
      * update inner state function - for non convex polygons collisions
      */

@@ -217,7 +217,6 @@ class Circle extends sat_1.Circle {
         this.type = model_1.Types.Circle;
         (0, utils_1.extendBody)(this, options);
         this.radiusBackup = radius;
-        this.uid = (0, utils_1.generateId)();
     }
     /**
      * get this.pos.x
@@ -348,9 +347,6 @@ class Circle extends sat_1.Circle {
      */
     center() {
         return;
-    }
-    toJSON() {
-        return (0, utils_1.toJSON)(this);
     }
     /**
      * internal for getting offset with applied angle
@@ -612,7 +608,6 @@ class Polygon extends sat_1.Polygon {
             throw new Error("No points in polygon");
         }
         (0, utils_1.extendBody)(this, options);
-        this.uid = (0, utils_1.generateId)();
     }
     get x() {
         return this.pos.x;
@@ -753,9 +748,6 @@ class Polygon extends sat_1.Polygon {
         this.pos.x += x;
         this.pos.y += y;
         this.isCentered = true;
-    }
-    toJSON() {
-        return (0, utils_1.toJSON)(this);
     }
     /**
      * update the position of the decomposed convex polygons (if any), called
@@ -910,7 +902,6 @@ class System extends base_system_1.BaseSystem {
          * the last collision result
          */
         this.response = new model_1.Response();
-        this.bodies = {};
         /**
          * reusable inner state - for non convex polygons collisions
          */
@@ -925,9 +916,6 @@ class System extends base_system_1.BaseSystem {
      * remove body aabb from collision tree
      */
     remove(body, equals) {
-        if (body.system) {
-            delete body.system.bodies[body.uid];
-        }
         body.system = undefined;
         return super.remove(body, equals);
     }
@@ -936,12 +924,12 @@ class System extends base_system_1.BaseSystem {
      */
     insert(body) {
         body.bbox = body.getAABBAsBBox();
-        // allow only on first insert or if body moved
-        if (body.system && !(0, utils_1.bodyMoved)(body)) {
-            return this;
-        }
-        // old bounding box *needs* to be removed
         if (body.system) {
+            // allow end if body inserted and not moved
+            if (!(0, utils_1.bodyMoved)(body)) {
+                return this;
+            }
+            // old bounding box *needs* to be removed
             body.system.remove(body);
         }
         // only then we update min, max
@@ -951,7 +939,6 @@ class System extends base_system_1.BaseSystem {
         body.maxY = body.bbox.maxY + body.padding;
         // set system for later body.system.updateBody(body)
         body.system = this;
-        this.bodies[body.uid] = body;
         // reinsert bounding box to collision tree
         return super.insert(body);
     }
@@ -1101,11 +1088,6 @@ class System extends base_system_1.BaseSystem {
         this.remove(this.ray);
         return result;
     }
-    clear() {
-        super.clear();
-        this.bodies = {};
-        return this;
-    }
     /**
      * used to find body deep inside data with finder function returning boolean found or not
      */
@@ -1122,15 +1104,6 @@ class System extends base_system_1.BaseSystem {
                 this.traverse(find, body);
             }
         });
-    }
-    fromJSON(data) {
-        this.traverse((body, children, index) => {
-            if (this.bodies[body.uid]) {
-                this.bodies[body.uid] = children[index] = Object.assign(this.bodies[body.uid], body);
-            }
-        }, data);
-        super.fromJSON(data);
-        return this;
     }
     /**
      * update inner state function - for non convex polygons collisions
@@ -1170,7 +1143,7 @@ exports.System = System;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.generateId = exports.toJSON = exports.drawPolygon = exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.drawPolygon = exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
@@ -1431,20 +1404,6 @@ function drawPolygon(context, { pos, calcPoints, }, isTrigger = false) {
     });
 }
 exports.drawPolygon = drawPolygon;
-function toJSON(object) {
-    return Object.entries(object).reduce((prev, [key, value]) => {
-        if (key !== "system") {
-            return Object.assign(Object.assign({}, prev), { [key]: value });
-        }
-        return prev;
-    }, {});
-}
-exports.toJSON = toJSON;
-let id = 0;
-function generateId() {
-    return (++id).toString(36);
-}
-exports.generateId = generateId;
 //# sourceMappingURL=utils.js.map
 
 /***/ }),

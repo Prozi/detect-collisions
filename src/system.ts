@@ -4,6 +4,7 @@ import { BaseSystem } from "./base-system";
 import { Line } from "./bodies/line";
 import {
   Body,
+  BodyOptions,
   ChildrenData,
   CollisionState,
   Leaf,
@@ -34,8 +35,6 @@ export class System extends BaseSystem {
    */
   response: Response = new Response();
 
-  bodies: Record<string, Body> = {};
-
   /**
    * reusable inner state - for non convex polygons collisions
    */
@@ -52,9 +51,6 @@ export class System extends BaseSystem {
    * remove body aabb from collision tree
    */
   remove(body: Body, equals?: (a: Body, b: Body) => boolean): RBush<Body> {
-    if (body.system) {
-      delete body.system.bodies[body.uid];
-    }
     body.system = undefined;
 
     return super.remove(body, equals);
@@ -66,13 +62,13 @@ export class System extends BaseSystem {
   insert(body: Body): RBush<Body> {
     body.bbox = body.getAABBAsBBox();
 
-    // allow only on first insert or if body moved
-    if (body.system && !bodyMoved(body)) {
-      return this;
-    }
-
-    // old bounding box *needs* to be removed
     if (body.system) {
+      // allow end if body inserted and not moved
+      if (!bodyMoved(body)) {
+        return this;
+      }
+
+      // old bounding box *needs* to be removed
       body.system.remove(body);
     }
 
@@ -84,8 +80,6 @@ export class System extends BaseSystem {
 
     // set system for later body.system.updateBody(body)
     body.system = this;
-
-    this.bodies[body.uid] = body;
 
     // reinsert bounding box to collision tree
     return super.insert(body);
@@ -266,13 +260,6 @@ export class System extends BaseSystem {
     return result;
   }
 
-  clear() {
-    super.clear();
-    this.bodies = {};
-
-    return this;
-  }
-
   /**
    * used to find body deep inside data with finder function returning boolean found or not
    */
@@ -294,21 +281,6 @@ export class System extends BaseSystem {
         this.traverse(find, body);
       }
     });
-  }
-
-  fromJSON(data: ChildrenData): RBush<Body> {
-    this.traverse((body, children, index) => {
-      if (this.bodies[body.uid]) {
-        this.bodies[body.uid] = children[index] = Object.assign(
-          this.bodies[body.uid],
-          body
-        );
-      }
-    }, data);
-
-    super.fromJSON(data);
-
-    return this;
   }
 
   /**

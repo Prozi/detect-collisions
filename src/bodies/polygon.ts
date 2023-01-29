@@ -20,8 +20,6 @@ import {
   mapVectorToArray,
   clonePointsArray,
   drawPolygon,
-  toJSON,
-  generateId,
 } from "../utils";
 
 /**
@@ -89,11 +87,6 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   system?: System;
 
   /**
-   * unique id for toJSON and fromJSON
-   */
-  uid: string;
-
-  /**
    * type of body
    */
   readonly type:
@@ -128,8 +121,6 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     }
 
     extendBody(this, options);
-
-    this.uid = generateId();
   }
 
   get x(): number {
@@ -292,10 +283,6 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     this.pos.x += x;
     this.pos.y += y;
     this.isCentered = true;
-  }
-
-  toJSON(): Partial<Polygon> {
-    return toJSON(this);
   }
 
   /**

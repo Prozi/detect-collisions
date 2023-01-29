@@ -15,7 +15,6 @@ class System extends base_system_1.BaseSystem {
          * the last collision result
          */
         this.response = new model_1.Response();
-        this.bodies = {};
         /**
          * reusable inner state - for non convex polygons collisions
          */
@@ -30,9 +29,6 @@ class System extends base_system_1.BaseSystem {
      * remove body aabb from collision tree
      */
     remove(body, equals) {
-        if (body.system) {
-            delete body.system.bodies[body.uid];
-        }
         body.system = undefined;
         return super.remove(body, equals);
     }
@@ -41,12 +37,12 @@ class System extends base_system_1.BaseSystem {
      */
     insert(body) {
         body.bbox = body.getAABBAsBBox();
-        // allow only on first insert or if body moved
-        if (body.system && !(0, utils_1.bodyMoved)(body)) {
-            return this;
-        }
-        // old bounding box *needs* to be removed
         if (body.system) {
+            // allow end if body inserted and not moved
+            if (!(0, utils_1.bodyMoved)(body)) {
+                return this;
+            }
+            // old bounding box *needs* to be removed
             body.system.remove(body);
         }
         // only then we update min, max
@@ -56,7 +52,6 @@ class System extends base_system_1.BaseSystem {
         body.maxY = body.bbox.maxY + body.padding;
         // set system for later body.system.updateBody(body)
         body.system = this;
-        this.bodies[body.uid] = body;
         // reinsert bounding box to collision tree
         return super.insert(body);
     }
@@ -206,11 +201,6 @@ class System extends base_system_1.BaseSystem {
         this.remove(this.ray);
         return result;
     }
-    clear() {
-        super.clear();
-        this.bodies = {};
-        return this;
-    }
     /**
      * used to find body deep inside data with finder function returning boolean found or not
      */
@@ -227,15 +217,6 @@ class System extends base_system_1.BaseSystem {
                 this.traverse(find, body);
             }
         });
-    }
-    fromJSON(data) {
-        this.traverse((body, children, index) => {
-            if (this.bodies[body.uid]) {
-                this.bodies[body.uid] = children[index] = Object.assign(this.bodies[body.uid], body);
-            }
-        }, data);
-        super.fromJSON(data);
-        return this;
     }
     /**
      * update inner state function - for non convex polygons collisions

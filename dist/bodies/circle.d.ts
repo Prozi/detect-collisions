@@ -60,10 +60,6 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      */
     system?: System;
     /**
-     * unique id for toJSON and fromJSON
-     */
-    uid: string;
-    /**
      * circle type
      */
     readonly type: Types.Circle;
@@ -135,7 +131,6 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      * for compatility reasons, does nothing
      */
     center(): void;
-    toJSON(): Partial<Circle>;
     /**
      * internal for getting offset with applied angle
      */

@@ -82,10 +82,6 @@ export interface Collider {
      */
     readonly type: Types;
     /**
-     * unique id for toJSON and fromJSON
-     */
-    uid: string;
-    /**
      * is the collider non moving
      */
     isStatic?: boolean;

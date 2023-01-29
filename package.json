@@ -1,6 +1,6 @@
 {
   "name": "detect-collisions",
-  "version": "6.7.2",
+  "version": "6.7.3",
   "description": "2d collision detection for Points, Lines, Boxes, Polygons, Ellipses and Circles (with SAT and BVH)",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -15,7 +15,7 @@
     "build:docs": "typedoc --customCss typedoc.css",
     "postbuild:docs": "npm run docs-from-master && cp -r dist/demo docs",
     "docs": "npm run build:docs && chef-express docs --debug",
-    "docs-from-master": "for f in `find docs -name *.html`; do sed -i '' -r 's_/blob/[^/]+/_/blob/master/_g' $f; done",
+    "docs-from-master": "for f in `find docs -name *.html`; do sed -i -r 's_/blob/[^/]+/_/blob/master/_g' $f; done",
     "demo": "npm run build && npm run build:demo && npm start",
     "start": "chef-express dist/demo --debug",
     "test": "jest --silent --verbose --forceExit",

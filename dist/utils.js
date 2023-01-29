@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateId = exports.toJSON = exports.drawPolygon = exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.drawPolygon = exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
 const sat_1 = require("sat");
 const model_1 = require("./model");
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
@@ -261,18 +261,4 @@ function drawPolygon(context, { pos, calcPoints, }, isTrigger = false) {
     });
 }
 exports.drawPolygon = drawPolygon;
-function toJSON(object) {
-    return Object.entries(object).reduce((prev, [key, value]) => {
-        if (key !== "system") {
-            return Object.assign(Object.assign({}, prev), { [key]: value });
-        }
-        return prev;
-    }, {});
-}
-exports.toJSON = toJSON;
-let id = 0;
-function generateId() {
-    return (++id).toString(36);
-}
-exports.generateId = generateId;
 //# sourceMappingURL=utils.js.map

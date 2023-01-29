@@ -342,25 +342,3 @@ export function drawPolygon(
     }
   });
 }
-
-export function toJSON<T extends {} = Body>(object: T): Partial<T> {
-  return Object.entries(object).reduce(
-    (prev: Partial<T>, [key, value]: [string, unknown]) => {
-      if (key !== "system") {
-        return {
-          ...prev,
-          [key]: value,
-        };
-      }
-
-      return prev;
-    },
-    {}
-  );
-}
-
-let id = 0;
-
-export function generateId(): string {
-  return (++id).toString(36);
-}
