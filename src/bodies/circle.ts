@@ -264,7 +264,7 @@ export class Circle extends SATCircle implements BBox, Collider {
    * internal for getting offset with applied angle
    */
   protected getOffsetWithAngle(): Vector {
-    if (!this.angle) {
+    if (!this.angle || (!this.offsetCopy.x && !this.offsetCopy.y)) {
       return this.offsetCopy;
     }
 

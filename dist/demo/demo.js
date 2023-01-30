@@ -352,7 +352,7 @@ class Circle extends sat_1.Circle {
      * internal for getting offset with applied angle
      */
     getOffsetWithAngle() {
-        if (!this.angle) {
+        if (!this.angle || (!this.offsetCopy.x && !this.offsetCopy.y)) {
             return this.offsetCopy;
         }
         const sin = Math.sin(this.angle);
