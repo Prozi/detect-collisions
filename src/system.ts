@@ -1,6 +1,7 @@
 import RBush from "rbush";
 
 import { BaseSystem } from "./base-system";
+import { Circle } from "./bodies/circle";
 import { Line } from "./bodies/line";
 import {
   Body,
@@ -8,6 +9,7 @@ import {
   Leaf,
   RaycastResult,
   Response,
+  SATPolygon,
   SATVector,
   TestFunction,
   Types,
@@ -163,31 +165,17 @@ export class System extends BaseSystem {
 
     // proceed to sat.js checking
     const sat: TestFunction = getSATFunction(body, wall);
+    const convexBodies = ensureConvex(body);
+    const convexWalls = ensureConvex(wall);
+
     this.state.collides = false;
     this.response.clear();
 
-    if (body.isConvex && wall.isConvex) {
-      this.state.collides = sat(body, wall, this.response);
-    } else {
-      if (body.isConvex && !wall.isConvex) {
-        ensureConvex(wall).forEach((convexWall: Body) => {
-          this.test(sat, body, convexWall);
-        });
-      } else if (!body.isConvex && wall.isConvex) {
-        ensureConvex(body).forEach((convexBody: Body) => {
-          this.test(sat, convexBody, wall);
-        });
-      } else {
-        const convexBodies = ensureConvex(body);
-        const convexWalls = ensureConvex(wall);
-
-        convexBodies.forEach((convexBody: Body) => {
-          convexWalls.forEach((convexWall: Body) => {
-            this.test(sat, convexBody, convexWall);
-          });
-        });
-      }
-    }
+    convexBodies.forEach((convexBody) => {
+      convexWalls.forEach((convexWall) => {
+        this.test(sat, convexBody, convexWall);
+      });
+    });
 
     // set proper response object bodies
     if (!body.isConvex || !wall.isConvex) {
@@ -279,7 +267,12 @@ export class System extends BaseSystem {
   /**
    * update inner state function - for non convex polygons collisions
    */
-  protected test(sat: TestFunction, body: Body, wall: Body): void {
+  protected test(
+    sat: TestFunction,
+    body: SATPolygon | Circle,
+    wall: SATPolygon | Circle
+  ): void {
+    console.log(sat.name);
     const collides = sat(body, wall, this.response);
 
     if (collides) {

@@ -1,5 +1,8 @@
 import { BBox } from "rbush";
+import { Point as DecompPoint } from "poly-decomp";
 import { Vector as SATVector } from "sat";
+import { Circle } from "./bodies/circle";
+import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
 import { Body, BodyOptions, PotentialVector, SATPolygon, TestFunction, Vector } from "./model";
 export declare function createEllipse(radiusX: number, radiusY?: number, step?: number): SATVector[];
@@ -38,15 +41,15 @@ export declare function dashLineTo(context: CanvasRenderingContext2D, fromX: num
 /**
  * change format from poly-decomp to SAT.js
  */
-export declare function mapVectorToArray({ x, y }: Vector): [number, number];
+export declare function mapVectorToArray({ x, y }?: Vector): DecompPoint;
 /**
  * change format from SAT.js to poly-decomp
  */
-export declare function mapArrayToVector([x, y]: [number, number]): Vector;
+export declare function mapArrayToVector([x, y]?: DecompPoint): Vector;
 /**
  * replace body with array of related convex polygons
  */
-export declare function ensureConvex(body: Body): Body[];
+export declare function ensureConvex(body: Circle | Point | Polygon): [Circle | Point | Polygon] | SATPolygon[];
 /**
  * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
  */

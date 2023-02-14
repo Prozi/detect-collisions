@@ -1,35 +1,24 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.intersectLineCircleProposal = exports.circleOutsidePolygon = exports.circleInPolygon = exports.circleInCircle = exports.pointInPolygon = exports.polygonInPolygon = exports.polygonInCircle = void 0;
+exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.intersectLineCircleProposal = exports.circleOutsidePolygon = exports.circleInPolygon = exports.circleInCircle = exports.pointOnCircle = exports.polygonInPolygon = exports.pointInPolygon = exports.polygonInCircle = void 0;
 const sat_1 = require("sat");
+const utils_1 = require("./utils");
 function polygonInCircle(polygon, circle) {
     return polygon.calcPoints.every((p) => (0, sat_1.pointInCircle)(p, circle));
 }
 exports.polygonInCircle = polygonInCircle;
-function polygonInPolygon(a, b) {
-    return a.calcPoints.every((p) => pointInPolygon(p, b));
-}
-exports.polygonInPolygon = polygonInPolygon;
-function pointInPolygon(p, { calcPoints }) {
-    let result = false;
-    let j = calcPoints.length - 1;
-    for (let i = 0; i < calcPoints.length; i++) {
-        if (((calcPoints[i].y <= p.y && p.y < calcPoints[j].y) ||
-            (calcPoints[j].y <= p.y && p.y < calcPoints[i].y)) &&
-            p.x <
-                ((calcPoints[j].x - calcPoints[i].x) * (p.y - calcPoints[i].y)) /
-                    (calcPoints[j].y - calcPoints[i].y) +
-                    calcPoints[i].x) {
-            result = !result;
-        }
-        j = i;
-    }
-    return result;
+function pointInPolygon(a, b) {
+    return (0, utils_1.ensureConvex)(b).some((convex) => (0, sat_1.pointInPolygon)(a, convex));
 }
 exports.pointInPolygon = pointInPolygon;
+function polygonInPolygon(a, b) {
+    return a.calcPoints.every((point) => pointInPolygon(point, b));
+}
+exports.polygonInPolygon = polygonInPolygon;
 function pointOnCircle(p, { r, pos }) {
     return ((p.x - pos.x) * (p.x - pos.x) + (p.y - pos.y) * (p.y - pos.y) === r * r);
 }
+exports.pointOnCircle = pointOnCircle;
 function circleInCircle(a, b) {
     const x1 = a.pos.x;
     const y1 = a.pos.y;

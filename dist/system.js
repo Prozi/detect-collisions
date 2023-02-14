@@ -125,32 +125,15 @@ class System extends base_system_1.BaseSystem {
         }
         // proceed to sat.js checking
         const sat = (0, utils_1.getSATFunction)(body, wall);
+        const convexBodies = (0, utils_1.ensureConvex)(body);
+        const convexWalls = (0, utils_1.ensureConvex)(wall);
         this.state.collides = false;
         this.response.clear();
-        if (body.isConvex && wall.isConvex) {
-            this.state.collides = sat(body, wall, this.response);
-        }
-        else {
-            if (body.isConvex && !wall.isConvex) {
-                (0, utils_1.ensureConvex)(wall).forEach((convexWall) => {
-                    this.test(sat, body, convexWall);
-                });
-            }
-            else if (!body.isConvex && wall.isConvex) {
-                (0, utils_1.ensureConvex)(body).forEach((convexBody) => {
-                    this.test(sat, convexBody, wall);
-                });
-            }
-            else {
-                const convexBodies = (0, utils_1.ensureConvex)(body);
-                const convexWalls = (0, utils_1.ensureConvex)(wall);
-                convexBodies.forEach((convexBody) => {
-                    convexWalls.forEach((convexWall) => {
-                        this.test(sat, convexBody, convexWall);
-                    });
-                });
-            }
-        }
+        convexBodies.forEach((convexBody) => {
+            convexWalls.forEach((convexWall) => {
+                this.test(sat, convexBody, convexWall);
+            });
+        });
         // set proper response object bodies
         if (!body.isConvex || !wall.isConvex) {
             this.response.a = body;
@@ -219,6 +202,7 @@ class System extends base_system_1.BaseSystem {
      * update inner state function - for non convex polygons collisions
      */
     test(sat, body, wall) {
+        console.log(sat.name);
         const collides = sat(body, wall, this.response);
         if (collides) {
             // first time in loop, reset

@@ -767,7 +767,8 @@ class Polygon extends sat_1.Polygon {
         if ((this.type && this.type !== model_1.Types.Polygon) || this.points.length <= 3) {
             return [];
         }
-        return (0, poly_decomp_1.quickDecomp)(this.calcPoints.map(utils_1.mapVectorToArray));
+        const points = this.calcPoints.map(utils_1.mapVectorToArray);
+        return (0, poly_decomp_1.decomp)(points);
     }
     /**
      * updates convex polygons cache in body
@@ -853,36 +854,25 @@ __exportStar(__webpack_require__(/*! ./intersect */ "./dist/intersect.js"), expo
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.intersectLineCircleProposal = exports.circleOutsidePolygon = exports.circleInPolygon = exports.circleInCircle = exports.pointInPolygon = exports.polygonInPolygon = exports.polygonInCircle = void 0;
+exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.intersectLineCircleProposal = exports.circleOutsidePolygon = exports.circleInPolygon = exports.circleInCircle = exports.pointOnCircle = exports.polygonInPolygon = exports.pointInPolygon = exports.polygonInCircle = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
+const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils.js");
 function polygonInCircle(polygon, circle) {
     return polygon.calcPoints.every((p) => (0, sat_1.pointInCircle)(p, circle));
 }
 exports.polygonInCircle = polygonInCircle;
-function polygonInPolygon(a, b) {
-    return a.calcPoints.every((p) => pointInPolygon(p, b));
-}
-exports.polygonInPolygon = polygonInPolygon;
-function pointInPolygon(p, { calcPoints }) {
-    let result = false;
-    let j = calcPoints.length - 1;
-    for (let i = 0; i < calcPoints.length; i++) {
-        if (((calcPoints[i].y <= p.y && p.y < calcPoints[j].y) ||
-            (calcPoints[j].y <= p.y && p.y < calcPoints[i].y)) &&
-            p.x <
-                ((calcPoints[j].x - calcPoints[i].x) * (p.y - calcPoints[i].y)) /
-                    (calcPoints[j].y - calcPoints[i].y) +
-                    calcPoints[i].x) {
-            result = !result;
-        }
-        j = i;
-    }
-    return result;
+function pointInPolygon(a, b) {
+    return (0, utils_1.ensureConvex)(b).some((convex) => (0, sat_1.pointInPolygon)(a, convex));
 }
 exports.pointInPolygon = pointInPolygon;
+function polygonInPolygon(a, b) {
+    return a.calcPoints.every((point) => pointInPolygon(point, b));
+}
+exports.polygonInPolygon = polygonInPolygon;
 function pointOnCircle(p, { r, pos }) {
     return ((p.x - pos.x) * (p.x - pos.x) + (p.y - pos.y) * (p.y - pos.y) === r * r);
 }
+exports.pointOnCircle = pointOnCircle;
 function circleInCircle(a, b) {
     const x1 = a.pos.x;
     const y1 = a.pos.y;
@@ -1062,13 +1052,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Types = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = void 0;
+exports.Types = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = void 0;
 const rbush_1 = __importDefault(__webpack_require__(/*! rbush */ "./node_modules/rbush/rbush.min.js"));
 Object.defineProperty(exports, "RBush", ({ enumerable: true, get: function () { return rbush_1.default; } }));
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 Object.defineProperty(exports, "Response", ({ enumerable: true, get: function () { return sat_1.Response; } }));
 Object.defineProperty(exports, "SATVector", ({ enumerable: true, get: function () { return sat_1.Vector; } }));
 Object.defineProperty(exports, "SATPolygon", ({ enumerable: true, get: function () { return sat_1.Polygon; } }));
+Object.defineProperty(exports, "SATCircle", ({ enumerable: true, get: function () { return sat_1.Circle; } }));
 /**
  * types
  */
@@ -1219,32 +1210,15 @@ class System extends base_system_1.BaseSystem {
         }
         // proceed to sat.js checking
         const sat = (0, utils_1.getSATFunction)(body, wall);
+        const convexBodies = (0, utils_1.ensureConvex)(body);
+        const convexWalls = (0, utils_1.ensureConvex)(wall);
         this.state.collides = false;
         this.response.clear();
-        if (body.isConvex && wall.isConvex) {
-            this.state.collides = sat(body, wall, this.response);
-        }
-        else {
-            if (body.isConvex && !wall.isConvex) {
-                (0, utils_1.ensureConvex)(wall).forEach((convexWall) => {
-                    this.test(sat, body, convexWall);
-                });
-            }
-            else if (!body.isConvex && wall.isConvex) {
-                (0, utils_1.ensureConvex)(body).forEach((convexBody) => {
-                    this.test(sat, convexBody, wall);
-                });
-            }
-            else {
-                const convexBodies = (0, utils_1.ensureConvex)(body);
-                const convexWalls = (0, utils_1.ensureConvex)(wall);
-                convexBodies.forEach((convexBody) => {
-                    convexWalls.forEach((convexWall) => {
-                        this.test(sat, convexBody, convexWall);
-                    });
-                });
-            }
-        }
+        convexBodies.forEach((convexBody) => {
+            convexWalls.forEach((convexWall) => {
+                this.test(sat, convexBody, convexWall);
+            });
+        });
         // set proper response object bodies
         if (!body.isConvex || !wall.isConvex) {
             this.response.a = body;
@@ -1313,6 +1287,7 @@ class System extends base_system_1.BaseSystem {
      * update inner state function - for non convex polygons collisions
      */
     test(sat, body, wall) {
+        console.log(sat.name);
         const collides = sat(body, wall, this.response);
         if (collides) {
             // first time in loop, reset
@@ -1482,14 +1457,14 @@ exports.dashLineTo = dashLineTo;
 /**
  * change format from poly-decomp to SAT.js
  */
-function mapVectorToArray({ x, y }) {
+function mapVectorToArray({ x, y } = { x: 0, y: 0 }) {
     return [x, y];
 }
 exports.mapVectorToArray = mapVectorToArray;
 /**
  * change format from SAT.js to poly-decomp
  */
-function mapArrayToVector([x, y]) {
+function mapArrayToVector([x, y] = [0, 0]) {
     return { x, y };
 }
 exports.mapArrayToVector = mapArrayToVector;

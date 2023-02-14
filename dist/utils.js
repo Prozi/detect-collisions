@@ -140,14 +140,14 @@ exports.dashLineTo = dashLineTo;
 /**
  * change format from poly-decomp to SAT.js
  */
-function mapVectorToArray({ x, y }) {
+function mapVectorToArray({ x, y } = { x: 0, y: 0 }) {
     return [x, y];
 }
 exports.mapVectorToArray = mapVectorToArray;
 /**
  * change format from SAT.js to poly-decomp
  */
-function mapArrayToVector([x, y]) {
+function mapArrayToVector([x, y] = [0, 0]) {
     return { x, y };
 }
 exports.mapArrayToVector = mapArrayToVector;

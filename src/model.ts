@@ -1,5 +1,10 @@
 import { BBox, default as RBush } from "rbush";
-import { Response, Vector as SATVector, Polygon as SATPolygon } from "sat";
+import {
+  Response,
+  Vector as SATVector,
+  Polygon as SATPolygon,
+  Circle as SATCircle,
+} from "sat";
 
 import { Box } from "./bodies/box";
 import { Circle } from "./bodies/circle";
@@ -9,7 +14,8 @@ import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
 import { System } from "./system";
 
-export { RBush, BBox, Response, SATVector, SATPolygon };
+export { Polygon as DecompPolygon, Point as DecompPoint } from "poly-decomp";
+export { RBush, BBox, Response, SATVector, SATPolygon, SATCircle };
 
 /**
  * types
@@ -187,6 +193,6 @@ export interface CollisionState {
 }
 
 export type TestFunction<
-  T extends Body = Circle | Polygon,
-  Y extends Body = Circle | Polygon
+  T extends {} = SATCircle | SATPolygon,
+  Y extends {} = SATCircle | SATPolygon
 > = (a: T, b: Y, r: Response) => boolean;

@@ -1,7 +1,6 @@
-import { Polygon as DecompPolygon } from "poly-decomp";
 import { BBox } from "rbush";
 import { Polygon as SATPolygon } from "sat";
-import { BodyOptions, Collider, PotentialVector, SATVector, Types, Vector } from "../model";
+import { BodyOptions, Collider, DecompPolygon, PotentialVector, SATVector, Types, Vector } from "../model";
 import { System } from "../system";
 /**
  * collider - polygon

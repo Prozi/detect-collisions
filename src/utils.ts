@@ -1,4 +1,5 @@
 import { BBox } from "rbush";
+import { Point as DecompPoint } from "poly-decomp";
 import {
   testCircleCircle,
   testCirclePolygon,
@@ -6,6 +7,8 @@ import {
   testPolygonPolygon,
   Vector as SATVector,
 } from "sat";
+import { Circle } from "./bodies/circle";
+import { Point } from "./bodies/point";
 
 import { Polygon } from "./bodies/polygon";
 import {
@@ -193,26 +196,30 @@ export function dashLineTo(
 /**
  * change format from poly-decomp to SAT.js
  */
-export function mapVectorToArray({ x, y }: Vector): [number, number] {
+export function mapVectorToArray(
+  { x, y }: Vector = { x: 0, y: 0 }
+): DecompPoint {
   return [x, y];
 }
 
 /**
  * change format from SAT.js to poly-decomp
  */
-export function mapArrayToVector([x, y]: [number, number]): Vector {
+export function mapArrayToVector([x, y]: DecompPoint = [0, 0]): Vector {
   return { x, y };
 }
 
 /**
  * replace body with array of related convex polygons
  */
-export function ensureConvex(body: Body): Body[] {
+export function ensureConvex(
+  body: Circle | Point | Polygon
+): [Circle | Point | Polygon] | SATPolygon[] {
   if (body.isConvex || body.type !== Types.Polygon) {
     return [body];
   }
 
-  return body.convexPolygons as Body[];
+  return body.convexPolygons;
 }
 
 /**

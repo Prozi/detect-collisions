@@ -163,8 +163,7 @@ describe("GIVEN Polygon", () => {
         { x: -13.25, y: -7.51 },
         { x: -11.25, y: -7.51 },
       ]);
-      const convex = physics.createCircle({ x: 0.77, y: 6.75 }, 1);
-
+      const convex = physics.createCircle({ x: 0, y: 7 }, 1);
       const collide = physics.checkCollision(concave, convex);
 
       expect(collide).toBe(true);

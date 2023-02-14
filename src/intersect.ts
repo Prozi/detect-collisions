@@ -1,9 +1,10 @@
-import { pointInCircle } from "sat";
+import { pointInCircle, pointInPolygon as pointInConvexPolygon } from "sat";
 
-import { Vector } from "./model";
+import { SATVector, Vector } from "./model";
 import { Circle } from "./bodies/circle";
 import { Polygon } from "./bodies/polygon";
 import { Line } from "./bodies/line";
+import { ensureConvex } from "./utils";
 
 export function polygonInCircle(
   polygon: Polygon,
@@ -12,31 +13,17 @@ export function polygonInCircle(
   return polygon.calcPoints.every((p) => pointInCircle(p, circle));
 }
 
+export function pointInPolygon(a: Vector, b: Polygon): boolean {
+  return (ensureConvex(b) as []).some((convex) =>
+    pointInConvexPolygon(a as SATVector, convex as Polygon)
+  );
+}
+
 export function polygonInPolygon(a: Polygon, b: Polygon): boolean {
-  return a.calcPoints.every((p) => pointInPolygon(p, b));
+  return a.calcPoints.every((point) => pointInPolygon(point, b));
 }
 
-export function pointInPolygon(p: Vector, { calcPoints }: Polygon) {
-  let result = false;
-  let j = calcPoints.length - 1;
-  for (let i = 0; i < calcPoints.length; i++) {
-    if (
-      ((calcPoints[i].y <= p.y && p.y < calcPoints[j].y) ||
-        (calcPoints[j].y <= p.y && p.y < calcPoints[i].y)) &&
-      p.x <
-        ((calcPoints[j].x - calcPoints[i].x) * (p.y - calcPoints[i].y)) /
-          (calcPoints[j].y - calcPoints[i].y) +
-          calcPoints[i].x
-    ) {
-      result = !result;
-    }
-    j = i;
-  }
-
-  return result;
-}
-
-function pointOnCircle(
+export function pointOnCircle(
   p: Vector,
   { r, pos }: Pick<Circle, "pos" | "r">
 ): boolean {
