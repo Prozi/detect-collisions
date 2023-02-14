@@ -138,7 +138,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
     this.translate(-x, -y);
     this.pos.x += x;
     this.pos.y += y;
-    this.centered = true;
+    this.centered = isCentered;
   }
 
   /**
