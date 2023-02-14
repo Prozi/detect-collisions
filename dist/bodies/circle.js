@@ -36,7 +36,7 @@ class Circle extends sat_1.Circle {
         /**
          * circle type
          */
-        this.type = model_1.BodyType.Circle;
+        this.type = model_1.Types.Circle;
         (0, utils_1.extendBody)(this, options);
         this.radiusBackup = radius;
     }

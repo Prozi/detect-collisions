@@ -21,7 +21,7 @@ class Polygon extends sat_1.Polygon {
         /**
          * type of body
          */
-        this.type = model_1.BodyType.Polygon;
+        this.type = model_1.Types.Polygon;
         /**
          * scale Vector of body
          */
@@ -186,8 +186,7 @@ class Polygon extends sat_1.Polygon {
      * returns body split into convex polygons, or empty array for convex bodies
      */
     getConvex() {
-        if ((this.type && this.type !== model_1.BodyType.Polygon) ||
-            this.points.length <= 3) {
+        if ((this.type && this.type !== model_1.Types.Polygon) || this.points.length <= 3) {
             return [];
         }
         const points = this.calcPoints.map(utils_1.mapVectorToArray);

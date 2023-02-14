@@ -19,7 +19,7 @@ class Line extends polygon_1.Polygon {
         /**
          * line type
          */
-        this.type = model_1.BodyType.Line;
+        this.type = model_1.Types.Line;
         /**
          * line is convex
          */

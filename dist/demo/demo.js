@@ -123,7 +123,7 @@ class Box extends polygon_1.Polygon {
         /**
          * type of body
          */
-        this.type = model_1.BodyType.Box;
+        this.type = model_1.Types.Box;
         /**
          * boxes are convex
          */
@@ -214,7 +214,7 @@ class Circle extends sat_1.Circle {
         /**
          * circle type
          */
-        this.type = model_1.BodyType.Circle;
+        this.type = model_1.Types.Circle;
         (0, utils_1.extendBody)(this, options);
         this.radiusBackup = radius;
     }
@@ -392,7 +392,7 @@ class Ellipse extends polygon_1.Polygon {
         /**
          * ellipse type
          */
-        this.type = model_1.BodyType.Ellipse;
+        this.type = model_1.Types.Ellipse;
         /**
          * ellipses are centered
          */
@@ -490,7 +490,7 @@ class Line extends polygon_1.Polygon {
         /**
          * line type
          */
-        this.type = model_1.BodyType.Line;
+        this.type = model_1.Types.Line;
         /**
          * line is convex
          */
@@ -561,7 +561,7 @@ class Point extends box_1.Box {
         /**
          * point type
          */
-        this.type = model_1.BodyType.Point;
+        this.type = model_1.Types.Point;
     }
 }
 exports.Point = Point;
@@ -599,7 +599,7 @@ class Polygon extends sat_1.Polygon {
         /**
          * type of body
          */
-        this.type = model_1.BodyType.Polygon;
+        this.type = model_1.Types.Polygon;
         /**
          * scale Vector of body
          */
@@ -764,8 +764,7 @@ class Polygon extends sat_1.Polygon {
      * returns body split into convex polygons, or empty array for convex bodies
      */
     getConvex() {
-        if ((this.type && this.type !== model_1.BodyType.Polygon) ||
-            this.points.length <= 3) {
+        if ((this.type && this.type !== model_1.Types.Polygon) || this.points.length <= 3) {
             return [];
         }
         const points = this.calcPoints.map(utils_1.mapVectorToArray);
@@ -1050,7 +1049,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.BodyType = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = void 0;
+exports.Types = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = void 0;
 const rbush_1 = __importDefault(__webpack_require__(/*! rbush */ "./node_modules/rbush/rbush.min.js"));
 Object.defineProperty(exports, "RBush", ({ enumerable: true, get: function () { return rbush_1.default; } }));
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
@@ -1061,15 +1060,15 @@ Object.defineProperty(exports, "SATCircle", ({ enumerable: true, get: function (
 /**
  * types
  */
-var BodyType;
-(function (BodyType) {
-    BodyType["Ellipse"] = "Ellipse";
-    BodyType["Line"] = "Line";
-    BodyType["Circle"] = "Circle";
-    BodyType["Box"] = "Box";
-    BodyType["Point"] = "Point";
-    BodyType["Polygon"] = "Polygon";
-})(BodyType = exports.BodyType || (exports.BodyType = {}));
+var Types;
+(function (Types) {
+    Types["Ellipse"] = "Ellipse";
+    Types["Line"] = "Line";
+    Types["Circle"] = "Circle";
+    Types["Box"] = "Box";
+    Types["Point"] = "Point";
+    Types["Polygon"] = "Polygon";
+})(Types = exports.Types || (exports.Types = {}));
 //# sourceMappingURL=model.js.map
 
 /***/ }),
@@ -1234,7 +1233,7 @@ class System extends base_system_1.BaseSystem {
     /**
      * raycast to get collider of ray from start to end
      */
-    raycast(start, end, allow = () => true) {
+    raycast(start, end, allowCollider = () => true) {
         let minDistance = Infinity;
         let result = null;
         if (!this.ray) {
@@ -1245,18 +1244,18 @@ class System extends base_system_1.BaseSystem {
             this.ray.end = end;
         }
         this.insert(this.ray);
-        this.checkOne(this.ray, ({ b: body }) => {
-            if (!allow(body)) {
+        this.checkOne(this.ray, ({ b: collider }) => {
+            if (!allowCollider(collider)) {
                 return false;
             }
-            const points = body.type === model_1.BodyType.Circle
-                ? (0, intersect_1.intersectLineCircle)(this.ray, body)
-                : (0, intersect_1.intersectLinePolygon)(this.ray, body);
+            const points = collider.type === model_1.Types.Circle
+                ? (0, intersect_1.intersectLineCircle)(this.ray, collider)
+                : (0, intersect_1.intersectLinePolygon)(this.ray, collider);
             points.forEach((point) => {
                 const pointDistance = (0, utils_1.distance)(start, point);
                 if (pointDistance < minDistance) {
                     minDistance = pointDistance;
-                    result = { point, body };
+                    result = { point, collider };
                 }
             });
         });
@@ -1404,7 +1403,7 @@ function extendBody(body, options) {
     body.isStatic = !!(options === null || options === void 0 ? void 0 : options.isStatic);
     body.isTrigger = !!(options === null || options === void 0 ? void 0 : options.isTrigger);
     body.padding = (options === null || options === void 0 ? void 0 : options.padding) || 0;
-    if (options === null || options === void 0 ? void 0 : options.isCentered) {
+    if (options === null || options === void 0 ? void 0 : options.center) {
         body.center();
     }
     body.setAngle((options === null || options === void 0 ? void 0 : options.angle) || 0);
@@ -1434,13 +1433,13 @@ exports.intersectAABB = intersectAABB;
  * checks if body a is in body b
  */
 function checkAInB(a, b) {
-    if (a.type === model_1.BodyType.Circle) {
-        if (b.type !== model_1.BodyType.Circle) {
+    if (a.type === model_1.Types.Circle) {
+        if (b.type !== model_1.Types.Circle) {
             return (0, intersect_1.circleInPolygon)(a, b);
         }
         return (0, intersect_1.circleInCircle)(a, b);
     }
-    if (b.type === model_1.BodyType.Circle) {
+    if (b.type === model_1.Types.Circle) {
         return (0, intersect_1.polygonInCircle)(a, b);
     }
     return (0, intersect_1.polygonInPolygon)(a, b);
@@ -1496,7 +1495,7 @@ exports.mapArrayToVector = mapArrayToVector;
  * replace body with array of related convex polygons
  */
 function ensureConvex(body) {
-    if (body.isConvex || body.type !== model_1.BodyType.Polygon) {
+    if (body.isConvex || body.type !== model_1.Types.Polygon) {
         return [body];
     }
     return body.convexPolygons;
@@ -1516,10 +1515,10 @@ exports.getBounceDirection = getBounceDirection;
  * returns correct sat.js testing function based on body types
  */
 function getSATFunction(body, wall) {
-    if (body.type === model_1.BodyType.Circle) {
-        return (wall.type === model_1.BodyType.Circle ? sat_1.testCircleCircle : sat_1.testCirclePolygon);
+    if (body.type === model_1.Types.Circle) {
+        return (wall.type === model_1.Types.Circle ? sat_1.testCircleCircle : sat_1.testCirclePolygon);
     }
-    return (wall.type === model_1.BodyType.Circle ? sat_1.testPolygonCircle : sat_1.testPolygonPolygon);
+    return (wall.type === model_1.Types.Circle ? sat_1.testPolygonCircle : sat_1.testPolygonPolygon);
 }
 exports.getSATFunction = getSATFunction;
 /**
@@ -3762,22 +3761,22 @@ class Stress {
       this.physics.createLine(
         { x: 0, y: 0 },
         { x: width, y: 0 },
-        { isStatic: true, isCentered: true }
+        { isStatic: true, center: true }
       ),
       this.physics.createLine(
         { x: width, y: 0 },
         { x: width, y: height },
-        { isStatic: true, isCentered: true }
+        { isStatic: true, center: true }
       ),
       this.physics.createLine(
         { x: width, y: height },
         { x: 0, y: height },
-        { isStatic: true, isCentered: true }
+        { isStatic: true, center: true }
       ),
       this.physics.createLine(
         { x: 0, y: height },
         { x: 0, y: 0 },
-        { isStatic: true, isCentered: true }
+        { isStatic: true, center: true }
       ),
     ];
 
@@ -3867,7 +3866,7 @@ class Stress {
     const y = random(0, height);
     const direction = (random(0, 360) * Math.PI) / 180;
     const options = {
-      isCentered: true,
+      center: true,
       padding: size * 0.5,
     };
 
@@ -4120,13 +4119,13 @@ class Tank {
         ? this.physics.createCircle(
             { x: this.scaleX(x), y: this.scaleY(y) },
             this.scaleX(size / 2),
-            { isCentered: true }
+            { center: true }
           )
         : this.physics.createBox(
             { x: this.scaleX(x - size / 2), y: this.scaleY(y - size / 2) },
             this.scaleX(size),
             this.scaleX(size),
-            { isCentered: true }
+            { center: true }
           );
 
     player.velocity = 0;

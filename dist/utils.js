@@ -91,7 +91,7 @@ function extendBody(body, options) {
     body.isStatic = !!(options === null || options === void 0 ? void 0 : options.isStatic);
     body.isTrigger = !!(options === null || options === void 0 ? void 0 : options.isTrigger);
     body.padding = (options === null || options === void 0 ? void 0 : options.padding) || 0;
-    if (options === null || options === void 0 ? void 0 : options.isCentered) {
+    if (options === null || options === void 0 ? void 0 : options.center) {
         body.center();
     }
     body.setAngle((options === null || options === void 0 ? void 0 : options.angle) || 0);
@@ -121,13 +121,13 @@ exports.intersectAABB = intersectAABB;
  * checks if body a is in body b
  */
 function checkAInB(a, b) {
-    if (a.type === model_1.BodyType.Circle) {
-        if (b.type !== model_1.BodyType.Circle) {
+    if (a.type === model_1.Types.Circle) {
+        if (b.type !== model_1.Types.Circle) {
             return (0, intersect_1.circleInPolygon)(a, b);
         }
         return (0, intersect_1.circleInCircle)(a, b);
     }
-    if (b.type === model_1.BodyType.Circle) {
+    if (b.type === model_1.Types.Circle) {
         return (0, intersect_1.polygonInCircle)(a, b);
     }
     return (0, intersect_1.polygonInPolygon)(a, b);
@@ -183,7 +183,7 @@ exports.mapArrayToVector = mapArrayToVector;
  * replace body with array of related convex polygons
  */
 function ensureConvex(body) {
-    if (body.isConvex || body.type !== model_1.BodyType.Polygon) {
+    if (body.isConvex || body.type !== model_1.Types.Polygon) {
         return [body];
     }
     return body.convexPolygons;
@@ -203,10 +203,10 @@ exports.getBounceDirection = getBounceDirection;
  * returns correct sat.js testing function based on body types
  */
 function getSATFunction(body, wall) {
-    if (body.type === model_1.BodyType.Circle) {
-        return (wall.type === model_1.BodyType.Circle ? sat_1.testCircleCircle : sat_1.testCirclePolygon);
+    if (body.type === model_1.Types.Circle) {
+        return (wall.type === model_1.Types.Circle ? sat_1.testCircleCircle : sat_1.testCirclePolygon);
     }
-    return (wall.type === model_1.BodyType.Circle ? sat_1.testPolygonCircle : sat_1.testPolygonPolygon);
+    return (wall.type === model_1.Types.Circle ? sat_1.testPolygonCircle : sat_1.testPolygonPolygon);
 }
 exports.getSATFunction = getSATFunction;
 /**

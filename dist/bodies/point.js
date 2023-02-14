@@ -16,7 +16,7 @@ class Point extends box_1.Box {
         /**
          * point type
          */
-        this.type = model_1.BodyType.Point;
+        this.type = model_1.Types.Point;
     }
 }
 exports.Point = Point;
