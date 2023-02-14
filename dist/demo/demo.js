@@ -729,7 +729,7 @@ class Polygon extends sat_1.Polygon {
         return this;
     }
     /**
-     * rotates polygon points by angle
+     * rotates polygon points by angle, in radians
      */
     rotate(angle) {
         super.rotate(angle);
@@ -1121,6 +1121,7 @@ class System extends base_system_1.BaseSystem {
     }
     /**
      * re-insert body into collision tree and update its aabb
+     * every body can be part of only one system
      */
     insert(body) {
         body.bbox = body.getAABBAsBBox();
@@ -1317,10 +1318,24 @@ exports.System = System;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.drawPolygon = exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = void 0;
+exports.drawPolygon = exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const intersect_1 = __webpack_require__(/*! ./intersect */ "./dist/intersect.js");
 const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
+/**
+ * convert from degrees to radians
+ */
+function deg2rad(degrees) {
+    return degrees * (Math.PI / 180);
+}
+exports.deg2rad = deg2rad;
+/**
+ * convert from radians to degrees
+ */
+function rad2deg(radians) {
+    return radians * (180 / Math.PI);
+}
+exports.rad2deg = rad2deg;
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
     const steps = Math.PI * Math.hypot(radiusX, radiusY) * 2;
     const length = Math.max(8, Math.ceil(steps / Math.max(1, step)));

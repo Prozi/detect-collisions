@@ -35,6 +35,7 @@ class System extends base_system_1.BaseSystem {
     }
     /**
      * re-insert body into collision tree and update its aabb
+     * every body can be part of only one system
      */
     insert(body) {
         body.bbox = body.getAABBAsBBox();

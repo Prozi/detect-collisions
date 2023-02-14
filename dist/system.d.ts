@@ -22,6 +22,7 @@ export declare class System extends BaseSystem {
     remove(body: Body, equals?: (a: Body, b: Body) => boolean): RBush<Body>;
     /**
      * re-insert body into collision tree and update its aabb
+     * every body can be part of only one system
      */
     insert(body: Body): RBush<Body>;
     /**

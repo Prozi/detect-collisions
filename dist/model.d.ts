@@ -32,6 +32,9 @@ export interface ChildrenData {
 export interface Data {
     data: ChildrenData;
 }
+/**
+ * BodyOptions, angle is in radians
+ */
 export interface BodyOptions {
     isStatic?: boolean;
     isTrigger?: boolean;
@@ -111,7 +114,7 @@ export interface Collider {
      */
     offset: SATVector;
     /**
-     * body angle
+     * body angle - in radians
      */
     angle: number;
     /**
@@ -127,7 +130,7 @@ export interface Collider {
      */
     get scaleY(): number;
     /**
-     * update position
+     * update position, and cached convexes positions
      */
     setPosition(x: number, y: number): void;
     /**

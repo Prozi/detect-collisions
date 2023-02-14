@@ -57,6 +57,7 @@ export class System extends BaseSystem {
 
   /**
    * re-insert body into collision tree and update its aabb
+   * every body can be part of only one system
    */
   insert(body: Body): RBush<Body> {
     body.bbox = body.getAABBAsBBox();

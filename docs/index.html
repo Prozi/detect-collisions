@@ -74,7 +74,7 @@
 <li><code>setPosition(x, y)</code> method - calling it <strong>updates</strong> <em>bounding box</em></li>
 <li><code>x &amp; y</code> properties - setting any of those <strong>updates</strong> <em>bounding box</em></li>
 <li><code>pos.x, pos.y</code> properties - setting those <strong>doesn&#39;t</strong> update <em>bounding box</em></li>
-<li><code>angle</code> property and <code>setAngle()</code> method - to rotate</li>
+<li><code>angle</code> property (in radians) and <code>setAngle()</code> method - to rotate</li>
 <li><code>scale</code> property and <code>setScale()</code> method - to scale (for <code>Circle</code> takes 1 parameter, <code>x, y</code> for rest)</li>
 <li><code>offset</code> and <code>setOffset()</code> method - for offset from center of body</li>
 <li><code>getAABBAsBBox()</code> method - for getting bbox even on non inserted bodies</li>
@@ -334,6 +334,7 @@ only using Detect-Collisions and with different <em>N</em> amounts of dynamic, m
 <li class="tsd-kind-function"><a href="functions/createBox.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>create<wbr/>Box</a></li>
 <li class="tsd-kind-function"><a href="functions/createEllipse.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>create<wbr/>Ellipse</a></li>
 <li class="tsd-kind-function"><a href="functions/dashLineTo.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>dash<wbr/>Line<wbr/>To</a></li>
+<li class="tsd-kind-function"><a href="functions/deg2rad.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>deg2rad</a></li>
 <li class="tsd-kind-function"><a href="functions/distance.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>distance</a></li>
 <li class="tsd-kind-function"><a href="functions/drawPolygon.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>draw<wbr/>Polygon</a></li>
 <li class="tsd-kind-function"><a href="functions/ensureConvex.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>ensure<wbr/>Convex</a></li>
@@ -352,7 +353,8 @@ only using Detect-Collisions and with different <em>N</em> amounts of dynamic, m
 <li class="tsd-kind-function"><a href="functions/pointInPolygon.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>point<wbr/>In<wbr/>Polygon</a></li>
 <li class="tsd-kind-function"><a href="functions/pointOnCircle.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>point<wbr/>On<wbr/>Circle</a></li>
 <li class="tsd-kind-function"><a href="functions/polygonInCircle.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>polygon<wbr/>In<wbr/>Circle</a></li>
-<li class="tsd-kind-function"><a href="functions/polygonInPolygon.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>polygon<wbr/>In<wbr/>Polygon</a></li></ul></nav></div></div>
+<li class="tsd-kind-function"><a href="functions/polygonInPolygon.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>polygon<wbr/>In<wbr/>Polygon</a></li>
+<li class="tsd-kind-function"><a href="functions/rad2deg.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-64-path"></use><use href="#icon-64-text"></use></svg>rad2deg</a></li></ul></nav></div></div>
 <div class="container tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
 <div class="overlay"></div><script src="assets/main.js"></script></body></html>

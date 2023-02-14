@@ -5,6 +5,14 @@ import { Circle } from "./bodies/circle";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
 import { Body, BodyOptions, PotentialVector, SATPolygon, TestFunction, Vector } from "./model";
+/**
+ * convert from degrees to radians
+ */
+export declare function deg2rad(degrees: number): number;
+/**
+ * convert from radians to degrees
+ */
+export declare function rad2deg(radians: number): number;
 export declare function createEllipse(radiusX: number, radiusY?: number, step?: number): SATVector[];
 /**
  * creates box polygon points

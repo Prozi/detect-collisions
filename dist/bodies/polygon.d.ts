@@ -125,7 +125,7 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      */
     translate(x: number, y: number): Polygon;
     /**
-     * rotates polygon points by angle
+     * rotates polygon points by angle, in radians
      */
     rotate(angle: number): Polygon;
     /**

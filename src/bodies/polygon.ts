@@ -262,7 +262,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   }
 
   /**
-   * rotates polygon points by angle
+   * rotates polygon points by angle, in radians
    */
   rotate(angle: number): Polygon {
     super.rotate(angle);

@@ -27,6 +27,20 @@ import {
   Vector,
 } from "./model";
 
+/**
+ * convert from degrees to radians
+ */
+export function deg2rad(degrees: number) {
+  return degrees * (Math.PI / 180);
+}
+
+/**
+ * convert from radians to degrees
+ */
+export function rad2deg(radians: number) {
+  return radians * (180 / Math.PI);
+}
+
 export function createEllipse(
   radiusX: number,
   radiusY: number = radiusX,

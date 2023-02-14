@@ -151,7 +151,7 @@ class Polygon extends sat_1.Polygon {
         return this;
     }
     /**
-     * rotates polygon points by angle
+     * rotates polygon points by angle, in radians
      */
     rotate(angle) {
         super.rotate(angle);
