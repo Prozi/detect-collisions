@@ -1,4 +1,4 @@
-import { pointInPolygon, pointInCircle } from "sat";
+import { pointInCircle } from "sat";
 
 import { Vector } from "./model";
 import { Circle } from "./bodies/circle";
@@ -14,6 +14,26 @@ export function polygonInCircle(
 
 export function polygonInPolygon(a: Polygon, b: Polygon): boolean {
   return a.calcPoints.every((p) => pointInPolygon(p, b));
+}
+
+export function pointInPolygon(p: Vector, { calcPoints }: Polygon) {
+  let result = false;
+  let j = calcPoints.length - 1;
+  for (let i = 0; i < calcPoints.length; i++) {
+    if (
+      ((calcPoints[i].y <= p.y && p.y < calcPoints[j].y) ||
+        (calcPoints[j].y <= p.y && p.y < calcPoints[i].y)) &&
+      p.x <
+        ((calcPoints[j].x - calcPoints[i].x) * (p.y - calcPoints[i].y)) /
+          (calcPoints[j].y - calcPoints[i].y) +
+          calcPoints[i].x
+    ) {
+      result = !result;
+    }
+    j = i;
+  }
+
+  return result;
 }
 
 function pointOnCircle(
