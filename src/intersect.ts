@@ -110,7 +110,7 @@ export function circleInPolygon(
     const end: Vector =
       i === 0 ? calcPoints[calcPoints.length - 1] : calcPoints[i + 1];
 
-    if (intersectLineCircle({ start, end }, circle)) {
+    if (intersectLineCircle({ start, end }, circle).length) {
       return false;
     }
   }
@@ -156,7 +156,7 @@ export function circleOutsidePolygon(
     const end: Vector =
       i === 0 ? calcPoints[calcPoints.length - 1] : calcPoints[i + 1];
 
-    if (intersectLineCircle({ start, end }, circle)) {
+    if (intersectLineCircle({ start, end }, circle).length) {
       return false;
     }
   }
