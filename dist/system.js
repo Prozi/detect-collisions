@@ -5,6 +5,7 @@ const base_system_1 = require("./base-system");
 const line_1 = require("./bodies/line");
 const model_1 = require("./model");
 const utils_1 = require("./utils");
+const intersect_1 = require("./intersect");
 /**
  * collision system
  */
@@ -118,38 +119,21 @@ class System extends base_system_1.BaseSystem {
      * check do 2 objects collide
      */
     checkCollision(body, wall) {
+        this.state.collides = false;
+        this.response.clear();
         // check real bounding boxes (without padding)
         if (body.bbox && wall.bbox && !(0, utils_1.intersectAABB)(body.bbox, wall.bbox)) {
             return false;
         }
         // proceed to sat.js checking
         const sat = (0, utils_1.getSATFunction)(body, wall);
-        this.state.collides = false;
-        this.response.clear();
-        if (body.isConvex && wall.isConvex) {
-            this.state.collides = sat(body, wall, this.response);
-        }
-        else {
-            if (body.isConvex && !wall.isConvex) {
-                (0, utils_1.ensureConvex)(wall).forEach((convexWall) => {
-                    this.test(sat, body, convexWall);
-                });
-            }
-            else if (!body.isConvex && wall.isConvex) {
-                (0, utils_1.ensureConvex)(body).forEach((convexBody) => {
-                    this.test(sat, convexBody, wall);
-                });
-            }
-            else {
-                const convexBodies = (0, utils_1.ensureConvex)(body);
-                const convexWalls = (0, utils_1.ensureConvex)(wall);
-                convexBodies.forEach((convexBody) => {
-                    convexWalls.forEach((convexWall) => {
-                        this.test(sat, convexBody, convexWall);
-                    });
-                });
-            }
-        }
+        const convexBodies = (0, utils_1.ensureConvex)(body);
+        const convexWalls = (0, utils_1.ensureConvex)(wall);
+        convexBodies.forEach((convexBody) => {
+            convexWalls.forEach((convexWall) => {
+                this.test(sat, convexBody, convexWall);
+            });
+        });
         // set proper response object bodies
         if (!body.isConvex || !wall.isConvex) {
             this.response.a = body;
@@ -160,12 +144,8 @@ class System extends base_system_1.BaseSystem {
                 this.response.overlapN = this.response.overlapV.clone().normalize();
                 this.response.overlap = this.response.overlapV.len();
             }
-            this.response.aInB = body.isConvex
-                ? this.state.aInB
-                : (0, utils_1.checkAInB)(body, wall);
-            this.response.bInA = wall.isConvex
-                ? this.state.bInA
-                : (0, utils_1.checkAInB)(wall, body);
+            this.response.aInB = (0, utils_1.checkAInB)(body, wall);
+            this.response.bInA = (0, utils_1.checkAInB)(wall, body);
         }
         return this.state.collides;
     }
@@ -188,8 +168,8 @@ class System extends base_system_1.BaseSystem {
                 return false;
             }
             const points = collider.type === model_1.Types.Circle
-                ? (0, utils_1.intersectLineCircle)(this.ray, collider)
-                : (0, utils_1.intersectLinePolygon)(this.ray, collider);
+                ? (0, intersect_1.intersectLineCircle)(this.ray, collider)
+                : (0, intersect_1.intersectLinePolygon)(this.ray, collider);
             points.forEach((point) => {
                 const pointDistance = (0, utils_1.distance)(start, point);
                 if (pointDistance < minDistance) {
@@ -226,16 +206,11 @@ class System extends base_system_1.BaseSystem {
         if (collides) {
             // first time in loop, reset
             if (!this.state.collides) {
-                this.state.aInB = false;
-                this.state.bInA = false;
                 this.state.overlapV = new model_1.SATVector();
             }
             // sum all collision vectors
             this.state.overlapV.add(this.response.overlapV);
         }
-        // aInB and bInA is kept in state for later restore
-        this.state.aInB = this.state.aInB || this.response.aInB;
-        this.state.bInA = this.state.bInA || this.response.bInA;
         // set state collide at least once value
         this.state.collides = collides || this.state.collides;
         // clear for reuse

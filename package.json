@@ -15,7 +15,7 @@
     "build:docs": "typedoc --customCss typedoc.css",
     "postbuild:docs": "npm run docs-from-master && cp -r dist/demo docs",
     "docs": "npm run build:docs && chef-express docs --debug",
-    "docs-from-master": "for f in `find docs -name *.html`; do sed -i -r 's_/blob/[^/]+/_/blob/master/_g' $f; done",
+    "docs-from-master": "for f in `find docs -name *.html`; do sed -i '' -r 's_/blob/[^/]+/_/blob/master/_g' $f; done",
     "demo": "npm run build && npm run build:demo && npm start",
     "start": "chef-express dist/demo --debug",
     "test": "jest --silent --verbose --forceExit",

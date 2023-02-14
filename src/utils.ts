@@ -1,4 +1,5 @@
 import { BBox } from "rbush";
+import { Point as DecompPoint } from "poly-decomp";
 import {
   testCircleCircle,
   testCirclePolygon,
@@ -6,10 +7,16 @@ import {
   testPolygonPolygon,
   Vector as SATVector,
 } from "sat";
-
 import { Circle } from "./bodies/circle";
-import { Line } from "./bodies/line";
+import { Point } from "./bodies/point";
+
 import { Polygon } from "./bodies/polygon";
+import {
+  circleInCircle,
+  circleInPolygon,
+  polygonInCircle,
+  polygonInPolygon,
+} from "./intersect";
 import {
   Body,
   BodyOptions,
@@ -128,11 +135,20 @@ export function intersectAABB(a: BBox, b: BBox): boolean {
   );
 }
 
-export function checkAInB(a: BBox, b: BBox): boolean {
-  const insideX = a.minX >= b.minX && a.maxX <= b.maxX;
-  const insideY = a.minY >= b.minY && a.maxY <= b.maxY;
+export function checkAInB(a: Body, b: Body): boolean {
+  if (a.type === Types.Circle) {
+    if (b.type !== Types.Circle) {
+      return circleInPolygon(a, b);
+    }
 
-  return insideX && insideY;
+    return circleInCircle(a, b);
+  }
+
+  if (b.type === Types.Circle) {
+    return polygonInCircle(a, b);
+  }
+
+  return polygonInPolygon(a, b);
 }
 
 export function clonePointsArray(points: SATVector[]): Vector[] {
@@ -177,113 +193,33 @@ export function dashLineTo(
   }
 }
 
-// https://stackoverflow.com/questions/37224912/circle-line-segment-collision
-export function intersectLineCircle(line: Line, circle: Circle): Vector[] {
-  const v1 = { x: line.end.x - line.start.x, y: line.end.y - line.start.y };
-  const v2 = { x: line.start.x - circle.pos.x, y: line.start.y - circle.pos.y };
-  const b = (v1.x * v2.x + v1.y * v2.y) * -2;
-  const c = (v1.x * v1.x + v1.y * v1.y) * 2;
-  const d = Math.sqrt(
-    b * b - (v2.x * v2.x + v2.y * v2.y - circle.r * circle.r) * c * 2
-  );
-
-  if (isNaN(d)) {
-    // no intercept
-    return [];
-  }
-
-  const u1 = (b - d) / c; // these represent the unit distance of point one and two on the line
-  const u2 = (b + d) / c;
-  const results: Vector[] = []; // return array
-
-  if (u1 <= 1 && u1 >= 0) {
-    // add point if on the line segment
-    results.push({ x: line.start.x + v1.x * u1, y: line.start.y + v1.y * u1 });
-  }
-
-  if (u2 <= 1 && u2 >= 0) {
-    // second add point if on the line segment
-    results.push({ x: line.start.x + v1.x * u2, y: line.start.y + v1.y * u2 });
-  }
-
-  return results;
-}
-
-// https://stackoverflow.com/questions/9043805/test-if-two-lines-intersect-javascript-function
-export function intersectLineLine(
-  line1: Pick<Line, "start" | "end">,
-  line2: Pick<Line, "start" | "end">
-): Vector | null {
-  const dX: number = line1.end.x - line1.start.x;
-  const dY: number = line1.end.y - line1.start.y;
-
-  const determinant: number =
-    dX * (line2.end.y - line2.start.y) - (line2.end.x - line2.start.x) * dY;
-
-  if (determinant === 0) {
-    return null;
-  }
-
-  const lambda: number =
-    ((line2.end.y - line2.start.y) * (line2.end.x - line1.start.x) +
-      (line2.start.x - line2.end.x) * (line2.end.y - line1.start.y)) /
-    determinant;
-
-  const gamma: number =
-    ((line1.start.y - line1.end.y) * (line2.end.x - line1.start.x) +
-      dX * (line2.end.y - line1.start.y)) /
-    determinant;
-
-  // check if there is an intersection
-  if (!(lambda >= 0 && lambda <= 1) || !(gamma >= 0 && gamma <= 1)) {
-    return null;
-  }
-
-  return { x: line1.start.x + lambda * dX, y: line1.start.y + lambda * dY };
-}
-
-/**
- * check if line (ray) intersects polygon
- */
-export function intersectLinePolygon(line: Line, polygon: Polygon): Vector[] {
-  return polygon.calcPoints
-    .map((to: Vector, index: number) => {
-      const from: Vector = index
-        ? polygon.calcPoints[index - 1]
-        : polygon.calcPoints[polygon.calcPoints.length - 1];
-      const side = {
-        start: { x: from.x + polygon.pos.x, y: from.y + polygon.pos.y },
-        end: { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y },
-      };
-
-      return intersectLineLine(line, side);
-    })
-    .filter((test: Vector | null) => !!test) as Vector[];
-}
-
 /**
  * change format from poly-decomp to SAT.js
  */
-export function mapVectorToArray({ x, y }: Vector): [number, number] {
+export function mapVectorToArray(
+  { x, y }: Vector = { x: 0, y: 0 }
+): DecompPoint {
   return [x, y];
 }
 
 /**
  * change format from SAT.js to poly-decomp
  */
-export function mapArrayToVector([x, y]: [number, number]): Vector {
+export function mapArrayToVector([x, y]: DecompPoint = [0, 0]): Vector {
   return { x, y };
 }
 
 /**
  * replace body with array of related convex polygons
  */
-export function ensureConvex(body: Body): Body[] {
+export function ensureConvex<T extends Body = Circle | Point | Polygon>(
+  body: T
+): [T] | SATPolygon[] {
   if (body.isConvex || body.type !== Types.Polygon) {
     return [body];
   }
 
-  return body.convexPolygons as Body[];
+  return body.convexPolygons;
 }
 
 /**

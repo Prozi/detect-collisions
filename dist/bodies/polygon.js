@@ -189,7 +189,8 @@ class Polygon extends sat_1.Polygon {
         if ((this.type && this.type !== model_1.Types.Polygon) || this.points.length <= 3) {
             return [];
         }
-        return (0, poly_decomp_1.quickDecomp)(this.calcPoints.map(utils_1.mapVectorToArray));
+        const points = this.calcPoints.map(utils_1.mapVectorToArray);
+        return (0, poly_decomp_1.quickDecomp)(points);
     }
     /**
      * updates convex polygons cache in body

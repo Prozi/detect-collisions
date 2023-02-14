@@ -1,15 +1,15 @@
 import RBush from "rbush";
 
 import { BaseSystem } from "./base-system";
+import { Circle } from "./bodies/circle";
 import { Line } from "./bodies/line";
 import {
   Body,
-  BodyOptions,
-  ChildrenData,
   CollisionState,
   Leaf,
   RaycastResult,
   Response,
+  SATPolygon,
   SATVector,
   TestFunction,
   Types,
@@ -17,14 +17,13 @@ import {
 } from "./model";
 import {
   distance,
-  intersectLineCircle,
-  intersectLinePolygon,
   checkAInB,
   ensureConvex,
   intersectAABB,
   bodyMoved,
   getSATFunction,
 } from "./utils";
+import { intersectLineCircle, intersectLinePolygon } from "./intersect";
 
 /**
  * collision system
@@ -159,6 +158,9 @@ export class System extends BaseSystem {
    * check do 2 objects collide
    */
   checkCollision(body: Body, wall: Body): boolean {
+    this.state.collides = false;
+    this.response.clear();
+
     // check real bounding boxes (without padding)
     if (body.bbox && wall.bbox && !intersectAABB(body.bbox, wall.bbox)) {
       return false;
@@ -166,31 +168,14 @@ export class System extends BaseSystem {
 
     // proceed to sat.js checking
     const sat: TestFunction = getSATFunction(body, wall);
-    this.state.collides = false;
-    this.response.clear();
+    const convexBodies = ensureConvex(body);
+    const convexWalls = ensureConvex(wall);
 
-    if (body.isConvex && wall.isConvex) {
-      this.state.collides = sat(body, wall, this.response);
-    } else {
-      if (body.isConvex && !wall.isConvex) {
-        ensureConvex(wall).forEach((convexWall: Body) => {
-          this.test(sat, body, convexWall);
-        });
-      } else if (!body.isConvex && wall.isConvex) {
-        ensureConvex(body).forEach((convexBody: Body) => {
-          this.test(sat, convexBody, wall);
-        });
-      } else {
-        const convexBodies = ensureConvex(body);
-        const convexWalls = ensureConvex(wall);
-
-        convexBodies.forEach((convexBody: Body) => {
-          convexWalls.forEach((convexWall: Body) => {
-            this.test(sat, convexBody, convexWall);
-          });
-        });
-      }
-    }
+    convexBodies.forEach((convexBody) => {
+      convexWalls.forEach((convexWall) => {
+        this.test(sat, convexBody, convexWall);
+      });
+    });
 
     // set proper response object bodies
     if (!body.isConvex || !wall.isConvex) {
@@ -204,12 +189,8 @@ export class System extends BaseSystem {
         this.response.overlap = this.response.overlapV.len();
       }
 
-      this.response.aInB = body.isConvex
-        ? this.state.aInB
-        : checkAInB(body, wall);
-      this.response.bInA = wall.isConvex
-        ? this.state.bInA
-        : checkAInB(wall, body);
+      this.response.aInB = checkAInB(body, wall);
+      this.response.bInA = checkAInB(wall, body);
     }
 
     return this.state.collides;
@@ -286,24 +267,22 @@ export class System extends BaseSystem {
   /**
    * update inner state function - for non convex polygons collisions
    */
-  protected test(sat: TestFunction, body: Body, wall: Body): void {
+  protected test(
+    sat: TestFunction,
+    body: SATPolygon | Circle,
+    wall: SATPolygon | Circle
+  ): void {
     const collides = sat(body, wall, this.response);
 
     if (collides) {
       // first time in loop, reset
       if (!this.state.collides) {
-        this.state.aInB = false;
-        this.state.bInA = false;
         this.state.overlapV = new SATVector();
       }
 
       // sum all collision vectors
       this.state.overlapV.add(this.response.overlapV);
     }
-
-    // aInB and bInA is kept in state for later restore
-    this.state.aInB = this.state.aInB || this.response.aInB;
-    this.state.bInA = this.state.bInA || this.response.bInA;
 
     // set state collide at least once value
     this.state.collides = collides || this.state.collides;

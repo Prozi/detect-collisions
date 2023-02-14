@@ -1,7 +1,8 @@
 /// <reference types="sat" />
 import RBush from "rbush";
 import { BaseSystem } from "./base-system";
-import { Body, CollisionState, Leaf, RaycastResult, Response, TestFunction, Vector } from "./model";
+import { Circle } from "./bodies/circle";
+import { Body, CollisionState, Leaf, RaycastResult, Response, SATPolygon, TestFunction, Vector } from "./model";
 /**
  * collision system
  */
@@ -65,6 +66,6 @@ export declare class System extends BaseSystem {
     /**
      * update inner state function - for non convex polygons collisions
      */
-    protected test(sat: TestFunction, body: Body, wall: Body): void;
+    protected test(sat: TestFunction, body: SATPolygon | Circle, wall: SATPolygon | Circle): void;
 }
 //# sourceMappingURL=system.d.ts.map

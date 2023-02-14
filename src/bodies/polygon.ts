@@ -1,10 +1,11 @@
-import { quickDecomp, Polygon as DecompPolygon } from "poly-decomp";
+import { quickDecomp } from "poly-decomp";
 import { BBox } from "rbush";
 import { Polygon as SATPolygon } from "sat";
 
 import {
   BodyOptions,
   Collider,
+  DecompPolygon,
   GetAABBAsBox,
   PotentialVector,
   SATVector,
@@ -16,10 +17,10 @@ import {
   ensurePolygonPoints,
   ensureVectorPoint,
   extendBody,
-  mapArrayToVector,
-  mapVectorToArray,
   clonePointsArray,
   drawPolygon,
+  mapArrayToVector,
+  mapVectorToArray,
 } from "../utils";
 
 /**
@@ -304,7 +305,9 @@ export class Polygon extends SATPolygon implements BBox, Collider {
       return [];
     }
 
-    return quickDecomp(this.calcPoints.map(mapVectorToArray));
+    const points = this.calcPoints.map(mapVectorToArray);
+
+    return quickDecomp(points);
   }
 
   /**
