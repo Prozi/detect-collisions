@@ -3,10 +3,10 @@ import { Circle as SATCircle } from "sat";
 
 import {
   BodyOptions,
-  Collider,
+  BodyProps,
   PotentialVector,
   SATVector,
-  Types,
+  BodyType,
   Vector,
 } from "../model";
 import { System } from "../system";
@@ -15,7 +15,7 @@ import { dashLineTo, ensureVectorPoint, extendBody } from "../utils";
 /**
  * collider - circle
  */
-export class Circle extends SATCircle implements BBox, Collider {
+export class Circle extends SATCircle implements BBox, BodyProps {
   /**
    * minimum x bound of body
    */
@@ -89,7 +89,7 @@ export class Circle extends SATCircle implements BBox, Collider {
   /**
    * circle type
    */
-  readonly type: Types.Circle = Types.Circle;
+  readonly type: BodyType.Circle = BodyType.Circle;
 
   /**
    * saved initial radius - internal

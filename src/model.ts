@@ -20,7 +20,7 @@ export { RBush, BBox, Response, SATVector, SATPolygon, SATCircle };
 /**
  * types
  */
-export enum Types {
+export enum BodyType {
   Ellipse = "Ellipse",
   Line = "Line",
   Circle = "Circle",
@@ -50,7 +50,7 @@ export interface Data {
 export interface BodyOptions {
   isStatic?: boolean;
   isTrigger?: boolean;
-  center?: boolean;
+  isCentered?: boolean;
   angle?: number;
   padding?: number;
 }
@@ -58,7 +58,10 @@ export interface BodyOptions {
 /**
  * system.raycast(from, to) result
  */
-export type RaycastResult = { point: Vector; collider: Body } | null;
+export interface RaycastHit {
+  point: Vector;
+  body: Body;
+}
 
 /**
  * potential vector
@@ -91,11 +94,11 @@ export type Body = Point | Line | Ellipse | Circle | Box | Polygon;
 /**
  * each body contains those regardless of type
  */
-export interface Collider {
+export interface BodyProps {
   /**
    * type of collider
    */
-  readonly type: Types;
+  readonly type: BodyType;
 
   /**
    * is the collider non moving
@@ -188,10 +191,8 @@ export interface Collider {
   getAABBAsBBox(): BBox;
 }
 
-export interface CollisionState {
+export interface State {
   collides: boolean;
-  aInB: boolean;
-  bInA: boolean;
   overlapV: SATVector;
 }
 

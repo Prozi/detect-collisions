@@ -4,12 +4,12 @@ import { Polygon as SATPolygon } from "sat";
 
 import {
   BodyOptions,
-  Collider,
+  BodyProps,
   DecompPolygon,
   GetAABBAsBox,
   PotentialVector,
   SATVector,
-  Types,
+  BodyType,
   Vector,
 } from "../model";
 import { System } from "../system";
@@ -26,7 +26,7 @@ import {
 /**
  * collider - polygon
  */
-export class Polygon extends SATPolygon implements BBox, Collider {
+export class Polygon extends SATPolygon implements BBox, BodyProps {
   /**
    * minimum x bound of body
    */
@@ -91,11 +91,11 @@ export class Polygon extends SATPolygon implements BBox, Collider {
    * type of body
    */
   readonly type:
-    | Types.Polygon
-    | Types.Box
-    | Types.Point
-    | Types.Ellipse
-    | Types.Line = Types.Polygon;
+    | BodyType.Polygon
+    | BodyType.Box
+    | BodyType.Point
+    | BodyType.Ellipse
+    | BodyType.Line = BodyType.Polygon;
 
   /**
    * backup of points used for scaling
@@ -301,7 +301,10 @@ export class Polygon extends SATPolygon implements BBox, Collider {
    * returns body split into convex polygons, or empty array for convex bodies
    */
   protected getConvex(): DecompPolygon[] {
-    if ((this.type && this.type !== Types.Polygon) || this.points.length <= 3) {
+    if (
+      (this.type && this.type !== BodyType.Polygon) ||
+      this.points.length <= 3
+    ) {
       return [];
     }
 

@@ -1,4 +1,4 @@
-import { BodyOptions, Types, PotentialVector } from "../model";
+import { BodyOptions, BodyType, PotentialVector } from "../model";
 import { createEllipse } from "../utils";
 import { Polygon } from "./polygon";
 
@@ -9,7 +9,7 @@ export class Ellipse extends Polygon {
   /**
    * ellipse type
    */
-  readonly type: Types.Ellipse = Types.Ellipse;
+  readonly type: BodyType.Ellipse = BodyType.Ellipse;
 
   /**
    * ellipses are centered

@@ -23,7 +23,7 @@ import {
   PotentialVector,
   SATPolygon,
   TestFunction,
-  Types,
+  BodyType,
   Vector,
 } from "./model";
 
@@ -123,7 +123,7 @@ export function extendBody(body: Body, options?: BodyOptions): void {
   body.isTrigger = !!options?.isTrigger;
   body.padding = options?.padding || 0;
 
-  if (options?.center) {
+  if (options?.isCentered) {
     body.center();
   }
 
@@ -150,15 +150,15 @@ export function intersectAABB(a: BBox, b: BBox): boolean {
 }
 
 export function checkAInB(a: Body, b: Body): boolean {
-  if (a.type === Types.Circle) {
-    if (b.type !== Types.Circle) {
+  if (a.type === BodyType.Circle) {
+    if (b.type !== BodyType.Circle) {
       return circleInPolygon(a, b);
     }
 
     return circleInCircle(a, b);
   }
 
-  if (b.type === Types.Circle) {
+  if (b.type === BodyType.Circle) {
     return polygonInCircle(a, b);
   }
 
@@ -229,7 +229,7 @@ export function mapArrayToVector([x, y]: DecompPoint = [0, 0]): Vector {
 export function ensureConvex<T extends Body = Circle | Point | Polygon>(
   body: T
 ): [T] | SATPolygon[] {
-  if (body.isConvex || body.type !== Types.Polygon) {
+  if (body.isConvex || body.type !== BodyType.Polygon) {
     return [body];
   }
 
@@ -248,14 +248,14 @@ export function getBounceDirection(body: Vector, collider: Vector): Vector {
 }
 
 export function getSATFunction(body: Body, wall: Body): TestFunction {
-  if (body.type === Types.Circle) {
+  if (body.type === BodyType.Circle) {
     return (
-      wall.type === Types.Circle ? testCircleCircle : testCirclePolygon
+      wall.type === BodyType.Circle ? testCircleCircle : testCirclePolygon
     ) as TestFunction;
   }
 
   return (
-    wall.type === Types.Circle ? testPolygonCircle : testPolygonPolygon
+    wall.type === BodyType.Circle ? testPolygonCircle : testPolygonPolygon
   ) as TestFunction;
 }
 

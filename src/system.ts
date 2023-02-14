@@ -5,14 +5,14 @@ import { Circle } from "./bodies/circle";
 import { Line } from "./bodies/line";
 import {
   Body,
-  CollisionState,
   Leaf,
-  RaycastResult,
+  RaycastHit,
   Response,
   SATPolygon,
   SATVector,
+  State,
   TestFunction,
-  Types,
+  BodyType,
   Vector,
 } from "./model";
 import {
@@ -37,10 +37,8 @@ export class System extends BaseSystem {
   /**
    * reusable inner state - for non convex polygons collisions
    */
-  protected state: CollisionState = {
+  protected state: State = {
     collides: false,
-    aInB: false,
-    bInA: false,
     overlapV: new SATVector(),
   };
 
@@ -203,10 +201,10 @@ export class System extends BaseSystem {
   raycast(
     start: Vector,
     end: Vector,
-    allowCollider: (testCollider: Body) => boolean = () => true
-  ): RaycastResult {
+    allow: (body: Body) => boolean = () => true
+  ): RaycastHit | null {
     let minDistance = Infinity;
-    let result: RaycastResult = null;
+    let result: RaycastHit | null = null;
 
     if (!this.ray) {
       this.ray = new Line(start, end, { isTrigger: true });
@@ -217,22 +215,22 @@ export class System extends BaseSystem {
 
     this.insert(this.ray);
 
-    this.checkOne(this.ray, ({ b: collider }) => {
-      if (!allowCollider(collider)) {
+    this.checkOne(this.ray, ({ b: body }) => {
+      if (!allow(body)) {
         return false;
       }
 
       const points: Vector[] =
-        collider.type === Types.Circle
-          ? intersectLineCircle(this.ray, collider)
-          : intersectLinePolygon(this.ray, collider);
+        body.type === BodyType.Circle
+          ? intersectLineCircle(this.ray, body)
+          : intersectLinePolygon(this.ray, body);
 
       points.forEach((point: Vector) => {
         const pointDistance: number = distance(start, point);
 
         if (pointDistance < minDistance) {
           minDistance = pointDistance;
-          result = { point, collider };
+          result = { point, body };
         }
       });
     });
