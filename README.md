@@ -44,7 +44,7 @@ const physics = new System()
 
 ### 2. Body Information
 
-#### 👉 each body has:
+#### each body has:
 
 - `pos: Vector` - position
 - `x: number` - x position
@@ -58,7 +58,6 @@ bodies also have:
 
 - `scale: number` prop & `setScale(x, y)` method - to scale (for `Circle` takes 1 parameter, `x, y` for rest)
 - `offset: Vector` prop & `setOffset({ x, y })` method - for offset from center of body for rotation purpouses
-- `center()` method - for centering anchor (useless but available for `Circle, Ellipse`)
 - `getAABBAsBBox(): BBox` method - for getting bbox even on non inserted bodies
 
 by calling `System.separate()` once a frame your bodies will separate from each other
@@ -75,17 +74,17 @@ you can also check if body is convex or not:
 - `isConvex: boolean` - body is convex (may be false only for `Polygon`)
 - `convexPolygons: Vector[][]` - if `Polygon` is concave it has its points split into convex polygons here
 
-#### 👉 some bodies:
+#### some bodies:
 
 - `Box` has `width & height` properties
 
-#### 👉 each body after inserted to system have:
+#### each body after inserted to system have:
 
 - `bbox = { minX, minY, maxX, maxY }` property - without padding
 - `minX, minY, maxX, maxY` properties - bbox plus padding
 - `system` property - to use `body.system.updateBody(body)` internally
 
-#### 👉 body types:
+#### body types:
 
 - **[Circle](https://github.com/jriecken/sat-js#satcircle)** - Shape with infinite sides equidistant of radius from its center position
 - **[Ellipse](https://prozi.github.io/detect-collisions/classes/Ellipse.html)** - Flattened circle (implemented as polygon)
@@ -109,7 +108,7 @@ const options = {
 }
 ```
 
-#### 👉 Only create Body
+#### Only create Body
 
 ```javascript
 // create with options, without insert
@@ -117,7 +116,7 @@ const circle = new Circle(position, radius, options)
 const polygon = new Polygon(position, points, options)
 ```
 
-#### 👉 Only insert Body
+#### Only insert Body
 
 ```javascript
 // insert, without create
@@ -125,7 +124,7 @@ physics.insert(circle)
 physics.insert(polygon)
 ```
 
-#### 👉 Create and insert Body
+#### Create and insert Body
 
 ```javascript
 // create with options, and insert
@@ -189,7 +188,7 @@ if (physics.checkCollision(polygon, line)) {
 }
 ```
 
-#### 👉 Getting Detailed Collision Information
+#### Getting Detailed Collision Information
 
 There is often a need for detailed information about a collision in order to react to it appropriately. This information is stored inside `physics.response` object. The `Response` ([documentation](https://github.com/jriecken/sat-js#satresponse)) object has several properties set on them when a collision occurs:
 
@@ -201,7 +200,7 @@ There is often a need for detailed information about a collision in order to rea
 - `aInB` - Whether the first object is completely inside the second.
 - `bInA` - Whether the second object is completely inside the first.
 
-#### 👉 Negating Overlap
+#### Negating Overlap
 
 A common use-case in collision detection is negating overlap when a collision occurs (such as when a player hits a wall). This can be done using the collision information in a `Response` object (see [Getting Detailed Collision Information](#anchor-getting-detailed-collision-information)).
 

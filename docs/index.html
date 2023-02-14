@@ -60,41 +60,56 @@
 </a>
 <p><code>System</code> extends <code>RBush</code> so it has <a href="https://github.com/mourner/rbush">all of its functionalities</a>.</p>
 <p>To start, create a unique collisions system:</p>
-<pre><code class="language-javascript"><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">physics</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">System</span><span class="hl-0">();</span>
+<pre><code class="language-javascript"><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">physics</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">System</span><span class="hl-0">()</span>
 </code></pre>
 
 <a href="#2-body-information" id="2-body-information" style="color: inherit; text-decoration: none;">
   <h3>2. Body Information</h3>
 </a>
 
-<a href="#👉-each-body-has" id="👉-each-body-has" style="color: inherit; text-decoration: none;">
-  <h4>👉 each body has:</h4>
+<a href="#each-body-has" id="each-body-has" style="color: inherit; text-decoration: none;">
+  <h4>each body has:</h4>
 </a>
 <ul>
-<li><code>setPosition(x, y)</code> method - calling it <strong>updates</strong> <em>bounding box</em></li>
-<li><code>x &amp; y</code> properties - setting any of those <strong>updates</strong> <em>bounding box</em></li>
-<li><code>pos.x, pos.y</code> properties - setting those <strong>doesn&#39;t</strong> update <em>bounding box</em></li>
-<li><code>angle</code> property (in radians) and <code>setAngle()</code> method - to rotate</li>
-<li><code>scale</code> property and <code>setScale()</code> method - to scale (for <code>Circle</code> takes 1 parameter, <code>x, y</code> for rest)</li>
-<li><code>offset</code> and <code>setOffset()</code> method - for offset from center of body</li>
-<li><code>getAABBAsBBox()</code> method - for getting bbox even on non inserted bodies</li>
+<li><code>pos: Vector</code> - position</li>
+<li><code>x: number</code> - x position</li>
+<li><code>y: number</code> - y position</li>
+</ul>
+<p>setting <code>body.pos.x</code> or <code>body.pos.y</code> doesn&#39;t update the bounding box. setting <code>body.x</code> or <code>body.y</code> directly does cause bounding box update, which is the most costly operation cpu wise in collision-detection. if you wan&#39;t to set position and update bounding box, you&#39;d better use:</p>
+<ul>
+<li><code>setPosition(x, y)</code></li>
+</ul>
+<p>bodies also have:</p>
+<ul>
+<li><code>scale: number</code> prop &amp; <code>setScale(x, y)</code> method - to scale (for <code>Circle</code> takes 1 parameter, <code>x, y</code> for rest)</li>
+<li><code>offset: Vector</code> prop &amp; <code>setOffset({ x, y })</code> method - for offset from center of body for rotation purpouses</li>
 <li><code>center()</code> method - for centering anchor (useless but available for <code>Circle, Ellipse</code>)</li>
-<li><code>isStatic</code> property - if true body doesn&#39;t move</li>
-<li><code>isTrigger</code> property - if true body doesn&#39;t trigger collisions</li>
-<li><code>isCentered</code> property - if true the body is centered (true for <code>Circle, Ellipse</code>)</li>
-<li><code>isConvex</code> property - if true the body is convex (may be false only for <code>Polygon</code>)</li>
-<li><code>padding</code> property - ignores costly tree update until outside bbox with padding</li>
+<li><code>getAABBAsBBox(): BBox</code> method - for getting bbox even on non inserted bodies</li>
+</ul>
+<p>by calling <code>System.separate()</code> once a frame your bodies will separate from each other
+bodies have properties that can be set in runtime or during creation by using <code>BodyOptions</code>:</p>
+<ul>
+<li><code>isStatic: boolean</code> - body won&#39;t separate</li>
+<li><code>isTrigger: boolean</code> - body won&#39;t trigger collisions</li>
+<li><code>isCentered: boolean</code> - offset is set to center for rotation purpouses</li>
+<li><code>angle: number</code> - angle in radians, use <code>deg2rad</code> for conversion</li>
+<li><code>padding: number</code> - bounding box padding, optimizes costly updates</li>
+</ul>
+<p>you can also check if body is convex or not:</p>
+<ul>
+<li><code>isConvex: boolean</code> - body is convex (may be false only for <code>Polygon</code>)</li>
+<li><code>convexPolygons: Vector[][]</code> - if <code>Polygon</code> is concave it has its points split into convex polygons here</li>
 </ul>
 
-<a href="#👉-some-bodies" id="👉-some-bodies" style="color: inherit; text-decoration: none;">
-  <h4>👉 some bodies:</h4>
+<a href="#some-bodies" id="some-bodies" style="color: inherit; text-decoration: none;">
+  <h4>some bodies:</h4>
 </a>
 <ul>
 <li><code>Box</code> has <code>width &amp; height</code> properties</li>
 </ul>
 
-<a href="#👉-each-body-after-inserted-to-system-have" id="👉-each-body-after-inserted-to-system-have" style="color: inherit; text-decoration: none;">
-  <h4>👉 each body after inserted to system have:</h4>
+<a href="#each-body-after-inserted-to-system-have" id="each-body-after-inserted-to-system-have" style="color: inherit; text-decoration: none;">
+  <h4>each body after inserted to system have:</h4>
 </a>
 <ul>
 <li><code>bbox = { minX, minY, maxX, maxY }</code> property - without padding</li>
@@ -102,8 +117,8 @@
 <li><code>system</code> property - to use <code>body.system.updateBody(body)</code> internally</li>
 </ul>
 
-<a href="#👉-body-types" id="👉-body-types" style="color: inherit; text-decoration: none;">
-  <h4>👉 body types:</h4>
+<a href="#body-types" id="body-types" style="color: inherit; text-decoration: none;">
+  <h4>body types:</h4>
 </a>
 <ul>
 <li><strong><a href="https://github.com/jriecken/sat-js#satcircle">Circle</a></strong> - Shape with infinite sides equidistant of radius from its center position</li>
@@ -121,35 +136,35 @@
 <pre><code class="language-javascript"><span class="hl-2">const</span><span class="hl-0"> { </span><span class="hl-3">deg2rad</span><span class="hl-0"> } = </span><span class="hl-4">require</span><span class="hl-0">(</span><span class="hl-1">&quot;detect-collisions&quot;</span><span class="hl-0">);</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">options</span><span class="hl-0"> = {</span><br/><span class="hl-0">  </span><span class="hl-5">angle:</span><span class="hl-0"> </span><span class="hl-4">deg2rad</span><span class="hl-0">(</span><span class="hl-6">90</span><span class="hl-0">),</span><br/><span class="hl-0">  </span><span class="hl-5">center:</span><span class="hl-0"> </span><span class="hl-2">false</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-5">isStatic:</span><span class="hl-0"> </span><span class="hl-2">false</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-5">isTrigger:</span><span class="hl-0"> </span><span class="hl-2">false</span><span class="hl-0">,</span><br/><span class="hl-0">  </span><span class="hl-5">padding:</span><span class="hl-0"> </span><span class="hl-6">0</span><span class="hl-0">;</span><br/><span class="hl-0">}</span>
 </code></pre>
 
-<a href="#👉-only-create-body" id="👉-only-create-body" style="color: inherit; text-decoration: none;">
-  <h4>👉 Only create Body</h4>
+<a href="#only-create-body" id="only-create-body" style="color: inherit; text-decoration: none;">
+  <h4>Only create Body</h4>
 </a>
-<pre><code class="language-javascript"><span class="hl-7">// create with options, without insert</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">circle</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">Circle</span><span class="hl-0">(</span><span class="hl-5">position</span><span class="hl-0">, </span><span class="hl-5">radius</span><span class="hl-0">, </span><span class="hl-5">options</span><span class="hl-0">);</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">polygon</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">Polygon</span><span class="hl-0">(</span><span class="hl-5">position</span><span class="hl-0">, </span><span class="hl-5">points</span><span class="hl-0">, </span><span class="hl-5">options</span><span class="hl-0">);</span>
+<pre><code class="language-javascript"><span class="hl-7">// create with options, without insert</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">circle</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">Circle</span><span class="hl-0">(</span><span class="hl-5">position</span><span class="hl-0">, </span><span class="hl-5">radius</span><span class="hl-0">, </span><span class="hl-5">options</span><span class="hl-0">)</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">polygon</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">Polygon</span><span class="hl-0">(</span><span class="hl-5">position</span><span class="hl-0">, </span><span class="hl-5">points</span><span class="hl-0">, </span><span class="hl-5">options</span><span class="hl-0">)</span>
 </code></pre>
 
-<a href="#👉-only-insert-body" id="👉-only-insert-body" style="color: inherit; text-decoration: none;">
-  <h4>👉 Only insert Body</h4>
+<a href="#only-insert-body" id="only-insert-body" style="color: inherit; text-decoration: none;">
+  <h4>Only insert Body</h4>
 </a>
-<pre><code class="language-javascript"><span class="hl-7">// insert, without create</span><br/><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">insert</span><span class="hl-0">(</span><span class="hl-5">circle</span><span class="hl-0">);</span><br/><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">insert</span><span class="hl-0">(</span><span class="hl-5">polygon</span><span class="hl-0">);</span>
+<pre><code class="language-javascript"><span class="hl-7">// insert, without create</span><br/><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">insert</span><span class="hl-0">(</span><span class="hl-5">circle</span><span class="hl-0">)</span><br/><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">insert</span><span class="hl-0">(</span><span class="hl-5">polygon</span><span class="hl-0">)</span>
 </code></pre>
 
-<a href="#👉-create-and-insert-body" id="👉-create-and-insert-body" style="color: inherit; text-decoration: none;">
-  <h4>👉 Create and insert Body</h4>
+<a href="#create-and-insert-body" id="create-and-insert-body" style="color: inherit; text-decoration: none;">
+  <h4>Create and insert Body</h4>
 </a>
-<pre><code class="language-javascript"><span class="hl-7">// create with options, and insert</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">circle</span><span class="hl-0"> = </span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">createCircle</span><span class="hl-0">(</span><span class="hl-5">position</span><span class="hl-0">, </span><span class="hl-5">radius</span><span class="hl-0">, </span><span class="hl-5">options</span><span class="hl-0">);</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">polygon</span><span class="hl-0"> = </span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">createPolygon</span><span class="hl-0">(</span><span class="hl-5">position</span><span class="hl-0">, </span><span class="hl-5">points</span><span class="hl-0">, </span><span class="hl-5">options</span><span class="hl-0">);</span>
+<pre><code class="language-javascript"><span class="hl-7">// create with options, and insert</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">circle</span><span class="hl-0"> = </span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">createCircle</span><span class="hl-0">(</span><span class="hl-5">position</span><span class="hl-0">, </span><span class="hl-5">radius</span><span class="hl-0">, </span><span class="hl-5">options</span><span class="hl-0">)</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">polygon</span><span class="hl-0"> = </span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">createPolygon</span><span class="hl-0">(</span><span class="hl-5">position</span><span class="hl-0">, </span><span class="hl-5">points</span><span class="hl-0">, </span><span class="hl-5">options</span><span class="hl-0">)</span>
 </code></pre>
 
 <a href="#4-move-body" id="4-move-body" style="color: inherit; text-decoration: none;">
   <h3>4. Move Body</h3>
 </a>
 <p><code>setPosition</code>: this modifies the <code>element.pos.x</code> and <code>element.pos.y</code> and updates its bounding box in collision physics.</p>
-<pre><code class="language-javascript"><span class="hl-5">circle</span><span class="hl-0">.</span><span class="hl-4">setPosition</span><span class="hl-0">(</span><span class="hl-5">x</span><span class="hl-0">, </span><span class="hl-5">y</span><span class="hl-0">);</span><br/><span class="hl-5">polygon</span><span class="hl-0">.</span><span class="hl-4">setPosition</span><span class="hl-0">(</span><span class="hl-5">x</span><span class="hl-0">, </span><span class="hl-5">y</span><span class="hl-0">);</span>
+<pre><code class="language-javascript"><span class="hl-5">circle</span><span class="hl-0">.</span><span class="hl-4">setPosition</span><span class="hl-0">(</span><span class="hl-5">x</span><span class="hl-0">, </span><span class="hl-5">y</span><span class="hl-0">)</span><br/><span class="hl-5">polygon</span><span class="hl-0">.</span><span class="hl-4">setPosition</span><span class="hl-0">(</span><span class="hl-5">x</span><span class="hl-0">, </span><span class="hl-5">y</span><span class="hl-0">)</span>
 </code></pre>
 
 <a href="#5-remove-body" id="5-remove-body" style="color: inherit; text-decoration: none;">
   <h3>5. Remove Body</h3>
 </a>
-<pre><code class="language-javascript"><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">remove</span><span class="hl-0">(</span><span class="hl-5">circle</span><span class="hl-0">);</span><br/><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">remove</span><span class="hl-0">(</span><span class="hl-5">polygon</span><span class="hl-0">);</span>
+<pre><code class="language-javascript"><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">remove</span><span class="hl-0">(</span><span class="hl-5">circle</span><span class="hl-0">)</span><br/><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">remove</span><span class="hl-0">(</span><span class="hl-5">polygon</span><span class="hl-0">)</span>
 </code></pre>
 
 <a href="#6-update-body-or-system" id="6-update-body-or-system" style="color: inherit; text-decoration: none;">
@@ -162,26 +177,26 @@
 </li>
 </ul>
 <p>Collisions systems need to be updated when the bodies within them change. This includes when bodies are inserted, removed, or when their properties change (e.g. position, angle, scaling, etc.). Updating a collision system can be done by calling <code>update()</code> which should typically occur once per frame. Updating the <code>System</code> by after each position change is <strong>required</strong> for <code>System</code> to detect <code>BVH</code> correctly.</p>
-<pre><code class="language-javascript"><span class="hl-7">// update one body, use anytime</span><br/><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">updateBody</span><span class="hl-0">(</span><span class="hl-5">body</span><span class="hl-0">);</span>
+<pre><code class="language-javascript"><span class="hl-7">// update one body, use anytime</span><br/><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">updateBody</span><span class="hl-0">(</span><span class="hl-5">body</span><span class="hl-0">)</span>
 </code></pre>
-<pre><code class="language-javascript"><span class="hl-7">// update all bodies (use 0-1 times per frame):</span><br/><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">update</span><span class="hl-0">();</span>
+<pre><code class="language-javascript"><span class="hl-7">// update all bodies (use 0-1 times per frame):</span><br/><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">update</span><span class="hl-0">()</span>
 </code></pre>
 
 <a href="#7-collision-detection" id="7-collision-detection" style="color: inherit; text-decoration: none;">
   <h3>7. Collision Detection</h3>
 </a>
 <p>The <strong>preferred method</strong> is once-in-a-gameloop checkAll and then handler:</p>
-<pre><code class="language-javascript"><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">checkAll</span><span class="hl-0">(</span><span class="hl-5">handleCollisions</span><span class="hl-0">);</span>
+<pre><code class="language-javascript"><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">checkAll</span><span class="hl-0">(</span><span class="hl-5">handleCollisions</span><span class="hl-0">)</span>
 </code></pre>
 <p>If you really need to check one body then use:</p>
-<pre><code class="language-javascript"><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">checkOne</span><span class="hl-0">(</span><span class="hl-5">body</span><span class="hl-0">, </span><span class="hl-5">handleCollisions</span><span class="hl-0">);</span>
+<pre><code class="language-javascript"><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">checkOne</span><span class="hl-0">(</span><span class="hl-5">body</span><span class="hl-0">, </span><span class="hl-5">handleCollisions</span><span class="hl-0">)</span>
 </code></pre>
 <p>It is possible to skip the broad-phase search entirely and call <code>checkCollision()</code> directly on two bodies.</p>
-<pre><code class="language-javascript"><span class="hl-8">if</span><span class="hl-0"> (</span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">checkCollision</span><span class="hl-0">(</span><span class="hl-5">polygon</span><span class="hl-0">, </span><span class="hl-5">line</span><span class="hl-0">)) {</span><br/><span class="hl-0">  </span><span class="hl-5">console</span><span class="hl-0">.</span><span class="hl-4">log</span><span class="hl-0">(</span><span class="hl-1">&quot;Collision detected!&quot;</span><span class="hl-0">, </span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-5">response</span><span class="hl-0">);</span><br/><span class="hl-0">}</span>
+<pre><code class="language-javascript"><span class="hl-8">if</span><span class="hl-0"> (</span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">checkCollision</span><span class="hl-0">(</span><span class="hl-5">polygon</span><span class="hl-0">, </span><span class="hl-5">line</span><span class="hl-0">)) {</span><br/><span class="hl-0">  </span><span class="hl-5">console</span><span class="hl-0">.</span><span class="hl-4">log</span><span class="hl-0">(</span><span class="hl-1">&quot;Collision detected!&quot;</span><span class="hl-0">, </span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-5">response</span><span class="hl-0">)</span><br/><span class="hl-0">}</span>
 </code></pre>
 
-<a href="#👉-getting-detailed-collision-information" id="👉-getting-detailed-collision-information" style="color: inherit; text-decoration: none;">
-  <h4>👉 Getting Detailed Collision Information</h4>
+<a href="#getting-detailed-collision-information" id="getting-detailed-collision-information" style="color: inherit; text-decoration: none;">
+  <h4>Getting Detailed Collision Information</h4>
 </a>
 <p>There is often a need for detailed information about a collision in order to react to it appropriately. This information is stored inside <code>physics.response</code> object. The <code>Response</code> (<a href="https://github.com/jriecken/sat-js#satresponse">documentation</a>) object has several properties set on them when a collision occurs:</p>
 <ul>
@@ -194,19 +209,19 @@
 <li><code>bInA</code> - Whether the second object is completely inside the first.</li>
 </ul>
 
-<a href="#👉-negating-overlap" id="👉-negating-overlap" style="color: inherit; text-decoration: none;">
-  <h4>👉 Negating Overlap</h4>
+<a href="#negating-overlap" id="negating-overlap" style="color: inherit; text-decoration: none;">
+  <h4>Negating Overlap</h4>
 </a>
 <p>A common use-case in collision detection is negating overlap when a collision occurs (such as when a player hits a wall). This can be done using the collision information in a <code>Response</code> object (see <a href="#anchor-getting-detailed-collision-information">Getting Detailed Collision Information</a>).</p>
 <p>The three most useful properties on a <code>Response</code> object are <code>overlapV</code>, <code>a</code>, and <code>b</code>. Together, these values describe how much and in what direction the source body is overlapping the target body. More specifically, <code>overlapV.x</code> and <code>overlapV.y</code> describe the scaled direction vector. If this vector is subtracted from the position of a, a and b will no longer be colliding.</p>
 <p>These values can be used to &quot;push&quot; one body out of another using the minimum distance required. More simply, subtracting this vector from the source body&#39;s position will cause the bodies to no longer collide. Here&#39;s an example:</p>
-<pre><code class="language-javascript"><span class="hl-8">if</span><span class="hl-0"> (</span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">checkCollision</span><span class="hl-0">(</span><span class="hl-5">player</span><span class="hl-0">, </span><span class="hl-5">wall</span><span class="hl-0">)) {</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> { </span><span class="hl-3">overlapV</span><span class="hl-0"> } = </span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-5">response</span><span class="hl-0">;</span><br/><br/><span class="hl-0">  </span><span class="hl-5">player</span><span class="hl-0">.</span><span class="hl-4">setPosition</span><span class="hl-0">(</span><span class="hl-5">player</span><span class="hl-0">.</span><span class="hl-5">x</span><span class="hl-0"> - </span><span class="hl-5">overlapV</span><span class="hl-0">.</span><span class="hl-5">x</span><span class="hl-0">, </span><span class="hl-5">player</span><span class="hl-0">.</span><span class="hl-5">y</span><span class="hl-0"> - </span><span class="hl-5">overlapV</span><span class="hl-0">.</span><span class="hl-5">y</span><span class="hl-0">);</span><br/><span class="hl-0">}</span>
+<pre><code class="language-javascript"><span class="hl-8">if</span><span class="hl-0"> (</span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">checkCollision</span><span class="hl-0">(</span><span class="hl-5">player</span><span class="hl-0">, </span><span class="hl-5">wall</span><span class="hl-0">)) {</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> { </span><span class="hl-3">overlapV</span><span class="hl-0"> } = </span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-5">response</span><br/><br/><span class="hl-0">  </span><span class="hl-5">player</span><span class="hl-0">.</span><span class="hl-4">setPosition</span><span class="hl-0">(</span><span class="hl-5">player</span><span class="hl-0">.</span><span class="hl-5">x</span><span class="hl-0"> - </span><span class="hl-5">overlapV</span><span class="hl-0">.</span><span class="hl-5">x</span><span class="hl-0">, </span><span class="hl-5">player</span><span class="hl-0">.</span><span class="hl-5">y</span><span class="hl-0"> - </span><span class="hl-5">overlapV</span><span class="hl-0">.</span><span class="hl-5">y</span><span class="hl-0">)</span><br/><span class="hl-0">}</span>
 </code></pre>
 
 <a href="#detecting-collision-after-insertion" id="detecting-collision-after-insertion" style="color: inherit; text-decoration: none;">
   <h2>Detecting collision after insertion</h2>
 </a>
-<pre><code class="language-javascript"><span class="hl-7">// create self-destructing collider</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-4">testCollision</span><span class="hl-0"> = ({ </span><span class="hl-5">x</span><span class="hl-0">, </span><span class="hl-5">y</span><span class="hl-0"> }, </span><span class="hl-5">radius</span><span class="hl-0"> = </span><span class="hl-6">10</span><span class="hl-0">) </span><span class="hl-2">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">circle</span><span class="hl-0"> = </span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">createCircle</span><span class="hl-0">({ </span><span class="hl-5">x</span><span class="hl-0">, </span><span class="hl-5">y</span><span class="hl-0"> }, </span><span class="hl-5">radius</span><span class="hl-0">);</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">potentials</span><span class="hl-0"> = </span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">getPotentials</span><span class="hl-0">(</span><span class="hl-5">circle</span><span class="hl-0">);</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">collided</span><span class="hl-0"> = </span><span class="hl-5">potentials</span><span class="hl-0">.</span><span class="hl-4">some</span><span class="hl-0">((</span><span class="hl-5">body</span><span class="hl-0">) </span><span class="hl-2">=&gt;</span><br/><span class="hl-0">    </span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">checkCollision</span><span class="hl-0">(</span><span class="hl-5">circle</span><span class="hl-0">, </span><span class="hl-5">body</span><span class="hl-0">)</span><br/><span class="hl-0">  );</span><br/><br/><span class="hl-0">  </span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">remove</span><span class="hl-0">(</span><span class="hl-5">circle</span><span class="hl-0">);</span><br/><br/><span class="hl-0">  </span><span class="hl-8">return</span><span class="hl-0"> </span><span class="hl-5">collided</span><span class="hl-0">;</span><br/><span class="hl-0">};</span>
+<pre><code class="language-javascript"><span class="hl-7">// create self-destructing collider</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-4">testCollision</span><span class="hl-0"> = ({ </span><span class="hl-5">x</span><span class="hl-0">, </span><span class="hl-5">y</span><span class="hl-0"> }, </span><span class="hl-5">radius</span><span class="hl-0"> = </span><span class="hl-6">10</span><span class="hl-0">) </span><span class="hl-2">=&gt;</span><span class="hl-0"> {</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">circle</span><span class="hl-0"> = </span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">createCircle</span><span class="hl-0">({ </span><span class="hl-5">x</span><span class="hl-0">, </span><span class="hl-5">y</span><span class="hl-0"> }, </span><span class="hl-5">radius</span><span class="hl-0">)</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">potentials</span><span class="hl-0"> = </span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">getPotentials</span><span class="hl-0">(</span><span class="hl-5">circle</span><span class="hl-0">)</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">collided</span><span class="hl-0"> = </span><span class="hl-5">potentials</span><span class="hl-0">.</span><span class="hl-4">some</span><span class="hl-0">((</span><span class="hl-5">body</span><span class="hl-0">) </span><span class="hl-2">=&gt;</span><br/><span class="hl-0">    </span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">checkCollision</span><span class="hl-0">(</span><span class="hl-5">circle</span><span class="hl-0">, </span><span class="hl-5">body</span><span class="hl-0">)</span><br/><span class="hl-0">  )</span><br/><br/><span class="hl-0">  </span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">remove</span><span class="hl-0">(</span><span class="hl-5">circle</span><span class="hl-0">)</span><br/><br/><span class="hl-0">  </span><span class="hl-8">return</span><span class="hl-0"> </span><span class="hl-5">collided</span><br/><span class="hl-0">}</span>
 </code></pre>
 
 <a href="#concave-polygons" id="concave-polygons" style="color: inherit; text-decoration: none;">
@@ -219,27 +234,27 @@
   <h2>Rendering</h2>
 </a>
 <p>For debugging, it is often useful to be able to visualize the collision bodies. All of the bodies in a Collision system can be drawn to a <code>&lt;canvas&gt;</code> element by calling <code>draw()</code> and passing in the canvas&#39; 2D context.</p>
-<pre><code class="language-javascript"><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">canvas</span><span class="hl-0"> = </span><span class="hl-5">document</span><span class="hl-0">.</span><span class="hl-4">createElement</span><span class="hl-0">(</span><span class="hl-1">&quot;canvas&quot;</span><span class="hl-0">);</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">context</span><span class="hl-0"> = </span><span class="hl-5">canvas</span><span class="hl-0">.</span><span class="hl-4">getContext</span><span class="hl-0">(</span><span class="hl-1">&quot;2d&quot;</span><span class="hl-0">);</span><br/><br/><span class="hl-5">context</span><span class="hl-0">.</span><span class="hl-5">strokeStyle</span><span class="hl-0"> = </span><span class="hl-1">&quot;#FFFFFF&quot;</span><span class="hl-0">;</span><br/><span class="hl-5">context</span><span class="hl-0">.</span><span class="hl-4">beginPath</span><span class="hl-0">();</span><br/><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">draw</span><span class="hl-0">(</span><span class="hl-5">context</span><span class="hl-0">);</span><br/><span class="hl-5">context</span><span class="hl-0">.</span><span class="hl-4">stroke</span><span class="hl-0">();</span>
+<pre><code class="language-javascript"><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">canvas</span><span class="hl-0"> = </span><span class="hl-5">document</span><span class="hl-0">.</span><span class="hl-4">createElement</span><span class="hl-0">(</span><span class="hl-1">&quot;canvas&quot;</span><span class="hl-0">)</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">context</span><span class="hl-0"> = </span><span class="hl-5">canvas</span><span class="hl-0">.</span><span class="hl-4">getContext</span><span class="hl-0">(</span><span class="hl-1">&quot;2d&quot;</span><span class="hl-0">)</span><br/><br/><span class="hl-5">context</span><span class="hl-0">.</span><span class="hl-5">strokeStyle</span><span class="hl-0"> = </span><span class="hl-1">&quot;#FFFFFF&quot;</span><br/><span class="hl-5">context</span><span class="hl-0">.</span><span class="hl-4">beginPath</span><span class="hl-0">()</span><br/><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">draw</span><span class="hl-0">(</span><span class="hl-5">context</span><span class="hl-0">)</span><br/><span class="hl-5">context</span><span class="hl-0">.</span><span class="hl-4">stroke</span><span class="hl-0">()</span>
 </code></pre>
 <p>Bodies can be individually drawn as well.</p>
-<pre><code class="language-javascript"><span class="hl-5">context</span><span class="hl-0">.</span><span class="hl-5">strokeStyle</span><span class="hl-0"> = </span><span class="hl-1">&quot;#FFFFFF&quot;</span><span class="hl-0">;</span><br/><span class="hl-5">context</span><span class="hl-0">.</span><span class="hl-4">beginPath</span><span class="hl-0">();</span><br/><span class="hl-5">polygon</span><span class="hl-0">.</span><span class="hl-4">draw</span><span class="hl-0">(</span><span class="hl-5">context</span><span class="hl-0">);</span><br/><span class="hl-5">circle</span><span class="hl-0">.</span><span class="hl-4">draw</span><span class="hl-0">(</span><span class="hl-5">context</span><span class="hl-0">);</span><br/><span class="hl-5">context</span><span class="hl-0">.</span><span class="hl-4">stroke</span><span class="hl-0">();</span>
+<pre><code class="language-javascript"><span class="hl-5">context</span><span class="hl-0">.</span><span class="hl-5">strokeStyle</span><span class="hl-0"> = </span><span class="hl-1">&quot;#FFFFFF&quot;</span><br/><span class="hl-5">context</span><span class="hl-0">.</span><span class="hl-4">beginPath</span><span class="hl-0">()</span><br/><span class="hl-5">polygon</span><span class="hl-0">.</span><span class="hl-4">draw</span><span class="hl-0">(</span><span class="hl-5">context</span><span class="hl-0">)</span><br/><span class="hl-5">circle</span><span class="hl-0">.</span><span class="hl-4">draw</span><span class="hl-0">(</span><span class="hl-5">context</span><span class="hl-0">)</span><br/><span class="hl-5">context</span><span class="hl-0">.</span><span class="hl-4">stroke</span><span class="hl-0">()</span>
 </code></pre>
 <p>The BVH can also be drawn to help test <a href="https://en.wikipedia.org/wiki/Bounding_volume_hierarchy">Bounding Volume Hierarchy</a>.</p>
-<pre><code class="language-javascript"><span class="hl-5">context</span><span class="hl-0">.</span><span class="hl-5">strokeStyle</span><span class="hl-0"> = </span><span class="hl-1">&quot;#FFFFFF&quot;</span><span class="hl-0">;</span><br/><span class="hl-5">context</span><span class="hl-0">.</span><span class="hl-4">beginPath</span><span class="hl-0">();</span><br/><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">drawBVH</span><span class="hl-0">(</span><span class="hl-5">context</span><span class="hl-0">);</span><br/><span class="hl-5">context</span><span class="hl-0">.</span><span class="hl-4">stroke</span><span class="hl-0">();</span>
+<pre><code class="language-javascript"><span class="hl-5">context</span><span class="hl-0">.</span><span class="hl-5">strokeStyle</span><span class="hl-0"> = </span><span class="hl-1">&quot;#FFFFFF&quot;</span><br/><span class="hl-5">context</span><span class="hl-0">.</span><span class="hl-4">beginPath</span><span class="hl-0">()</span><br/><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">drawBVH</span><span class="hl-0">(</span><span class="hl-5">context</span><span class="hl-0">)</span><br/><span class="hl-5">context</span><span class="hl-0">.</span><span class="hl-4">stroke</span><span class="hl-0">()</span>
 </code></pre>
 
 <a href="#only-using-sat" id="only-using-sat" style="color: inherit; text-decoration: none;">
   <h2>Only using SAT</h2>
 </a>
 <p>Some projects may only have a need to perform SAT collision tests without broad-phase searching. This can be achieved by avoiding collision systems altogether and only using the <code>checkCollision()</code> function. Note that unless a use-case really requires this, I strongly advise to use the normal flow.</p>
-<pre><code class="language-javascript"><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">circle</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">Circle</span><span class="hl-0">(</span><span class="hl-5">position</span><span class="hl-0">, </span><span class="hl-5">radius</span><span class="hl-0">);</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">polygon</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">Polygon</span><span class="hl-0">(</span><span class="hl-5">position</span><span class="hl-0">, </span><span class="hl-5">points</span><span class="hl-0">);</span><br/><br/><span class="hl-8">if</span><span class="hl-0"> (</span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">checkCollision</span><span class="hl-0">(</span><span class="hl-5">polygon</span><span class="hl-0">, </span><span class="hl-5">circle</span><span class="hl-0">)) {</span><br/><span class="hl-0">  </span><span class="hl-5">console</span><span class="hl-0">.</span><span class="hl-4">log</span><span class="hl-0">(</span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-5">response</span><span class="hl-0">);</span><br/><span class="hl-0">}</span>
+<pre><code class="language-javascript"><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">circle</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">Circle</span><span class="hl-0">(</span><span class="hl-5">position</span><span class="hl-0">, </span><span class="hl-5">radius</span><span class="hl-0">)</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">polygon</span><span class="hl-0"> = </span><span class="hl-2">new</span><span class="hl-0"> </span><span class="hl-4">Polygon</span><span class="hl-0">(</span><span class="hl-5">position</span><span class="hl-0">, </span><span class="hl-5">points</span><span class="hl-0">)</span><br/><br/><span class="hl-8">if</span><span class="hl-0"> (</span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">checkCollision</span><span class="hl-0">(</span><span class="hl-5">polygon</span><span class="hl-0">, </span><span class="hl-5">circle</span><span class="hl-0">)) {</span><br/><span class="hl-0">  </span><span class="hl-5">console</span><span class="hl-0">.</span><span class="hl-4">log</span><span class="hl-0">(</span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-5">response</span><span class="hl-0">)</span><br/><span class="hl-0">}</span>
 </code></pre>
 
 <a href="#raycast" id="raycast" style="color: inherit; text-decoration: none;">
   <h2>Raycast</h2>
 </a>
 <p>To get raycast information use</p>
-<pre><code class="language-javascript"><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">start</span><span class="hl-0"> = { </span><span class="hl-5">x:</span><span class="hl-0"> </span><span class="hl-6">0</span><span class="hl-0">, </span><span class="hl-5">y:</span><span class="hl-0"> </span><span class="hl-6">0</span><span class="hl-0"> };</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">end</span><span class="hl-0"> = { </span><span class="hl-5">x:</span><span class="hl-0"> </span><span class="hl-6">0</span><span class="hl-0">, </span><span class="hl-5">y:</span><span class="hl-0"> -</span><span class="hl-6">10</span><span class="hl-0"> };</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">hit</span><span class="hl-0"> = </span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">raycast</span><span class="hl-0">(</span><span class="hl-5">start</span><span class="hl-0">, </span><span class="hl-5">end</span><span class="hl-0">);</span><br/><br/><span class="hl-8">if</span><span class="hl-0"> (</span><span class="hl-5">hit</span><span class="hl-0">) {</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> { </span><span class="hl-3">point</span><span class="hl-0">, </span><span class="hl-3">collider</span><span class="hl-0"> } = </span><span class="hl-5">hit</span><span class="hl-0">;</span><br/><br/><span class="hl-0">  </span><span class="hl-5">console</span><span class="hl-0">.</span><span class="hl-4">log</span><span class="hl-0">({ </span><span class="hl-5">point</span><span class="hl-0">, </span><span class="hl-5">collider</span><span class="hl-0"> });</span><br/><span class="hl-0">}</span>
+<pre><code class="language-javascript"><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">start</span><span class="hl-0"> = { </span><span class="hl-5">x:</span><span class="hl-0"> </span><span class="hl-6">0</span><span class="hl-0">, </span><span class="hl-5">y:</span><span class="hl-0"> </span><span class="hl-6">0</span><span class="hl-0"> }</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">end</span><span class="hl-0"> = { </span><span class="hl-5">x:</span><span class="hl-0"> </span><span class="hl-6">0</span><span class="hl-0">, </span><span class="hl-5">y:</span><span class="hl-0"> -</span><span class="hl-6">10</span><span class="hl-0"> }</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">hit</span><span class="hl-0"> = </span><span class="hl-5">physics</span><span class="hl-0">.</span><span class="hl-4">raycast</span><span class="hl-0">(</span><span class="hl-5">start</span><span class="hl-0">, </span><span class="hl-5">end</span><span class="hl-0">)</span><br/><br/><span class="hl-8">if</span><span class="hl-0"> (</span><span class="hl-5">hit</span><span class="hl-0">) {</span><br/><span class="hl-0">  </span><span class="hl-2">const</span><span class="hl-0"> { </span><span class="hl-3">point</span><span class="hl-0">, </span><span class="hl-3">collider</span><span class="hl-0"> } = </span><span class="hl-5">hit</span><br/><br/><span class="hl-0">  </span><span class="hl-5">console</span><span class="hl-0">.</span><span class="hl-4">log</span><span class="hl-0">({ </span><span class="hl-5">point</span><span class="hl-0">, </span><span class="hl-5">collider</span><span class="hl-0"> })</span><br/><span class="hl-0">}</span>
 </code></pre>
 <ul>
 <li>point is the <code>Vector { x, y }</code> with coordinates of (closest) intersection</li>
