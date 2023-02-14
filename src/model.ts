@@ -29,10 +29,16 @@ export enum BodyType {
   Polygon = "Polygon",
 }
 
+/**
+ * body with children (rbush)
+ */
 export type Leaf = Body & {
   children?: Leaf[];
 };
 
+/**
+ * rbush data
+ */
 export interface ChildrenData {
   children: Leaf[];
 }
@@ -191,11 +197,17 @@ export interface BodyProps {
   getAABBAsBBox(): BBox;
 }
 
+/**
+ * inner system state for concave collision detection
+ */
 export interface State {
   collides: boolean;
   overlapV: SATVector;
 }
 
+/**
+ * test function from sat.js type
+ */
 export type TestFunction<
   T extends {} = SATCircle | SATPolygon,
   Y extends {} = SATCircle | SATPolygon

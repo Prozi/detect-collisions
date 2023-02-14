@@ -855,7 +855,7 @@ __exportStar(__webpack_require__(/*! ./intersect */ "./dist/intersect.js"), expo
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.intersectLineCircleProposal = exports.circleOutsidePolygon = exports.circleInPolygon = exports.circleInCircle = exports.pointOnCircle = exports.polygonInPolygon = exports.pointInPolygon = exports.polygonInCircle = void 0;
+exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.circleOutsidePolygon = exports.circleInPolygon = exports.circleInCircle = exports.pointOnCircle = exports.polygonInPolygon = exports.pointInPolygon = exports.polygonInCircle = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils.js");
 function polygonInCircle({ pos, calcPoints }, circle) {
@@ -870,10 +870,16 @@ function polygonInPolygon(a, b) {
     return a.calcPoints.every((p) => pointInPolygon({ x: p.x + a.pos.x, y: p.y + a.pos.y }, b));
 }
 exports.polygonInPolygon = polygonInPolygon;
+/**
+ * https://stackoverflow.com/a/68197894/1749528
+ */
 function pointOnCircle(p, { r, pos }) {
     return ((p.x - pos.x) * (p.x - pos.x) + (p.y - pos.y) * (p.y - pos.y) === r * r);
 }
 exports.pointOnCircle = pointOnCircle;
+/**
+ * https://stackoverflow.com/a/68197894/1749528
+ */
 function circleInCircle(a, b) {
     const x1 = a.pos.x;
     const y1 = a.pos.y;
@@ -885,6 +891,9 @@ function circleInCircle(a, b) {
     return distSq + r2 === r1 || distSq + r2 < r1;
 }
 exports.circleInCircle = circleInCircle;
+/**
+ * https://stackoverflow.com/a/68197894/1749528
+ */
 function circleInPolygon(circle, polygon) {
     // Circle with radius 0 isn't a circle
     if (circle.r === 0) {
@@ -914,13 +923,15 @@ function circleInPolygon(circle, polygon) {
             ? calcPoints[calcPoints.length - 1]
             : calcPoints[i + 1] || calcPoints[i];
         if (intersectLineCircle({ start, end }, circle).length) {
-            console.log("case3", intersectLineCircle({ start, end }, circle));
             return false;
         }
     }
     return true;
 }
 exports.circleInPolygon = circleInPolygon;
+/**
+ * https://stackoverflow.com/a/68197894/1749528
+ */
 function circleOutsidePolygon(circle, polygon) {
     // Circle with radius 0 isn't a circle
     if (circle.r === 0) {
@@ -958,23 +969,9 @@ function circleOutsidePolygon(circle, polygon) {
     return true;
 }
 exports.circleOutsidePolygon = circleOutsidePolygon;
-// TODO compare in raycast then Benchmark and remove or remove the other
-function intersectLineCircleProposal({ start, end }, { pos, r }) {
-    const X1 = start.x;
-    const X2 = end.x;
-    const Y1 = start.y;
-    const Y2 = end.y;
-    const A = Y1 - Y2;
-    const B = X2 - X1;
-    const C = X1 * Y2 - X2 * Y1;
-    // radius === distance = touching/tangent
-    // radius > distance = not intersecting
-    // radius < distance = intersecting
-    const distance = Math.abs(A * pos.x + B * pos.y + C) / Math.sqrt(A * A + B * B);
-    return distance <= r;
-}
-exports.intersectLineCircleProposal = intersectLineCircleProposal;
-// https://stackoverflow.com/questions/37224912/circle-line-segment-collision
+/**
+ * https://stackoverflow.com/a/37225895/1749528
+ */
 function intersectLineCircle(line, { pos, r }) {
     const v1 = { x: line.end.x - line.start.x, y: line.end.y - line.start.y };
     const v2 = { x: line.start.x - pos.x, y: line.start.y - pos.y };
@@ -999,7 +996,9 @@ function intersectLineCircle(line, { pos, r }) {
     return results;
 }
 exports.intersectLineCircle = intersectLineCircle;
-// https://stackoverflow.com/questions/9043805/test-if-two-lines-intersect-javascript-function
+/**
+ * https://stackoverflow.com/a/24392281/1749528
+ */
 function intersectLineLine(line1, line2) {
     const dX = line1.end.x - line1.start.x;
     const dY = line1.end.y - line1.start.y;
@@ -1020,9 +1019,6 @@ function intersectLineLine(line1, line2) {
     return { x: line1.start.x + lambda * dX, y: line1.start.y + lambda * dY };
 }
 exports.intersectLineLine = intersectLineLine;
-/**
- * check if line (ray) intersects polygon
- */
 function intersectLinePolygon(line, polygon) {
     return polygon.calcPoints
         .map((to, index) => {
@@ -1335,6 +1331,9 @@ function rad2deg(radians) {
     return radians * (180 / Math.PI);
 }
 exports.rad2deg = rad2deg;
+/**
+ * creates ellipse-shaped polygon based on params
+ */
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
     const steps = Math.PI * Math.hypot(radiusX, radiusY) * 2;
     const length = Math.max(8, Math.ceil(steps / Math.max(1, step)));
@@ -1411,7 +1410,9 @@ function extendBody(body, options) {
     body.setAngle((options === null || options === void 0 ? void 0 : options.angle) || 0);
 }
 exports.extendBody = extendBody;
-// check if body moved outside of padding
+/**
+ * check if body moved outside of its padding
+ */
 function bodyMoved(body) {
     return (body.bbox.minX < body.minX ||
         body.bbox.minY < body.minY ||
@@ -1419,6 +1420,9 @@ function bodyMoved(body) {
         body.bbox.maxY > body.maxY);
 }
 exports.bodyMoved = bodyMoved;
+/**
+ * checks if two boxes intersect
+ */
 function intersectAABB(a, b) {
     return !(b.minX > a.maxX ||
         b.minY > a.maxY ||
@@ -1426,6 +1430,9 @@ function intersectAABB(a, b) {
         b.maxY < a.minY);
 }
 exports.intersectAABB = intersectAABB;
+/**
+ * checks if body a is in body b
+ */
 function checkAInB(a, b) {
     if (a.type === model_1.BodyType.Circle) {
         if (b.type !== model_1.BodyType.Circle) {
@@ -1439,6 +1446,9 @@ function checkAInB(a, b) {
     return (0, intersect_1.polygonInPolygon)(a, b);
 }
 exports.checkAInB = checkAInB;
+/**
+ * clone sat vector points array into vector points array
+ */
 function clonePointsArray(points) {
     return points.map(({ x, y }) => ({
         x,
@@ -1502,6 +1512,9 @@ function getBounceDirection(body, collider) {
     return new sat_1.Vector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
 }
 exports.getBounceDirection = getBounceDirection;
+/**
+ * returns correct sat.js testing function based on body types
+ */
 function getSATFunction(body, wall) {
     if (body.type === model_1.BodyType.Circle) {
         return (wall.type === model_1.BodyType.Circle ? sat_1.testCircleCircle : sat_1.testCirclePolygon);
@@ -1509,6 +1522,9 @@ function getSATFunction(body, wall) {
     return (wall.type === model_1.BodyType.Circle ? sat_1.testPolygonCircle : sat_1.testPolygonPolygon);
 }
 exports.getSATFunction = getSATFunction;
+/**
+ * draw polygon
+ */
 function drawPolygon(context, { pos, calcPoints, }, isTrigger = false) {
     const loopPoints = [...calcPoints, calcPoints[0]];
     loopPoints.forEach((point, index) => {
