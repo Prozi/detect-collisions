@@ -57,18 +57,16 @@ export function circleInPolygon(
     return false;
   }
 
-  for (let i = 0; i < calcPoints.length; ++i) {
+  for (let i = 0; i < calcPoints.length; i++) {
     // If any point of the polygon is within the circle,
     // the circle is not "contained"
     // so return false
     if (pointInCircle(calcPoints[i], circle)) {
-      console.log("polygon point in circle");
-
       return false;
     }
   }
 
-  for (let i = 0; i < calcPoints.length; ++i) {
+  for (let i = 0; i < calcPoints.length; i++) {
     // If any line-segment of the polygon intersects the circle,
     // the circle is not "contained"
     // so return false
@@ -104,7 +102,7 @@ export function circleOutsidePolygon(
   }
 
   const { calcPoints } = polygon;
-  for (let i = 0; i < calcPoints.length; ++i) {
+  for (let i = 0; i < calcPoints.length; i++) {
     // If any point of the polygon is within the circle,
     // or any point of the polygon lies on the circle,
     // the circle is not outside of the polygon
@@ -117,7 +115,7 @@ export function circleOutsidePolygon(
     }
   }
 
-  for (let i = 0; i < calcPoints.length; ++i) {
+  for (let i = 0; i < calcPoints.length; i++) {
     // If any line-segment of the polygon intersects the circle,
     // the circle is not outside the polygon, it is overlapping,
     // so return false
