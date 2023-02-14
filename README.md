@@ -84,8 +84,9 @@ const physics = new System();
 Last optional parameter for body creation is always [BodyOptions](https://prozi.github.io/detect-collisions/interfaces/BodyOptions.html)
 
 ```javascript
+const { deg2rad } = require("detect-collisions");
 const options = {
-  angle: 0,
+  angle: deg2rad(90),
   center: false,
   isStatic: false,
   isTrigger: false,
