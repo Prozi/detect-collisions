@@ -1,10 +1,9 @@
 # Detect-Collisions
 
-[<img src="https://img.shields.io/npm/v/detect-collisions?style=flat-square&color=success" alt="npm version" />](https://www.npmjs.com/package/detect-collisions?activeTab=versions)
-[<img src="https://img.shields.io/npm/dw/detect-collisions.svg?style=flat-square&color=success" alt="npm downloads per week" />](https://www.npmjs.com/package/detect-collisions)
-[<img src="https://img.shields.io/snyk/vulnerabilities/github/Prozi/detect-collisions?style=flat-square" alt="vulnerabilities" />](https://snyk.io/test/github/Prozi/detect-collisions)
-[<img src="https://img.shields.io/circleci/build/github/Prozi/detect-collisions/master?style=flat-square" alt="build status" />](https://app.circleci.com/pipelines/github/Prozi/detect-collisions)
-[<img src="https://img.shields.io/npm/l/detect-collisions.svg?style=flat-square&color=success" alt="license: MIT" />](https://github.com/Prozi/detect-collisions/blob/master/LICENSE)
+[<img src="https://img.shields.io/npm/v/detect-collisions?style=for-the-badge&color=success" alt="npm version" />](https://www.npmjs.com/package/detect-collisions?activeTab=versions)
+[<img src="https://img.shields.io/npm/dw/detect-collisions.svg?style=for-the-badge&color=success" alt="npm downloads per week" />](https://www.npmjs.com/package/detect-collisions)
+[<img src="https://img.shields.io/circleci/build/github/Prozi/detect-collisions/master?style=for-the-badge" alt="build status" />](https://app.circleci.com/pipelines/github/Prozi/detect-collisions)
+[<img src="https://img.shields.io/npm/l/detect-collisions.svg?style=for-the-badge&color=success" alt="license: MIT" />](https://github.com/Prozi/detect-collisions/blob/master/LICENSE)
 
 ## Introduction
 
@@ -12,8 +11,9 @@ It is a fast TypeScript library for detecting collisions between bodies: Points,
 
 This library combines:
 
-- efficiency of [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and
-- accuracy of [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
+- efficiency of [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching
+- accuracy of [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing
+- decomposition of [Concave Polygons](https://en.wikipedia.org/wiki/Concave_polygon) into convex ones for ability to use any kind of polygon
 
 ## Demos
 
@@ -54,7 +54,7 @@ setting `body.pos.x` or `body.pos.y` doesn't update the bounding box. setting `b
 
 - `setPosition(x, y)`
 
-bodies also have:
+#### bodies also have:
 
 - `scale: number` prop & `setScale(x, y)` method - to scale (for `Circle` takes 1 parameter, `x, y` for rest)
 - `offset: Vector` prop & `setOffset({ x, y })` method - for offset from center of body for rotation purpouses
@@ -69,20 +69,20 @@ bodies have properties that can be set in runtime or during creation by using `B
 - `angle: number` - angle in radians, use `deg2rad` for conversion
 - `padding: number` - bounding box padding, optimizes costly updates
 
-you can also check if body is convex or not:
+#### you can also check if body is convex or not:
 
 - `isConvex: boolean` - body is convex (may be false only for `Polygon`)
 - `convexPolygons: Vector[][]` - if `Polygon` is concave it has its points split into convex polygons here
 
 #### some bodies:
 
-- `Box` has `width & height` properties
+- `Box` has `width` & `height` properties
 
 #### each body after inserted to system has:
 
-- `bbox = { minX, minY, maxX, maxY }` property - without padding
-- `minX, minY, maxX, maxY` properties - bbox plus padding
-- `system` property - to use `body.system.updateBody(body)` internally
+- `bbox = { minX, minY, maxX, maxY }` prop - without padding
+- `minX, minY, maxX, maxY` props - bbox plus padding
+- `system` prop - to use `body.system.updateBody(body)` internally during `body.setPosition(x, y)`
 
 #### body types:
 
