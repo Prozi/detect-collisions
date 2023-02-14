@@ -190,7 +190,7 @@ class Polygon extends sat_1.Polygon {
             return [];
         }
         const points = this.calcPoints.map(utils_1.mapVectorToArray);
-        return (0, poly_decomp_1.decomp)(points);
+        return (0, poly_decomp_1.quickDecomp)(points);
     }
     /**
      * updates convex polygons cache in body

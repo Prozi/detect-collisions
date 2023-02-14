@@ -212,9 +212,9 @@ export function mapArrayToVector([x, y]: DecompPoint = [0, 0]): Vector {
 /**
  * replace body with array of related convex polygons
  */
-export function ensureConvex(
-  body: Circle | Point | Polygon
-): [Circle | Point | Polygon] | SATPolygon[] {
+export function ensureConvex<T extends Body = Circle | Point | Polygon>(
+  body: T
+): [T] | SATPolygon[] {
   if (body.isConvex || body.type !== Types.Polygon) {
     return [body];
   }

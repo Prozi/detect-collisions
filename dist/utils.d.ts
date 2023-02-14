@@ -49,7 +49,7 @@ export declare function mapArrayToVector([x, y]?: DecompPoint): Vector;
 /**
  * replace body with array of related convex polygons
  */
-export declare function ensureConvex(body: Circle | Point | Polygon): [Circle | Point | Polygon] | SATPolygon[];
+export declare function ensureConvex<T extends Body = Circle | Point | Polygon>(body: T): [T] | SATPolygon[];
 /**
  * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
  */

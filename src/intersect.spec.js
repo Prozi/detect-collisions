@@ -1,4 +1,4 @@
-const { Line, Circle, intersectLineLine, intersectLineCircle } = require("../");
+const { Line, Circle, intersectLineLine, intersectLineCircle } = require(".");
 
 describe("GIVEN Intersect Utils", () => {
   it("THEN intersectLineLine should work", () => {

@@ -1,4 +1,4 @@
-const { Circle, getBounceDirection } = require("../");
+const { Circle, getBounceDirection } = require(".");
 
 describe("GIVEN Utils", () => {
   it("THEN getBounceDirection works correctly", () => {

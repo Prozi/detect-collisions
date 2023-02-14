@@ -158,6 +158,9 @@ export class System extends BaseSystem {
    * check do 2 objects collide
    */
   checkCollision(body: Body, wall: Body): boolean {
+    this.state.collides = false;
+    this.response.clear();
+
     // check real bounding boxes (without padding)
     if (body.bbox && wall.bbox && !intersectAABB(body.bbox, wall.bbox)) {
       return false;
@@ -167,9 +170,6 @@ export class System extends BaseSystem {
     const sat: TestFunction = getSATFunction(body, wall);
     const convexBodies = ensureConvex(body);
     const convexWalls = ensureConvex(wall);
-
-    this.state.collides = false;
-    this.response.clear();
 
     convexBodies.forEach((convexBody) => {
       convexWalls.forEach((convexWall) => {
@@ -272,7 +272,6 @@ export class System extends BaseSystem {
     body: SATPolygon | Circle,
     wall: SATPolygon | Circle
   ): void {
-    console.log(sat.name);
     const collides = sat(body, wall, this.response);
 
     if (collides) {

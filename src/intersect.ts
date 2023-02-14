@@ -7,20 +7,24 @@ import { Line } from "./bodies/line";
 import { ensureConvex } from "./utils";
 
 export function polygonInCircle(
-  polygon: Polygon,
+  { pos, calcPoints }: Polygon,
   circle: Pick<Circle, "pos" | "r">
 ): boolean {
-  return polygon.calcPoints.every((p) => pointInCircle(p, circle));
+  return calcPoints.every((p) =>
+    pointInCircle({ x: pos.x + p.x, y: pos.y + p.y } as SATVector, circle)
+  );
 }
 
 export function pointInPolygon(a: Vector, b: Polygon): boolean {
-  return (ensureConvex(b) as []).some((convex) =>
-    pointInConvexPolygon(a as SATVector, convex as Polygon)
+  return ensureConvex(b).some((convex) =>
+    pointInConvexPolygon(a as SATVector, convex)
   );
 }
 
 export function polygonInPolygon(a: Polygon, b: Polygon): boolean {
-  return a.calcPoints.every((point) => pointInPolygon(point, b));
+  return a.calcPoints.every((p) =>
+    pointInPolygon({ x: p.x + a.pos.x, y: p.y + a.pos.y }, b)
+  );
 }
 
 export function pointOnCircle(
@@ -85,6 +89,8 @@ export function circleInPolygon(
         : calcPoints[i + 1] || calcPoints[i];
 
     if (intersectLineCircle({ start, end }, circle).length) {
+      console.log("case3", intersectLineCircle({ start, end }, circle));
+
       return false;
     }
   }

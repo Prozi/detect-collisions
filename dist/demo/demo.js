@@ -768,7 +768,7 @@ class Polygon extends sat_1.Polygon {
             return [];
         }
         const points = this.calcPoints.map(utils_1.mapVectorToArray);
-        return (0, poly_decomp_1.decomp)(points);
+        return (0, poly_decomp_1.quickDecomp)(points);
     }
     /**
      * updates convex polygons cache in body
@@ -857,8 +857,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.intersectLineCircleProposal = exports.circleOutsidePolygon = exports.circleInPolygon = exports.circleInCircle = exports.pointOnCircle = exports.polygonInPolygon = exports.pointInPolygon = exports.polygonInCircle = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils.js");
-function polygonInCircle(polygon, circle) {
-    return polygon.calcPoints.every((p) => (0, sat_1.pointInCircle)(p, circle));
+function polygonInCircle({ pos, calcPoints }, circle) {
+    return calcPoints.every((p) => (0, sat_1.pointInCircle)({ x: pos.x + p.x, y: pos.y + p.y }, circle));
 }
 exports.polygonInCircle = polygonInCircle;
 function pointInPolygon(a, b) {
@@ -866,7 +866,7 @@ function pointInPolygon(a, b) {
 }
 exports.pointInPolygon = pointInPolygon;
 function polygonInPolygon(a, b) {
-    return a.calcPoints.every((point) => pointInPolygon(point, b));
+    return a.calcPoints.every((p) => pointInPolygon({ x: p.x + a.pos.x, y: p.y + a.pos.y }, b));
 }
 exports.polygonInPolygon = polygonInPolygon;
 function pointOnCircle(p, { r, pos }) {
@@ -913,6 +913,7 @@ function circleInPolygon(circle, polygon) {
             ? calcPoints[calcPoints.length - 1]
             : calcPoints[i + 1] || calcPoints[i];
         if (intersectLineCircle({ start, end }, circle).length) {
+            console.log("case3", intersectLineCircle({ start, end }, circle));
             return false;
         }
     }
@@ -1204,6 +1205,8 @@ class System extends base_system_1.BaseSystem {
      * check do 2 objects collide
      */
     checkCollision(body, wall) {
+        this.state.collides = false;
+        this.response.clear();
         // check real bounding boxes (without padding)
         if (body.bbox && wall.bbox && !(0, utils_1.intersectAABB)(body.bbox, wall.bbox)) {
             return false;
@@ -1212,8 +1215,6 @@ class System extends base_system_1.BaseSystem {
         const sat = (0, utils_1.getSATFunction)(body, wall);
         const convexBodies = (0, utils_1.ensureConvex)(body);
         const convexWalls = (0, utils_1.ensureConvex)(wall);
-        this.state.collides = false;
-        this.response.clear();
         convexBodies.forEach((convexBody) => {
             convexWalls.forEach((convexWall) => {
                 this.test(sat, convexBody, convexWall);
@@ -1287,7 +1288,6 @@ class System extends base_system_1.BaseSystem {
      * update inner state function - for non convex polygons collisions
      */
     test(sat, body, wall) {
-        console.log(sat.name);
         const collides = sat(body, wall, this.response);
         if (collides) {
             // first time in loop, reset

@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.intersectLineCircleProposal = exports.circleOutsidePolygon = exports.circleInPolygon = exports.circleInCircle = exports.pointOnCircle = exports.polygonInPolygon = exports.pointInPolygon = exports.polygonInCircle = void 0;
 const sat_1 = require("sat");
 const utils_1 = require("./utils");
-function polygonInCircle(polygon, circle) {
-    return polygon.calcPoints.every((p) => (0, sat_1.pointInCircle)(p, circle));
+function polygonInCircle({ pos, calcPoints }, circle) {
+    return calcPoints.every((p) => (0, sat_1.pointInCircle)({ x: pos.x + p.x, y: pos.y + p.y }, circle));
 }
 exports.polygonInCircle = polygonInCircle;
 function pointInPolygon(a, b) {
@@ -12,7 +12,7 @@ function pointInPolygon(a, b) {
 }
 exports.pointInPolygon = pointInPolygon;
 function polygonInPolygon(a, b) {
-    return a.calcPoints.every((point) => pointInPolygon(point, b));
+    return a.calcPoints.every((p) => pointInPolygon({ x: p.x + a.pos.x, y: p.y + a.pos.y }, b));
 }
 exports.polygonInPolygon = polygonInPolygon;
 function pointOnCircle(p, { r, pos }) {
@@ -59,6 +59,7 @@ function circleInPolygon(circle, polygon) {
             ? calcPoints[calcPoints.length - 1]
             : calcPoints[i + 1] || calcPoints[i];
         if (intersectLineCircle({ start, end }, circle).length) {
+            console.log("case3", intersectLineCircle({ start, end }, circle));
             return false;
         }
     }

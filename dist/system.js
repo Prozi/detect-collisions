@@ -119,6 +119,8 @@ class System extends base_system_1.BaseSystem {
      * check do 2 objects collide
      */
     checkCollision(body, wall) {
+        this.state.collides = false;
+        this.response.clear();
         // check real bounding boxes (without padding)
         if (body.bbox && wall.bbox && !(0, utils_1.intersectAABB)(body.bbox, wall.bbox)) {
             return false;
@@ -127,8 +129,6 @@ class System extends base_system_1.BaseSystem {
         const sat = (0, utils_1.getSATFunction)(body, wall);
         const convexBodies = (0, utils_1.ensureConvex)(body);
         const convexWalls = (0, utils_1.ensureConvex)(wall);
-        this.state.collides = false;
-        this.response.clear();
         convexBodies.forEach((convexBody) => {
             convexWalls.forEach((convexWall) => {
                 this.test(sat, convexBody, convexWall);
@@ -202,7 +202,6 @@ class System extends base_system_1.BaseSystem {
      * update inner state function - for non convex polygons collisions
      */
     test(sat, body, wall) {
-        console.log(sat.name);
         const collides = sat(body, wall, this.response);
         if (collides) {
             // first time in loop, reset
