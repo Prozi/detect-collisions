@@ -71,7 +71,7 @@ function circleInPolygon(circle, { calcPoints }) {
         // so return false
         const start = i === 0 ? calcPoints[0] : calcPoints[i];
         const end = i === 0 ? calcPoints[calcPoints.length - 1] : calcPoints[i + 1];
-        if (intersectLineCircle({ start, end }, circle)) {
+        if (intersectLineCircle({ start, end }, circle).length) {
             return false;
         }
     }
@@ -105,7 +105,7 @@ function circleOutsidePolygon(circle, { calcPoints }) {
         // so return false
         const start = i === 0 ? calcPoints[0] : calcPoints[i];
         const end = i === 0 ? calcPoints[calcPoints.length - 1] : calcPoints[i + 1];
-        if (intersectLineCircle({ start, end }, circle)) {
+        if (intersectLineCircle({ start, end }, circle).length) {
             return false;
         }
     }
