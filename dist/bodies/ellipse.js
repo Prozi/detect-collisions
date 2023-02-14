@@ -16,7 +16,7 @@ class Ellipse extends polygon_1.Polygon {
         /**
          * ellipse type
          */
-        this.type = model_1.Types.Ellipse;
+        this.type = model_1.BodyType.Ellipse;
         /**
          * ellipses are centered
          */

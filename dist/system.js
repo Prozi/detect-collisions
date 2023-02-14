@@ -21,8 +21,6 @@ class System extends base_system_1.BaseSystem {
          */
         this.state = {
             collides: false,
-            aInB: false,
-            bInA: false,
             overlapV: new model_1.SATVector(),
         };
     }
@@ -153,7 +151,7 @@ class System extends base_system_1.BaseSystem {
     /**
      * raycast to get collider of ray from start to end
      */
-    raycast(start, end, allowCollider = () => true) {
+    raycast(start, end, allow = () => true) {
         let minDistance = Infinity;
         let result = null;
         if (!this.ray) {
@@ -164,18 +162,18 @@ class System extends base_system_1.BaseSystem {
             this.ray.end = end;
         }
         this.insert(this.ray);
-        this.checkOne(this.ray, ({ b: collider }) => {
-            if (!allowCollider(collider)) {
+        this.checkOne(this.ray, ({ b: body }) => {
+            if (!allow(body)) {
                 return false;
             }
-            const points = collider.type === model_1.Types.Circle
-                ? (0, intersect_1.intersectLineCircle)(this.ray, collider)
-                : (0, intersect_1.intersectLinePolygon)(this.ray, collider);
+            const points = body.type === model_1.BodyType.Circle
+                ? (0, intersect_1.intersectLineCircle)(this.ray, body)
+                : (0, intersect_1.intersectLinePolygon)(this.ray, body);
             points.forEach((point) => {
                 const pointDistance = (0, utils_1.distance)(start, point);
                 if (pointDistance < minDistance) {
                     minDistance = pointDistance;
-                    result = { point, collider };
+                    result = { point, body };
                 }
             });
         });

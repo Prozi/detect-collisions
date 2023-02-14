@@ -1,11 +1,11 @@
 import { BBox } from "rbush";
 import { Polygon as SATPolygon } from "sat";
-import { BodyOptions, Collider, DecompPolygon, PotentialVector, SATVector, Types, Vector } from "../model";
+import { BodyOptions, BodyProps, DecompPolygon, PotentialVector, SATVector, BodyType, Vector } from "../model";
 import { System } from "../system";
 /**
  * collider - polygon
  */
-export declare class Polygon extends SATPolygon implements BBox, Collider {
+export declare class Polygon extends SATPolygon implements BBox, BodyProps {
     /**
      * minimum x bound of body
      */
@@ -57,7 +57,7 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
     /**
      * type of body
      */
-    readonly type: Types.Polygon | Types.Box | Types.Point | Types.Ellipse | Types.Line;
+    readonly type: BodyType.Polygon | BodyType.Box | BodyType.Point | BodyType.Ellipse | BodyType.Line;
     /**
      * backup of points used for scaling
      */

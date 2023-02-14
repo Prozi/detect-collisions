@@ -1,11 +1,11 @@
 import { BBox } from "rbush";
 import { Circle as SATCircle } from "sat";
-import { BodyOptions, Collider, PotentialVector, SATVector, Types, Vector } from "../model";
+import { BodyOptions, BodyProps, PotentialVector, SATVector, BodyType, Vector } from "../model";
 import { System } from "../system";
 /**
  * collider - circle
  */
-export declare class Circle extends SATCircle implements BBox, Collider {
+export declare class Circle extends SATCircle implements BBox, BodyProps {
     /**
      * minimum x bound of body
      */
@@ -62,7 +62,7 @@ export declare class Circle extends SATCircle implements BBox, Collider {
     /**
      * circle type
      */
-    readonly type: Types.Circle;
+    readonly type: BodyType.Circle;
     /**
      * saved initial radius - internal
      */

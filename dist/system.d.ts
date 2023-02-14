@@ -2,7 +2,7 @@
 import RBush from "rbush";
 import { BaseSystem } from "./base-system";
 import { Circle } from "./bodies/circle";
-import { Body, CollisionState, Leaf, RaycastResult, Response, SATPolygon, TestFunction, Vector } from "./model";
+import { Body, Leaf, RaycastHit, Response, SATPolygon, State, TestFunction, Vector } from "./model";
 /**
  * collision system
  */
@@ -14,7 +14,7 @@ export declare class System extends BaseSystem {
     /**
      * reusable inner state - for non convex polygons collisions
      */
-    protected state: CollisionState;
+    protected state: State;
     private ray;
     /**
      * remove body aabb from collision tree
@@ -57,7 +57,7 @@ export declare class System extends BaseSystem {
     /**
      * raycast to get collider of ray from start to end
      */
-    raycast(start: Vector, end: Vector, allowCollider?: (testCollider: Body) => boolean): RaycastResult;
+    raycast(start: Vector, end: Vector, allow?: (body: Body) => boolean): RaycastHit | null;
     /**
      * used to find body deep inside data with finder function returning boolean found or not
      */

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Types = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = void 0;
+exports.BodyType = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = void 0;
 const rbush_1 = __importDefault(require("rbush"));
 Object.defineProperty(exports, "RBush", { enumerable: true, get: function () { return rbush_1.default; } });
 const sat_1 = require("sat");
@@ -14,13 +14,13 @@ Object.defineProperty(exports, "SATCircle", { enumerable: true, get: function ()
 /**
  * types
  */
-var Types;
-(function (Types) {
-    Types["Ellipse"] = "Ellipse";
-    Types["Line"] = "Line";
-    Types["Circle"] = "Circle";
-    Types["Box"] = "Box";
-    Types["Point"] = "Point";
-    Types["Polygon"] = "Polygon";
-})(Types = exports.Types || (exports.Types = {}));
+var BodyType;
+(function (BodyType) {
+    BodyType["Ellipse"] = "Ellipse";
+    BodyType["Line"] = "Line";
+    BodyType["Circle"] = "Circle";
+    BodyType["Box"] = "Box";
+    BodyType["Point"] = "Point";
+    BodyType["Polygon"] = "Polygon";
+})(BodyType = exports.BodyType || (exports.BodyType = {}));
 //# sourceMappingURL=model.js.map
