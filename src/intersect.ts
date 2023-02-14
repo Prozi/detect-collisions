@@ -1,28 +1,19 @@
+import { pointInPolygon, pointInCircle } from "sat";
+
 import { Vector } from "./model";
 import { Circle } from "./bodies/circle";
 import { Polygon } from "./bodies/polygon";
 import { Line } from "./bodies/line";
 
 export function polygonInCircle(
-  { calcPoints }: Pick<Polygon, "calcPoints">,
+  polygon: Polygon,
   circle: Pick<Circle, "pos" | "r">
 ): boolean {
-  return calcPoints.every((p) => pointInCircle(p, circle));
+  return polygon.calcPoints.every((p) => pointInCircle(p, circle));
 }
 
-export function polygonInPolygon(
-  a: Pick<Polygon, "calcPoints">,
-  b: Pick<Polygon, "calcPoints">
-): boolean {
+export function polygonInPolygon(a: Polygon, b: Polygon): boolean {
   return a.calcPoints.every((p) => pointInPolygon(p, b));
-}
-
-// https://stackoverflow.com/a/68197894/1749528
-export function pointInCircle(
-  p: Vector,
-  { r, pos }: Pick<Circle, "pos" | "r">
-): boolean {
-  return (p.x - pos.x) * (p.x - pos.x) + (p.y - pos.y) * (p.y - pos.y) < r * r;
 }
 
 function pointOnCircle(
@@ -32,31 +23,6 @@ function pointOnCircle(
   return (
     (p.x - pos.x) * (p.x - pos.x) + (p.y - pos.y) * (p.y - pos.y) === r * r
   );
-}
-
-export function pointInPolygon(
-  p: Vector,
-  { calcPoints }: Pick<Polygon, "calcPoints">
-): boolean {
-  let result = false;
-
-  let j = calcPoints.length - 1;
-  for (let i = 0; i < calcPoints.length; ++i) {
-    if (
-      ((calcPoints[i].y <= p.y && p.y < calcPoints[j].y) ||
-        (calcPoints[j].y <= p.y && p.y < calcPoints[i].y)) &&
-      p.x <
-        ((calcPoints[j].x - calcPoints[i].x) * (p.y - calcPoints[i].y)) /
-          (calcPoints[j].y - calcPoints[i].y) +
-          calcPoints[i].x
-    ) {
-      result = !result;
-    }
-
-    j = i;
-  }
-
-  return result;
 }
 
 export function circleInCircle(
@@ -76,17 +42,18 @@ export function circleInCircle(
 
 export function circleInPolygon(
   circle: Pick<Circle, "pos" | "r">,
-  { calcPoints }: Pick<Polygon, "calcPoints">
+  polygon: Polygon
 ): boolean {
   // Circle with radius 0 isn't a circle
   if (circle.r === 0) {
     return false;
   }
 
+  const { calcPoints } = polygon;
   // If the center of the circle is not within the polygon,
   // then the circle may overlap, but it'll never be "contained"
   // so return false
-  if (!pointInPolygon(circle.pos, { calcPoints })) {
+  if (!pointInPolygon(circle.pos, polygon)) {
     return false;
   }
 
@@ -108,7 +75,9 @@ export function circleInPolygon(
 
     const start: Vector = i === 0 ? calcPoints[0] : calcPoints[i];
     const end: Vector =
-      i === 0 ? calcPoints[calcPoints.length - 1] : calcPoints[i + 1];
+      i === 0
+        ? calcPoints[calcPoints.length - 1]
+        : calcPoints[i + 1] || calcPoints[i];
 
     if (intersectLineCircle({ start, end }, circle).length) {
       return false;
@@ -120,7 +89,7 @@ export function circleInPolygon(
 
 export function circleOutsidePolygon(
   circle: Pick<Circle, "pos" | "r">,
-  { calcPoints }: Pick<Polygon, "calcPoints">
+  polygon: Polygon
 ): boolean {
   // Circle with radius 0 isn't a circle
   if (circle.r === 0) {
@@ -130,10 +99,11 @@ export function circleOutsidePolygon(
   // If the center of the circle is within the polygon,
   // the circle is not outside of the polygon completely.
   // so return false.
-  if (pointInPolygon(circle.pos, { calcPoints })) {
+  if (pointInPolygon(circle.pos, polygon)) {
     return false;
   }
 
+  const { calcPoints } = polygon;
   for (let i = 0; i < calcPoints.length; ++i) {
     // If any point of the polygon is within the circle,
     // or any point of the polygon lies on the circle,
@@ -154,7 +124,9 @@ export function circleOutsidePolygon(
 
     const start: Vector = i === 0 ? calcPoints[0] : calcPoints[i];
     const end: Vector =
-      i === 0 ? calcPoints[calcPoints.length - 1] : calcPoints[i + 1];
+      i === 0
+        ? calcPoints[calcPoints.length - 1]
+        : calcPoints[i + 1] || calcPoints[i];
 
     if (intersectLineCircle({ start, end }, circle).length) {
       return false;

@@ -107,7 +107,7 @@ describe("GIVEN System", () => {
     });
   });
 
-  xit("THEN circle inside concave polygon have correct aInB, bInA", () => {
+  it("THEN circle inside concave polygon have correct aInB, bInA", () => {
     const { System } = require("../");
     const physics = new System();
     const concave = physics.createPolygon(
@@ -163,7 +163,7 @@ describe("GIVEN System", () => {
     expect(physics.response.bInA).toBe(false);
   });
 
-  xit("THEN concave polygon inside concave polygon have correct aInB, bInA", () => {
+  it("THEN concave polygon inside concave polygon have correct aInB, bInA", () => {
     const { System } = require("../");
     const physics = new System();
     const concave = physics.createPolygon({ x: 0, y: 0 }, [
