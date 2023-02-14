@@ -1,39 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.intersectLineCircleProposal = exports.circleOutsidePolygon = exports.circleInPolygon = exports.circleInCircle = exports.pointInPolygon = exports.pointInCircle = exports.polygonInPolygon = exports.polygonInCircle = void 0;
-function polygonInCircle({ calcPoints }, circle) {
-    return calcPoints.every((p) => pointInCircle(p, circle));
+exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.intersectLineCircleProposal = exports.circleOutsidePolygon = exports.circleInPolygon = exports.circleInCircle = exports.polygonInPolygon = exports.polygonInCircle = void 0;
+const sat_1 = require("sat");
+function polygonInCircle(polygon, circle) {
+    return polygon.calcPoints.every((p) => (0, sat_1.pointInCircle)(p, circle));
 }
 exports.polygonInCircle = polygonInCircle;
 function polygonInPolygon(a, b) {
-    return a.calcPoints.every((p) => pointInPolygon(p, b));
+    return a.calcPoints.every((p) => (0, sat_1.pointInPolygon)(p, b));
 }
 exports.polygonInPolygon = polygonInPolygon;
-// https://stackoverflow.com/a/68197894/1749528
-function pointInCircle(p, { r, pos }) {
-    return (p.x - pos.x) * (p.x - pos.x) + (p.y - pos.y) * (p.y - pos.y) < r * r;
-}
-exports.pointInCircle = pointInCircle;
 function pointOnCircle(p, { r, pos }) {
     return ((p.x - pos.x) * (p.x - pos.x) + (p.y - pos.y) * (p.y - pos.y) === r * r);
 }
-function pointInPolygon(p, { calcPoints }) {
-    let result = false;
-    let j = calcPoints.length - 1;
-    for (let i = 0; i < calcPoints.length; ++i) {
-        if (((calcPoints[i].y <= p.y && p.y < calcPoints[j].y) ||
-            (calcPoints[j].y <= p.y && p.y < calcPoints[i].y)) &&
-            p.x <
-                ((calcPoints[j].x - calcPoints[i].x) * (p.y - calcPoints[i].y)) /
-                    (calcPoints[j].y - calcPoints[i].y) +
-                    calcPoints[i].x) {
-            result = !result;
-        }
-        j = i;
-    }
-    return result;
-}
-exports.pointInPolygon = pointInPolygon;
 function circleInCircle(a, b) {
     const x1 = a.pos.x;
     const y1 = a.pos.y;
@@ -45,22 +24,23 @@ function circleInCircle(a, b) {
     return distSq + r2 === r1 || distSq + r2 < r1;
 }
 exports.circleInCircle = circleInCircle;
-function circleInPolygon(circle, { calcPoints }) {
+function circleInPolygon(circle, polygon) {
     // Circle with radius 0 isn't a circle
     if (circle.r === 0) {
         return false;
     }
+    const { calcPoints } = polygon;
     // If the center of the circle is not within the polygon,
     // then the circle may overlap, but it'll never be "contained"
     // so return false
-    if (!pointInPolygon(circle.pos, { calcPoints })) {
+    if (!(0, sat_1.pointInPolygon)(circle.pos, polygon)) {
         return false;
     }
     for (let i = 0; i < calcPoints.length; ++i) {
         // If any point of the polygon is within the circle,
         // the circle is not "contained"
         // so return false
-        if (pointInCircle(calcPoints[i], circle)) {
+        if ((0, sat_1.pointInCircle)(calcPoints[i], circle)) {
             console.log("polygon point in circle");
             return false;
         }
@@ -70,7 +50,9 @@ function circleInPolygon(circle, { calcPoints }) {
         // the circle is not "contained"
         // so return false
         const start = i === 0 ? calcPoints[0] : calcPoints[i];
-        const end = i === 0 ? calcPoints[calcPoints.length - 1] : calcPoints[i + 1];
+        const end = i === 0
+            ? calcPoints[calcPoints.length - 1]
+            : calcPoints[i + 1] || calcPoints[i];
         if (intersectLineCircle({ start, end }, circle).length) {
             return false;
         }
@@ -78,7 +60,7 @@ function circleInPolygon(circle, { calcPoints }) {
     return true;
 }
 exports.circleInPolygon = circleInPolygon;
-function circleOutsidePolygon(circle, { calcPoints }) {
+function circleOutsidePolygon(circle, polygon) {
     // Circle with radius 0 isn't a circle
     if (circle.r === 0) {
         return false;
@@ -86,15 +68,16 @@ function circleOutsidePolygon(circle, { calcPoints }) {
     // If the center of the circle is within the polygon,
     // the circle is not outside of the polygon completely.
     // so return false.
-    if (pointInPolygon(circle.pos, { calcPoints })) {
+    if ((0, sat_1.pointInPolygon)(circle.pos, polygon)) {
         return false;
     }
+    const { calcPoints } = polygon;
     for (let i = 0; i < calcPoints.length; ++i) {
         // If any point of the polygon is within the circle,
         // or any point of the polygon lies on the circle,
         // the circle is not outside of the polygon
         // so return false.
-        if (pointInCircle(calcPoints[i], circle) ||
+        if ((0, sat_1.pointInCircle)(calcPoints[i], circle) ||
             pointOnCircle(calcPoints[i], circle)) {
             return false;
         }
@@ -104,7 +87,9 @@ function circleOutsidePolygon(circle, { calcPoints }) {
         // the circle is not outside the polygon, it is overlapping,
         // so return false
         const start = i === 0 ? calcPoints[0] : calcPoints[i];
-        const end = i === 0 ? calcPoints[calcPoints.length - 1] : calcPoints[i + 1];
+        const end = i === 0
+            ? calcPoints[calcPoints.length - 1]
+            : calcPoints[i + 1] || calcPoints[i];
         if (intersectLineCircle({ start, end }, circle).length) {
             return false;
         }
