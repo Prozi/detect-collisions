@@ -15,7 +15,7 @@ export class Line extends Polygon {
   /**
    * line is convex
    */
-  isConvex = true;
+  readonly isConvex = true;
 
   /**
    * collider - line from start to end

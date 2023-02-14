@@ -14,7 +14,7 @@ export class Box extends Polygon {
   /**
    * boxes are convex
    */
-  isConvex = true;
+  readonly isConvex = true;
 
   /**
    * inner width

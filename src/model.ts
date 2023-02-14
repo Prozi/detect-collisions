@@ -187,11 +187,6 @@ export interface BodyProps {
   draw(context: CanvasRenderingContext2D): void;
 
   /**
-   * center the body anchor
-   */
-  center(): void;
-
-  /**
    * return bounding box without padding
    */
   getAABBAsBBox(): BBox;

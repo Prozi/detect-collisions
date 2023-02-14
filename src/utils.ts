@@ -125,11 +125,9 @@ export function extendBody(body: Body, options?: BodyOptions): void {
   body.isStatic = !!options?.isStatic;
   body.isTrigger = !!options?.isTrigger;
   body.padding = options?.padding || 0;
-
-  if (options?.isCentered) {
-    body.center();
+  if (body.type !== BodyType.Circle) {
+    body.isCentered = options?.isCentered || false;
   }
-
   body.setAngle(options?.angle || 0);
 }
 

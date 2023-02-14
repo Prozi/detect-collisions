@@ -12,14 +12,9 @@ export class Ellipse extends Polygon {
   readonly type: BodyType.Ellipse = BodyType.Ellipse;
 
   /**
-   * ellipses are centered
-   */
-  isCentered = true;
-
-  /**
    * ellipses are convex
    */
-  isConvex = true;
+  readonly isConvex = true;
 
   /**
    * inner initial params save
@@ -43,6 +38,18 @@ export class Ellipse extends Polygon {
     this._radiusX = radiusX;
     this._radiusY = radiusY;
     this._step = step;
+  }
+
+  /**
+   * flag to set is body centered
+   */
+  set isCentered(_isCentered: boolean) {}
+
+  /**
+   * is body centered?
+   */
+  get isCentered(): boolean {
+    return true;
   }
 
   /**

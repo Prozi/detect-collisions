@@ -61,16 +61,6 @@ export class Circle extends SATCircle implements BBox, BodyProps {
    */
   angle = 0;
 
-  /*
-   * circles are convex
-   */
-  isConvex = true;
-
-  /**
-   * circles are centered
-   */
-  isCentered = true;
-
   /**
    * static bodies don't move but they collide
    */
@@ -86,10 +76,20 @@ export class Circle extends SATCircle implements BBox, BodyProps {
    */
   system?: System;
 
+  /*
+   * circles are convex
+   */
+  readonly isConvex = true;
+
   /**
    * circle type
    */
   readonly type: BodyType.Circle = BodyType.Circle;
+
+  /**
+   * always centered
+   */
+  readonly isCentered = true;
 
   /**
    * saved initial radius - internal
@@ -253,13 +253,6 @@ export class Circle extends SATCircle implements BBox, BodyProps {
       context.moveTo(x + this.r, y);
       context.arc(x, y, this.r, 0, Math.PI * 2);
     }
-  }
-
-  /**
-   * for compatility reasons, does nothing
-   */
-  center(): void {
-    return;
   }
 
   /**

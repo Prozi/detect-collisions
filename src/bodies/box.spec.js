@@ -94,7 +94,7 @@ describe("GIVEN Box", () => {
 
     const box = new Box({}, 100, 100);
 
-    box.center();
+    box.isCentered = true;
 
     expect(box.points[0].x).toBe(-box.width / 2);
     expect(box.points[0].y).toBe(-box.height / 2);

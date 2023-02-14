@@ -78,11 +78,6 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   isTrigger?: boolean;
 
   /**
-   * flag to show is it centered
-   */
-  isCentered?: boolean;
-
-  /**
    * reference to collision system
    */
   system?: System;
@@ -101,6 +96,11 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    * backup of points used for scaling
    */
   protected pointsBackup!: Vector[];
+
+  /**
+   * is body centered
+   */
+  protected centered = false;
 
   /**
    * scale Vector of body
@@ -122,6 +122,30 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
     }
 
     extendBody(this, options);
+  }
+
+  /**
+   * flag to set is polygon centered
+   */
+  set isCentered(isCentered: boolean) {
+    if (this.centered === isCentered) {
+      return;
+    }
+
+    const centroid = this.getCentroidWithoutRotation();
+    const x = centroid.x * (isCentered ? 1 : -1);
+    const y = centroid.y * (isCentered ? 1 : -1);
+    this.translate(-x, -y);
+    this.pos.x += x;
+    this.pos.y += y;
+    this.centered = true;
+  }
+
+  /**
+   * is polygon centered?
+   */
+  get isCentered(): boolean {
+    return this.centered;
   }
 
   get x(): number {
@@ -271,21 +295,6 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
     this.pointsBackup = clonePointsArray(this.points);
 
     return this;
-  }
-
-  /**
-   * center the box anchor
-   */
-  center(): void {
-    if (this.isCentered) {
-      return;
-    }
-
-    const { x, y } = this.getCentroidWithoutRotation();
-    this.translate(-x, -y);
-    this.pos.x += x;
-    this.pos.y += y;
-    this.isCentered = true;
   }
 
   /**
