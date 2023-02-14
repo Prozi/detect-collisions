@@ -5,6 +5,7 @@ const base_system_1 = require("./base-system");
 const line_1 = require("./bodies/line");
 const model_1 = require("./model");
 const utils_1 = require("./utils");
+const intersect_1 = require("./intersect");
 /**
  * collision system
  */
@@ -160,12 +161,8 @@ class System extends base_system_1.BaseSystem {
                 this.response.overlapN = this.response.overlapV.clone().normalize();
                 this.response.overlap = this.response.overlapV.len();
             }
-            this.response.aInB = body.isConvex
-                ? this.state.aInB
-                : (0, utils_1.checkAInB)(body, wall);
-            this.response.bInA = wall.isConvex
-                ? this.state.bInA
-                : (0, utils_1.checkAInB)(wall, body);
+            this.response.aInB = (0, utils_1.checkAInB)(body, wall);
+            this.response.bInA = (0, utils_1.checkAInB)(wall, body);
         }
         return this.state.collides;
     }
@@ -188,8 +185,8 @@ class System extends base_system_1.BaseSystem {
                 return false;
             }
             const points = collider.type === model_1.Types.Circle
-                ? (0, utils_1.intersectLineCircle)(this.ray, collider)
-                : (0, utils_1.intersectLinePolygon)(this.ray, collider);
+                ? (0, intersect_1.intersectLineCircle)(this.ray, collider)
+                : (0, intersect_1.intersectLinePolygon)(this.ray, collider);
             points.forEach((point) => {
                 const pointDistance = (0, utils_1.distance)(start, point);
                 if (pointDistance < minDistance) {
@@ -226,16 +223,11 @@ class System extends base_system_1.BaseSystem {
         if (collides) {
             // first time in loop, reset
             if (!this.state.collides) {
-                this.state.aInB = false;
-                this.state.bInA = false;
                 this.state.overlapV = new model_1.SATVector();
             }
             // sum all collision vectors
             this.state.overlapV.add(this.response.overlapV);
         }
-        // aInB and bInA is kept in state for later restore
-        this.state.aInB = this.state.aInB || this.response.aInB;
-        this.state.bInA = this.state.bInA || this.response.bInA;
         // set state collide at least once value
         this.state.collides = collides || this.state.collides;
         // clear for reuse

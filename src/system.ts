@@ -4,8 +4,6 @@ import { BaseSystem } from "./base-system";
 import { Line } from "./bodies/line";
 import {
   Body,
-  BodyOptions,
-  ChildrenData,
   CollisionState,
   Leaf,
   RaycastResult,
@@ -17,14 +15,13 @@ import {
 } from "./model";
 import {
   distance,
-  intersectLineCircle,
-  intersectLinePolygon,
   checkAInB,
   ensureConvex,
   intersectAABB,
   bodyMoved,
   getSATFunction,
 } from "./utils";
+import { intersectLineCircle, intersectLinePolygon } from "./intersect";
 
 /**
  * collision system
@@ -204,12 +201,8 @@ export class System extends BaseSystem {
         this.response.overlap = this.response.overlapV.len();
       }
 
-      this.response.aInB = body.isConvex
-        ? this.state.aInB
-        : checkAInB(body, wall);
-      this.response.bInA = wall.isConvex
-        ? this.state.bInA
-        : checkAInB(wall, body);
+      this.response.aInB = checkAInB(body, wall);
+      this.response.bInA = checkAInB(wall, body);
     }
 
     return this.state.collides;
@@ -292,18 +285,12 @@ export class System extends BaseSystem {
     if (collides) {
       // first time in loop, reset
       if (!this.state.collides) {
-        this.state.aInB = false;
-        this.state.bInA = false;
         this.state.overlapV = new SATVector();
       }
 
       // sum all collision vectors
       this.state.overlapV.add(this.response.overlapV);
     }
-
-    // aInB and bInA is kept in state for later restore
-    this.state.aInB = this.state.aInB || this.response.aInB;
-    this.state.bInA = this.state.bInA || this.response.bInA;
 
     // set state collide at least once value
     this.state.collides = collides || this.state.collides;
