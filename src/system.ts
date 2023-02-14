@@ -39,8 +39,6 @@ export class System extends BaseSystem {
    */
   protected state: CollisionState = {
     collides: false,
-    aInB: false,
-    bInA: false,
     overlapV: new SATVector(),
   };
 

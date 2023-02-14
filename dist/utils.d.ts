@@ -13,6 +13,9 @@ export declare function deg2rad(degrees: number): number;
  * convert from radians to degrees
  */
 export declare function rad2deg(radians: number): number;
+/**
+ * creates ellipse-shaped polygon based on params
+ */
 export declare function createEllipse(radiusX: number, radiusY?: number, step?: number): SATVector[];
 /**
  * creates box polygon points
@@ -38,9 +41,21 @@ export declare function clockwise(points: Vector[]): boolean;
  * used for all types of bodies
  */
 export declare function extendBody(body: Body, options?: BodyOptions): void;
+/**
+ * check if body moved outside of its padding
+ */
 export declare function bodyMoved(body: Body): boolean;
+/**
+ * checks if two boxes intersect
+ */
 export declare function intersectAABB(a: BBox, b: BBox): boolean;
+/**
+ * checks if body a is in body b
+ */
 export declare function checkAInB(a: Body, b: Body): boolean;
+/**
+ * clone sat vector points array into vector points array
+ */
 export declare function clonePointsArray(points: SATVector[]): Vector[];
 /**
  * draws dashed line on canvas context
@@ -62,7 +77,13 @@ export declare function ensureConvex<T extends Body = Circle | Point | Polygon>(
  * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
  */
 export declare function getBounceDirection(body: Vector, collider: Vector): Vector;
+/**
+ * returns correct sat.js testing function based on body types
+ */
 export declare function getSATFunction(body: Body, wall: Body): TestFunction;
+/**
+ * draw polygon
+ */
 export declare function drawPolygon(context: CanvasRenderingContext2D, { pos, calcPoints, }: Pick<Polygon | SATPolygon, "calcPoints"> & {
     pos: Vector;
 }, isTrigger?: boolean): void;

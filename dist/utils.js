@@ -18,6 +18,9 @@ function rad2deg(radians) {
     return radians * (180 / Math.PI);
 }
 exports.rad2deg = rad2deg;
+/**
+ * creates ellipse-shaped polygon based on params
+ */
 function createEllipse(radiusX, radiusY = radiusX, step = 1) {
     const steps = Math.PI * Math.hypot(radiusX, radiusY) * 2;
     const length = Math.max(8, Math.ceil(steps / Math.max(1, step)));
@@ -94,7 +97,9 @@ function extendBody(body, options) {
     body.setAngle((options === null || options === void 0 ? void 0 : options.angle) || 0);
 }
 exports.extendBody = extendBody;
-// check if body moved outside of padding
+/**
+ * check if body moved outside of its padding
+ */
 function bodyMoved(body) {
     return (body.bbox.minX < body.minX ||
         body.bbox.minY < body.minY ||
@@ -102,6 +107,9 @@ function bodyMoved(body) {
         body.bbox.maxY > body.maxY);
 }
 exports.bodyMoved = bodyMoved;
+/**
+ * checks if two boxes intersect
+ */
 function intersectAABB(a, b) {
     return !(b.minX > a.maxX ||
         b.minY > a.maxY ||
@@ -109,6 +117,9 @@ function intersectAABB(a, b) {
         b.maxY < a.minY);
 }
 exports.intersectAABB = intersectAABB;
+/**
+ * checks if body a is in body b
+ */
 function checkAInB(a, b) {
     if (a.type === model_1.Types.Circle) {
         if (b.type !== model_1.Types.Circle) {
@@ -122,6 +133,9 @@ function checkAInB(a, b) {
     return (0, intersect_1.polygonInPolygon)(a, b);
 }
 exports.checkAInB = checkAInB;
+/**
+ * clone sat vector points array into vector points array
+ */
 function clonePointsArray(points) {
     return points.map(({ x, y }) => ({
         x,
@@ -185,6 +199,9 @@ function getBounceDirection(body, collider) {
     return new sat_1.Vector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
 }
 exports.getBounceDirection = getBounceDirection;
+/**
+ * returns correct sat.js testing function based on body types
+ */
 function getSATFunction(body, wall) {
     if (body.type === model_1.Types.Circle) {
         return (wall.type === model_1.Types.Circle ? sat_1.testCircleCircle : sat_1.testCirclePolygon);
@@ -192,6 +209,9 @@ function getSATFunction(body, wall) {
     return (wall.type === model_1.Types.Circle ? sat_1.testPolygonCircle : sat_1.testPolygonPolygon);
 }
 exports.getSATFunction = getSATFunction;
+/**
+ * draw polygon
+ */
 function drawPolygon(context, { pos, calcPoints, }, isTrigger = false) {
     const loopPoints = [...calcPoints, calcPoints[0]];
     loopPoints.forEach((point, index) => {

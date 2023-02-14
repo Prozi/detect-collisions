@@ -21,8 +21,6 @@ class System extends base_system_1.BaseSystem {
          */
         this.state = {
             collides: false,
-            aInB: false,
-            bInA: false,
             overlapV: new model_1.SATVector(),
         };
     }

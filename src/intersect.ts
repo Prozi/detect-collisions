@@ -27,6 +27,9 @@ export function polygonInPolygon(a: Polygon, b: Polygon): boolean {
   );
 }
 
+/**
+ * https://stackoverflow.com/a/68197894/1749528
+ */
 export function pointOnCircle(
   p: Vector,
   { r, pos }: Pick<Circle, "pos" | "r">
@@ -36,6 +39,9 @@ export function pointOnCircle(
   );
 }
 
+/**
+ * https://stackoverflow.com/a/68197894/1749528
+ */
 export function circleInCircle(
   a: Pick<Circle, "pos" | "r">,
   b: Pick<Circle, "pos" | "r">
@@ -51,6 +57,9 @@ export function circleInCircle(
   return distSq + r2 === r1 || distSq + r2 < r1;
 }
 
+/**
+ * https://stackoverflow.com/a/68197894/1749528
+ */
 export function circleInPolygon(
   circle: Pick<Circle, "pos" | "r">,
   polygon: Polygon
@@ -89,8 +98,6 @@ export function circleInPolygon(
         : calcPoints[i + 1] || calcPoints[i];
 
     if (intersectLineCircle({ start, end }, circle).length) {
-      console.log("case3", intersectLineCircle({ start, end }, circle));
-
       return false;
     }
   }
@@ -98,6 +105,9 @@ export function circleInPolygon(
   return true;
 }
 
+/**
+ * https://stackoverflow.com/a/68197894/1749528
+ */
 export function circleOutsidePolygon(
   circle: Pick<Circle, "pos" | "r">,
   polygon: Polygon
@@ -147,30 +157,9 @@ export function circleOutsidePolygon(
   return true;
 }
 
-// TODO compare in raycast then Benchmark and remove or remove the other
-export function intersectLineCircleProposal(
-  { start, end }: Pick<Line, "start" | "end">,
-  { pos, r }: Pick<Circle, "pos" | "r">
-): boolean {
-  const X1 = start.x;
-  const X2 = end.x;
-  const Y1 = start.y;
-  const Y2 = end.y;
-
-  const A = Y1 - Y2;
-  const B = X2 - X1;
-  const C = X1 * Y2 - X2 * Y1;
-
-  // radius === distance = touching/tangent
-  // radius > distance = not intersecting
-  // radius < distance = intersecting
-  const distance: number =
-    Math.abs(A * pos.x + B * pos.y + C) / Math.sqrt(A * A + B * B);
-
-  return distance <= r;
-}
-
-// https://stackoverflow.com/questions/37224912/circle-line-segment-collision
+/**
+ * https://stackoverflow.com/a/37225895/1749528
+ */
 export function intersectLineCircle(
   line: Pick<Line, "start" | "end">,
   { pos, r }: Pick<Circle, "pos" | "r">
@@ -203,7 +192,9 @@ export function intersectLineCircle(
   return results;
 }
 
-// https://stackoverflow.com/questions/9043805/test-if-two-lines-intersect-javascript-function
+/**
+ * https://stackoverflow.com/a/24392281/1749528
+ */
 export function intersectLineLine(
   line1: Pick<Line, "start" | "end">,
   line2: Pick<Line, "start" | "end">
@@ -236,9 +227,6 @@ export function intersectLineLine(
   return { x: line1.start.x + lambda * dX, y: line1.start.y + lambda * dY };
 }
 
-/**
- * check if line (ray) intersects polygon
- */
 export function intersectLinePolygon(line: Line, polygon: Polygon): Vector[] {
   return polygon.calcPoints
     .map((to: Vector, index: number) => {

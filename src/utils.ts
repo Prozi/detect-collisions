@@ -41,6 +41,9 @@ export function rad2deg(radians: number) {
   return radians * (180 / Math.PI);
 }
 
+/**
+ * creates ellipse-shaped polygon based on params
+ */
 export function createEllipse(
   radiusX: number,
   radiusY: number = radiusX,
@@ -130,7 +133,9 @@ export function extendBody(body: Body, options?: BodyOptions): void {
   body.setAngle(options?.angle || 0);
 }
 
-// check if body moved outside of padding
+/**
+ * check if body moved outside of its padding
+ */
 export function bodyMoved(body: Body): boolean {
   return (
     body.bbox.minX < body.minX ||
@@ -140,6 +145,9 @@ export function bodyMoved(body: Body): boolean {
   );
 }
 
+/**
+ * checks if two boxes intersect
+ */
 export function intersectAABB(a: BBox, b: BBox): boolean {
   return !(
     b.minX > a.maxX ||
@@ -149,6 +157,9 @@ export function intersectAABB(a: BBox, b: BBox): boolean {
   );
 }
 
+/**
+ * checks if body a is in body b
+ */
 export function checkAInB(a: Body, b: Body): boolean {
   if (a.type === Types.Circle) {
     if (b.type !== Types.Circle) {
@@ -165,6 +176,9 @@ export function checkAInB(a: Body, b: Body): boolean {
   return polygonInPolygon(a, b);
 }
 
+/**
+ * clone sat vector points array into vector points array
+ */
 export function clonePointsArray(points: SATVector[]): Vector[] {
   return points.map(({ x, y }) => ({
     x,
@@ -247,6 +261,9 @@ export function getBounceDirection(body: Vector, collider: Vector): Vector {
   return new SATVector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
 }
 
+/**
+ * returns correct sat.js testing function based on body types
+ */
 export function getSATFunction(body: Body, wall: Body): TestFunction {
   if (body.type === Types.Circle) {
     return (
@@ -259,6 +276,9 @@ export function getSATFunction(body: Body, wall: Body): TestFunction {
   ) as TestFunction;
 }
 
+/**
+ * draw polygon
+ */
 export function drawPolygon(
   context: CanvasRenderingContext2D,
   {

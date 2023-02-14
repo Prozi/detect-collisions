@@ -20,9 +20,15 @@ export declare enum Types {
     Point = "Point",
     Polygon = "Polygon"
 }
+/**
+ * body with children (rbush)
+ */
 export type Leaf = Body & {
     children?: Leaf[];
 };
+/**
+ * rbush data
+ */
 export interface ChildrenData {
     children: Leaf[];
 }
@@ -160,9 +166,10 @@ export interface Collider {
 }
 export interface CollisionState {
     collides: boolean;
-    aInB: boolean;
-    bInA: boolean;
     overlapV: SATVector;
 }
+/**
+ * test function from sat.js type
+ */
 export type TestFunction<T extends {} = SATCircle | SATPolygon, Y extends {} = SATCircle | SATPolygon> = (a: T, b: Y, r: Response) => boolean;
 //# sourceMappingURL=model.d.ts.map
