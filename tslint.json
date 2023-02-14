@@ -83,7 +83,7 @@
     "use-default-type-parameter": true,
     "use-isnan": true,
     "cyclomatic-complexity": true,
-    "deprecation": true,
+    "deprecation": false,
     "eofline": true,
     "indent": [true, "spaces"],
     "linebreak-style": [true, "LF"],

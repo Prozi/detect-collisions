@@ -27,18 +27,21 @@ import {
   Vector,
 } from "./model";
 
+export const DEG2RAD = Math.PI / 180;
+export const RAD2DEG = 180 / Math.PI;
+
 /**
  * convert from degrees to radians
  */
 export function deg2rad(degrees: number) {
-  return degrees * (Math.PI / 180);
+  return degrees * DEG2RAD;
 }
 
 /**
  * convert from radians to degrees
  */
 export function rad2deg(radians: number) {
-  return radians * (180 / Math.PI);
+  return radians * RAD2DEG;
 }
 
 /**
