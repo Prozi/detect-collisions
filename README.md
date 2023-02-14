@@ -39,26 +39,41 @@ https://prozi.github.io/detect-collisions/modules.html
 To start, create a unique collisions system:
 
 ```javascript
-const physics = new System();
+const physics = new System()
 ```
 
 ### 2. Body Information
 
 #### 👉 each body has:
 
-- `setPosition(x, y)` method - calling it **updates** _bounding box_
-- `x & y` properties - setting any of those **updates** _bounding box_
-- `pos.x, pos.y` properties - setting those **doesn't** update _bounding box_
-- `angle` property (in radians) and `setAngle()` method - to rotate
-- `scale` property and `setScale()` method - to scale (for `Circle` takes 1 parameter, `x, y` for rest)
-- `offset` and `setOffset()` method - for offset from center of body
-- `getAABBAsBBox()` method - for getting bbox even on non inserted bodies
+- `pos: Vector` - position
+- `x: number` - x position
+- `y: number` - y position
+
+setting `body.pos.x` or `body.pos.y` doesn't update the bounding box. setting `body.x` or `body.y` directly does cause bounding box update, which is the most costly operation cpu wise in collision-detection. if you wan't to set position and update bounding box, you'd better use:
+
+- `setPosition(x, y)`
+
+bodies also have:
+
+- `scale: number` prop & `setScale(x, y)` method - to scale (for `Circle` takes 1 parameter, `x, y` for rest)
+- `offset: Vector` prop & `setOffset({ x, y })` method - for offset from center of body for rotation purpouses
 - `center()` method - for centering anchor (useless but available for `Circle, Ellipse`)
-- `isStatic` property - if true body doesn't move
-- `isTrigger` property - if true body doesn't trigger collisions
-- `isCentered` property - if true the body is centered (true for `Circle, Ellipse`)
-- `isConvex` property - if true the body is convex (may be false only for `Polygon`)
-- `padding` property - ignores costly tree update until outside bbox with padding
+- `getAABBAsBBox(): BBox` method - for getting bbox even on non inserted bodies
+
+by calling `System.separate()` once a frame your bodies will separate from each other
+bodies have properties that can be set in runtime or during creation by using `BodyOptions`:
+
+- `isStatic: boolean` - body won't separate
+- `isTrigger: boolean` - body won't trigger collisions
+- `isCentered: boolean` - offset is set to center for rotation purpouses
+- `angle: number` - angle in radians, use `deg2rad` for conversion
+- `padding: number` - bounding box padding, optimizes costly updates
+
+you can also check if body is convex or not:
+
+- `isConvex: boolean` - body is convex (may be false only for `Polygon`)
+- `convexPolygons: Vector[][]` - if `Polygon` is concave it has its points split into convex polygons here
 
 #### 👉 some bodies:
 
@@ -98,24 +113,24 @@ const options = {
 
 ```javascript
 // create with options, without insert
-const circle = new Circle(position, radius, options);
-const polygon = new Polygon(position, points, options);
+const circle = new Circle(position, radius, options)
+const polygon = new Polygon(position, points, options)
 ```
 
 #### 👉 Only insert Body
 
 ```javascript
 // insert, without create
-physics.insert(circle);
-physics.insert(polygon);
+physics.insert(circle)
+physics.insert(polygon)
 ```
 
 #### 👉 Create and insert Body
 
 ```javascript
 // create with options, and insert
-const circle = physics.createCircle(position, radius, options);
-const polygon = physics.createPolygon(position, points, options);
+const circle = physics.createCircle(position, radius, options)
+const polygon = physics.createPolygon(position, points, options)
 ```
 
 ### 4. Move Body
@@ -123,15 +138,15 @@ const polygon = physics.createPolygon(position, points, options);
 `setPosition`: this modifies the `element.pos.x` and `element.pos.y` and updates its bounding box in collision physics.
 
 ```javascript
-circle.setPosition(x, y);
-polygon.setPosition(x, y);
+circle.setPosition(x, y)
+polygon.setPosition(x, y)
 ```
 
 ### 5. Remove Body
 
 ```javascript
-physics.remove(circle);
-physics.remove(polygon);
+physics.remove(circle)
+physics.remove(polygon)
 ```
 
 ### 6. Update Body or System
@@ -144,12 +159,12 @@ Collisions systems need to be updated when the bodies within them change. This i
 
 ```javascript
 // update one body, use anytime
-physics.updateBody(body);
+physics.updateBody(body)
 ```
 
 ```javascript
 // update all bodies (use 0-1 times per frame):
-physics.update();
+physics.update()
 ```
 
 ### 7. Collision Detection
@@ -157,20 +172,20 @@ physics.update();
 The **preferred method** is once-in-a-gameloop checkAll and then handler:
 
 ```javascript
-physics.checkAll(handleCollisions);
+physics.checkAll(handleCollisions)
 ```
 
 If you really need to check one body then use:
 
 ```javascript
-physics.checkOne(body, handleCollisions);
+physics.checkOne(body, handleCollisions)
 ```
 
 It is possible to skip the broad-phase search entirely and call `checkCollision()` directly on two bodies.
 
 ```javascript
 if (physics.checkCollision(polygon, line)) {
-  console.log("Collision detected!", physics.response);
+  console.log("Collision detected!", physics.response)
 }
 ```
 
@@ -196,9 +211,9 @@ These values can be used to "push" one body out of another using the minimum dis
 
 ```javascript
 if (physics.checkCollision(player, wall)) {
-  const { overlapV } = physics.response;
+  const { overlapV } = physics.response
 
-  player.setPosition(player.x - overlapV.x, player.y - overlapV.y);
+  player.setPosition(player.x - overlapV.x, player.y - overlapV.y)
 }
 ```
 
@@ -207,16 +222,16 @@ if (physics.checkCollision(player, wall)) {
 ```javascript
 // create self-destructing collider
 const testCollision = ({ x, y }, radius = 10) => {
-  const circle = physics.createCircle({ x, y }, radius);
-  const potentials = physics.getPotentials(circle);
+  const circle = physics.createCircle({ x, y }, radius)
+  const potentials = physics.getPotentials(circle)
   const collided = potentials.some((body) =>
     physics.checkCollision(circle, body)
-  );
+  )
 
-  physics.remove(circle);
+  physics.remove(circle)
 
-  return collided;
-};
+  return collided
+}
 ```
 
 ## Concave Polygons
@@ -230,32 +245,32 @@ the `System.response.aInB` and `System.response.bInA` is currently because of co
 For debugging, it is often useful to be able to visualize the collision bodies. All of the bodies in a Collision system can be drawn to a `<canvas>` element by calling `draw()` and passing in the canvas' 2D context.
 
 ```javascript
-const canvas = document.createElement("canvas");
-const context = canvas.getContext("2d");
+const canvas = document.createElement("canvas")
+const context = canvas.getContext("2d")
 
-context.strokeStyle = "#FFFFFF";
-context.beginPath();
-physics.draw(context);
-context.stroke();
+context.strokeStyle = "#FFFFFF"
+context.beginPath()
+physics.draw(context)
+context.stroke()
 ```
 
 Bodies can be individually drawn as well.
 
 ```javascript
-context.strokeStyle = "#FFFFFF";
-context.beginPath();
-polygon.draw(context);
-circle.draw(context);
-context.stroke();
+context.strokeStyle = "#FFFFFF"
+context.beginPath()
+polygon.draw(context)
+circle.draw(context)
+context.stroke()
 ```
 
 The BVH can also be drawn to help test [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy).
 
 ```javascript
-context.strokeStyle = "#FFFFFF";
-context.beginPath();
-physics.drawBVH(context);
-context.stroke();
+context.strokeStyle = "#FFFFFF"
+context.beginPath()
+physics.drawBVH(context)
+context.stroke()
 ```
 
 ## Only using SAT
@@ -263,11 +278,11 @@ context.stroke();
 Some projects may only have a need to perform SAT collision tests without broad-phase searching. This can be achieved by avoiding collision systems altogether and only using the `checkCollision()` function. Note that unless a use-case really requires this, I strongly advise to use the normal flow.
 
 ```javascript
-const circle = new Circle(position, radius);
-const polygon = new Polygon(position, points);
+const circle = new Circle(position, radius)
+const polygon = new Polygon(position, points)
 
 if (physics.checkCollision(polygon, circle)) {
-  console.log(physics.response);
+  console.log(physics.response)
 }
 ```
 
@@ -276,14 +291,14 @@ if (physics.checkCollision(polygon, circle)) {
 To get raycast information use
 
 ```javascript
-const start = { x: 0, y: 0 };
-const end = { x: 0, y: -10 };
-const hit = physics.raycast(start, end);
+const start = { x: 0, y: 0 }
+const end = { x: 0, y: -10 }
+const hit = physics.raycast(start, end)
 
 if (hit) {
-  const { point, collider } = hit;
+  const { point, collider } = hit
 
-  console.log({ point, collider });
+  console.log({ point, collider })
 }
 ```
 

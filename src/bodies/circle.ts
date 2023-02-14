@@ -120,6 +120,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
 
   /**
    * updating this.pos.x by this.x = x updates AABB
+   * @deprecated use setPosition(x, y) instead
    */
   set x(x: number) {
     this.pos.x = x;
@@ -135,6 +136,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
 
   /**
    * updating this.pos.y by this.y = y updates AABB
+   * @deprecated use setPosition(x, y) instead
    */
   set y(y: number) {
     this.pos.y = y;
