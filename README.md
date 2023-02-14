@@ -60,7 +60,7 @@ bodies also have:
 - `offset: Vector` prop & `setOffset({ x, y })` method - for offset from center of body for rotation purpouses
 - `getAABBAsBBox(): BBox` method - for getting bbox even on non inserted bodies
 
-by calling `System.separate()` once a frame your bodies will separate from each other
+by calling `System.separate()` once a frame your bodies will separate from each other.
 bodies have properties that can be set in runtime or during creation by using `BodyOptions`:
 
 - `isStatic: boolean` - body won't separate
@@ -78,7 +78,7 @@ you can also check if body is convex or not:
 
 - `Box` has `width & height` properties
 
-#### each body after inserted to system have:
+#### each body after inserted to system has:
 
 - `bbox = { minX, minY, maxX, maxY }` property - without padding
 - `minX, minY, maxX, maxY` properties - bbox plus padding
