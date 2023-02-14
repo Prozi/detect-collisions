@@ -74,13 +74,10 @@ describe("GIVEN Ellipse", () => {
       const { System } = require("../../src");
 
       const physics = new System();
+      const ellipse1 = physics.createEllipse({ x: 0, y: 0 }, 10, 30);
+      const ellipse2 = physics.createEllipse({ x: 0, y: 0 }, 10, 30);
 
-      physics.createEllipse({ x: 0, y: 0 }, 10, 30);
-      physics.createEllipse({ x: 0, y: 0 }, 10, 30);
-
-      physics.checkAll((result) => {
-        expect(result.aInB || result.bInA).toBeTruthy();
-      });
+      expect(physics.checkCollision(ellipse1, ellipse2)).toBeTruthy();
     });
   });
 

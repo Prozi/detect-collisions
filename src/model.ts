@@ -192,18 +192,17 @@ export interface BodyProps {
   getAABBAsBBox(): BBox;
 }
 
-/**
- * inner system state for concave collision detection
- */
-export interface State {
-  collides: boolean;
-  overlapV: SATVector;
-}
+type SATTestTemplate<T extends Body, Y extends Body> = (
+  a: T,
+  b: Y,
+  r: Response
+) => boolean;
 
 /**
  * test function from sat.js type
  */
-export type TestFunction<
-  T extends {} = SATCircle | SATPolygon,
-  Y extends {} = SATCircle | SATPolygon
-> = (a: T, b: Y, r: Response) => boolean;
+export type SATTest =
+  | SATTestTemplate<Circle, Polygon>
+  | SATTestTemplate<Circle, Circle>
+  | SATTestTemplate<Polygon, Polygon>
+  | SATTestTemplate<Polygon, Circle>;

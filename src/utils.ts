@@ -22,7 +22,7 @@ import {
   BodyOptions,
   PotentialVector,
   SATPolygon,
-  TestFunction,
+  SATTest,
   BodyType,
   Vector,
 } from "./model";
@@ -240,7 +240,7 @@ export function mapArrayToVector([x, y]: DecompPoint = [0, 0]): Vector {
  */
 export function ensureConvex<T extends Body = Circle | Point | Polygon>(
   body: T
-): [T] | SATPolygon[] {
+): (T | SATPolygon)[] {
   if (body.isConvex || body.type !== BodyType.Polygon) {
     return [body];
   }
@@ -262,16 +262,12 @@ export function getBounceDirection(body: Vector, collider: Vector): Vector {
 /**
  * returns correct sat.js testing function based on body types
  */
-export function getSATFunction(body: Body, wall: Body): TestFunction {
+export function getSATTest(body: Body, wall: Body): SATTest {
   if (body.type === BodyType.Circle) {
-    return (
-      wall.type === BodyType.Circle ? testCircleCircle : testCirclePolygon
-    ) as TestFunction;
+    return wall.type === BodyType.Circle ? testCircleCircle : testCirclePolygon;
   }
 
-  return (
-    wall.type === BodyType.Circle ? testPolygonCircle : testPolygonPolygon
-  ) as TestFunction;
+  return wall.type === BodyType.Circle ? testPolygonCircle : testPolygonPolygon;
 }
 
 /**
