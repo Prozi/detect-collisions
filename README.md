@@ -98,13 +98,13 @@ bodies have properties that can be set in runtime or during creation by using `B
 Last optional parameter for body creation is always [BodyOptions](https://prozi.github.io/detect-collisions/interfaces/BodyOptions.html)
 
 ```javascript
-const { deg2rad } = require("detect-collisions");
+const { deg2rad } = require("detect-collisions")
 const options = {
   angle: deg2rad(90),
   isCentered: false,
   isStatic: false,
   isTrigger: false,
-  padding: 0;
+  padding: 0,
 }
 ```
 
@@ -171,13 +171,29 @@ physics.update()
 The **preferred method** is once-in-a-gameloop checkAll and then handler:
 
 ```javascript
-physics.checkAll(handleCollisions)
+physics.checkAll((response: Response) => {
+  console.log(
+    response.a,
+    response.b,
+    response.aInB,
+    response.bInA,
+    response.overlapV
+  )
+})
 ```
 
 If you really need to check one body then use:
 
 ```javascript
-physics.checkOne(body, handleCollisions)
+physics.checkOne(body, (response: Response) => {
+  console.log(
+    response.a, // === body
+    response.b,
+    response.aInB,
+    response.bInA,
+    response.overlapV
+  )
+})
 ```
 
 It is possible to skip the broad-phase search entirely and call `checkCollision()` directly on two bodies.
