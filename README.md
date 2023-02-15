@@ -219,7 +219,7 @@ system.checkOne(body, (response: Response) => {
 })
 ```
 
-It is possible to skip the broad-phase search entirely and call `checkCollision()` directly on two bodies.
+It is possible to skip the broad-phase search entirely and call `checkCollision()` directly on two bodies. although this is very not recommended as the BVH (rbush) broad-phase-search with bounding boxes makes the collision checking a lot more efficient.
 
 ```javascript
 if (system.checkCollision(polygon, line)) {
@@ -250,11 +250,17 @@ The three most useful properties on a `Response` object are `overlapV`, `a`, and
 These values can be used to "push" one body out of another using the minimum distance required. More simply, subtracting this vector from the source body's position will cause the bodies to no longer collide. Here's an example:
 
 ```javascript
+// check collision between player and wall and negate overlap manually
 if (system.checkCollision(player, wall)) {
   const { overlapV } = system.response
 
   player.setPosition(player.x - overlapV.x, player.y - overlapV.y)
 }
+```
+
+```javascript
+// this is easier to use and takes into account isTrigger and isStatic flags on bodies
+system.separate()
 ```
 
 ## Detecting collision after insertion
@@ -336,14 +342,14 @@ const end = { x: 0, y: -10 }
 const hit = system.raycast(start, end)
 
 if (hit) {
-  const { point, collider } = hit
+  const { point, body } = hit
 
-  console.log({ point, collider })
+  console.log({ point, body })
 }
 ```
 
 - point is the `Vector { x, y }` with coordinates of (closest) intersection
-- collider is the reference to body of the (closest) collider
+- body is the reference to the closest body
 
 ## FAQ
 
