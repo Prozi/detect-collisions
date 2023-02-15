@@ -139,7 +139,11 @@ system.insert(body)
 
 ```javascript
 // create with options, and insert
+const box = system.createBox(position, width, height, options)
 const circle = system.createCircle(position, radius, options)
+const ellipse = system.createEllipse(position, radiusX, radiusY, step, options)
+const line = system.createLine(start, end, options)
+const point = system.createPoint(position, options)
 const polygon = system.createPolygon(position, points, options)
 ```
 
