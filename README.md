@@ -137,6 +137,8 @@ system.insert(body)
 
 #### Create and insert Body
 
+you can do create + insert in one step by using `system.create*` functions with create followed by body class name. the `system.create*` functions take the exact same parameters as when creating bodies without insert.
+
 ```javascript
 // create with options, and insert
 const box = system.createBox(position, width, height, options)
@@ -149,36 +151,42 @@ const polygon = system.createPolygon(position, points, options)
 
 ### 4. Move Body
 
-`setPosition`: this modifies the `element.pos.x` and `element.pos.y` and updates its bounding box in collision system.
-
 ```javascript
-circle.setPosition(x, y)
-polygon.setPosition(x, y)
+body.setPosition(x, y)
 ```
 
 ### 5. Remove Body
 
 ```javascript
-system.remove(circle)
-system.remove(polygon)
+system.remove(body)
 ```
 
 ### 6. Update Body or System
 
 - After body moves, its bounding box in collision tree needs to be updated.
 
-- This is done under-the-hood automatically when you use setPosition().
+- This is done under-the-hood automatically when you use `body.setPosition(x, y)`.
 
 Collisions systems need to be updated when the bodies within them change. This includes when bodies are inserted, removed, or when their properties change (e.g. position, angle, scaling, etc.). Updating a collision system can be done by calling `update()` which should typically occur once per frame. Updating the `System` by after each position change is **required** for `System` to detect `BVH` correctly.
 
 ```javascript
-// update one body, use anytime
+// move and update one body (use 0-1 times per frame):
+body.setPostion(x, y)
+```
+
+```javascript
+// update one body (use 0-1 times per frame):
 system.updateBody(body)
 ```
 
 ```javascript
 // update all bodies (use 0-1 times per frame):
 system.update()
+```
+
+```javascript
+// separate all bodies (use 0-1 times per frame):
+system.separate()
 ```
 
 ### 7. Collision Detection
@@ -218,6 +226,8 @@ if (system.checkCollision(polygon, line)) {
   console.log("Collision detected!", system.response)
 }
 ```
+
+You can provide last additional parameter which is `const response = new Response()` if you need, to any of above `system.check*` functions
 
 #### Getting Detailed Collision Information
 

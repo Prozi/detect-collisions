@@ -155,20 +155,20 @@ bodies have properties that can be set in runtime or during creation by using <c
 <a href="#create-and-insert-body" id="create-and-insert-body" style="color: inherit; text-decoration: none;">
   <h4>Create and insert Body</h4>
 </a>
+<p>you can do create + insert in one step by using <code>system.create*</code> functions with create followed by body class name. the <code>system.create*</code> functions take the exact same parameters as when creating bodies without insert.</p>
 <pre><code class="language-javascript"><span class="hl-7">// create with options, and insert</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">box</span><span class="hl-0"> = </span><span class="hl-5">system</span><span class="hl-0">.</span><span class="hl-4">createBox</span><span class="hl-0">(</span><span class="hl-5">position</span><span class="hl-0">, </span><span class="hl-5">width</span><span class="hl-0">, </span><span class="hl-5">height</span><span class="hl-0">, </span><span class="hl-5">options</span><span class="hl-0">)</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">circle</span><span class="hl-0"> = </span><span class="hl-5">system</span><span class="hl-0">.</span><span class="hl-4">createCircle</span><span class="hl-0">(</span><span class="hl-5">position</span><span class="hl-0">, </span><span class="hl-5">radius</span><span class="hl-0">, </span><span class="hl-5">options</span><span class="hl-0">)</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">ellipse</span><span class="hl-0"> = </span><span class="hl-5">system</span><span class="hl-0">.</span><span class="hl-4">createEllipse</span><span class="hl-0">(</span><span class="hl-5">position</span><span class="hl-0">, </span><span class="hl-5">radiusX</span><span class="hl-0">, </span><span class="hl-5">radiusY</span><span class="hl-0">, </span><span class="hl-5">step</span><span class="hl-0">, </span><span class="hl-5">options</span><span class="hl-0">)</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">line</span><span class="hl-0"> = </span><span class="hl-5">system</span><span class="hl-0">.</span><span class="hl-4">createLine</span><span class="hl-0">(</span><span class="hl-5">start</span><span class="hl-0">, </span><span class="hl-5">end</span><span class="hl-0">, </span><span class="hl-5">options</span><span class="hl-0">)</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">point</span><span class="hl-0"> = </span><span class="hl-5">system</span><span class="hl-0">.</span><span class="hl-4">createPoint</span><span class="hl-0">(</span><span class="hl-5">position</span><span class="hl-0">, </span><span class="hl-5">options</span><span class="hl-0">)</span><br/><span class="hl-2">const</span><span class="hl-0"> </span><span class="hl-3">polygon</span><span class="hl-0"> = </span><span class="hl-5">system</span><span class="hl-0">.</span><span class="hl-4">createPolygon</span><span class="hl-0">(</span><span class="hl-5">position</span><span class="hl-0">, </span><span class="hl-5">points</span><span class="hl-0">, </span><span class="hl-5">options</span><span class="hl-0">)</span>
 </code></pre>
 
 <a href="#4-move-body" id="4-move-body" style="color: inherit; text-decoration: none;">
   <h3>4. Move Body</h3>
 </a>
-<p><code>setPosition</code>: this modifies the <code>element.pos.x</code> and <code>element.pos.y</code> and updates its bounding box in collision system.</p>
-<pre><code class="language-javascript"><span class="hl-5">circle</span><span class="hl-0">.</span><span class="hl-4">setPosition</span><span class="hl-0">(</span><span class="hl-5">x</span><span class="hl-0">, </span><span class="hl-5">y</span><span class="hl-0">)</span><br/><span class="hl-5">polygon</span><span class="hl-0">.</span><span class="hl-4">setPosition</span><span class="hl-0">(</span><span class="hl-5">x</span><span class="hl-0">, </span><span class="hl-5">y</span><span class="hl-0">)</span>
+<pre><code class="language-javascript"><span class="hl-5">body</span><span class="hl-0">.</span><span class="hl-4">setPosition</span><span class="hl-0">(</span><span class="hl-5">x</span><span class="hl-0">, </span><span class="hl-5">y</span><span class="hl-0">)</span>
 </code></pre>
 
 <a href="#5-remove-body" id="5-remove-body" style="color: inherit; text-decoration: none;">
   <h3>5. Remove Body</h3>
 </a>
-<pre><code class="language-javascript"><span class="hl-5">system</span><span class="hl-0">.</span><span class="hl-4">remove</span><span class="hl-0">(</span><span class="hl-5">circle</span><span class="hl-0">)</span><br/><span class="hl-5">system</span><span class="hl-0">.</span><span class="hl-4">remove</span><span class="hl-0">(</span><span class="hl-5">polygon</span><span class="hl-0">)</span>
+<pre><code class="language-javascript"><span class="hl-5">system</span><span class="hl-0">.</span><span class="hl-4">remove</span><span class="hl-0">(</span><span class="hl-5">body</span><span class="hl-0">)</span>
 </code></pre>
 
 <a href="#6-update-body-or-system" id="6-update-body-or-system" style="color: inherit; text-decoration: none;">
@@ -177,13 +177,17 @@ bodies have properties that can be set in runtime or during creation by using <c
 <ul>
 <li><p>After body moves, its bounding box in collision tree needs to be updated.</p>
 </li>
-<li><p>This is done under-the-hood automatically when you use setPosition().</p>
+<li><p>This is done under-the-hood automatically when you use <code>body.setPosition(x, y)</code>.</p>
 </li>
 </ul>
 <p>Collisions systems need to be updated when the bodies within them change. This includes when bodies are inserted, removed, or when their properties change (e.g. position, angle, scaling, etc.). Updating a collision system can be done by calling <code>update()</code> which should typically occur once per frame. Updating the <code>System</code> by after each position change is <strong>required</strong> for <code>System</code> to detect <code>BVH</code> correctly.</p>
-<pre><code class="language-javascript"><span class="hl-7">// update one body, use anytime</span><br/><span class="hl-5">system</span><span class="hl-0">.</span><span class="hl-4">updateBody</span><span class="hl-0">(</span><span class="hl-5">body</span><span class="hl-0">)</span>
+<pre><code class="language-javascript"><span class="hl-7">// move and update one body (use 0-1 times per frame):</span><br/><span class="hl-5">body</span><span class="hl-0">.</span><span class="hl-4">setPostion</span><span class="hl-0">(</span><span class="hl-5">x</span><span class="hl-0">, </span><span class="hl-5">y</span><span class="hl-0">)</span>
+</code></pre>
+<pre><code class="language-javascript"><span class="hl-7">// update one body (use 0-1 times per frame):</span><br/><span class="hl-5">system</span><span class="hl-0">.</span><span class="hl-4">updateBody</span><span class="hl-0">(</span><span class="hl-5">body</span><span class="hl-0">)</span>
 </code></pre>
 <pre><code class="language-javascript"><span class="hl-7">// update all bodies (use 0-1 times per frame):</span><br/><span class="hl-5">system</span><span class="hl-0">.</span><span class="hl-4">update</span><span class="hl-0">()</span>
+</code></pre>
+<pre><code class="language-javascript"><span class="hl-7">// separate all bodies (use 0-1 times per frame):</span><br/><span class="hl-5">system</span><span class="hl-0">.</span><span class="hl-4">separate</span><span class="hl-0">()</span>
 </code></pre>
 
 <a href="#7-collision-detection" id="7-collision-detection" style="color: inherit; text-decoration: none;">
@@ -198,6 +202,7 @@ bodies have properties that can be set in runtime or during creation by using <c
 <p>It is possible to skip the broad-phase search entirely and call <code>checkCollision()</code> directly on two bodies.</p>
 <pre><code class="language-javascript"><span class="hl-9">if</span><span class="hl-0"> (</span><span class="hl-5">system</span><span class="hl-0">.</span><span class="hl-4">checkCollision</span><span class="hl-0">(</span><span class="hl-5">polygon</span><span class="hl-0">, </span><span class="hl-5">line</span><span class="hl-0">)) {</span><br/><span class="hl-0">  </span><span class="hl-5">console</span><span class="hl-0">.</span><span class="hl-4">log</span><span class="hl-0">(</span><span class="hl-1">&quot;Collision detected!&quot;</span><span class="hl-0">, </span><span class="hl-5">system</span><span class="hl-0">.</span><span class="hl-5">response</span><span class="hl-0">)</span><br/><span class="hl-0">}</span>
 </code></pre>
+<p>You can provide last additional parameter which is <code>const response = new Response()</code> if you need, to any of above <code>system.check*</code> functions</p>
 
 <a href="#getting-detailed-collision-information" id="getting-detailed-collision-information" style="color: inherit; text-decoration: none;">
   <h4>Getting Detailed Collision Information</h4>
