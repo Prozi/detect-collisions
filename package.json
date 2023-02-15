@@ -1,7 +1,7 @@
 {
   "name": "detect-collisions",
   "version": "7.0.0",
-  "description": "2d collision detection for Points, Lines, Boxes, Polygons, Ellipses and Circles (with SAT and BVH)",
+  "description": "Fast TypeScript library for detecting collisions between bodies: Points, Lines, Boxes, Polygons (Concave too), Ellipses and Circles. Also RayCasting. All bodies can have offset, rotation, scale, bounding box padding, be static (non moving) or be trigger bodies (non colliding).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

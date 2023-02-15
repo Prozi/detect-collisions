@@ -11,7 +11,7 @@ export function polygonInCircle(
   circle: Pick<Circle, "pos" | "r">
 ): boolean {
   return calcPoints.every((p) =>
-    pointInCircle({ x: pos.x + p.x, y: pos.y + p.y } as SATVector, circle)
+    pointInCircle({ x: p.x + pos.x, y: p.y + pos.y } as SATVector, circle)
   );
 }
 

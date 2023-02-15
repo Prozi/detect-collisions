@@ -4,7 +4,7 @@ exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLine
 const sat_1 = require("sat");
 const utils_1 = require("./utils");
 function polygonInCircle({ pos, calcPoints }, circle) {
-    return calcPoints.every((p) => (0, sat_1.pointInCircle)({ x: pos.x + p.x, y: pos.y + p.y }, circle));
+    return calcPoints.every((p) => (0, sat_1.pointInCircle)({ x: p.x + pos.x, y: p.y + pos.y }, circle));
 }
 exports.polygonInCircle = polygonInCircle;
 function pointInPolygon(a, b) {

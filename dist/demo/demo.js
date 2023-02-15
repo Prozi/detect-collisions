@@ -863,7 +863,7 @@ exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLine
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils.js");
 function polygonInCircle({ pos, calcPoints }, circle) {
-    return calcPoints.every((p) => (0, sat_1.pointInCircle)({ x: pos.x + p.x, y: pos.y + p.y }, circle));
+    return calcPoints.every((p) => (0, sat_1.pointInCircle)({ x: p.x + pos.x, y: p.y + pos.y }, circle));
 }
 exports.polygonInCircle = polygonInCircle;
 function pointInPolygon(a, b) {

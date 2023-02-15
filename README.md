@@ -6,13 +6,13 @@
 
 ## Introduction
 
-It is a fast TypeScript library for detecting collisions between bodies: Points, Lines, Boxes, Polygons, Ellipses and Circles, and for Raycasting. All bodies can have offset, rotation, scale, bounding box padding, be static (non moving) or be trigger bodies (non colliding).
+Fast TypeScript library for detecting collisions between bodies: Points, Lines, Boxes, Polygons (Concave too), Ellipses and Circles. Also RayCasting. All bodies can have offset, rotation, scale, bounding box padding, be static (non moving) or be trigger bodies (non colliding).
 
 This library combines:
 
 - efficiency of [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching
 - accuracy of [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing
-- decomposition of [Concave Polygons](https://en.wikipedia.org/wiki/Concave_polygon) into convex ones for ability to use any kind of polygon
+- decomposing of [Concave Polygons](https://en.wikipedia.org/wiki/Polygon_triangulation) into convex ones for ability to use concaves
 
 ## Demos
 
