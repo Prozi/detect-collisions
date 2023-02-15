@@ -38,6 +38,7 @@ https://prozi.github.io/detect-collisions/modules.html
 To start, create a unique collisions system:
 
 ```javascript
+const { System } = require("detect-collisions")
 const system = new System()
 ```
 
@@ -99,7 +100,7 @@ Last optional parameter for body creation is always [BodyOptions](https://prozi.
 ```javascript
 const { deg2rad } = require("detect-collisions")
 const options = {
-  angle: deg2rad(90),
+  angle: deg2rad(90), // defaults to 0
   isCentered: false,
   isStatic: false,
   isTrigger: false,
@@ -110,17 +111,28 @@ const options = {
 #### Only create Body
 
 ```javascript
+const {
+  Box,
+  Circle,
+  Ellipse,
+  Line,
+  Point,
+  Polygon,
+} = require("detect-collisions")
 // create with options, without insert
+const box = new Box(position, width, height, options)
 const circle = new Circle(position, radius, options)
+const ellipse = new Ellipse(position, radiusX, radiusY, step, options)
+const line = new Line(start, end, options)
+const point = new Point(position, options)
 const polygon = new Polygon(position, points, options)
 ```
 
 #### Only insert Body
 
 ```javascript
-// insert, without create
-system.insert(circle)
-system.insert(polygon)
+// insert any of the above
+system.insert(body)
 ```
 
 #### Create and insert Body
