@@ -1,4 +1,4 @@
-import { quickDecomp } from "poly-decomp";
+import { decomp, isSimple, quickDecomp } from "poly-decomp";
 import { BBox } from "rbush";
 import { Polygon as SATPolygon } from "sat";
 
@@ -314,14 +314,18 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   protected getConvex(): DecompPolygon[] {
     if (
       (this.type && this.type !== BodyType.Polygon) ||
-      this.points.length <= 3
+      this.points.length < 4
     ) {
       return [];
     }
 
     const points = this.calcPoints.map(mapVectorToArray);
 
-    return quickDecomp(points);
+    if (isSimple(points)) {
+      return quickDecomp(points);
+    }
+
+    return decomp(points);
   }
 
   /**

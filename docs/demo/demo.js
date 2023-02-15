@@ -769,11 +769,14 @@ class Polygon extends sat_1.Polygon {
      */
     getConvex() {
         if ((this.type && this.type !== model_1.BodyType.Polygon) ||
-            this.points.length <= 3) {
+            this.points.length < 4) {
             return [];
         }
         const points = this.calcPoints.map(utils_1.mapVectorToArray);
-        return (0, poly_decomp_1.quickDecomp)(points);
+        if ((0, poly_decomp_1.isSimple)(points)) {
+            return (0, poly_decomp_1.quickDecomp)(points);
+        }
+        return (0, poly_decomp_1.decomp)(points);
     }
     /**
      * updates convex polygons cache in body
