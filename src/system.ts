@@ -153,8 +153,6 @@ export class System extends BaseSystem {
    * check do 2 objects collide
    */
   checkCollision(body: Body, wall: Body, response = this.response): boolean {
-    const bothSimple = body.isConvex && wall.isConvex;
-    const overlapV = new SATVector();
     let collided = false;
 
     if (
@@ -162,6 +160,8 @@ export class System extends BaseSystem {
       intersectAABB(body.bbox || body, wall.bbox || wall)
     ) {
       const sat: SATTest = getSATTest(body, wall);
+      const overlapV = new SATVector();
+      const bothConvex = body.isConvex && wall.isConvex;
       const convexBodies = ensureConvex(body) as [];
       const convexWalls = ensureConvex(wall) as [];
 
@@ -172,7 +172,7 @@ export class System extends BaseSystem {
           if (sat(convexBody, convexWall, response)) {
             collided = true;
 
-            if (bothSimple) {
+            if (bothConvex) {
               return true;
             }
 
@@ -182,19 +182,19 @@ export class System extends BaseSystem {
           return false;
         })
       );
-    }
 
-    if (!collided) {
-      response.aInB = false;
-      response.bInA = false;
-    } else if (!bothSimple) {
-      response.a = body;
-      response.b = wall;
-      response.overlapV = overlapV;
-      response.overlapN = overlapV.clone().normalize();
-      response.overlap = overlapV.len();
-      response.aInB = checkAInB(body, wall);
-      response.bInA = checkAInB(wall, body);
+      if (!collided) {
+        response.aInB = false;
+        response.bInA = false;
+      } else if (!bothConvex) {
+        response.a = body;
+        response.b = wall;
+        response.overlapV = overlapV;
+        response.overlapN = overlapV.clone().normalize();
+        response.overlap = overlapV.len();
+        response.aInB = checkAInB(body, wall);
+        response.bInA = checkAInB(wall, body);
+      }
     }
 
     return collided;
