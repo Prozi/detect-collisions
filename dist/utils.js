@@ -1,21 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.drawPolygon = exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = void 0;
+exports.drawPolygon = exports.getSATTest = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
 const sat_1 = require("sat");
 const intersect_1 = require("./intersect");
 const model_1 = require("./model");
+exports.DEG2RAD = Math.PI / 180;
+exports.RAD2DEG = 180 / Math.PI;
 /**
  * convert from degrees to radians
  */
 function deg2rad(degrees) {
-    return degrees * (Math.PI / 180);
+    return degrees * exports.DEG2RAD;
 }
 exports.deg2rad = deg2rad;
 /**
  * convert from radians to degrees
  */
 function rad2deg(radians) {
-    return radians * (180 / Math.PI);
+    return radians * exports.RAD2DEG;
 }
 exports.rad2deg = rad2deg;
 /**
@@ -91,8 +93,8 @@ function extendBody(body, options) {
     body.isStatic = !!(options === null || options === void 0 ? void 0 : options.isStatic);
     body.isTrigger = !!(options === null || options === void 0 ? void 0 : options.isTrigger);
     body.padding = (options === null || options === void 0 ? void 0 : options.padding) || 0;
-    if (options === null || options === void 0 ? void 0 : options.center) {
-        body.center();
+    if (body.type !== model_1.BodyType.Circle) {
+        body.isCentered = (options === null || options === void 0 ? void 0 : options.isCentered) || false;
     }
     body.setAngle((options === null || options === void 0 ? void 0 : options.angle) || 0);
 }
@@ -121,13 +123,13 @@ exports.intersectAABB = intersectAABB;
  * checks if body a is in body b
  */
 function checkAInB(a, b) {
-    if (a.type === model_1.Types.Circle) {
-        if (b.type !== model_1.Types.Circle) {
+    if (a.type === model_1.BodyType.Circle) {
+        if (b.type !== model_1.BodyType.Circle) {
             return (0, intersect_1.circleInPolygon)(a, b);
         }
         return (0, intersect_1.circleInCircle)(a, b);
     }
-    if (b.type === model_1.Types.Circle) {
+    if (b.type === model_1.BodyType.Circle) {
         return (0, intersect_1.polygonInCircle)(a, b);
     }
     return (0, intersect_1.polygonInPolygon)(a, b);
@@ -183,7 +185,7 @@ exports.mapArrayToVector = mapArrayToVector;
  * replace body with array of related convex polygons
  */
 function ensureConvex(body) {
-    if (body.isConvex || body.type !== model_1.Types.Polygon) {
+    if (body.isConvex || body.type !== model_1.BodyType.Polygon) {
         return [body];
     }
     return body.convexPolygons;
@@ -202,13 +204,13 @@ exports.getBounceDirection = getBounceDirection;
 /**
  * returns correct sat.js testing function based on body types
  */
-function getSATFunction(body, wall) {
-    if (body.type === model_1.Types.Circle) {
-        return (wall.type === model_1.Types.Circle ? sat_1.testCircleCircle : sat_1.testCirclePolygon);
+function getSATTest(body, wall) {
+    if (body.type === model_1.BodyType.Circle) {
+        return wall.type === model_1.BodyType.Circle ? sat_1.testCircleCircle : sat_1.testCirclePolygon;
     }
-    return (wall.type === model_1.Types.Circle ? sat_1.testPolygonCircle : sat_1.testPolygonPolygon);
+    return wall.type === model_1.BodyType.Circle ? sat_1.testPolygonCircle : sat_1.testPolygonPolygon;
 }
-exports.getSATFunction = getSATFunction;
+exports.getSATTest = getSATTest;
 /**
  * draw polygon
  */

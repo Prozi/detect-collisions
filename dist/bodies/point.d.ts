@@ -1,4 +1,4 @@
-import { BodyOptions, PotentialVector, Types } from "../model";
+import { BodyOptions, PotentialVector, BodyType } from "../model";
 import { Box } from "./box";
 /**
  * collider - point (very tiny box)
@@ -7,7 +7,7 @@ export declare class Point extends Box {
     /**
      * point type
      */
-    readonly type: Types.Point;
+    readonly type: BodyType.Point;
     /**
      * collider - point (very tiny box)
      */

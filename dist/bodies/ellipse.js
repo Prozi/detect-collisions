@@ -16,11 +16,7 @@ class Ellipse extends polygon_1.Polygon {
         /**
          * ellipse type
          */
-        this.type = model_1.Types.Ellipse;
-        /**
-         * ellipses are centered
-         */
-        this.isCentered = true;
+        this.type = model_1.BodyType.Ellipse;
         /**
          * ellipses are convex
          */
@@ -28,6 +24,16 @@ class Ellipse extends polygon_1.Polygon {
         this._radiusX = radiusX;
         this._radiusY = radiusY;
         this._step = step;
+    }
+    /**
+     * flag to set is body centered
+     */
+    set isCentered(_isCentered) { }
+    /**
+     * is body centered?
+     */
+    get isCentered() {
+        return true;
     }
     /**
      * get ellipse step number

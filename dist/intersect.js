@@ -44,32 +44,32 @@ function circleInPolygon(circle, polygon) {
     if (circle.r === 0) {
         return false;
     }
-    const { calcPoints } = polygon;
+    // Necessary add polygon pos to points
+    const points = polygon.calcPoints.map(({ x, y }) => ({
+        x: x + polygon.pos.x,
+        y: y + polygon.pos.y,
+    }));
     // If the center of the circle is not within the polygon,
     // then the circle may overlap, but it'll never be "contained"
     // so return false
     if (!pointInPolygon(circle.pos, polygon)) {
         return false;
     }
-    for (let i = 0; i < calcPoints.length; i++) {
-        // If any point of the polygon is within the circle,
-        // the circle is not "contained"
-        // so return false
-        if ((0, sat_1.pointInCircle)(calcPoints[i], circle)) {
-            return false;
-        }
+    // If the center of the circle is within the polygon,
+    // the circle is not outside of the polygon completely.
+    // so return false.
+    if (points.some((point) => (0, sat_1.pointInCircle)(point, circle))) {
+        return false;
     }
-    for (let i = 0; i < calcPoints.length; i++) {
-        // If any line-segment of the polygon intersects the circle,
-        // the circle is not "contained"
-        // so return false
-        const start = i === 0 ? calcPoints[0] : calcPoints[i];
-        const end = i === 0
-            ? calcPoints[calcPoints.length - 1]
-            : calcPoints[i + 1] || calcPoints[i];
-        if (intersectLineCircle({ start, end }, circle).length) {
-            return false;
-        }
+    // If any line-segment of the polygon intersects the circle,
+    // the circle is not "contained"
+    // so return false
+    if (points.some((_point, i) => {
+        const start = i === 0 ? points[0] : points[i];
+        const end = i === 0 ? points[points.length - 1] : points[i + 1] || points[i];
+        return intersectLineCircle({ start, end }, circle).length > 0;
+    })) {
+        return false;
     }
     return true;
 }
@@ -88,28 +88,26 @@ function circleOutsidePolygon(circle, polygon) {
     if (pointInPolygon(circle.pos, polygon)) {
         return false;
     }
-    const { calcPoints } = polygon;
-    for (let i = 0; i < calcPoints.length; i++) {
-        // If any point of the polygon is within the circle,
-        // or any point of the polygon lies on the circle,
-        // the circle is not outside of the polygon
-        // so return false.
-        if ((0, sat_1.pointInCircle)(calcPoints[i], circle) ||
-            pointOnCircle(calcPoints[i], circle)) {
-            return false;
-        }
+    // Necessary add polygon pos to points
+    const points = polygon.calcPoints.map(({ x, y }) => ({
+        x: x + polygon.pos.x,
+        y: y + polygon.pos.y,
+    }));
+    // If the center of the circle is within the polygon,
+    // the circle is not outside of the polygon completely.
+    // so return false.
+    if (points.some((point) => (0, sat_1.pointInCircle)(point, circle) || pointOnCircle(point, circle))) {
+        return false;
     }
-    for (let i = 0; i < calcPoints.length; i++) {
-        // If any line-segment of the polygon intersects the circle,
-        // the circle is not outside the polygon, it is overlapping,
-        // so return false
-        const start = i === 0 ? calcPoints[0] : calcPoints[i];
-        const end = i === 0
-            ? calcPoints[calcPoints.length - 1]
-            : calcPoints[i + 1] || calcPoints[i];
-        if (intersectLineCircle({ start, end }, circle).length) {
-            return false;
-        }
+    // If any line-segment of the polygon intersects the circle,
+    // the circle is not "contained"
+    // so return false
+    if (points.some((_point, i) => {
+        const start = i === 0 ? points[0] : points[i];
+        const end = i === 0 ? points[points.length - 1] : points[i + 1] || points[i];
+        return intersectLineCircle({ start, end }, circle).length > 0;
+    })) {
+        return false;
     }
     return true;
 }

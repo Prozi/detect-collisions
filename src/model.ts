@@ -51,13 +51,32 @@ export interface Data {
 }
 
 /**
- * BodyOptions, angle is in radians
+ * BodyOptions for body creation
  */
 export interface BodyOptions {
+  /**
+   * system.separate() doesn't move this body
+   */
   isStatic?: boolean;
+
+  /**
+   * system.separate() doesn't trigger collision of this body
+   */
   isTrigger?: boolean;
+
+  /**
+   * is body offset centered for rotation purpouses
+   */
   isCentered?: boolean;
+
+  /**
+   * body angle in radians use deg2rad to convert
+   */
   angle?: number;
+
+  /**
+   * BHV padding for bounding box, preventing costly updates
+   */
   padding?: number;
 }
 
@@ -100,36 +119,16 @@ export type Body = Point | Line | Ellipse | Circle | Box | Polygon;
 /**
  * each body contains those regardless of type
  */
-export interface BodyProps {
+export interface BodyProps extends Required<BodyOptions> {
   /**
-   * type of collider
+   * type of body
    */
   readonly type: BodyType;
-
-  /**
-   * is the collider non moving
-   */
-  isStatic?: boolean;
-
-  /**
-   * is the collider a "trigger"
-   */
-  isTrigger?: boolean;
-
-  /**
-   * flag to show is it centered
-   */
-  isCentered?: boolean;
 
   /**
    * flag to show is it a convex body or non convex polygon
    */
   isConvex: boolean;
-
-  /**
-   * BHV padding (defaults to 0)
-   */
-  padding: number;
 
   /**
    * bounding box cache, without padding
@@ -140,11 +139,6 @@ export interface BodyProps {
    * each body may have offset from center
    */
   offset: SATVector;
-
-  /**
-   * body angle - in radians
-   */
-  angle: number;
 
   /**
    * collisions system reference

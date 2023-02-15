@@ -16,7 +16,7 @@ class Box extends polygon_1.Polygon {
         /**
          * type of body
          */
-        this.type = model_1.Types.Box;
+        this.type = model_1.BodyType.Box;
         /**
          * boxes are convex
          */

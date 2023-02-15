@@ -54,22 +54,22 @@ export class Circle extends SATCircle implements BBox, BodyProps {
   /**
    * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
    */
-  padding = 0;
+  padding!: number;
 
   /**
    * for compatibility reasons circle has angle
    */
-  angle = 0;
+  angle!: number;
 
   /**
    * static bodies don't move but they collide
    */
-  isStatic?: boolean;
+  isStatic!: boolean;
 
   /**
    * trigger bodies move but are like ghosts
    */
-  isTrigger?: boolean;
+  isTrigger!: boolean;
 
   /**
    * reference to collision system
@@ -94,7 +94,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
   /**
    * saved initial radius - internal
    */
-  protected readonly radiusBackup: number;
+  protected readonly unscaledRadius: number;
 
   /**
    * collider - circle
@@ -108,7 +108,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
 
     extendBody(this, options);
 
-    this.radiusBackup = radius;
+    this.unscaledRadius = radius;
   }
 
   /**
@@ -147,7 +147,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
    * allow get scale
    */
   get scale(): number {
-    return this.r / this.radiusBackup;
+    return this.r / this.unscaledRadius;
   }
 
   /**
@@ -184,7 +184,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
    * update scale
    */
   setScale(scale: number, _ignoredParameter?: number): void {
-    this.r = this.radiusBackup * scale;
+    this.r = this.unscaledRadius * scale;
   }
 
   /**

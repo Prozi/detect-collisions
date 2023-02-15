@@ -4,7 +4,9 @@ import { Vector as SATVector } from "sat";
 import { Circle } from "./bodies/circle";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
-import { Body, BodyOptions, PotentialVector, SATPolygon, TestFunction, Vector } from "./model";
+import { Body, BodyOptions, PotentialVector, SATPolygon, SATTest, Vector } from "./model";
+export declare const DEG2RAD: number;
+export declare const RAD2DEG: number;
 /**
  * convert from degrees to radians
  */
@@ -72,7 +74,7 @@ export declare function mapArrayToVector([x, y]?: DecompPoint): Vector;
 /**
  * replace body with array of related convex polygons
  */
-export declare function ensureConvex<T extends Body = Circle | Point | Polygon>(body: T): [T] | SATPolygon[];
+export declare function ensureConvex<T extends Body = Circle | Point | Polygon>(body: T): (T | SATPolygon)[];
 /**
  * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
  */
@@ -80,7 +82,7 @@ export declare function getBounceDirection(body: Vector, collider: Vector): Vect
 /**
  * returns correct sat.js testing function based on body types
  */
-export declare function getSATFunction(body: Body, wall: Body): TestFunction;
+export declare function getSATTest(body: Body, wall: Body): SATTest;
 /**
  * draw polygon
  */

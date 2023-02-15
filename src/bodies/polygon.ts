@@ -65,17 +65,17 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   /**
    * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
    */
-  padding = 0;
+  padding!: number;
 
   /**
    * static bodies don't move but they collide
    */
-  isStatic?: boolean;
+  isStatic!: boolean;
 
   /**
    * trigger bodies move but are like ghosts
    */
-  isTrigger?: boolean;
+  isTrigger!: boolean;
 
   /**
    * reference to collision system
