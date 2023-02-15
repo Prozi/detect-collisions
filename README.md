@@ -38,7 +38,7 @@ https://prozi.github.io/detect-collisions/modules.html
 To start, create a unique collisions system:
 
 ```javascript
-const physics = new System()
+const system = new System()
 ```
 
 ### 2. Body Information
@@ -59,7 +59,7 @@ setting `body.pos.x` or `body.pos.y` doesn't update the bounding box. setting `b
 - `offset: Vector` prop & `setOffset({ x, y })` method - for offset from center of body for rotation purpouses
 - `getAABBAsBBox(): BBox` method - for getting bbox even on non inserted bodies
 
-by calling `System.separate()` once a frame your bodies will separate from each other.
+by calling `system.separate()` once a frame your bodies will separate from each other.
 bodies have properties that can be set in runtime or during creation by using `BodyOptions`:
 
 - `isStatic: boolean` - body won't separate
@@ -119,21 +119,21 @@ const polygon = new Polygon(position, points, options)
 
 ```javascript
 // insert, without create
-physics.insert(circle)
-physics.insert(polygon)
+system.insert(circle)
+system.insert(polygon)
 ```
 
 #### Create and insert Body
 
 ```javascript
 // create with options, and insert
-const circle = physics.createCircle(position, radius, options)
-const polygon = physics.createPolygon(position, points, options)
+const circle = system.createCircle(position, radius, options)
+const polygon = system.createPolygon(position, points, options)
 ```
 
 ### 4. Move Body
 
-`setPosition`: this modifies the `element.pos.x` and `element.pos.y` and updates its bounding box in collision physics.
+`setPosition`: this modifies the `element.pos.x` and `element.pos.y` and updates its bounding box in collision system.
 
 ```javascript
 circle.setPosition(x, y)
@@ -143,8 +143,8 @@ polygon.setPosition(x, y)
 ### 5. Remove Body
 
 ```javascript
-physics.remove(circle)
-physics.remove(polygon)
+system.remove(circle)
+system.remove(polygon)
 ```
 
 ### 6. Update Body or System
@@ -157,12 +157,12 @@ Collisions systems need to be updated when the bodies within them change. This i
 
 ```javascript
 // update one body, use anytime
-physics.updateBody(body)
+system.updateBody(body)
 ```
 
 ```javascript
 // update all bodies (use 0-1 times per frame):
-physics.update()
+system.update()
 ```
 
 ### 7. Collision Detection
@@ -170,7 +170,7 @@ physics.update()
 The **preferred method** is once-in-a-gameloop checkAll and then handler:
 
 ```typescript
-physics.checkAll((response: Response) => {
+system.checkAll((response: Response) => {
   console.log(
     response.a,
     response.b,
@@ -184,7 +184,7 @@ physics.checkAll((response: Response) => {
 If you really need to check one body then use:
 
 ```typescript
-physics.checkOne(body, (response: Response) => {
+system.checkOne(body, (response: Response) => {
   console.log(
     response.a, // === body
     response.b,
@@ -198,14 +198,14 @@ physics.checkOne(body, (response: Response) => {
 It is possible to skip the broad-phase search entirely and call `checkCollision()` directly on two bodies.
 
 ```javascript
-if (physics.checkCollision(polygon, line)) {
-  console.log("Collision detected!", physics.response)
+if (system.checkCollision(polygon, line)) {
+  console.log("Collision detected!", system.response)
 }
 ```
 
 #### Getting Detailed Collision Information
 
-There is often a need for detailed information about a collision in order to react to it appropriately. This information is stored inside `physics.response` object. The `Response` ([documentation](https://github.com/jriecken/sat-js#satresponse)) object has several properties set on them when a collision occurs:
+There is often a need for detailed information about a collision in order to react to it appropriately. This information is stored inside `system.response` object. The `Response` ([documentation](https://github.com/jriecken/sat-js#satresponse)) object has several properties set on them when a collision occurs:
 
 - `a` - The first object in the collision.
 - `b` - The second object in the collison.
@@ -224,8 +224,8 @@ The three most useful properties on a `Response` object are `overlapV`, `a`, and
 These values can be used to "push" one body out of another using the minimum distance required. More simply, subtracting this vector from the source body's position will cause the bodies to no longer collide. Here's an example:
 
 ```javascript
-if (physics.checkCollision(player, wall)) {
-  const { overlapV } = physics.response
+if (system.checkCollision(player, wall)) {
+  const { overlapV } = system.response
 
   player.setPosition(player.x - overlapV.x, player.y - overlapV.y)
 }
@@ -236,13 +236,13 @@ if (physics.checkCollision(player, wall)) {
 ```javascript
 // create self-destructing collider
 const testCollision = ({ x, y }, radius = 10) => {
-  const circle = physics.createCircle({ x, y }, radius)
-  const potentials = physics.getPotentials(circle)
+  const circle = system.createCircle({ x, y }, radius)
+  const potentials = system.getPotentials(circle)
   const collided = potentials.some((body) =>
-    physics.checkCollision(circle, body)
+    system.checkCollision(circle, body)
   )
 
-  physics.remove(circle)
+  system.remove(circle)
 
   return collided
 }
@@ -264,7 +264,7 @@ const context = canvas.getContext("2d")
 
 context.strokeStyle = "#FFFFFF"
 context.beginPath()
-physics.draw(context)
+system.draw(context)
 context.stroke()
 ```
 
@@ -283,7 +283,7 @@ The BVH can also be drawn to help test [Bounding Volume Hierarchy](https://en.wi
 ```javascript
 context.strokeStyle = "#FFFFFF"
 context.beginPath()
-physics.drawBVH(context)
+system.drawBVH(context)
 context.stroke()
 ```
 
@@ -295,8 +295,8 @@ Some projects may only have a need to perform SAT collision tests without broad-
 const circle = new Circle(position, radius)
 const polygon = new Polygon(position, points)
 
-if (physics.checkCollision(polygon, circle)) {
-  console.log(physics.response)
+if (system.checkCollision(polygon, circle)) {
+  console.log(system.response)
 }
 ```
 
@@ -307,7 +307,7 @@ To get raycast information use
 ```javascript
 const start = { x: 0, y: 0 }
 const end = { x: 0, y: -10 }
-const hit = physics.raycast(start, end)
+const hit = system.raycast(start, end)
 
 if (hit) {
   const { point, collider } = hit
