@@ -1,11 +1,11 @@
 import { BBox } from "rbush";
 import { Polygon as SATPolygon } from "sat";
-import { BodyOptions, Collider, DecompPolygon, PotentialVector, SATVector, Types, Vector } from "../model";
+import { BodyOptions, BodyProps, DecompPolygon, PotentialVector, SATVector, BodyType, Vector } from "../model";
 import { System } from "../system";
 /**
  * collider - polygon
  */
-export declare class Polygon extends SATPolygon implements BBox, Collider {
+export declare class Polygon extends SATPolygon implements BBox, BodyProps {
     /**
      * minimum x bound of body
      */
@@ -41,15 +41,11 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
     /**
      * static bodies don't move but they collide
      */
-    isStatic?: boolean;
+    isStatic: boolean;
     /**
      * trigger bodies move but are like ghosts
      */
-    isTrigger?: boolean;
-    /**
-     * flag to show is it centered
-     */
-    isCentered?: boolean;
+    isTrigger: boolean;
     /**
      * reference to collision system
      */
@@ -57,11 +53,15 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
     /**
      * type of body
      */
-    readonly type: Types.Polygon | Types.Box | Types.Point | Types.Ellipse | Types.Line;
+    readonly type: BodyType.Polygon | BodyType.Box | BodyType.Point | BodyType.Ellipse | BodyType.Line;
     /**
      * backup of points used for scaling
      */
     protected pointsBackup: Vector[];
+    /**
+     * is body centered
+     */
+    protected centered: boolean;
     /**
      * scale Vector of body
      */
@@ -70,14 +70,24 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      * collider - polygon
      */
     constructor(position: PotentialVector, points: PotentialVector[], options?: BodyOptions);
+    /**
+     * flag to set is polygon centered
+     */
+    set isCentered(isCentered: boolean);
+    /**
+     * is polygon centered?
+     */
+    get isCentered(): boolean;
     get x(): number;
     /**
      * updating this.pos.x by this.x = x updates AABB
+     * @deprecated use setPosition(x, y) instead
      */
     set x(x: number);
     get y(): number;
     /**
      * updating this.pos.y by this.y = y updates AABB
+     * @deprecated use setPosition(x, y) instead
      */
     set y(y: number);
     /**
@@ -128,10 +138,6 @@ export declare class Polygon extends SATPolygon implements BBox, Collider {
      * rotates polygon points by angle, in radians
      */
     rotate(angle: number): Polygon;
-    /**
-     * center the box anchor
-     */
-    center(): void;
     /**
      * update the position of the decomposed convex polygons (if any), called
      * after the position of the body has changed

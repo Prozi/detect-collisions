@@ -25,22 +25,22 @@ class Stress {
       this.physics.createLine(
         { x: 0, y: 0 },
         { x: width, y: 0 },
-        { isStatic: true, center: true }
+        { isStatic: true, isCentered: true }
       ),
       this.physics.createLine(
         { x: width, y: 0 },
         { x: width, y: height },
-        { isStatic: true, center: true }
+        { isStatic: true, isCentered: true }
       ),
       this.physics.createLine(
         { x: width, y: height },
         { x: 0, y: height },
-        { isStatic: true, center: true }
+        { isStatic: true, isCentered: true }
       ),
       this.physics.createLine(
         { x: 0, y: height },
         { x: 0, y: 0 },
-        { isStatic: true, center: true }
+        { isStatic: true, isCentered: true }
       ),
     ];
 
@@ -130,7 +130,7 @@ class Stress {
     const y = random(0, height);
     const direction = (random(0, 360) * Math.PI) / 180;
     const options = {
-      center: true,
+      isCentered: true,
       padding: size * 0.5,
     };
 

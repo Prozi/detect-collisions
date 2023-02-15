@@ -190,7 +190,7 @@ describe("GIVEN System", () => {
     expect(physics.response.bInA).toBe(true);
   });
 
-  it("@@ THEN circle and line inside concave aInB works", () => {
+  it("THEN circle and line inside concave aInB works", () => {
     const { System } = require(".");
     const physics = new System();
 
@@ -515,7 +515,7 @@ describe("GIVEN System", () => {
 
     expect(physics.checkCollision(circle, line)).toBe(false);
 
-    expect(physics.response.aInB).toBe(true);
-    expect(physics.response.bInA).toBe(true);
+    expect(physics.response.aInB).toBe(false);
+    expect(physics.response.bInA).toBe(false);
   });
 });

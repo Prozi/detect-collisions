@@ -3,10 +3,10 @@ import { Circle as SATCircle } from "sat";
 
 import {
   BodyOptions,
-  Collider,
+  BodyProps,
   PotentialVector,
   SATVector,
-  Types,
+  BodyType,
   Vector,
 } from "../model";
 import { System } from "../system";
@@ -15,7 +15,7 @@ import { dashLineTo, ensureVectorPoint, extendBody } from "../utils";
 /**
  * collider - circle
  */
-export class Circle extends SATCircle implements BBox, Collider {
+export class Circle extends SATCircle implements BBox, BodyProps {
   /**
    * minimum x bound of body
    */
@@ -54,47 +54,47 @@ export class Circle extends SATCircle implements BBox, Collider {
   /**
    * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
    */
-  padding = 0;
+  padding!: number;
 
   /**
    * for compatibility reasons circle has angle
    */
-  angle = 0;
-
-  /*
-   * circles are convex
-   */
-  isConvex = true;
-
-  /**
-   * circles are centered
-   */
-  isCentered = true;
+  angle!: number;
 
   /**
    * static bodies don't move but they collide
    */
-  isStatic?: boolean;
+  isStatic!: boolean;
 
   /**
    * trigger bodies move but are like ghosts
    */
-  isTrigger?: boolean;
+  isTrigger!: boolean;
 
   /**
    * reference to collision system
    */
   system?: System;
 
+  /*
+   * circles are convex
+   */
+  readonly isConvex = true;
+
   /**
    * circle type
    */
-  readonly type: Types.Circle = Types.Circle;
+  readonly type: BodyType.Circle = BodyType.Circle;
+
+  /**
+   * always centered
+   */
+  readonly isCentered = true;
 
   /**
    * saved initial radius - internal
    */
-  protected readonly radiusBackup: number;
+  protected readonly unscaledRadius: number;
 
   /**
    * collider - circle
@@ -108,7 +108,7 @@ export class Circle extends SATCircle implements BBox, Collider {
 
     extendBody(this, options);
 
-    this.radiusBackup = radius;
+    this.unscaledRadius = radius;
   }
 
   /**
@@ -120,6 +120,7 @@ export class Circle extends SATCircle implements BBox, Collider {
 
   /**
    * updating this.pos.x by this.x = x updates AABB
+   * @deprecated use setPosition(x, y) instead
    */
   set x(x: number) {
     this.pos.x = x;
@@ -135,6 +136,7 @@ export class Circle extends SATCircle implements BBox, Collider {
 
   /**
    * updating this.pos.y by this.y = y updates AABB
+   * @deprecated use setPosition(x, y) instead
    */
   set y(y: number) {
     this.pos.y = y;
@@ -145,7 +147,7 @@ export class Circle extends SATCircle implements BBox, Collider {
    * allow get scale
    */
   get scale(): number {
-    return this.r / this.radiusBackup;
+    return this.r / this.unscaledRadius;
   }
 
   /**
@@ -182,7 +184,7 @@ export class Circle extends SATCircle implements BBox, Collider {
    * update scale
    */
   setScale(scale: number, _ignoredParameter?: number): void {
-    this.r = this.radiusBackup * scale;
+    this.r = this.unscaledRadius * scale;
   }
 
   /**
@@ -251,13 +253,6 @@ export class Circle extends SATCircle implements BBox, Collider {
       context.moveTo(x + this.r, y);
       context.arc(x, y, this.r, 0, Math.PI * 2);
     }
-  }
-
-  /**
-   * for compatility reasons, does nothing
-   */
-  center(): void {
-    return;
   }
 
   /**

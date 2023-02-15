@@ -123,7 +123,7 @@ class Box extends polygon_1.Polygon {
         /**
          * type of body
          */
-        this.type = model_1.Types.Box;
+        this.type = model_1.BodyType.Box;
         /**
          * boxes are convex
          */
@@ -195,28 +195,20 @@ class Circle extends sat_1.Circle {
          * offset copy without angle applied
          */
         this.offsetCopy = { x: 0, y: 0 };
-        /**
-         * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
-         */
-        this.padding = 0;
-        /**
-         * for compatibility reasons circle has angle
-         */
-        this.angle = 0;
         /*
          * circles are convex
          */
         this.isConvex = true;
         /**
-         * circles are centered
-         */
-        this.isCentered = true;
-        /**
          * circle type
          */
-        this.type = model_1.Types.Circle;
+        this.type = model_1.BodyType.Circle;
+        /**
+         * always centered
+         */
+        this.isCentered = true;
         (0, utils_1.extendBody)(this, options);
-        this.radiusBackup = radius;
+        this.unscaledRadius = radius;
     }
     /**
      * get this.pos.x
@@ -226,6 +218,7 @@ class Circle extends sat_1.Circle {
     }
     /**
      * updating this.pos.x by this.x = x updates AABB
+     * @deprecated use setPosition(x, y) instead
      */
     set x(x) {
         var _a;
@@ -240,6 +233,7 @@ class Circle extends sat_1.Circle {
     }
     /**
      * updating this.pos.y by this.y = y updates AABB
+     * @deprecated use setPosition(x, y) instead
      */
     set y(y) {
         var _a;
@@ -250,7 +244,7 @@ class Circle extends sat_1.Circle {
      * allow get scale
      */
     get scale() {
-        return this.r / this.radiusBackup;
+        return this.r / this.unscaledRadius;
     }
     /**
      * shorthand for setScale()
@@ -283,7 +277,7 @@ class Circle extends sat_1.Circle {
      * update scale
      */
     setScale(scale, _ignoredParameter) {
-        this.r = this.radiusBackup * scale;
+        this.r = this.unscaledRadius * scale;
     }
     /**
      * set rotation
@@ -343,12 +337,6 @@ class Circle extends sat_1.Circle {
         }
     }
     /**
-     * for compatility reasons, does nothing
-     */
-    center() {
-        return;
-    }
-    /**
      * internal for getting offset with applied angle
      */
     getOffsetWithAngle() {
@@ -392,11 +380,7 @@ class Ellipse extends polygon_1.Polygon {
         /**
          * ellipse type
          */
-        this.type = model_1.Types.Ellipse;
-        /**
-         * ellipses are centered
-         */
-        this.isCentered = true;
+        this.type = model_1.BodyType.Ellipse;
         /**
          * ellipses are convex
          */
@@ -404,6 +388,16 @@ class Ellipse extends polygon_1.Polygon {
         this._radiusX = radiusX;
         this._radiusY = radiusY;
         this._step = step;
+    }
+    /**
+     * flag to set is body centered
+     */
+    set isCentered(_isCentered) { }
+    /**
+     * is body centered?
+     */
+    get isCentered() {
+        return true;
     }
     /**
      * get ellipse step number
@@ -490,7 +484,7 @@ class Line extends polygon_1.Polygon {
         /**
          * line type
          */
-        this.type = model_1.Types.Line;
+        this.type = model_1.BodyType.Line;
         /**
          * line is convex
          */
@@ -561,7 +555,7 @@ class Point extends box_1.Box {
         /**
          * point type
          */
-        this.type = model_1.Types.Point;
+        this.type = model_1.BodyType.Point;
     }
 }
 exports.Point = Point;
@@ -593,13 +587,13 @@ class Polygon extends sat_1.Polygon {
     constructor(position, points, options) {
         super((0, utils_1.ensureVectorPoint)(position), (0, utils_1.ensurePolygonPoints)(points));
         /**
-         * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
-         */
-        this.padding = 0;
-        /**
          * type of body
          */
-        this.type = model_1.Types.Polygon;
+        this.type = model_1.BodyType.Polygon;
+        /**
+         * is body centered
+         */
+        this.centered = false;
         /**
          * scale Vector of body
          */
@@ -609,11 +603,33 @@ class Polygon extends sat_1.Polygon {
         }
         (0, utils_1.extendBody)(this, options);
     }
+    /**
+     * flag to set is polygon centered
+     */
+    set isCentered(isCentered) {
+        if (this.centered === isCentered) {
+            return;
+        }
+        const centroid = this.getCentroidWithoutRotation();
+        const x = centroid.x * (isCentered ? 1 : -1);
+        const y = centroid.y * (isCentered ? 1 : -1);
+        this.translate(-x, -y);
+        this.pos.x += x;
+        this.pos.y += y;
+        this.centered = isCentered;
+    }
+    /**
+     * is polygon centered?
+     */
+    get isCentered() {
+        return this.centered;
+    }
     get x() {
         return this.pos.x;
     }
     /**
      * updating this.pos.x by this.x = x updates AABB
+     * @deprecated use setPosition(x, y) instead
      */
     set x(x) {
         var _a;
@@ -626,6 +642,7 @@ class Polygon extends sat_1.Polygon {
     }
     /**
      * updating this.pos.y by this.y = y updates AABB
+     * @deprecated use setPosition(x, y) instead
      */
     set y(y) {
         var _a;
@@ -737,19 +754,6 @@ class Polygon extends sat_1.Polygon {
         return this;
     }
     /**
-     * center the box anchor
-     */
-    center() {
-        if (this.isCentered) {
-            return;
-        }
-        const { x, y } = this.getCentroidWithoutRotation();
-        this.translate(-x, -y);
-        this.pos.x += x;
-        this.pos.y += y;
-        this.isCentered = true;
-    }
-    /**
      * update the position of the decomposed convex polygons (if any), called
      * after the position of the body has changed
      */
@@ -764,11 +768,15 @@ class Polygon extends sat_1.Polygon {
      * returns body split into convex polygons, or empty array for convex bodies
      */
     getConvex() {
-        if ((this.type && this.type !== model_1.Types.Polygon) || this.points.length <= 3) {
+        if ((this.type && this.type !== model_1.BodyType.Polygon) ||
+            this.points.length < 4) {
             return [];
         }
         const points = this.calcPoints.map(utils_1.mapVectorToArray);
-        return (0, poly_decomp_1.quickDecomp)(points);
+        if ((0, poly_decomp_1.isSimple)(points)) {
+            return (0, poly_decomp_1.quickDecomp)(points);
+        }
+        return (0, poly_decomp_1.decomp)(points);
     }
     /**
      * updates convex polygons cache in body
@@ -858,7 +866,7 @@ exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLine
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils.js");
 function polygonInCircle({ pos, calcPoints }, circle) {
-    return calcPoints.every((p) => (0, sat_1.pointInCircle)({ x: pos.x + p.x, y: pos.y + p.y }, circle));
+    return calcPoints.every((p) => (0, sat_1.pointInCircle)({ x: p.x + pos.x, y: p.y + pos.y }, circle));
 }
 exports.polygonInCircle = polygonInCircle;
 function pointInPolygon(a, b) {
@@ -898,32 +906,32 @@ function circleInPolygon(circle, polygon) {
     if (circle.r === 0) {
         return false;
     }
-    const { calcPoints } = polygon;
+    // Necessary add polygon pos to points
+    const points = polygon.calcPoints.map(({ x, y }) => ({
+        x: x + polygon.pos.x,
+        y: y + polygon.pos.y,
+    }));
     // If the center of the circle is not within the polygon,
     // then the circle may overlap, but it'll never be "contained"
     // so return false
     if (!pointInPolygon(circle.pos, polygon)) {
         return false;
     }
-    for (let i = 0; i < calcPoints.length; i++) {
-        // If any point of the polygon is within the circle,
-        // the circle is not "contained"
-        // so return false
-        if ((0, sat_1.pointInCircle)(calcPoints[i], circle)) {
-            return false;
-        }
+    // If the center of the circle is within the polygon,
+    // the circle is not outside of the polygon completely.
+    // so return false.
+    if (points.some((point) => (0, sat_1.pointInCircle)(point, circle))) {
+        return false;
     }
-    for (let i = 0; i < calcPoints.length; i++) {
-        // If any line-segment of the polygon intersects the circle,
-        // the circle is not "contained"
-        // so return false
-        const start = i === 0 ? calcPoints[0] : calcPoints[i];
-        const end = i === 0
-            ? calcPoints[calcPoints.length - 1]
-            : calcPoints[i + 1] || calcPoints[i];
-        if (intersectLineCircle({ start, end }, circle).length) {
-            return false;
-        }
+    // If any line-segment of the polygon intersects the circle,
+    // the circle is not "contained"
+    // so return false
+    if (points.some((_point, i) => {
+        const start = i === 0 ? points[0] : points[i];
+        const end = i === 0 ? points[points.length - 1] : points[i + 1] || points[i];
+        return intersectLineCircle({ start, end }, circle).length > 0;
+    })) {
+        return false;
     }
     return true;
 }
@@ -942,28 +950,26 @@ function circleOutsidePolygon(circle, polygon) {
     if (pointInPolygon(circle.pos, polygon)) {
         return false;
     }
-    const { calcPoints } = polygon;
-    for (let i = 0; i < calcPoints.length; i++) {
-        // If any point of the polygon is within the circle,
-        // or any point of the polygon lies on the circle,
-        // the circle is not outside of the polygon
-        // so return false.
-        if ((0, sat_1.pointInCircle)(calcPoints[i], circle) ||
-            pointOnCircle(calcPoints[i], circle)) {
-            return false;
-        }
+    // Necessary add polygon pos to points
+    const points = polygon.calcPoints.map(({ x, y }) => ({
+        x: x + polygon.pos.x,
+        y: y + polygon.pos.y,
+    }));
+    // If the center of the circle is within the polygon,
+    // the circle is not outside of the polygon completely.
+    // so return false.
+    if (points.some((point) => (0, sat_1.pointInCircle)(point, circle) || pointOnCircle(point, circle))) {
+        return false;
     }
-    for (let i = 0; i < calcPoints.length; i++) {
-        // If any line-segment of the polygon intersects the circle,
-        // the circle is not outside the polygon, it is overlapping,
-        // so return false
-        const start = i === 0 ? calcPoints[0] : calcPoints[i];
-        const end = i === 0
-            ? calcPoints[calcPoints.length - 1]
-            : calcPoints[i + 1] || calcPoints[i];
-        if (intersectLineCircle({ start, end }, circle).length) {
-            return false;
-        }
+    // If any line-segment of the polygon intersects the circle,
+    // the circle is not "contained"
+    // so return false
+    if (points.some((_point, i) => {
+        const start = i === 0 ? points[0] : points[i];
+        const end = i === 0 ? points[points.length - 1] : points[i + 1] || points[i];
+        return intersectLineCircle({ start, end }, circle).length > 0;
+    })) {
+        return false;
     }
     return true;
 }
@@ -1049,7 +1055,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Types = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = void 0;
+exports.BodyType = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = void 0;
 const rbush_1 = __importDefault(__webpack_require__(/*! rbush */ "./node_modules/rbush/rbush.min.js"));
 Object.defineProperty(exports, "RBush", ({ enumerable: true, get: function () { return rbush_1.default; } }));
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
@@ -1060,15 +1066,15 @@ Object.defineProperty(exports, "SATCircle", ({ enumerable: true, get: function (
 /**
  * types
  */
-var Types;
-(function (Types) {
-    Types["Ellipse"] = "Ellipse";
-    Types["Line"] = "Line";
-    Types["Circle"] = "Circle";
-    Types["Box"] = "Box";
-    Types["Point"] = "Point";
-    Types["Polygon"] = "Polygon";
-})(Types = exports.Types || (exports.Types = {}));
+var BodyType;
+(function (BodyType) {
+    BodyType["Ellipse"] = "Ellipse";
+    BodyType["Line"] = "Line";
+    BodyType["Circle"] = "Circle";
+    BodyType["Box"] = "Box";
+    BodyType["Point"] = "Point";
+    BodyType["Polygon"] = "Polygon";
+})(BodyType = exports.BodyType || (exports.BodyType = {}));
 //# sourceMappingURL=model.js.map
 
 /***/ }),
@@ -1098,13 +1104,6 @@ class System extends base_system_1.BaseSystem {
          * the last collision result
          */
         this.response = new model_1.Response();
-        /**
-         * reusable inner state - for non convex polygons collisions
-         */
-        this.state = {
-            collides: false,
-            overlapV: new model_1.SATVector(),
-        };
     }
     /**
      * remove body aabb from collision tree
@@ -1169,23 +1168,24 @@ class System extends base_system_1.BaseSystem {
     /**
      * check one collider collisions with callback
      */
-    checkOne(body, callback) {
+    checkOne(body, callback, response = this.response) {
         // no need to check static body collision
         if (body.isStatic) {
             return false;
         }
         return this.search(body).some((candidate) => {
-            if (candidate !== body && this.checkCollision(body, candidate)) {
-                return callback(this.response);
+            if (candidate !== body &&
+                this.checkCollision(body, candidate, response)) {
+                return callback(response);
             }
         });
     }
     /**
      * check all colliders collisions with callback
      */
-    checkAll(callback) {
+    checkAll(callback, response = this.response) {
         return this.all().some((body) => {
-            return this.checkOne(body, callback);
+            return this.checkOne(body, callback, response);
         });
     }
     /**
@@ -1199,41 +1199,46 @@ class System extends base_system_1.BaseSystem {
     /**
      * check do 2 objects collide
      */
-    checkCollision(body, wall) {
-        this.state.collides = false;
-        this.response.clear();
-        // check real bounding boxes (without padding)
-        if (body.bbox && wall.bbox && !(0, utils_1.intersectAABB)(body.bbox, wall.bbox)) {
-            return false;
-        }
-        // proceed to sat.js checking
-        const sat = (0, utils_1.getSATFunction)(body, wall);
-        const convexBodies = (0, utils_1.ensureConvex)(body);
-        const convexWalls = (0, utils_1.ensureConvex)(wall);
-        convexBodies.forEach((convexBody) => {
-            convexWalls.forEach((convexWall) => {
-                this.test(sat, convexBody, convexWall);
-            });
-        });
-        // set proper response object bodies
-        if (!body.isConvex || !wall.isConvex) {
-            this.response.a = body;
-            this.response.b = wall;
-            // collisionVector is set if body or candidate was concave during this.test()
-            if (this.state.collides) {
-                this.response.overlapV = this.state.overlapV;
-                this.response.overlapN = this.response.overlapV.clone().normalize();
-                this.response.overlap = this.response.overlapV.len();
+    checkCollision(body, wall, response = this.response) {
+        let collided = false;
+        if ((!body.padding && !wall.padding) ||
+            (0, utils_1.intersectAABB)(body.bbox || body, wall.bbox || wall)) {
+            const sat = (0, utils_1.getSATTest)(body, wall);
+            const overlapV = new model_1.SATVector();
+            const bothConvex = body.isConvex && wall.isConvex;
+            const convexBodies = (0, utils_1.ensureConvex)(body);
+            const convexWalls = (0, utils_1.ensureConvex)(wall);
+            convexBodies.some((convexBody) => convexWalls.some((convexWall) => {
+                response.clear();
+                if (sat(convexBody, convexWall, response)) {
+                    collided = true;
+                    if (bothConvex) {
+                        return true;
+                    }
+                    overlapV.add(response.overlapV);
+                }
+                return false;
+            }));
+            if (!collided) {
+                response.aInB = false;
+                response.bInA = false;
             }
-            this.response.aInB = (0, utils_1.checkAInB)(body, wall);
-            this.response.bInA = (0, utils_1.checkAInB)(wall, body);
+            else if (!bothConvex) {
+                response.a = body;
+                response.b = wall;
+                response.overlapV = overlapV;
+                response.overlapN = overlapV.clone().normalize();
+                response.overlap = overlapV.len();
+                response.aInB = (0, utils_1.checkAInB)(body, wall);
+                response.bInA = (0, utils_1.checkAInB)(wall, body);
+            }
         }
-        return this.state.collides;
+        return collided;
     }
     /**
      * raycast to get collider of ray from start to end
      */
-    raycast(start, end, allowCollider = () => true) {
+    raycast(start, end, allow = () => true) {
         let minDistance = Infinity;
         let result = null;
         if (!this.ray) {
@@ -1244,18 +1249,18 @@ class System extends base_system_1.BaseSystem {
             this.ray.end = end;
         }
         this.insert(this.ray);
-        this.checkOne(this.ray, ({ b: collider }) => {
-            if (!allowCollider(collider)) {
+        this.checkOne(this.ray, ({ b: body }) => {
+            if (!allow(body)) {
                 return false;
             }
-            const points = collider.type === model_1.Types.Circle
-                ? (0, intersect_1.intersectLineCircle)(this.ray, collider)
-                : (0, intersect_1.intersectLinePolygon)(this.ray, collider);
+            const points = body.type === model_1.BodyType.Circle
+                ? (0, intersect_1.intersectLineCircle)(this.ray, body)
+                : (0, intersect_1.intersectLinePolygon)(this.ray, body);
             points.forEach((point) => {
                 const pointDistance = (0, utils_1.distance)(start, point);
                 if (pointDistance < minDistance) {
                     minDistance = pointDistance;
-                    result = { point, collider };
+                    result = { point, body };
                 }
             });
         });
@@ -1279,24 +1284,6 @@ class System extends base_system_1.BaseSystem {
             }
         });
     }
-    /**
-     * update inner state function - for non convex polygons collisions
-     */
-    test(sat, body, wall) {
-        const collides = sat(body, wall, this.response);
-        if (collides) {
-            // first time in loop, reset
-            if (!this.state.collides) {
-                this.state.overlapV = new model_1.SATVector();
-            }
-            // sum all collision vectors
-            this.state.overlapV.add(this.response.overlapV);
-        }
-        // set state collide at least once value
-        this.state.collides = collides || this.state.collides;
-        // clear for reuse
-        this.response.clear();
-    }
 }
 exports.System = System;
 //# sourceMappingURL=system.js.map
@@ -1312,22 +1299,24 @@ exports.System = System;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.drawPolygon = exports.getSATFunction = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = void 0;
+exports.drawPolygon = exports.getSATTest = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const intersect_1 = __webpack_require__(/*! ./intersect */ "./dist/intersect.js");
 const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
+exports.DEG2RAD = Math.PI / 180;
+exports.RAD2DEG = 180 / Math.PI;
 /**
  * convert from degrees to radians
  */
 function deg2rad(degrees) {
-    return degrees * (Math.PI / 180);
+    return degrees * exports.DEG2RAD;
 }
 exports.deg2rad = deg2rad;
 /**
  * convert from radians to degrees
  */
 function rad2deg(radians) {
-    return radians * (180 / Math.PI);
+    return radians * exports.RAD2DEG;
 }
 exports.rad2deg = rad2deg;
 /**
@@ -1403,8 +1392,8 @@ function extendBody(body, options) {
     body.isStatic = !!(options === null || options === void 0 ? void 0 : options.isStatic);
     body.isTrigger = !!(options === null || options === void 0 ? void 0 : options.isTrigger);
     body.padding = (options === null || options === void 0 ? void 0 : options.padding) || 0;
-    if (options === null || options === void 0 ? void 0 : options.center) {
-        body.center();
+    if (body.type !== model_1.BodyType.Circle) {
+        body.isCentered = (options === null || options === void 0 ? void 0 : options.isCentered) || false;
     }
     body.setAngle((options === null || options === void 0 ? void 0 : options.angle) || 0);
 }
@@ -1433,13 +1422,13 @@ exports.intersectAABB = intersectAABB;
  * checks if body a is in body b
  */
 function checkAInB(a, b) {
-    if (a.type === model_1.Types.Circle) {
-        if (b.type !== model_1.Types.Circle) {
+    if (a.type === model_1.BodyType.Circle) {
+        if (b.type !== model_1.BodyType.Circle) {
             return (0, intersect_1.circleInPolygon)(a, b);
         }
         return (0, intersect_1.circleInCircle)(a, b);
     }
-    if (b.type === model_1.Types.Circle) {
+    if (b.type === model_1.BodyType.Circle) {
         return (0, intersect_1.polygonInCircle)(a, b);
     }
     return (0, intersect_1.polygonInPolygon)(a, b);
@@ -1495,7 +1484,7 @@ exports.mapArrayToVector = mapArrayToVector;
  * replace body with array of related convex polygons
  */
 function ensureConvex(body) {
-    if (body.isConvex || body.type !== model_1.Types.Polygon) {
+    if (body.isConvex || body.type !== model_1.BodyType.Polygon) {
         return [body];
     }
     return body.convexPolygons;
@@ -1514,13 +1503,13 @@ exports.getBounceDirection = getBounceDirection;
 /**
  * returns correct sat.js testing function based on body types
  */
-function getSATFunction(body, wall) {
-    if (body.type === model_1.Types.Circle) {
-        return (wall.type === model_1.Types.Circle ? sat_1.testCircleCircle : sat_1.testCirclePolygon);
+function getSATTest(body, wall) {
+    if (body.type === model_1.BodyType.Circle) {
+        return wall.type === model_1.BodyType.Circle ? sat_1.testCircleCircle : sat_1.testCirclePolygon;
     }
-    return (wall.type === model_1.Types.Circle ? sat_1.testPolygonCircle : sat_1.testPolygonPolygon);
+    return wall.type === model_1.BodyType.Circle ? sat_1.testPolygonCircle : sat_1.testPolygonPolygon;
 }
-exports.getSATFunction = getSATFunction;
+exports.getSATTest = getSATTest;
 /**
  * draw polygon
  */
@@ -3761,22 +3750,22 @@ class Stress {
       this.physics.createLine(
         { x: 0, y: 0 },
         { x: width, y: 0 },
-        { isStatic: true, center: true }
+        { isStatic: true, isCentered: true }
       ),
       this.physics.createLine(
         { x: width, y: 0 },
         { x: width, y: height },
-        { isStatic: true, center: true }
+        { isStatic: true, isCentered: true }
       ),
       this.physics.createLine(
         { x: width, y: height },
         { x: 0, y: height },
-        { isStatic: true, center: true }
+        { isStatic: true, isCentered: true }
       ),
       this.physics.createLine(
         { x: 0, y: height },
         { x: 0, y: 0 },
-        { isStatic: true, center: true }
+        { isStatic: true, isCentered: true }
       ),
     ];
 
@@ -3866,7 +3855,7 @@ class Stress {
     const y = random(0, height);
     const direction = (random(0, 360) * Math.PI) / 180;
     const options = {
-      center: true,
+      isCentered: true,
       padding: size * 0.5,
     };
 
@@ -4119,13 +4108,13 @@ class Tank {
         ? this.physics.createCircle(
             { x: this.scaleX(x), y: this.scaleY(y) },
             this.scaleX(size / 2),
-            { center: true }
+            { isCentered: true }
           )
         : this.physics.createBox(
             { x: this.scaleX(x - size / 2), y: this.scaleY(y - size / 2) },
             this.scaleX(size),
             this.scaleX(size),
-            { center: true }
+            { isCentered: true }
           );
 
     player.velocity = 0;

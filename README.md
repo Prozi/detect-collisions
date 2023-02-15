@@ -1,19 +1,18 @@
 # Detect-Collisions
 
-[<img src="https://img.shields.io/npm/v/detect-collisions?style=flat-square&color=success" alt="npm version" />](https://www.npmjs.com/package/detect-collisions?activeTab=versions)
-[<img src="https://img.shields.io/npm/dw/detect-collisions.svg?style=flat-square&color=success" alt="npm downloads per week" />](https://www.npmjs.com/package/detect-collisions)
-[<img src="https://img.shields.io/snyk/vulnerabilities/github/Prozi/detect-collisions?style=flat-square" alt="vulnerabilities" />](https://snyk.io/test/github/Prozi/detect-collisions)
-[<img src="https://img.shields.io/circleci/build/github/Prozi/detect-collisions/master?style=flat-square" alt="build status" />](https://app.circleci.com/pipelines/github/Prozi/detect-collisions)
-[<img src="https://img.shields.io/npm/l/detect-collisions.svg?style=flat-square&color=success" alt="license: MIT" />](https://github.com/Prozi/detect-collisions/blob/master/LICENSE)
+[<img src="https://img.shields.io/npm/v/detect-collisions?style=for-the-badge&color=success" alt="npm version" />](https://www.npmjs.com/package/detect-collisions?activeTab=versions)
+[<img src="https://img.shields.io/npm/dw/detect-collisions.svg?style=for-the-badge&color=success" alt="npm downloads per week" />](https://www.npmjs.com/package/detect-collisions)
+[<img src="https://img.shields.io/circleci/build/github/Prozi/detect-collisions/master?style=for-the-badge" alt="build status" />](https://app.circleci.com/pipelines/github/Prozi/detect-collisions)
 
 ## Introduction
 
-It is a fast TypeScript library for detecting collisions between bodies: Points, Lines, Boxes, Polygons, Ellipses and Circles, and for Raycasting. All bodies can have offset, rotation, scale, bounding box padding, be static (non moving) or be trigger bodies (non colliding).
+Fast TypeScript library for detecting collisions between bodies: Points, Lines, Boxes, Polygons (Concave too), Ellipses and Circles. Also RayCasting. All bodies can have offset, rotation, scale, bounding box padding, can be static (non moving) or be trigger bodies (non colliding).
 
 This library combines:
 
-- efficiency of [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching and
-- accuracy of [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing.
+- efficiency of [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching
+- accuracy of [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing
+- decomposing of [Concave Polygons](https://en.wikipedia.org/wiki/Polygon_triangulation) into convex ones so you can use concave polygons
 
 ## Demos
 
@@ -39,7 +38,8 @@ https://prozi.github.io/detect-collisions/modules.html
 To start, create a unique collisions system:
 
 ```javascript
-const physics = new System()
+const { System } = require("detect-collisions")
+const system = new System()
 ```
 
 ### 2. Body Information
@@ -54,14 +54,13 @@ setting `body.pos.x` or `body.pos.y` doesn't update the bounding box. setting `b
 
 - `setPosition(x, y)`
 
-bodies also have:
+#### bodies also have:
 
 - `scale: number` prop & `setScale(x, y)` method - to scale (for `Circle` takes 1 parameter, `x, y` for rest)
 - `offset: Vector` prop & `setOffset({ x, y })` method - for offset from center of body for rotation purpouses
-- `center()` method - for centering anchor (useless but available for `Circle, Ellipse`)
 - `getAABBAsBBox(): BBox` method - for getting bbox even on non inserted bodies
 
-by calling `System.separate()` once a frame your bodies will separate from each other
+by calling `system.separate()` once a frame your bodies will separate from each other.
 bodies have properties that can be set in runtime or during creation by using `BodyOptions`:
 
 - `isStatic: boolean` - body won't separate
@@ -70,20 +69,20 @@ bodies have properties that can be set in runtime or during creation by using `B
 - `angle: number` - angle in radians, use `deg2rad` for conversion
 - `padding: number` - bounding box padding, optimizes costly updates
 
-you can also check if body is convex or not:
+#### you can also check if body is convex or not:
 
 - `isConvex: boolean` - body is convex (may be false only for `Polygon`)
 - `convexPolygons: Vector[][]` - if `Polygon` is concave it has its points split into convex polygons here
 
 #### some bodies:
 
-- `Box` has `width & height` properties
+- `Box` has `width` & `height` properties
 
-#### each body after inserted to system have:
+#### each body after inserted to system has:
 
-- `bbox = { minX, minY, maxX, maxY }` property - without padding
-- `minX, minY, maxX, maxY` properties - bbox plus padding
-- `system` property - to use `body.system.updateBody(body)` internally
+- `bbox = { minX, minY, maxX, maxY }` prop - without padding
+- `minX, minY, maxX, maxY` props - bbox plus padding
+- `system` prop - to use `body.system.updateBody(body)` internally during `body.setPosition(x, y)`
 
 #### body types:
 
@@ -99,99 +98,140 @@ you can also check if body is convex or not:
 Last optional parameter for body creation is always [BodyOptions](https://prozi.github.io/detect-collisions/interfaces/BodyOptions.html)
 
 ```javascript
-const { deg2rad } = require("detect-collisions");
+const { deg2rad } = require("detect-collisions")
 const options = {
-  angle: deg2rad(90),
-  center: false,
+  angle: deg2rad(90), // defaults to 0
+  isCentered: false,
   isStatic: false,
   isTrigger: false,
-  padding: 0;
+  padding: 0,
 }
 ```
 
 #### Only create Body
 
 ```javascript
+const {
+  Box,
+  Circle,
+  Ellipse,
+  Line,
+  Point,
+  Polygon,
+} = require("detect-collisions")
 // create with options, without insert
+const box = new Box(position, width, height, options)
 const circle = new Circle(position, radius, options)
+const ellipse = new Ellipse(position, radiusX, radiusY, step, options)
+const line = new Line(start, end, options)
+const point = new Point(position, options)
 const polygon = new Polygon(position, points, options)
 ```
 
 #### Only insert Body
 
 ```javascript
-// insert, without create
-physics.insert(circle)
-physics.insert(polygon)
+// insert any of the above
+system.insert(body)
 ```
 
 #### Create and insert Body
 
+you can do create + insert in one step by using `system.create*` functions with create followed by body class name. the `system.create*` functions take the exact same parameters as when creating bodies without insert.
+
 ```javascript
 // create with options, and insert
-const circle = physics.createCircle(position, radius, options)
-const polygon = physics.createPolygon(position, points, options)
+const box = system.createBox(position, width, height, options)
+const circle = system.createCircle(position, radius, options)
+const ellipse = system.createEllipse(position, radiusX, radiusY, step, options)
+const line = system.createLine(start, end, options)
+const point = system.createPoint(position, options)
+const polygon = system.createPolygon(position, points, options)
 ```
 
 ### 4. Move Body
 
-`setPosition`: this modifies the `element.pos.x` and `element.pos.y` and updates its bounding box in collision physics.
-
 ```javascript
-circle.setPosition(x, y)
-polygon.setPosition(x, y)
+body.setPosition(x, y)
 ```
 
 ### 5. Remove Body
 
 ```javascript
-physics.remove(circle)
-physics.remove(polygon)
+system.remove(body)
 ```
 
 ### 6. Update Body or System
 
 - After body moves, its bounding box in collision tree needs to be updated.
 
-- This is done under-the-hood automatically when you use setPosition().
+- This is done under-the-hood automatically when you use `body.setPosition(x, y)`.
 
 Collisions systems need to be updated when the bodies within them change. This includes when bodies are inserted, removed, or when their properties change (e.g. position, angle, scaling, etc.). Updating a collision system can be done by calling `update()` which should typically occur once per frame. Updating the `System` by after each position change is **required** for `System` to detect `BVH` correctly.
 
 ```javascript
-// update one body, use anytime
-physics.updateBody(body)
+// move and update one body (use 0-1 times per frame):
+body.setPostion(x, y)
+```
+
+```javascript
+// update one body (use 0-1 times per frame):
+system.updateBody(body)
 ```
 
 ```javascript
 // update all bodies (use 0-1 times per frame):
-physics.update()
+system.update()
+```
+
+```javascript
+// separate all bodies (use 0-1 times per frame):
+system.separate()
 ```
 
 ### 7. Collision Detection
 
 The **preferred method** is once-in-a-gameloop checkAll and then handler:
 
-```javascript
-physics.checkAll(handleCollisions)
+```typescript
+system.checkAll((response: Response) => {
+  console.log(
+    response.a,
+    response.b,
+    response.aInB,
+    response.bInA,
+    response.overlapV
+  )
+})
 ```
 
 If you really need to check one body then use:
 
-```javascript
-physics.checkOne(body, handleCollisions)
+```typescript
+system.checkOne(body, (response: Response) => {
+  console.log(
+    response.a, // === body
+    response.b,
+    response.aInB,
+    response.bInA,
+    response.overlapV
+  )
+})
 ```
 
-It is possible to skip the broad-phase search entirely and call `checkCollision()` directly on two bodies.
+It is possible to skip the broad-phase search entirely and call `checkCollision()` directly on two bodies. although this is very not recommended as the BVH (rbush) broad-phase-search with bounding boxes makes the collision checking a lot more efficient.
 
 ```javascript
-if (physics.checkCollision(polygon, line)) {
-  console.log("Collision detected!", physics.response)
+if (system.checkCollision(polygon, line)) {
+  console.log("Collision detected!", system.response)
 }
 ```
 
+You can provide last additional parameter which is `const response = new Response()` if you need, to any of above `system.check*` functions
+
 #### Getting Detailed Collision Information
 
-There is often a need for detailed information about a collision in order to react to it appropriately. This information is stored inside `physics.response` object. The `Response` ([documentation](https://github.com/jriecken/sat-js#satresponse)) object has several properties set on them when a collision occurs:
+There is often a need for detailed information about a collision in order to react to it appropriately. This information is stored inside `system.response` object. The `Response` ([documentation](https://github.com/jriecken/sat-js#satresponse)) object has several properties set on them when a collision occurs:
 
 - `a` - The first object in the collision.
 - `b` - The second object in the collison.
@@ -210,11 +250,17 @@ The three most useful properties on a `Response` object are `overlapV`, `a`, and
 These values can be used to "push" one body out of another using the minimum distance required. More simply, subtracting this vector from the source body's position will cause the bodies to no longer collide. Here's an example:
 
 ```javascript
-if (physics.checkCollision(player, wall)) {
-  const { overlapV } = physics.response
+// check collision between player and wall and negate overlap manually
+if (system.checkCollision(player, wall)) {
+  const { overlapV } = system.response
 
   player.setPosition(player.x - overlapV.x, player.y - overlapV.y)
 }
+```
+
+```javascript
+// this is easier to use and takes into account isTrigger and isStatic flags on bodies
+system.separate()
 ```
 
 ## Detecting collision after insertion
@@ -222,13 +268,13 @@ if (physics.checkCollision(player, wall)) {
 ```javascript
 // create self-destructing collider
 const testCollision = ({ x, y }, radius = 10) => {
-  const circle = physics.createCircle({ x, y }, radius)
-  const potentials = physics.getPotentials(circle)
+  const circle = system.createCircle({ x, y }, radius)
+  const potentials = system.getPotentials(circle)
   const collided = potentials.some((body) =>
-    physics.checkCollision(circle, body)
+    system.checkCollision(circle, body)
   )
 
-  physics.remove(circle)
+  system.remove(circle)
 
   return collided
 }
@@ -250,7 +296,7 @@ const context = canvas.getContext("2d")
 
 context.strokeStyle = "#FFFFFF"
 context.beginPath()
-physics.draw(context)
+system.draw(context)
 context.stroke()
 ```
 
@@ -269,7 +315,7 @@ The BVH can also be drawn to help test [Bounding Volume Hierarchy](https://en.wi
 ```javascript
 context.strokeStyle = "#FFFFFF"
 context.beginPath()
-physics.drawBVH(context)
+system.drawBVH(context)
 context.stroke()
 ```
 
@@ -281,8 +327,8 @@ Some projects may only have a need to perform SAT collision tests without broad-
 const circle = new Circle(position, radius)
 const polygon = new Polygon(position, points)
 
-if (physics.checkCollision(polygon, circle)) {
-  console.log(physics.response)
+if (system.checkCollision(polygon, circle)) {
+  console.log(system.response)
 }
 ```
 
@@ -293,17 +339,17 @@ To get raycast information use
 ```javascript
 const start = { x: 0, y: 0 }
 const end = { x: 0, y: -10 }
-const hit = physics.raycast(start, end)
+const hit = system.raycast(start, end)
 
 if (hit) {
-  const { point, collider } = hit
+  const { point, body } = hit
 
-  console.log({ point, collider })
+  console.log({ point, body })
 }
 ```
 
 - point is the `Vector { x, y }` with coordinates of (closest) intersection
-- collider is the reference to body of the (closest) collider
+- body is the reference to the closest body
 
 ## FAQ
 

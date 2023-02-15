@@ -17,28 +17,20 @@ class Circle extends sat_1.Circle {
          * offset copy without angle applied
          */
         this.offsetCopy = { x: 0, y: 0 };
-        /**
-         * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
-         */
-        this.padding = 0;
-        /**
-         * for compatibility reasons circle has angle
-         */
-        this.angle = 0;
         /*
          * circles are convex
          */
         this.isConvex = true;
         /**
-         * circles are centered
-         */
-        this.isCentered = true;
-        /**
          * circle type
          */
-        this.type = model_1.Types.Circle;
+        this.type = model_1.BodyType.Circle;
+        /**
+         * always centered
+         */
+        this.isCentered = true;
         (0, utils_1.extendBody)(this, options);
-        this.radiusBackup = radius;
+        this.unscaledRadius = radius;
     }
     /**
      * get this.pos.x
@@ -48,6 +40,7 @@ class Circle extends sat_1.Circle {
     }
     /**
      * updating this.pos.x by this.x = x updates AABB
+     * @deprecated use setPosition(x, y) instead
      */
     set x(x) {
         var _a;
@@ -62,6 +55,7 @@ class Circle extends sat_1.Circle {
     }
     /**
      * updating this.pos.y by this.y = y updates AABB
+     * @deprecated use setPosition(x, y) instead
      */
     set y(y) {
         var _a;
@@ -72,7 +66,7 @@ class Circle extends sat_1.Circle {
      * allow get scale
      */
     get scale() {
-        return this.r / this.radiusBackup;
+        return this.r / this.unscaledRadius;
     }
     /**
      * shorthand for setScale()
@@ -105,7 +99,7 @@ class Circle extends sat_1.Circle {
      * update scale
      */
     setScale(scale, _ignoredParameter) {
-        this.r = this.radiusBackup * scale;
+        this.r = this.unscaledRadius * scale;
     }
     /**
      * set rotation
@@ -163,12 +157,6 @@ class Circle extends sat_1.Circle {
             context.moveTo(x + this.r, y);
             context.arc(x, y, this.r, 0, Math.PI * 2);
         }
-    }
-    /**
-     * for compatility reasons, does nothing
-     */
-    center() {
-        return;
     }
     /**
      * internal for getting offset with applied angle

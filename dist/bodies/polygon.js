@@ -15,13 +15,13 @@ class Polygon extends sat_1.Polygon {
     constructor(position, points, options) {
         super((0, utils_1.ensureVectorPoint)(position), (0, utils_1.ensurePolygonPoints)(points));
         /**
-         * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
-         */
-        this.padding = 0;
-        /**
          * type of body
          */
-        this.type = model_1.Types.Polygon;
+        this.type = model_1.BodyType.Polygon;
+        /**
+         * is body centered
+         */
+        this.centered = false;
         /**
          * scale Vector of body
          */
@@ -31,11 +31,33 @@ class Polygon extends sat_1.Polygon {
         }
         (0, utils_1.extendBody)(this, options);
     }
+    /**
+     * flag to set is polygon centered
+     */
+    set isCentered(isCentered) {
+        if (this.centered === isCentered) {
+            return;
+        }
+        const centroid = this.getCentroidWithoutRotation();
+        const x = centroid.x * (isCentered ? 1 : -1);
+        const y = centroid.y * (isCentered ? 1 : -1);
+        this.translate(-x, -y);
+        this.pos.x += x;
+        this.pos.y += y;
+        this.centered = isCentered;
+    }
+    /**
+     * is polygon centered?
+     */
+    get isCentered() {
+        return this.centered;
+    }
     get x() {
         return this.pos.x;
     }
     /**
      * updating this.pos.x by this.x = x updates AABB
+     * @deprecated use setPosition(x, y) instead
      */
     set x(x) {
         var _a;
@@ -48,6 +70,7 @@ class Polygon extends sat_1.Polygon {
     }
     /**
      * updating this.pos.y by this.y = y updates AABB
+     * @deprecated use setPosition(x, y) instead
      */
     set y(y) {
         var _a;
@@ -159,19 +182,6 @@ class Polygon extends sat_1.Polygon {
         return this;
     }
     /**
-     * center the box anchor
-     */
-    center() {
-        if (this.isCentered) {
-            return;
-        }
-        const { x, y } = this.getCentroidWithoutRotation();
-        this.translate(-x, -y);
-        this.pos.x += x;
-        this.pos.y += y;
-        this.isCentered = true;
-    }
-    /**
      * update the position of the decomposed convex polygons (if any), called
      * after the position of the body has changed
      */
@@ -186,11 +196,15 @@ class Polygon extends sat_1.Polygon {
      * returns body split into convex polygons, or empty array for convex bodies
      */
     getConvex() {
-        if ((this.type && this.type !== model_1.Types.Polygon) || this.points.length <= 3) {
+        if ((this.type && this.type !== model_1.BodyType.Polygon) ||
+            this.points.length < 4) {
             return [];
         }
         const points = this.calcPoints.map(utils_1.mapVectorToArray);
-        return (0, poly_decomp_1.quickDecomp)(points);
+        if ((0, poly_decomp_1.isSimple)(points)) {
+            return (0, poly_decomp_1.quickDecomp)(points);
+        }
+        return (0, poly_decomp_1.decomp)(points);
     }
     /**
      * updates convex polygons cache in body

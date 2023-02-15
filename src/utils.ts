@@ -22,23 +22,26 @@ import {
   BodyOptions,
   PotentialVector,
   SATPolygon,
-  TestFunction,
-  Types,
+  SATTest,
+  BodyType,
   Vector,
 } from "./model";
+
+export const DEG2RAD = Math.PI / 180;
+export const RAD2DEG = 180 / Math.PI;
 
 /**
  * convert from degrees to radians
  */
 export function deg2rad(degrees: number) {
-  return degrees * (Math.PI / 180);
+  return degrees * DEG2RAD;
 }
 
 /**
  * convert from radians to degrees
  */
 export function rad2deg(radians: number) {
-  return radians * (180 / Math.PI);
+  return radians * RAD2DEG;
 }
 
 /**
@@ -125,11 +128,9 @@ export function extendBody(body: Body, options?: BodyOptions): void {
   body.isStatic = !!options?.isStatic;
   body.isTrigger = !!options?.isTrigger;
   body.padding = options?.padding || 0;
-
-  if (options?.center) {
-    body.center();
+  if (body.type !== BodyType.Circle) {
+    body.isCentered = options?.isCentered || false;
   }
-
   body.setAngle(options?.angle || 0);
 }
 
@@ -161,15 +162,15 @@ export function intersectAABB(a: BBox, b: BBox): boolean {
  * checks if body a is in body b
  */
 export function checkAInB(a: Body, b: Body): boolean {
-  if (a.type === Types.Circle) {
-    if (b.type !== Types.Circle) {
+  if (a.type === BodyType.Circle) {
+    if (b.type !== BodyType.Circle) {
       return circleInPolygon(a, b);
     }
 
     return circleInCircle(a, b);
   }
 
-  if (b.type === Types.Circle) {
+  if (b.type === BodyType.Circle) {
     return polygonInCircle(a, b);
   }
 
@@ -242,8 +243,8 @@ export function mapArrayToVector([x, y]: DecompPoint = [0, 0]): Vector {
  */
 export function ensureConvex<T extends Body = Circle | Point | Polygon>(
   body: T
-): [T] | SATPolygon[] {
-  if (body.isConvex || body.type !== Types.Polygon) {
+): (T | SATPolygon)[] {
+  if (body.isConvex || body.type !== BodyType.Polygon) {
     return [body];
   }
 
@@ -264,16 +265,12 @@ export function getBounceDirection(body: Vector, collider: Vector): Vector {
 /**
  * returns correct sat.js testing function based on body types
  */
-export function getSATFunction(body: Body, wall: Body): TestFunction {
-  if (body.type === Types.Circle) {
-    return (
-      wall.type === Types.Circle ? testCircleCircle : testCirclePolygon
-    ) as TestFunction;
+export function getSATTest(body: Body, wall: Body): SATTest {
+  if (body.type === BodyType.Circle) {
+    return wall.type === BodyType.Circle ? testCircleCircle : testCirclePolygon;
   }
 
-  return (
-    wall.type === Types.Circle ? testPolygonCircle : testPolygonPolygon
-  ) as TestFunction;
+  return wall.type === BodyType.Circle ? testPolygonCircle : testPolygonPolygon;
 }
 
 /**

@@ -11,7 +11,7 @@ export function polygonInCircle(
   circle: Pick<Circle, "pos" | "r">
 ): boolean {
   return calcPoints.every((p) =>
-    pointInCircle({ x: pos.x + p.x, y: pos.y + p.y } as SATVector, circle)
+    pointInCircle({ x: p.x + pos.x, y: p.y + pos.y } as SATVector, circle)
   );
 }
 
@@ -69,7 +69,12 @@ export function circleInPolygon(
     return false;
   }
 
-  const { calcPoints } = polygon;
+  // Necessary add polygon pos to points
+  const points = polygon.calcPoints.map(({ x, y }) => ({
+    x: x + polygon.pos.x,
+    y: y + polygon.pos.y,
+  })) as SATVector[];
+
   // If the center of the circle is not within the polygon,
   // then the circle may overlap, but it'll never be "contained"
   // so return false
@@ -77,29 +82,26 @@ export function circleInPolygon(
     return false;
   }
 
-  for (let i = 0; i < calcPoints.length; i++) {
-    // If any point of the polygon is within the circle,
-    // the circle is not "contained"
-    // so return false
-    if (pointInCircle(calcPoints[i], circle)) {
-      return false;
-    }
+  // If the center of the circle is within the polygon,
+  // the circle is not outside of the polygon completely.
+  // so return false.
+  if (points.some((point) => pointInCircle(point, circle))) {
+    return false;
   }
 
-  for (let i = 0; i < calcPoints.length; i++) {
-    // If any line-segment of the polygon intersects the circle,
-    // the circle is not "contained"
-    // so return false
+  // If any line-segment of the polygon intersects the circle,
+  // the circle is not "contained"
+  // so return false
+  if (
+    points.some((_point, i) => {
+      const start: Vector = i === 0 ? points[0] : points[i];
+      const end: Vector =
+        i === 0 ? points[points.length - 1] : points[i + 1] || points[i];
 
-    const start: Vector = i === 0 ? calcPoints[0] : calcPoints[i];
-    const end: Vector =
-      i === 0
-        ? calcPoints[calcPoints.length - 1]
-        : calcPoints[i + 1] || calcPoints[i];
-
-    if (intersectLineCircle({ start, end }, circle).length) {
-      return false;
-    }
+      return intersectLineCircle({ start, end }, circle).length > 0;
+    })
+  ) {
+    return false;
   }
 
   return true;
@@ -124,34 +126,36 @@ export function circleOutsidePolygon(
     return false;
   }
 
-  const { calcPoints } = polygon;
-  for (let i = 0; i < calcPoints.length; i++) {
-    // If any point of the polygon is within the circle,
-    // or any point of the polygon lies on the circle,
-    // the circle is not outside of the polygon
-    // so return false.
-    if (
-      pointInCircle(calcPoints[i], circle) ||
-      pointOnCircle(calcPoints[i], circle)
-    ) {
-      return false;
-    }
+  // Necessary add polygon pos to points
+  const points = polygon.calcPoints.map(({ x, y }) => ({
+    x: x + polygon.pos.x,
+    y: y + polygon.pos.y,
+  })) as SATVector[];
+
+  // If the center of the circle is within the polygon,
+  // the circle is not outside of the polygon completely.
+  // so return false.
+  if (
+    points.some(
+      (point) => pointInCircle(point, circle) || pointOnCircle(point, circle)
+    )
+  ) {
+    return false;
   }
 
-  for (let i = 0; i < calcPoints.length; i++) {
-    // If any line-segment of the polygon intersects the circle,
-    // the circle is not outside the polygon, it is overlapping,
-    // so return false
+  // If any line-segment of the polygon intersects the circle,
+  // the circle is not "contained"
+  // so return false
+  if (
+    points.some((_point, i) => {
+      const start: Vector = i === 0 ? points[0] : points[i];
+      const end: Vector =
+        i === 0 ? points[points.length - 1] : points[i + 1] || points[i];
 
-    const start: Vector = i === 0 ? calcPoints[0] : calcPoints[i];
-    const end: Vector =
-      i === 0
-        ? calcPoints[calcPoints.length - 1]
-        : calcPoints[i + 1] || calcPoints[i];
-
-    if (intersectLineCircle({ start, end }, circle).length) {
-      return false;
-    }
+      return intersectLineCircle({ start, end }, circle).length > 0;
+    })
+  ) {
+    return false;
   }
 
   return true;

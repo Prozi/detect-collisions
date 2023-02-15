@@ -1,11 +1,11 @@
 import { BBox } from "rbush";
 import { Circle as SATCircle } from "sat";
-import { BodyOptions, Collider, PotentialVector, SATVector, Types, Vector } from "../model";
+import { BodyOptions, BodyProps, PotentialVector, SATVector, BodyType, Vector } from "../model";
 import { System } from "../system";
 /**
  * collider - circle
  */
-export declare class Circle extends SATCircle implements BBox, Collider {
+export declare class Circle extends SATCircle implements BBox, BodyProps {
     /**
      * minimum x bound of body
      */
@@ -42,31 +42,31 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      * for compatibility reasons circle has angle
      */
     angle: number;
-    isConvex: boolean;
-    /**
-     * circles are centered
-     */
-    isCentered: boolean;
     /**
      * static bodies don't move but they collide
      */
-    isStatic?: boolean;
+    isStatic: boolean;
     /**
      * trigger bodies move but are like ghosts
      */
-    isTrigger?: boolean;
+    isTrigger: boolean;
     /**
      * reference to collision system
      */
     system?: System;
+    readonly isConvex = true;
     /**
      * circle type
      */
-    readonly type: Types.Circle;
+    readonly type: BodyType.Circle;
+    /**
+     * always centered
+     */
+    readonly isCentered = true;
     /**
      * saved initial radius - internal
      */
-    protected readonly radiusBackup: number;
+    protected readonly unscaledRadius: number;
     /**
      * collider - circle
      */
@@ -77,6 +77,7 @@ export declare class Circle extends SATCircle implements BBox, Collider {
     get x(): number;
     /**
      * updating this.pos.x by this.x = x updates AABB
+     * @deprecated use setPosition(x, y) instead
      */
     set x(x: number);
     /**
@@ -85,6 +86,7 @@ export declare class Circle extends SATCircle implements BBox, Collider {
     get y(): number;
     /**
      * updating this.pos.y by this.y = y updates AABB
+     * @deprecated use setPosition(x, y) instead
      */
     set y(y: number);
     /**
@@ -127,10 +129,6 @@ export declare class Circle extends SATCircle implements BBox, Collider {
      * Draws collider on a CanvasRenderingContext2D's current path
      */
     draw(context: CanvasRenderingContext2D): void;
-    /**
-     * for compatility reasons, does nothing
-     */
-    center(): void;
     /**
      * internal for getting offset with applied angle
      */

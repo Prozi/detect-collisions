@@ -1,8 +1,7 @@
 /// <reference types="sat" />
 import RBush from "rbush";
 import { BaseSystem } from "./base-system";
-import { Circle } from "./bodies/circle";
-import { Body, CollisionState, Leaf, RaycastResult, Response, SATPolygon, TestFunction, Vector } from "./model";
+import { Body, Leaf, RaycastHit, Response, Vector } from "./model";
 /**
  * collision system
  */
@@ -11,10 +10,6 @@ export declare class System extends BaseSystem {
      * the last collision result
      */
     response: Response;
-    /**
-     * reusable inner state - for non convex polygons collisions
-     */
-    protected state: CollisionState;
     private ray;
     /**
      * remove body aabb from collision tree
@@ -40,11 +35,11 @@ export declare class System extends BaseSystem {
     /**
      * check one collider collisions with callback
      */
-    checkOne(body: Body, callback: (response: Response) => void | boolean): boolean;
+    checkOne(body: Body, callback: (response: Response) => void | boolean, response?: Response): boolean;
     /**
      * check all colliders collisions with callback
      */
-    checkAll(callback: (response: Response) => void | boolean): boolean;
+    checkAll(callback: (response: Response) => void | boolean, response?: Response): boolean;
     /**
      * get object potential colliders
      * @deprecated because it's slower to use than checkOne() or checkAll()
@@ -53,20 +48,16 @@ export declare class System extends BaseSystem {
     /**
      * check do 2 objects collide
      */
-    checkCollision(body: Body, wall: Body): boolean;
+    checkCollision(body: Body, wall: Body, response?: Response): boolean;
     /**
      * raycast to get collider of ray from start to end
      */
-    raycast(start: Vector, end: Vector, allowCollider?: (testCollider: Body) => boolean): RaycastResult;
+    raycast(start: Vector, end: Vector, allow?: (body: Body) => boolean): RaycastHit | null;
     /**
      * used to find body deep inside data with finder function returning boolean found or not
      */
     traverse(find: (child: Leaf, children: Leaf[], index: number) => boolean | void, { children }?: {
         children?: Leaf[];
     }): Body | undefined;
-    /**
-     * update inner state function - for non convex polygons collisions
-     */
-    protected test(sat: TestFunction, body: SATPolygon | Circle, wall: SATPolygon | Circle): void;
 }
 //# sourceMappingURL=system.d.ts.map

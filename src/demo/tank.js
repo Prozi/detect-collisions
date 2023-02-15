@@ -161,13 +161,13 @@ class Tank {
         ? this.physics.createCircle(
             { x: this.scaleX(x), y: this.scaleY(y) },
             this.scaleX(size / 2),
-            { center: true }
+            { isCentered: true }
           )
         : this.physics.createBox(
             { x: this.scaleX(x - size / 2), y: this.scaleY(y - size / 2) },
             this.scaleX(size),
             this.scaleX(size),
-            { center: true }
+            { isCentered: true }
           );
 
     player.velocity = 0;

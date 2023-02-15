@@ -20,7 +20,7 @@ export { RBush, BBox, Response, SATVector, SATPolygon, SATCircle };
 /**
  * types
  */
-export enum Types {
+export enum BodyType {
   Ellipse = "Ellipse",
   Line = "Line",
   Circle = "Circle",
@@ -51,20 +51,42 @@ export interface Data {
 }
 
 /**
- * BodyOptions, angle is in radians
+ * BodyOptions for body creation
  */
 export interface BodyOptions {
+  /**
+   * system.separate() doesn't move this body
+   */
   isStatic?: boolean;
+
+  /**
+   * system.separate() doesn't trigger collision of this body
+   */
   isTrigger?: boolean;
-  center?: boolean;
+
+  /**
+   * is body offset centered for rotation purpouses
+   */
+  isCentered?: boolean;
+
+  /**
+   * body angle in radians use deg2rad to convert
+   */
   angle?: number;
+
+  /**
+   * BHV padding for bounding box, preventing costly updates
+   */
   padding?: number;
 }
 
 /**
  * system.raycast(from, to) result
  */
-export type RaycastResult = { point: Vector; collider: Body } | null;
+export interface RaycastHit {
+  point: Vector;
+  body: Body;
+}
 
 /**
  * potential vector
@@ -97,36 +119,16 @@ export type Body = Point | Line | Ellipse | Circle | Box | Polygon;
 /**
  * each body contains those regardless of type
  */
-export interface Collider {
+export interface BodyProps extends Required<BodyOptions> {
   /**
-   * type of collider
+   * type of body
    */
-  readonly type: Types;
-
-  /**
-   * is the collider non moving
-   */
-  isStatic?: boolean;
-
-  /**
-   * is the collider a "trigger"
-   */
-  isTrigger?: boolean;
-
-  /**
-   * flag to show is it centered
-   */
-  isCentered?: boolean;
+  readonly type: BodyType;
 
   /**
    * flag to show is it a convex body or non convex polygon
    */
   isConvex: boolean;
-
-  /**
-   * BHV padding (defaults to 0)
-   */
-  padding: number;
 
   /**
    * bounding box cache, without padding
@@ -137,11 +139,6 @@ export interface Collider {
    * each body may have offset from center
    */
   offset: SATVector;
-
-  /**
-   * body angle - in radians
-   */
-  angle: number;
 
   /**
    * collisions system reference
@@ -184,25 +181,22 @@ export interface Collider {
   draw(context: CanvasRenderingContext2D): void;
 
   /**
-   * center the body anchor
-   */
-  center(): void;
-
-  /**
    * return bounding box without padding
    */
   getAABBAsBBox(): BBox;
 }
 
-export interface CollisionState {
-  collides: boolean;
-  overlapV: SATVector;
-}
+type SATTestTemplate<T extends Body, Y extends Body> = (
+  a: T,
+  b: Y,
+  r: Response
+) => boolean;
 
 /**
  * test function from sat.js type
  */
-export type TestFunction<
-  T extends {} = SATCircle | SATPolygon,
-  Y extends {} = SATCircle | SATPolygon
-> = (a: T, b: Y, r: Response) => boolean;
+export type SATTest =
+  | SATTestTemplate<Circle, Polygon>
+  | SATTestTemplate<Circle, Circle>
+  | SATTestTemplate<Polygon, Polygon>
+  | SATTestTemplate<Polygon, Circle>;

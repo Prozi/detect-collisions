@@ -1,15 +1,15 @@
-import { quickDecomp } from "poly-decomp";
+import { decomp, isSimple, quickDecomp } from "poly-decomp";
 import { BBox } from "rbush";
 import { Polygon as SATPolygon } from "sat";
 
 import {
   BodyOptions,
-  Collider,
+  BodyProps,
   DecompPolygon,
   GetAABBAsBox,
   PotentialVector,
   SATVector,
-  Types,
+  BodyType,
   Vector,
 } from "../model";
 import { System } from "../system";
@@ -26,7 +26,7 @@ import {
 /**
  * collider - polygon
  */
-export class Polygon extends SATPolygon implements BBox, Collider {
+export class Polygon extends SATPolygon implements BBox, BodyProps {
   /**
    * minimum x bound of body
    */
@@ -65,22 +65,17 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   /**
    * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
    */
-  padding = 0;
+  padding!: number;
 
   /**
    * static bodies don't move but they collide
    */
-  isStatic?: boolean;
+  isStatic!: boolean;
 
   /**
    * trigger bodies move but are like ghosts
    */
-  isTrigger?: boolean;
-
-  /**
-   * flag to show is it centered
-   */
-  isCentered?: boolean;
+  isTrigger!: boolean;
 
   /**
    * reference to collision system
@@ -91,16 +86,21 @@ export class Polygon extends SATPolygon implements BBox, Collider {
    * type of body
    */
   readonly type:
-    | Types.Polygon
-    | Types.Box
-    | Types.Point
-    | Types.Ellipse
-    | Types.Line = Types.Polygon;
+    | BodyType.Polygon
+    | BodyType.Box
+    | BodyType.Point
+    | BodyType.Ellipse
+    | BodyType.Line = BodyType.Polygon;
 
   /**
    * backup of points used for scaling
    */
   protected pointsBackup!: Vector[];
+
+  /**
+   * is body centered
+   */
+  protected centered = false;
 
   /**
    * scale Vector of body
@@ -124,12 +124,37 @@ export class Polygon extends SATPolygon implements BBox, Collider {
     extendBody(this, options);
   }
 
+  /**
+   * flag to set is polygon centered
+   */
+  set isCentered(isCentered: boolean) {
+    if (this.centered === isCentered) {
+      return;
+    }
+
+    const centroid = this.getCentroidWithoutRotation();
+    const x = centroid.x * (isCentered ? 1 : -1);
+    const y = centroid.y * (isCentered ? 1 : -1);
+    this.translate(-x, -y);
+    this.pos.x += x;
+    this.pos.y += y;
+    this.centered = isCentered;
+  }
+
+  /**
+   * is polygon centered?
+   */
+  get isCentered(): boolean {
+    return this.centered;
+  }
+
   get x(): number {
     return this.pos.x;
   }
 
   /**
    * updating this.pos.x by this.x = x updates AABB
+   * @deprecated use setPosition(x, y) instead
    */
   set x(x: number) {
     this.pos.x = x;
@@ -143,6 +168,7 @@ export class Polygon extends SATPolygon implements BBox, Collider {
 
   /**
    * updating this.pos.y by this.y = y updates AABB
+   * @deprecated use setPosition(x, y) instead
    */
   set y(y: number) {
     this.pos.y = y;
@@ -272,21 +298,6 @@ export class Polygon extends SATPolygon implements BBox, Collider {
   }
 
   /**
-   * center the box anchor
-   */
-  center(): void {
-    if (this.isCentered) {
-      return;
-    }
-
-    const { x, y } = this.getCentroidWithoutRotation();
-    this.translate(-x, -y);
-    this.pos.x += x;
-    this.pos.y += y;
-    this.isCentered = true;
-  }
-
-  /**
    * update the position of the decomposed convex polygons (if any), called
    * after the position of the body has changed
    */
@@ -301,13 +312,20 @@ export class Polygon extends SATPolygon implements BBox, Collider {
    * returns body split into convex polygons, or empty array for convex bodies
    */
   protected getConvex(): DecompPolygon[] {
-    if ((this.type && this.type !== Types.Polygon) || this.points.length <= 3) {
+    if (
+      (this.type && this.type !== BodyType.Polygon) ||
+      this.points.length < 4
+    ) {
       return [];
     }
 
     const points = this.calcPoints.map(mapVectorToArray);
 
-    return quickDecomp(points);
+    if (isSimple(points)) {
+      return quickDecomp(points);
+    }
+
+    return decomp(points);
   }
 
   /**

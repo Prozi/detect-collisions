@@ -1,4 +1,4 @@
-import { BodyOptions, PotentialVector, Types } from "../model";
+import { BodyOptions, PotentialVector, BodyType } from "../model";
 import { createBox } from "../utils";
 import { Polygon } from "./polygon";
 
@@ -9,12 +9,12 @@ export class Box extends Polygon {
   /**
    * type of body
    */
-  readonly type: Types.Box | Types.Point = Types.Box;
+  readonly type: BodyType.Box | BodyType.Point = BodyType.Box;
 
   /**
    * boxes are convex
    */
-  isConvex = true;
+  readonly isConvex = true;
 
   /**
    * inner width

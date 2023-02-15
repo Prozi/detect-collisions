@@ -1,4 +1,4 @@
-import { BodyOptions, Types, PotentialVector } from "../model";
+import { BodyOptions, BodyType, PotentialVector } from "../model";
 import { createEllipse } from "../utils";
 import { Polygon } from "./polygon";
 
@@ -9,17 +9,12 @@ export class Ellipse extends Polygon {
   /**
    * ellipse type
    */
-  readonly type: Types.Ellipse = Types.Ellipse;
-
-  /**
-   * ellipses are centered
-   */
-  isCentered = true;
+  readonly type: BodyType.Ellipse = BodyType.Ellipse;
 
   /**
    * ellipses are convex
    */
-  isConvex = true;
+  readonly isConvex = true;
 
   /**
    * inner initial params save
@@ -43,6 +38,18 @@ export class Ellipse extends Polygon {
     this._radiusX = radiusX;
     this._radiusY = radiusY;
     this._step = step;
+  }
+
+  /**
+   * flag to set is body centered
+   */
+  set isCentered(_isCentered: boolean) {}
+
+  /**
+   * is body centered?
+   */
+  get isCentered(): boolean {
+    return true;
   }
 
   /**
