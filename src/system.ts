@@ -110,7 +110,8 @@ export class System extends BaseSystem {
    */
   checkOne(
     body: Body,
-    callback: (response: Response) => void | boolean
+    callback: (response: Response) => void | boolean,
+    response = this.response
   ): boolean {
     // no need to check static body collision
     if (body.isStatic) {
@@ -118,8 +119,11 @@ export class System extends BaseSystem {
     }
 
     return this.search(body).some((candidate: Body) => {
-      if (candidate !== body && this.checkCollision(body, candidate)) {
-        return callback(this.response);
+      if (
+        candidate !== body &&
+        this.checkCollision(body, candidate, response)
+      ) {
+        return callback(response);
       }
     });
   }
@@ -127,9 +131,12 @@ export class System extends BaseSystem {
   /**
    * check all colliders collisions with callback
    */
-  checkAll(callback: (response: Response) => void | boolean): boolean {
+  checkAll(
+    callback: (response: Response) => void | boolean,
+    response = this.response
+  ): boolean {
     return this.all().some((body: Body) => {
-      return this.checkOne(body, callback);
+      return this.checkOne(body, callback, response);
     });
   }
 
@@ -149,7 +156,10 @@ export class System extends BaseSystem {
     const overlapV = new SATVector();
     let collided = false;
 
-    if (intersectAABB(body.bbox || body, wall.bbox || wall)) {
+    if (
+      (!body.padding && !wall.padding) ||
+      intersectAABB(body.bbox || body, wall.bbox || wall)
+    ) {
       const sat: SATTest = getSATTest(body, wall);
       const convexBodies = ensureConvex(body) as [];
       const convexWalls = ensureConvex(wall) as [];

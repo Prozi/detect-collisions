@@ -1165,23 +1165,24 @@ class System extends base_system_1.BaseSystem {
     /**
      * check one collider collisions with callback
      */
-    checkOne(body, callback) {
+    checkOne(body, callback, response = this.response) {
         // no need to check static body collision
         if (body.isStatic) {
             return false;
         }
         return this.search(body).some((candidate) => {
-            if (candidate !== body && this.checkCollision(body, candidate)) {
-                return callback(this.response);
+            if (candidate !== body &&
+                this.checkCollision(body, candidate, response)) {
+                return callback(response);
             }
         });
     }
     /**
      * check all colliders collisions with callback
      */
-    checkAll(callback) {
+    checkAll(callback, response = this.response) {
         return this.all().some((body) => {
-            return this.checkOne(body, callback);
+            return this.checkOne(body, callback, response);
         });
     }
     /**
@@ -1198,7 +1199,8 @@ class System extends base_system_1.BaseSystem {
     checkCollision(body, wall, response = this.response) {
         const overlapV = new model_1.SATVector();
         let collided = false;
-        if ((0, utils_1.intersectAABB)(body.bbox || body, wall.bbox || wall)) {
+        if ((!body.padding && !wall.padding) ||
+            (0, utils_1.intersectAABB)(body.bbox || body, wall.bbox || wall)) {
             const sat = (0, utils_1.getSATTest)(body, wall);
             const convexBodies = (0, utils_1.ensureConvex)(body);
             const convexWalls = (0, utils_1.ensureConvex)(wall);
