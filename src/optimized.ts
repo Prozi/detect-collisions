@@ -7,7 +7,7 @@ export const forEach = <T>(
   array: T[],
   callback: (item: T, index: number) => void
 ): void => {
-  for (let i = 0, l = array?.length; i < l; i++) {
+  for (let i = 0, l = array.length; i < l; i++) {
     callback(array[i], i);
   }
 };
@@ -21,7 +21,7 @@ export const some = <T>(
   array: T[],
   callback: (item: T, index: number) => unknown
 ): boolean => {
-  for (let i = 0, l = array?.length; i < l; i++) {
+  for (let i = 0, l = array.length; i < l; i++) {
     if (callback(array[i], i)) {
       return true;
     }
@@ -39,7 +39,7 @@ export const every = <T>(
   array: T[],
   callback: (item: T, index: number) => unknown
 ): boolean => {
-  for (let i = 0, l = array?.length; i < l; i++) {
+  for (let i = 0, l = array.length; i < l; i++) {
     if (!callback(array[i], i)) {
       return false;
     }
@@ -59,7 +59,7 @@ export const filter = <T>(
 ): T[] => {
   const output = [];
 
-  for (let i = 0, l = array?.length; i < l; i++) {
+  for (let i = 0, l = array.length; i < l; i++) {
     const item = array[i];
 
     if (callback(item, i)) {

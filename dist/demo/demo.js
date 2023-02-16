@@ -762,10 +762,12 @@ class Polygon extends sat_1.Polygon {
      * after the position of the body has changed
      */
     updateConvexPolygonPositions() {
-        (0, optimized_1.forEach)(this.convexPolygons, (polygon) => {
-            polygon.pos.x = this.pos.x;
-            polygon.pos.y = this.pos.y;
-        });
+        if (this.convexPolygons) {
+            (0, optimized_1.forEach)(this.convexPolygons, (polygon) => {
+                polygon.pos.x = this.pos.x;
+                polygon.pos.y = this.pos.y;
+            });
+        }
     }
     /**
      * returns body split into convex polygons, or empty array for convex bodies
@@ -1097,7 +1099,7 @@ exports.map = exports.filter = exports.every = exports.some = exports.forEach = 
  * basic benchmark: https://jsbench.me/urle772xdn
  */
 const forEach = (array, callback) => {
-    for (let i = 0, l = array === null || array === void 0 ? void 0 : array.length; i < l; i++) {
+    for (let i = 0, l = array.length; i < l; i++) {
         callback(array[i], i);
     }
 };
@@ -1108,7 +1110,7 @@ exports.forEach = forEach;
  * basic benchmark: https://jsbench.me/l0le7bnnsq
  */
 const some = (array, callback) => {
-    for (let i = 0, l = array === null || array === void 0 ? void 0 : array.length; i < l; i++) {
+    for (let i = 0, l = array.length; i < l; i++) {
         if (callback(array[i], i)) {
             return true;
         }
@@ -1122,7 +1124,7 @@ exports.some = some;
  * basic benchmark: https://jsbench.me/unle7da29v
  */
 const every = (array, callback) => {
-    for (let i = 0, l = array === null || array === void 0 ? void 0 : array.length; i < l; i++) {
+    for (let i = 0, l = array.length; i < l; i++) {
         if (!callback(array[i], i)) {
             return false;
         }
@@ -1137,7 +1139,7 @@ exports.every = every;
  */
 const filter = (array, callback) => {
     const output = [];
-    for (let i = 0, l = array === null || array === void 0 ? void 0 : array.length; i < l; i++) {
+    for (let i = 0, l = array.length; i < l; i++) {
         const item = array[i];
         if (callback(item, i)) {
             output.push(item);

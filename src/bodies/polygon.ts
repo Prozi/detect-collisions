@@ -303,10 +303,12 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    * after the position of the body has changed
    */
   protected updateConvexPolygonPositions() {
-    forEach(this.convexPolygons, (polygon: SATPolygon) => {
-      polygon.pos.x = this.pos.x;
-      polygon.pos.y = this.pos.y;
-    });
+    if (this.convexPolygons) {
+      forEach(this.convexPolygons, (polygon: SATPolygon) => {
+        polygon.pos.x = this.pos.x;
+        polygon.pos.y = this.pos.y;
+      });
+    }
   }
 
   /**

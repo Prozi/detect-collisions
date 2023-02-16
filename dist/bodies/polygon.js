@@ -187,10 +187,12 @@ class Polygon extends sat_1.Polygon {
      * after the position of the body has changed
      */
     updateConvexPolygonPositions() {
-        (0, optimized_1.forEach)(this.convexPolygons, (polygon) => {
-            polygon.pos.x = this.pos.x;
-            polygon.pos.y = this.pos.y;
-        });
+        if (this.convexPolygons) {
+            (0, optimized_1.forEach)(this.convexPolygons, (polygon) => {
+                polygon.pos.x = this.pos.x;
+                polygon.pos.y = this.pos.y;
+            });
+        }
     }
     /**
      * returns body split into convex polygons, or empty array for convex bodies
