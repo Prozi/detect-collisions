@@ -5,6 +5,7 @@ import { Circle } from "./bodies/circle";
 import { Polygon } from "./bodies/polygon";
 import { Line } from "./bodies/line";
 import { ensureConvex } from "./utils";
+import { filter, map } from "./optimized";
 
 export function polygonInCircle(
   { pos, calcPoints }: Polygon,
@@ -70,7 +71,7 @@ export function circleInPolygon(
   }
 
   // Necessary add polygon pos to points
-  const points = polygon.calcPoints.map(({ x, y }) => ({
+  const points = map(polygon.calcPoints, ({ x, y }: SATVector) => ({
     x: x + polygon.pos.x,
     y: y + polygon.pos.y,
   })) as SATVector[];
@@ -127,7 +128,7 @@ export function circleOutsidePolygon(
   }
 
   // Necessary add polygon pos to points
-  const points = polygon.calcPoints.map(({ x, y }) => ({
+  const points = map(polygon.calcPoints, ({ x, y }: SATVector) => ({
     x: x + polygon.pos.x,
     y: y + polygon.pos.y,
   })) as SATVector[];
@@ -232,8 +233,8 @@ export function intersectLineLine(
 }
 
 export function intersectLinePolygon(line: Line, polygon: Polygon): Vector[] {
-  return polygon.calcPoints
-    .map((to: Vector, index: number) => {
+  return filter(
+    map(polygon.calcPoints, (to: Vector, index: number) => {
       const from: Vector = index
         ? polygon.calcPoints[index - 1]
         : polygon.calcPoints[polygon.calcPoints.length - 1];
@@ -243,6 +244,7 @@ export function intersectLinePolygon(line: Line, polygon: Polygon): Vector[] {
       };
 
       return intersectLineLine(line, side);
-    })
-    .filter((test: Vector | null) => !!test) as Vector[];
+    }),
+    (test: Vector | null) => !!test
+  ) as Vector[];
 }

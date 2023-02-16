@@ -12,6 +12,7 @@ import {
   BodyType,
   Vector,
 } from "../model";
+import { forEach, map } from "../optimized";
 import { System } from "../system";
 import {
   ensurePolygonPoints,
@@ -221,7 +222,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
     this.scaleVector.x = x;
     this.scaleVector.y = y;
 
-    this.points.forEach((point: SATVector, i: number) => {
+    forEach(this.points, (point: SATVector, i: number) => {
       point.x = this.pointsBackup[i].x * x;
       point.y = this.pointsBackup[i].y * y;
     });
@@ -302,7 +303,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    * after the position of the body has changed
    */
   protected updateConvexPolygonPositions() {
-    this.convexPolygons?.forEach((polygon: SATPolygon) => {
+    forEach(this.convexPolygons, (polygon: SATPolygon) => {
       polygon.pos.x = this.pos.x;
       polygon.pos.y = this.pos.y;
     });
@@ -319,7 +320,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
       return [];
     }
 
-    const points = this.calcPoints.map(mapVectorToArray);
+    const points = map(this.calcPoints, mapVectorToArray);
 
     if (isSimple(points)) {
       return quickDecomp(points);
@@ -342,7 +343,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
       this.convexPolygons = [];
     }
 
-    convex.forEach((points: DecompPolygon, index: number) => {
+    forEach(convex, (points: DecompPolygon, index: number) => {
       // lazy create
       if (!this.convexPolygons[index]) {
         this.convexPolygons[index] = new SATPolygon();
@@ -351,7 +352,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
       this.convexPolygons[index].pos.x = this.pos.x;
       this.convexPolygons[index].pos.y = this.pos.y;
       this.convexPolygons[index].setPoints(
-        ensurePolygonPoints(points.map(mapArrayToVector))
+        ensurePolygonPoints(map(points, mapArrayToVector))
       );
     });
 
