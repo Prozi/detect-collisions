@@ -21,7 +21,7 @@ import {
   getSATTest,
 } from "./utils";
 import { intersectLineCircle, intersectLinePolygon } from "./intersect";
-import { filter, forEach } from "./optimized";
+import { filter, forEach, some } from "./optimized";
 
 /**
  * collision system
@@ -119,7 +119,7 @@ export class System extends BaseSystem {
       return false;
     }
 
-    return this.search(body).some((candidate: Body) => {
+    return some(this.search(body), (candidate: Body) => {
       if (
         candidate !== body &&
         this.checkCollision(body, candidate, response)
@@ -136,7 +136,7 @@ export class System extends BaseSystem {
     callback: (response: Response) => void | boolean,
     response = this.response
   ): boolean {
-    return this.all().some((body: Body) => {
+    return some(this.all(), (body: Body) => {
       return this.checkOne(body, callback, response);
     });
   }
@@ -166,8 +166,8 @@ export class System extends BaseSystem {
       const convexBodies = ensureConvex(body) as [];
       const convexWalls = ensureConvex(wall) as [];
 
-      convexBodies.some((convexBody) =>
-        convexWalls.some((convexWall) => {
+      some(convexBodies, (convexBody) =>
+        some(convexWalls, (convexWall) => {
           response.clear();
 
           if (sat(convexBody, convexWall, response)) {

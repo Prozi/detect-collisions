@@ -42,7 +42,9 @@ export class BaseSystem extends RBush<Body> implements Data {
         calcPoints: createBox(maxX - x, maxY - y),
       });
 
-      forEach(children, drawChildren);
+      if (children) {
+        forEach(children, drawChildren);
+      }
     };
 
     forEach(this.data.children, drawChildren);

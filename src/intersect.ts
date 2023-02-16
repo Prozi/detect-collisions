@@ -5,7 +5,7 @@ import { Circle } from "./bodies/circle";
 import { Polygon } from "./bodies/polygon";
 import { Line } from "./bodies/line";
 import { ensureConvex } from "./utils";
-import { filter, map } from "./optimized";
+import { filter, map, some } from "./optimized";
 
 export function polygonInCircle(
   { pos, calcPoints }: Polygon,
@@ -17,7 +17,7 @@ export function polygonInCircle(
 }
 
 export function pointInPolygon(a: Vector, b: Polygon): boolean {
-  return ensureConvex(b).some((convex) =>
+  return some(ensureConvex(b), (convex) =>
     pointInConvexPolygon(a as SATVector, convex)
   );
 }
@@ -86,7 +86,7 @@ export function circleInPolygon(
   // If the center of the circle is within the polygon,
   // the circle is not outside of the polygon completely.
   // so return false.
-  if (points.some((point) => pointInCircle(point, circle))) {
+  if (some(points, (point) => pointInCircle(point, circle))) {
     return false;
   }
 
@@ -94,7 +94,7 @@ export function circleInPolygon(
   // the circle is not "contained"
   // so return false
   if (
-    points.some((_point, i) => {
+    some(points, (_point, i) => {
       const start: Vector = i === 0 ? points[0] : points[i];
       const end: Vector =
         i === 0 ? points[points.length - 1] : points[i + 1] || points[i];
@@ -137,7 +137,8 @@ export function circleOutsidePolygon(
   // the circle is not outside of the polygon completely.
   // so return false.
   if (
-    points.some(
+    some(
+      points,
       (point) => pointInCircle(point, circle) || pointOnCircle(point, circle)
     )
   ) {
@@ -148,7 +149,7 @@ export function circleOutsidePolygon(
   // the circle is not "contained"
   // so return false
   if (
-    points.some((_point, i) => {
+    some(points, (_point, i) => {
       const start: Vector = i === 0 ? points[0] : points[i];
       const end: Vector =
         i === 0 ? points[points.length - 1] : points[i + 1] || points[i];
