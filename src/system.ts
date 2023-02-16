@@ -21,6 +21,7 @@ import {
   getSATTest,
 } from "./utils";
 import { intersectLineCircle, intersectLinePolygon } from "./intersect";
+import { filter, forEach } from "./optimized";
 
 /**
  * collision system
@@ -83,7 +84,7 @@ export class System extends BaseSystem {
    * update all bodies aabb
    */
   update(): void {
-    this.all().forEach((body: Body) => {
+    forEach(this.all(), (body: Body) => {
       // no need to every cycle update static body aabb
       if (!body.isStatic) {
         this.insert(body);
@@ -146,7 +147,7 @@ export class System extends BaseSystem {
    */
   getPotentials(body: Body): Body[] {
     // filter here is required as collides with self
-    return this.search(body).filter((candidate) => candidate !== body);
+    return filter(this.search(body), (candidate: Body) => candidate !== body);
   }
 
   /**
@@ -230,7 +231,7 @@ export class System extends BaseSystem {
           ? intersectLineCircle(this.ray, body)
           : intersectLinePolygon(this.ray, body);
 
-      points.forEach((point: Vector) => {
+      forEach(points, (point: Vector) => {
         const pointDistance: number = distance(start, point);
 
         if (pointDistance < minDistance) {

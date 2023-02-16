@@ -26,6 +26,7 @@ import {
   BodyType,
   Vector,
 } from "./model";
+import { forEach, map } from "./optimized";
 
 export const DEG2RAD = Math.PI / 180;
 export const RAD2DEG = 180 / Math.PI;
@@ -93,7 +94,7 @@ export function ensurePolygonPoints(points: PotentialVector[]): SATVector[] {
     throw new Error("No points array provided");
   }
 
-  const polygonPoints: SATVector[] = points.map(ensureVectorPoint);
+  const polygonPoints: SATVector[] = map(points, ensureVectorPoint);
 
   return clockwise(polygonPoints) ? polygonPoints.reverse() : polygonPoints;
 }
@@ -181,7 +182,7 @@ export function checkAInB(a: Body, b: Body): boolean {
  * clone sat vector points array into vector points array
  */
 export function clonePointsArray(points: SATVector[]): Vector[] {
-  return points.map(({ x, y }) => ({
+  return map(points, ({ x, y }: Vector) => ({
     x,
     y,
   }));
@@ -286,7 +287,7 @@ export function drawPolygon(
 ): void {
   const loopPoints = [...calcPoints, calcPoints[0]];
 
-  loopPoints.forEach((point: Vector, index: number) => {
+  forEach(loopPoints, (point: Vector, index: number) => {
     const toX = pos.x + point.x;
     const toY = pos.y + point.y;
     const prev = calcPoints[index - 1] || calcPoints[calcPoints.length - 1];

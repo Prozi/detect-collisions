@@ -14,6 +14,7 @@ import {
   RBush,
   Vector,
 } from "./model";
+import { forEach } from "./optimized";
 import { createBox, drawPolygon } from "./utils";
 
 /**
@@ -26,7 +27,7 @@ export class BaseSystem extends RBush<Body> implements Data {
    * draw bodies
    */
   draw(context: CanvasRenderingContext2D): void {
-    this.all().forEach((body: Body) => {
+    forEach(this.all(), (body: Body) => {
       body.draw(context);
     });
   }
@@ -41,10 +42,10 @@ export class BaseSystem extends RBush<Body> implements Data {
         calcPoints: createBox(maxX - x, maxY - y),
       });
 
-      children?.forEach(drawChildren);
+      forEach(children, drawChildren);
     };
 
-    this.data.children.forEach(drawChildren);
+    forEach(this.data.children, drawChildren);
   }
 
   /**
