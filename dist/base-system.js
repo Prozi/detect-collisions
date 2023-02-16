@@ -8,6 +8,7 @@ const line_1 = require("./bodies/line");
 const point_1 = require("./bodies/point");
 const polygon_1 = require("./bodies/polygon");
 const model_1 = require("./model");
+const optimized_1 = require("./optimized");
 const utils_1 = require("./utils");
 /**
  * very base collision system
@@ -17,7 +18,7 @@ class BaseSystem extends model_1.RBush {
      * draw bodies
      */
     draw(context) {
-        this.all().forEach((body) => {
+        (0, optimized_1.forEach)(this.all(), (body) => {
             body.draw(context);
         });
     }
@@ -30,9 +31,11 @@ class BaseSystem extends model_1.RBush {
                 pos: { x, y },
                 calcPoints: (0, utils_1.createBox)(maxX - x, maxY - y),
             });
-            children === null || children === void 0 ? void 0 : children.forEach(drawChildren);
+            if (children) {
+                (0, optimized_1.forEach)(children, drawChildren);
+            }
         };
-        this.data.children.forEach(drawChildren);
+        (0, optimized_1.forEach)(this.data.children, drawChildren);
     }
     /**
      * create point at position with options and add to system

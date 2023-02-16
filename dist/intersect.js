@@ -3,12 +3,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.circleOutsidePolygon = exports.circleInPolygon = exports.circleInCircle = exports.pointOnCircle = exports.polygonInPolygon = exports.pointInPolygon = exports.polygonInCircle = void 0;
 const sat_1 = require("sat");
 const utils_1 = require("./utils");
+const optimized_1 = require("./optimized");
 function polygonInCircle({ pos, calcPoints }, circle) {
     return calcPoints.every((p) => (0, sat_1.pointInCircle)({ x: p.x + pos.x, y: p.y + pos.y }, circle));
 }
 exports.polygonInCircle = polygonInCircle;
 function pointInPolygon(a, b) {
-    return (0, utils_1.ensureConvex)(b).some((convex) => (0, sat_1.pointInPolygon)(a, convex));
+    return (0, optimized_1.some)((0, utils_1.ensureConvex)(b), (convex) => (0, sat_1.pointInPolygon)(a, convex));
 }
 exports.pointInPolygon = pointInPolygon;
 function polygonInPolygon(a, b) {
@@ -45,7 +46,7 @@ function circleInPolygon(circle, polygon) {
         return false;
     }
     // Necessary add polygon pos to points
-    const points = polygon.calcPoints.map(({ x, y }) => ({
+    const points = (0, optimized_1.map)(polygon.calcPoints, ({ x, y }) => ({
         x: x + polygon.pos.x,
         y: y + polygon.pos.y,
     }));
@@ -58,13 +59,13 @@ function circleInPolygon(circle, polygon) {
     // If the center of the circle is within the polygon,
     // the circle is not outside of the polygon completely.
     // so return false.
-    if (points.some((point) => (0, sat_1.pointInCircle)(point, circle))) {
+    if ((0, optimized_1.some)(points, (point) => (0, sat_1.pointInCircle)(point, circle))) {
         return false;
     }
     // If any line-segment of the polygon intersects the circle,
     // the circle is not "contained"
     // so return false
-    if (points.some((_point, i) => {
+    if ((0, optimized_1.some)(points, (_point, i) => {
         const start = i === 0 ? points[0] : points[i];
         const end = i === 0 ? points[points.length - 1] : points[i + 1] || points[i];
         return intersectLineCircle({ start, end }, circle).length > 0;
@@ -89,20 +90,20 @@ function circleOutsidePolygon(circle, polygon) {
         return false;
     }
     // Necessary add polygon pos to points
-    const points = polygon.calcPoints.map(({ x, y }) => ({
+    const points = (0, optimized_1.map)(polygon.calcPoints, ({ x, y }) => ({
         x: x + polygon.pos.x,
         y: y + polygon.pos.y,
     }));
     // If the center of the circle is within the polygon,
     // the circle is not outside of the polygon completely.
     // so return false.
-    if (points.some((point) => (0, sat_1.pointInCircle)(point, circle) || pointOnCircle(point, circle))) {
+    if ((0, optimized_1.some)(points, (point) => (0, sat_1.pointInCircle)(point, circle) || pointOnCircle(point, circle))) {
         return false;
     }
     // If any line-segment of the polygon intersects the circle,
     // the circle is not "contained"
     // so return false
-    if (points.some((_point, i) => {
+    if ((0, optimized_1.some)(points, (_point, i) => {
         const start = i === 0 ? points[0] : points[i];
         const end = i === 0 ? points[points.length - 1] : points[i + 1] || points[i];
         return intersectLineCircle({ start, end }, circle).length > 0;
@@ -163,8 +164,7 @@ function intersectLineLine(line1, line2) {
 }
 exports.intersectLineLine = intersectLineLine;
 function intersectLinePolygon(line, polygon) {
-    return polygon.calcPoints
-        .map((to, index) => {
+    return (0, optimized_1.filter)((0, optimized_1.map)(polygon.calcPoints, (to, index) => {
         const from = index
             ? polygon.calcPoints[index - 1]
             : polygon.calcPoints[polygon.calcPoints.length - 1];
@@ -173,8 +173,7 @@ function intersectLinePolygon(line, polygon) {
             end: { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y },
         };
         return intersectLineLine(line, side);
-    })
-        .filter((test) => !!test);
+    }), (test) => !!test);
 }
 exports.intersectLinePolygon = intersectLinePolygon;
 //# sourceMappingURL=intersect.js.map

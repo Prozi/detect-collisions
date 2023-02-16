@@ -4,6 +4,7 @@ exports.Polygon = void 0;
 const poly_decomp_1 = require("poly-decomp");
 const sat_1 = require("sat");
 const model_1 = require("../model");
+const optimized_1 = require("../optimized");
 const utils_1 = require("../utils");
 /**
  * collider - polygon
@@ -118,7 +119,7 @@ class Polygon extends sat_1.Polygon {
     setScale(x, y = x) {
         this.scaleVector.x = x;
         this.scaleVector.y = y;
-        this.points.forEach((point, i) => {
+        (0, optimized_1.forEach)(this.points, (point, i) => {
             point.x = this.pointsBackup[i].x * x;
             point.y = this.pointsBackup[i].y * y;
         });
@@ -186,8 +187,7 @@ class Polygon extends sat_1.Polygon {
      * after the position of the body has changed
      */
     updateConvexPolygonPositions() {
-        var _a;
-        (_a = this.convexPolygons) === null || _a === void 0 ? void 0 : _a.forEach((polygon) => {
+        (0, optimized_1.forEach)(this.convexPolygons, (polygon) => {
             polygon.pos.x = this.pos.x;
             polygon.pos.y = this.pos.y;
         });
@@ -200,7 +200,7 @@ class Polygon extends sat_1.Polygon {
             this.points.length < 4) {
             return [];
         }
-        const points = this.calcPoints.map(utils_1.mapVectorToArray);
+        const points = (0, optimized_1.map)(this.calcPoints, utils_1.mapVectorToArray);
         if ((0, poly_decomp_1.isSimple)(points)) {
             return (0, poly_decomp_1.quickDecomp)(points);
         }
@@ -216,14 +216,14 @@ class Polygon extends sat_1.Polygon {
         if (!this.convexPolygons) {
             this.convexPolygons = [];
         }
-        convex.forEach((points, index) => {
+        (0, optimized_1.forEach)(convex, (points, index) => {
             // lazy create
             if (!this.convexPolygons[index]) {
                 this.convexPolygons[index] = new sat_1.Polygon();
             }
             this.convexPolygons[index].pos.x = this.pos.x;
             this.convexPolygons[index].pos.y = this.pos.y;
-            this.convexPolygons[index].setPoints((0, utils_1.ensurePolygonPoints)(points.map(utils_1.mapArrayToVector)));
+            this.convexPolygons[index].setPoints((0, utils_1.ensurePolygonPoints)((0, optimized_1.map)(points, utils_1.mapArrayToVector)));
         });
         // trim array length
         this.convexPolygons.length = convex.length;

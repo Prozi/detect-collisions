@@ -4,6 +4,7 @@ exports.drawPolygon = exports.getSATTest = exports.getBounceDirection = exports.
 const sat_1 = require("sat");
 const intersect_1 = require("./intersect");
 const model_1 = require("./model");
+const optimized_1 = require("./optimized");
 exports.DEG2RAD = Math.PI / 180;
 exports.RAD2DEG = 180 / Math.PI;
 /**
@@ -62,7 +63,7 @@ function ensurePolygonPoints(points) {
     if (!points) {
         throw new Error("No points array provided");
     }
-    const polygonPoints = points.map(ensureVectorPoint);
+    const polygonPoints = (0, optimized_1.map)(points, ensureVectorPoint);
     return clockwise(polygonPoints) ? polygonPoints.reverse() : polygonPoints;
 }
 exports.ensurePolygonPoints = ensurePolygonPoints;
@@ -139,7 +140,7 @@ exports.checkAInB = checkAInB;
  * clone sat vector points array into vector points array
  */
 function clonePointsArray(points) {
-    return points.map(({ x, y }) => ({
+    return (0, optimized_1.map)(points, ({ x, y }) => ({
         x,
         y,
     }));
@@ -216,7 +217,7 @@ exports.getSATTest = getSATTest;
  */
 function drawPolygon(context, { pos, calcPoints, }, isTrigger = false) {
     const loopPoints = [...calcPoints, calcPoints[0]];
-    loopPoints.forEach((point, index) => {
+    (0, optimized_1.forEach)(loopPoints, (point, index) => {
         const toX = pos.x + point.x;
         const toY = pos.y + point.y;
         const prev = calcPoints[index - 1] || calcPoints[calcPoints.length - 1];

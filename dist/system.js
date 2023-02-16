@@ -6,6 +6,7 @@ const line_1 = require("./bodies/line");
 const model_1 = require("./model");
 const utils_1 = require("./utils");
 const intersect_1 = require("./intersect");
+const optimized_1 = require("./optimized");
 /**
  * collision system
  */
@@ -58,7 +59,7 @@ class System extends base_system_1.BaseSystem {
      * update all bodies aabb
      */
     update() {
-        this.all().forEach((body) => {
+        (0, optimized_1.forEach)(this.all(), (body) => {
             // no need to every cycle update static body aabb
             if (!body.isStatic) {
                 this.insert(body);
@@ -85,7 +86,7 @@ class System extends base_system_1.BaseSystem {
         if (body.isStatic) {
             return false;
         }
-        return this.search(body).some((candidate) => {
+        return (0, optimized_1.some)(this.search(body), (candidate) => {
             if (candidate !== body &&
                 this.checkCollision(body, candidate, response)) {
                 return callback(response);
@@ -96,7 +97,7 @@ class System extends base_system_1.BaseSystem {
      * check all colliders collisions with callback
      */
     checkAll(callback, response = this.response) {
-        return this.all().some((body) => {
+        return (0, optimized_1.some)(this.all(), (body) => {
             return this.checkOne(body, callback, response);
         });
     }
@@ -106,7 +107,7 @@ class System extends base_system_1.BaseSystem {
      */
     getPotentials(body) {
         // filter here is required as collides with self
-        return this.search(body).filter((candidate) => candidate !== body);
+        return (0, optimized_1.filter)(this.search(body), (candidate) => candidate !== body);
     }
     /**
      * check do 2 objects collide
@@ -120,7 +121,7 @@ class System extends base_system_1.BaseSystem {
             const bothConvex = body.isConvex && wall.isConvex;
             const convexBodies = (0, utils_1.ensureConvex)(body);
             const convexWalls = (0, utils_1.ensureConvex)(wall);
-            convexBodies.some((convexBody) => convexWalls.some((convexWall) => {
+            (0, optimized_1.some)(convexBodies, (convexBody) => (0, optimized_1.some)(convexWalls, (convexWall) => {
                 response.clear();
                 if (sat(convexBody, convexWall, response)) {
                     collided = true;
@@ -168,7 +169,7 @@ class System extends base_system_1.BaseSystem {
             const points = body.type === model_1.BodyType.Circle
                 ? (0, intersect_1.intersectLineCircle)(this.ray, body)
                 : (0, intersect_1.intersectLinePolygon)(this.ray, body);
-            points.forEach((point) => {
+            (0, optimized_1.forEach)(points, (point) => {
                 const pointDistance = (0, utils_1.distance)(start, point);
                 if (pointDistance < minDistance) {
                     minDistance = pointDistance;
