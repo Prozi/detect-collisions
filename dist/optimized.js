@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.map = exports.filter = exports.some = exports.forEach = void 0;
+exports.map = exports.filter = exports.every = exports.some = exports.forEach = void 0;
 /**
  * 40-90% faster than built-in Array.forEach function.
  *
@@ -26,6 +26,20 @@ const some = (array, callback) => {
     return false;
 };
 exports.some = some;
+/**
+ * 20-40% faster than built-in Array.every function.
+ *
+ * basic benchmark: https://jsbench.me/unle7da29v
+ */
+const every = (array, callback) => {
+    for (let i = 0, l = array === null || array === void 0 ? void 0 : array.length; i < l; i++) {
+        if (!callback(array[i], i)) {
+            return false;
+        }
+    }
+    return true;
+};
+exports.every = every;
 /**
  * 20-60% faster than built-in Array.filter function.
  *

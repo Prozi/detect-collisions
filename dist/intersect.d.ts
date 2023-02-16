@@ -4,7 +4,7 @@ import { Polygon } from "./bodies/polygon";
 import { Line } from "./bodies/line";
 export declare function polygonInCircle({ pos, calcPoints }: Polygon, circle: Pick<Circle, "pos" | "r">): boolean;
 export declare function pointInPolygon(a: Vector, b: Polygon): boolean;
-export declare function polygonInPolygon(a: Polygon, b: Polygon): boolean;
+export declare function polygonInPolygon({ pos, calcPoints }: Polygon, b: Polygon): boolean;
 /**
  * https://stackoverflow.com/a/68197894/1749528
  */

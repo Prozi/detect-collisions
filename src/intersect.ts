@@ -5,13 +5,13 @@ import { Circle } from "./bodies/circle";
 import { Polygon } from "./bodies/polygon";
 import { Line } from "./bodies/line";
 import { ensureConvex } from "./utils";
-import { filter, map, some } from "./optimized";
+import { filter, map, some, every } from "./optimized";
 
 export function polygonInCircle(
   { pos, calcPoints }: Polygon,
   circle: Pick<Circle, "pos" | "r">
 ): boolean {
-  return calcPoints.every((p) =>
+  return every(calcPoints, (p) =>
     pointInCircle({ x: p.x + pos.x, y: p.y + pos.y } as SATVector, circle)
   );
 }
@@ -22,9 +22,12 @@ export function pointInPolygon(a: Vector, b: Polygon): boolean {
   );
 }
 
-export function polygonInPolygon(a: Polygon, b: Polygon): boolean {
-  return a.calcPoints.every((p) =>
-    pointInPolygon({ x: p.x + a.pos.x, y: p.y + a.pos.y }, b)
+export function polygonInPolygon(
+  { pos, calcPoints }: Polygon,
+  b: Polygon
+): boolean {
+  return every(calcPoints, (p) =>
+    pointInPolygon({ x: p.x + pos.x, y: p.y + pos.y }, b)
   );
 }
 

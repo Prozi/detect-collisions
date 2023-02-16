@@ -5,15 +5,15 @@ const sat_1 = require("sat");
 const utils_1 = require("./utils");
 const optimized_1 = require("./optimized");
 function polygonInCircle({ pos, calcPoints }, circle) {
-    return calcPoints.every((p) => (0, sat_1.pointInCircle)({ x: p.x + pos.x, y: p.y + pos.y }, circle));
+    return (0, optimized_1.every)(calcPoints, (p) => (0, sat_1.pointInCircle)({ x: p.x + pos.x, y: p.y + pos.y }, circle));
 }
 exports.polygonInCircle = polygonInCircle;
 function pointInPolygon(a, b) {
     return (0, optimized_1.some)((0, utils_1.ensureConvex)(b), (convex) => (0, sat_1.pointInPolygon)(a, convex));
 }
 exports.pointInPolygon = pointInPolygon;
-function polygonInPolygon(a, b) {
-    return a.calcPoints.every((p) => pointInPolygon({ x: p.x + a.pos.x, y: p.y + a.pos.y }, b));
+function polygonInPolygon({ pos, calcPoints }, b) {
+    return (0, optimized_1.every)(calcPoints, (p) => pointInPolygon({ x: p.x + pos.x, y: p.y + pos.y }, b));
 }
 exports.polygonInPolygon = polygonInPolygon;
 /**
