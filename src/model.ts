@@ -186,17 +186,7 @@ export interface BodyProps extends Required<BodyOptions> {
   getAABBAsBBox(): BBox;
 }
 
-type SATTestTemplate<T extends Body, Y extends Body> = (
-  a: T,
-  b: Y,
-  r: Response
-) => boolean;
-
-/**
- * test function from sat.js type
- */
-export type SATTest =
-  | SATTestTemplate<Circle, Polygon>
-  | SATTestTemplate<Circle, Circle>
-  | SATTestTemplate<Polygon, Polygon>
-  | SATTestTemplate<Polygon, Circle>;
+export type SATTest<
+  T extends {} = Circle | Polygon | SATPolygon,
+  Y extends {} = Circle | Polygon | SATPolygon
+> = (a: T, b: Y, r: Response) => boolean;

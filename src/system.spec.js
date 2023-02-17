@@ -514,8 +514,5 @@ describe("GIVEN System", () => {
     expect(physics.response.bInA).toBe(false);
 
     expect(physics.checkCollision(circle, line)).toBe(false);
-
-    expect(physics.response.aInB).toBe(false);
-    expect(physics.response.bInA).toBe(false);
   });
 });

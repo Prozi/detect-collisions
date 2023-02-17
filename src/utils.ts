@@ -266,7 +266,7 @@ export function getBounceDirection(body: Vector, collider: Vector): Vector {
 /**
  * returns correct sat.js testing function based on body types
  */
-export function getSATTest(body: Body, wall: Body): SATTest {
+export function getSATTest(body: Body, wall: Body) {
   if (body.type === BodyType.Circle) {
     return wall.type === BodyType.Circle ? testCircleCircle : testCirclePolygon;
   }
@@ -285,28 +285,26 @@ export function drawPolygon(
   }: Pick<Polygon | SATPolygon, "calcPoints"> & { pos: Vector },
   isTrigger = false
 ): void {
-  const loopPoints = [...calcPoints, calcPoints[0]];
+  const lastPoint = calcPoints[calcPoints.length - 1];
+  const fromX = pos.x + lastPoint.x;
+  const fromY = pos.y + lastPoint.y;
 
-  forEach(loopPoints, (point: Vector, index: number) => {
+  if (calcPoints.length === 1) {
+    context.arc(fromX, fromY, 1, 0, Math.PI * 2);
+  } else {
+    context.moveTo(fromX, fromY);
+  }
+
+  forEach(calcPoints, (point: Vector, index: number) => {
     const toX = pos.x + point.x;
     const toY = pos.y + point.y;
-    const prev = calcPoints[index - 1] || calcPoints[calcPoints.length - 1];
 
-    if (!index) {
-      if (calcPoints.length === 1) {
-        context.arc(toX, toY, 1, 0, Math.PI * 2);
-      } else {
-        context.moveTo(toX, toY);
-      }
-    } else if (calcPoints.length > 1) {
-      if (isTrigger) {
-        const fromX = pos.x + prev.x;
-        const fromY = pos.y + prev.y;
+    if (isTrigger) {
+      const prev = calcPoints[index - 1] || lastPoint;
 
-        dashLineTo(context, fromX, fromY, toX, toY);
-      } else {
-        context.lineTo(toX, toY);
-      }
+      dashLineTo(context, pos.x + prev.x, pos.y + prev.y, toX, toY);
+    } else {
+      context.lineTo(toX, toY);
     }
   });
 }

@@ -153,49 +153,49 @@ export class System extends BaseSystem {
   /**
    * check do 2 objects collide
    */
-  checkCollision(body: Body, wall: Body, response = this.response): boolean {
+  checkCollision(bodyA: Body, bodyB: Body, response = this.response): boolean {
+    // check without padding bbox
+    if (
+      (bodyA.padding || bodyB.padding) &&
+      !intersectAABB(bodyA.bbox || bodyA, bodyB.bbox || bodyB)
+    ) {
+      return false;
+    }
+
+    const sat = getSATTest(bodyA, bodyB) as SATTest;
+
+    // 99% of cases
+    if (bodyA.isConvex && bodyB.isConvex) {
+      response.clear();
+
+      return sat(bodyA, bodyB, response);
+    }
+
+    // more complex (non convex) cases
+    const convexBodiesA = ensureConvex(bodyA);
+    const convexBodiesB = ensureConvex(bodyB);
+    const overlapV = new SATVector();
     let collided = false;
 
-    if (
-      (!body.padding && !wall.padding) ||
-      intersectAABB(body.bbox || body, wall.bbox || wall)
-    ) {
-      const sat: SATTest = getSATTest(body, wall);
-      const overlapV = new SATVector();
-      const bothConvex = body.isConvex && wall.isConvex;
-      const convexBodies = ensureConvex(body) as [];
-      const convexWalls = ensureConvex(wall) as [];
+    forEach(convexBodiesA, (convexBodyA) => {
+      forEach(convexBodiesB, (convexBodyB) => {
+        response.clear();
 
-      some(convexBodies, (convexBody) =>
-        some(convexWalls, (convexWall) => {
-          response.clear();
+        if (sat(convexBodyA, convexBodyB, response)) {
+          collided = true;
+          overlapV.add(response.overlapV);
+        }
+      });
+    });
 
-          if (sat(convexBody, convexWall, response)) {
-            collided = true;
-
-            if (bothConvex) {
-              return true;
-            }
-
-            overlapV.add(response.overlapV);
-          }
-
-          return false;
-        })
-      );
-
-      if (!collided) {
-        response.aInB = false;
-        response.bInA = false;
-      } else if (!bothConvex) {
-        response.a = body;
-        response.b = wall;
-        response.overlapV = overlapV;
-        response.overlapN = overlapV.clone().normalize();
-        response.overlap = overlapV.len();
-        response.aInB = checkAInB(body, wall);
-        response.bInA = checkAInB(wall, body);
-      }
+    if (collided) {
+      response.a = bodyA;
+      response.b = bodyB;
+      response.overlapV = overlapV;
+      response.overlapN = overlapV.clone().normalize();
+      response.overlap = overlapV.len();
+      response.aInB = checkAInB(bodyA, bodyB);
+      response.bInA = checkAInB(bodyB, bodyA);
     }
 
     return collided;

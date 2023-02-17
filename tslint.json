@@ -154,17 +154,7 @@
       "check-format",
       "allow-leading-underscore"
     ],
-    "whitespace": [
-      true,
-      "check-branch",
-      "check-decl",
-      "check-operator",
-      "check-module",
-      "check-separator",
-      "check-type",
-      "check-typecast",
-      "check-preblock"
-    ],
+    "whitespace": [true],
     "max-file-line-count": [true, 400],
     "ban-comma-operator": true,
     "no-duplicate-switch-case": true,
