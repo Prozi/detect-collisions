@@ -1286,39 +1286,40 @@ class System extends base_system_1.BaseSystem {
     /**
      * check do 2 objects collide
      */
-    checkCollision(body, wall, response = this.response) {
+    checkCollision(bodyA, bodyB, response = this.response) {
+        // check without padding bbox
+        if ((bodyA.padding || bodyB.padding) &&
+            !(0, utils_1.intersectAABB)(bodyA.bbox || bodyA, bodyB.bbox || bodyB)) {
+            return false;
+        }
+        const sat = (0, utils_1.getSATTest)(bodyA, bodyB);
+        // 99% of cases
+        if (bodyA.isConvex && bodyB.isConvex) {
+            response.clear();
+            return sat(bodyA, bodyB, response);
+        }
+        // more complex (non convex) cases
+        const convexBodiesA = (0, utils_1.ensureConvex)(bodyA);
+        const convexBodiesB = (0, utils_1.ensureConvex)(bodyB);
+        const overlapV = new model_1.SATVector();
         let collided = false;
-        if ((!body.padding && !wall.padding) ||
-            (0, utils_1.intersectAABB)(body.bbox || body, wall.bbox || wall)) {
-            const sat = (0, utils_1.getSATTest)(body, wall);
-            const overlapV = new model_1.SATVector();
-            const bothConvex = body.isConvex && wall.isConvex;
-            const convexBodies = (0, utils_1.ensureConvex)(body);
-            const convexWalls = (0, utils_1.ensureConvex)(wall);
-            (0, optimized_1.some)(convexBodies, (convexBody) => (0, optimized_1.some)(convexWalls, (convexWall) => {
+        (0, optimized_1.forEach)(convexBodiesA, (convexBodyA) => {
+            (0, optimized_1.forEach)(convexBodiesB, (convexBodyB) => {
                 response.clear();
-                if (sat(convexBody, convexWall, response)) {
+                if (sat(convexBodyA, convexBodyB, response)) {
                     collided = true;
-                    if (bothConvex) {
-                        return true;
-                    }
                     overlapV.add(response.overlapV);
                 }
-                return false;
-            }));
-            if (!collided) {
-                response.aInB = false;
-                response.bInA = false;
-            }
-            else if (!bothConvex) {
-                response.a = body;
-                response.b = wall;
-                response.overlapV = overlapV;
-                response.overlapN = overlapV.clone().normalize();
-                response.overlap = overlapV.len();
-                response.aInB = (0, utils_1.checkAInB)(body, wall);
-                response.bInA = (0, utils_1.checkAInB)(wall, body);
-            }
+            });
+        });
+        if (collided) {
+            response.a = bodyA;
+            response.b = bodyB;
+            response.overlapV = overlapV;
+            response.overlapN = overlapV.clone().normalize();
+            response.overlap = overlapV.len();
+            response.aInB = (0, utils_1.checkAInB)(bodyA, bodyB);
+            response.bInA = (0, utils_1.checkAInB)(bodyB, bodyA);
         }
         return collided;
     }
@@ -1602,28 +1603,24 @@ exports.getSATTest = getSATTest;
  * draw polygon
  */
 function drawPolygon(context, { pos, calcPoints, }, isTrigger = false) {
-    const loopPoints = [...calcPoints, calcPoints[0]];
-    (0, optimized_1.forEach)(loopPoints, (point, index) => {
+    const lastPoint = calcPoints[calcPoints.length - 1];
+    const fromX = pos.x + lastPoint.x;
+    const fromY = pos.y + lastPoint.y;
+    if (calcPoints.length === 1) {
+        context.arc(fromX, fromY, 1, 0, Math.PI * 2);
+    }
+    else {
+        context.moveTo(fromX, fromY);
+    }
+    (0, optimized_1.forEach)(calcPoints, (point, index) => {
         const toX = pos.x + point.x;
         const toY = pos.y + point.y;
-        const prev = calcPoints[index - 1] || calcPoints[calcPoints.length - 1];
-        if (!index) {
-            if (calcPoints.length === 1) {
-                context.arc(toX, toY, 1, 0, Math.PI * 2);
-            }
-            else {
-                context.moveTo(toX, toY);
-            }
+        if (isTrigger) {
+            const prev = calcPoints[index - 1] || lastPoint;
+            dashLineTo(context, pos.x + prev.x, pos.y + prev.y, toX, toY);
         }
-        else if (calcPoints.length > 1) {
-            if (isTrigger) {
-                const fromX = pos.x + prev.x;
-                const fromY = pos.y + prev.y;
-                dashLineTo(context, fromX, fromY, toX, toY);
-            }
-            else {
-                context.lineTo(toX, toY);
-            }
+        else {
+            context.lineTo(toX, toY);
         }
     });
 }

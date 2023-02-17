@@ -1,10 +1,10 @@
 import { BBox } from "rbush";
 import { Point as DecompPoint } from "poly-decomp";
-import { Vector as SATVector } from "sat";
+import { testCircleCircle, testCirclePolygon, testPolygonCircle, testPolygonPolygon, Vector as SATVector } from "sat";
 import { Circle } from "./bodies/circle";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
-import { Body, BodyOptions, PotentialVector, SATPolygon, SATTest, Vector } from "./model";
+import { Body, BodyOptions, PotentialVector, SATPolygon, Vector } from "./model";
 export declare const DEG2RAD: number;
 export declare const RAD2DEG: number;
 /**
@@ -82,7 +82,7 @@ export declare function getBounceDirection(body: Vector, collider: Vector): Vect
 /**
  * returns correct sat.js testing function based on body types
  */
-export declare function getSATTest(body: Body, wall: Body): SATTest;
+export declare function getSATTest(body: Body, wall: Body): typeof testCircleCircle | typeof testCirclePolygon | typeof testPolygonCircle | typeof testPolygonPolygon;
 /**
  * draw polygon
  */

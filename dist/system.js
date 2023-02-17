@@ -112,39 +112,40 @@ class System extends base_system_1.BaseSystem {
     /**
      * check do 2 objects collide
      */
-    checkCollision(body, wall, response = this.response) {
+    checkCollision(bodyA, bodyB, response = this.response) {
+        // check without padding bbox
+        if ((bodyA.padding || bodyB.padding) &&
+            !(0, utils_1.intersectAABB)(bodyA.bbox || bodyA, bodyB.bbox || bodyB)) {
+            return false;
+        }
+        const sat = (0, utils_1.getSATTest)(bodyA, bodyB);
+        // 99% of cases
+        if (bodyA.isConvex && bodyB.isConvex) {
+            response.clear();
+            return sat(bodyA, bodyB, response);
+        }
+        // more complex (non convex) cases
+        const convexBodiesA = (0, utils_1.ensureConvex)(bodyA);
+        const convexBodiesB = (0, utils_1.ensureConvex)(bodyB);
+        const overlapV = new model_1.SATVector();
         let collided = false;
-        if ((!body.padding && !wall.padding) ||
-            (0, utils_1.intersectAABB)(body.bbox || body, wall.bbox || wall)) {
-            const sat = (0, utils_1.getSATTest)(body, wall);
-            const overlapV = new model_1.SATVector();
-            const bothConvex = body.isConvex && wall.isConvex;
-            const convexBodies = (0, utils_1.ensureConvex)(body);
-            const convexWalls = (0, utils_1.ensureConvex)(wall);
-            (0, optimized_1.some)(convexBodies, (convexBody) => (0, optimized_1.some)(convexWalls, (convexWall) => {
+        (0, optimized_1.forEach)(convexBodiesA, (convexBodyA) => {
+            (0, optimized_1.forEach)(convexBodiesB, (convexBodyB) => {
                 response.clear();
-                if (sat(convexBody, convexWall, response)) {
+                if (sat(convexBodyA, convexBodyB, response)) {
                     collided = true;
-                    if (bothConvex) {
-                        return true;
-                    }
                     overlapV.add(response.overlapV);
                 }
-                return false;
-            }));
-            if (!collided) {
-                response.aInB = false;
-                response.bInA = false;
-            }
-            else if (!bothConvex) {
-                response.a = body;
-                response.b = wall;
-                response.overlapV = overlapV;
-                response.overlapN = overlapV.clone().normalize();
-                response.overlap = overlapV.len();
-                response.aInB = (0, utils_1.checkAInB)(body, wall);
-                response.bInA = (0, utils_1.checkAInB)(wall, body);
-            }
+            });
+        });
+        if (collided) {
+            response.a = bodyA;
+            response.b = bodyB;
+            response.overlapV = overlapV;
+            response.overlapN = overlapV.clone().normalize();
+            response.overlap = overlapV.len();
+            response.aInB = (0, utils_1.checkAInB)(bodyA, bodyB);
+            response.bInA = (0, utils_1.checkAInB)(bodyB, bodyA);
         }
         return collided;
     }

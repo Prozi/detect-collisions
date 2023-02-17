@@ -216,28 +216,24 @@ exports.getSATTest = getSATTest;
  * draw polygon
  */
 function drawPolygon(context, { pos, calcPoints, }, isTrigger = false) {
-    const loopPoints = [...calcPoints, calcPoints[0]];
-    (0, optimized_1.forEach)(loopPoints, (point, index) => {
+    const lastPoint = calcPoints[calcPoints.length - 1];
+    const fromX = pos.x + lastPoint.x;
+    const fromY = pos.y + lastPoint.y;
+    if (calcPoints.length === 1) {
+        context.arc(fromX, fromY, 1, 0, Math.PI * 2);
+    }
+    else {
+        context.moveTo(fromX, fromY);
+    }
+    (0, optimized_1.forEach)(calcPoints, (point, index) => {
         const toX = pos.x + point.x;
         const toY = pos.y + point.y;
-        const prev = calcPoints[index - 1] || calcPoints[calcPoints.length - 1];
-        if (!index) {
-            if (calcPoints.length === 1) {
-                context.arc(toX, toY, 1, 0, Math.PI * 2);
-            }
-            else {
-                context.moveTo(toX, toY);
-            }
+        if (isTrigger) {
+            const prev = calcPoints[index - 1] || lastPoint;
+            dashLineTo(context, pos.x + prev.x, pos.y + prev.y, toX, toY);
         }
-        else if (calcPoints.length > 1) {
-            if (isTrigger) {
-                const fromX = pos.x + prev.x;
-                const fromY = pos.y + prev.y;
-                dashLineTo(context, fromX, fromY, toX, toY);
-            }
-            else {
-                context.lineTo(toX, toY);
-            }
+        else {
+            context.lineTo(toX, toY);
         }
     });
 }

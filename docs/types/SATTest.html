@@ -14,12 +14,34 @@
 <ul class="tsd-breadcrumb">
 <li><a href="../modules.html">Detect-Collisions</a></li>
 <li><a href="SATTest.html">SATTest</a></li></ul>
-<h1>Type alias SATTest</h1></div>
-<div class="tsd-signature">SATTest<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SATTestTemplate</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/Circle.html" class="tsd-signature-type" data-tsd-kind="Class">Circle</a><span class="tsd-signature-symbol">, </span><a href="../classes/Polygon.html" class="tsd-signature-type" data-tsd-kind="Class">Polygon</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SATTestTemplate</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/Circle.html" class="tsd-signature-type" data-tsd-kind="Class">Circle</a><span class="tsd-signature-symbol">, </span><a href="../classes/Circle.html" class="tsd-signature-type" data-tsd-kind="Class">Circle</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SATTestTemplate</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/Polygon.html" class="tsd-signature-type" data-tsd-kind="Class">Polygon</a><span class="tsd-signature-symbol">, </span><a href="../classes/Polygon.html" class="tsd-signature-type" data-tsd-kind="Class">Polygon</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SATTestTemplate</span><span class="tsd-signature-symbol">&lt;</span><a href="../classes/Polygon.html" class="tsd-signature-type" data-tsd-kind="Class">Polygon</a><span class="tsd-signature-symbol">, </span><a href="../classes/Circle.html" class="tsd-signature-type" data-tsd-kind="Class">Circle</a><span class="tsd-signature-symbol">&gt;</span></div>
-<div class="tsd-comment tsd-typography"><p>test function from sat.js type</p>
-</div><aside class="tsd-sources">
+<h1>Type alias SATTest&lt;T, Y&gt;</h1></div>
+<div class="tsd-signature">SATTest<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">Y</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span>, b<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">Y</span>, r<span class="tsd-signature-symbol">: </span><a href="../classes/Response.html" class="tsd-signature-type" data-tsd-kind="Class">Response</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span></div>
+<section class="tsd-panel tsd-type-parameters">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameters">
+<li>
+<h4>T<span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-symbol">{}</span> = <a href="../classes/Circle.html" class="tsd-signature-type" data-tsd-kind="Class">Circle</a><span class="tsd-signature-symbol"> | </span><a href="../classes/Polygon.html" class="tsd-signature-type" data-tsd-kind="Class">Polygon</a><span class="tsd-signature-symbol"> | </span><a href="../classes/SATPolygon.html" class="tsd-signature-type" data-tsd-kind="Class">SATPolygon</a></h4></li>
+<li>
+<h4>Y<span class="tsd-signature-symbol"> extends </span><span class="tsd-signature-symbol">{}</span> = <a href="../classes/Circle.html" class="tsd-signature-type" data-tsd-kind="Class">Circle</a><span class="tsd-signature-symbol"> | </span><a href="../classes/Polygon.html" class="tsd-signature-type" data-tsd-kind="Class">Polygon</a><span class="tsd-signature-symbol"> | </span><a href="../classes/SATPolygon.html" class="tsd-signature-type" data-tsd-kind="Class">SATPolygon</a></h4></li></ul></section>
+<div class="tsd-type-declaration">
+<h4>Type declaration</h4>
+<ul class="tsd-parameters">
+<li class="tsd-parameter-signature">
+<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
+<li class="tsd-signature" id="__type.__type-1"><span class="tsd-signature-symbol">(</span>a<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span>, b<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">Y</span>, r<span class="tsd-signature-symbol">: </span><a href="../classes/Response.html" class="tsd-signature-type" data-tsd-kind="Class">Response</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+<li class="tsd-description">
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>a: <span class="tsd-signature-type" data-tsd-kind="Type parameter">T</span></h5></li>
+<li>
+<h5>b: <span class="tsd-signature-type" data-tsd-kind="Type parameter">Y</span></h5></li>
+<li>
+<h5>r: <a href="../classes/Response.html" class="tsd-signature-type" data-tsd-kind="Class">Response</a></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4></li></ul></li></ul></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L198">src/model.ts:198</a></li></ul></aside></div>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L189">src/model.ts:189</a></li></ul></aside></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
