@@ -55,6 +55,10 @@ export declare class Polygon extends SATPolygon implements BBox, BodyProps {
      */
     readonly type: BodyType.Polygon | BodyType.Box | BodyType.Point | BodyType.Ellipse | BodyType.Line;
     /**
+     * backup of points used for scaling
+     */
+    protected pointsBackup: Vector[];
+    /**
      * is body centered
      */
     protected centered: boolean;

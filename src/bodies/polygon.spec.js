@@ -182,8 +182,11 @@ describe("GIVEN Polygon", () => {
       ]);
       const circle = physics.createCircle({ x: -5, y: 0 }, 1);
 
+      for (let i = 0; i < 10; i++) {
+        polygon.setScale(Math.random());
+      }
+
       // Make sure minX isn't -10 * 0.3 * 0.3
-      polygon.setScale(0.3);
       polygon.setScale(0.3);
 
       const { minX, minY, maxX, maxY } = polygon.getAABBAsBBox();

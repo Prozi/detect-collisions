@@ -73,6 +73,10 @@ describe("GIVEN Circle", () => {
       body.scale = 4;
       expect(body.scale).toBe(4);
 
+      for (let i = 0; i < 10; i++) {
+        body.setScale(Math.random());
+      }
+
       body.setScale(Math.PI, 3);
       expect(body.scaleX).toBe(Math.PI);
       expect(body.scaleY).toBe(Math.PI);

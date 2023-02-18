@@ -1,4 +1,4 @@
-import { decomp, isSimple, quickDecomp } from "poly-decomp";
+import { quickDecomp } from "poly-decomp";
 import { BBox } from "rbush";
 import { Polygon as SATPolygon } from "sat";
 
@@ -18,6 +18,7 @@ import {
   ensurePolygonPoints,
   ensureVectorPoint,
   extendBody,
+  clonePointsArray,
   drawPolygon,
   mapArrayToVector,
   mapVectorToArray,
@@ -91,6 +92,11 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
     | BodyType.Point
     | BodyType.Ellipse
     | BodyType.Line = BodyType.Polygon;
+
+  /**
+   * backup of points used for scaling
+   */
+  protected pointsBackup!: Vector[];
 
   /**
    * is body centered
@@ -210,18 +216,13 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    * update scale
    */
   setScale(x: number, y: number = x): void {
-    const pointsWithoutScale = map(this.points, (point: Vector) => ({
-      x: point.x / this.scaleVector.x,
-      y: point.y / this.scaleVector.y,
-    }));
-
     this.scaleVector.x = x;
     this.scaleVector.y = y;
 
     super.setPoints(
       map(this.points, (point: SATVector, index: number) => {
-        point.x = pointsWithoutScale[index].x * x;
-        point.y = pointsWithoutScale[index].y * y;
+        point.x = this.pointsBackup[index].x * x;
+        point.y = this.pointsBackup[index].y * y;
 
         return point;
       })
@@ -271,6 +272,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   setPoints(points: SATVector[]): Polygon {
     super.setPoints(points);
     this.updateIsConvex();
+    this.pointsBackup = clonePointsArray(points);
 
     return this;
   }
@@ -280,6 +282,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    */
   translate(x: number, y: number): Polygon {
     super.translate(x, y);
+    this.pointsBackup = clonePointsArray(this.points);
 
     return this;
   }
@@ -289,6 +292,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    */
   rotate(angle: number): Polygon {
     super.rotate(angle);
+    this.pointsBackup = clonePointsArray(this.points);
 
     return this;
   }
@@ -298,12 +302,14 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    * after the position of the body has changed
    */
   protected updateConvexPolygonPositions() {
-    if (this.convexPolygons) {
-      forEach(this.convexPolygons, (polygon: SATPolygon) => {
-        polygon.pos.x = this.pos.x;
-        polygon.pos.y = this.pos.y;
-      });
+    if (this.isConvex) {
+      return;
     }
+
+    forEach(this.convexPolygons, (polygon: SATPolygon) => {
+      polygon.pos.x = this.pos.x;
+      polygon.pos.y = this.pos.y;
+    });
   }
 
   /**
@@ -319,11 +325,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
 
     const points = map(this.calcPoints, mapVectorToArray);
 
-    if (isSimple(points)) {
-      return quickDecomp(points);
-    }
-
-    return decomp(points);
+    return quickDecomp(points);
   }
 
   /**
@@ -369,9 +371,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   }
 
   protected updateBody(): void {
-    if (!this.isConvex) {
-      this.updateConvexPolygonPositions();
-    }
+    this.updateConvexPolygonPositions();
     this.system?.insert(this);
   }
 }

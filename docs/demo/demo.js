@@ -686,15 +686,11 @@ class Polygon extends sat_1.Polygon {
      * update scale
      */
     setScale(x, y = x) {
-        const pointsWithoutScale = (0, optimized_1.map)(this.points, (point) => ({
-            x: point.x / this.scaleVector.x,
-            y: point.y / this.scaleVector.y,
-        }));
         this.scaleVector.x = x;
         this.scaleVector.y = y;
         super.setPoints((0, optimized_1.map)(this.points, (point, index) => {
-            point.x = pointsWithoutScale[index].x * x;
-            point.y = pointsWithoutScale[index].y * y;
+            point.x = this.pointsBackup[index].x * x;
+            point.y = this.pointsBackup[index].y * y;
             return point;
         }));
     }
@@ -736,6 +732,7 @@ class Polygon extends sat_1.Polygon {
     setPoints(points) {
         super.setPoints(points);
         this.updateIsConvex();
+        this.pointsBackup = (0, utils_1.clonePointsArray)(points);
         return this;
     }
     /**
@@ -743,6 +740,7 @@ class Polygon extends sat_1.Polygon {
      */
     translate(x, y) {
         super.translate(x, y);
+        this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
         return this;
     }
     /**
@@ -750,6 +748,7 @@ class Polygon extends sat_1.Polygon {
      */
     rotate(angle) {
         super.rotate(angle);
+        this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
         return this;
     }
     /**
@@ -757,12 +756,13 @@ class Polygon extends sat_1.Polygon {
      * after the position of the body has changed
      */
     updateConvexPolygonPositions() {
-        if (this.convexPolygons) {
-            (0, optimized_1.forEach)(this.convexPolygons, (polygon) => {
-                polygon.pos.x = this.pos.x;
-                polygon.pos.y = this.pos.y;
-            });
+        if (this.isConvex) {
+            return;
         }
+        (0, optimized_1.forEach)(this.convexPolygons, (polygon) => {
+            polygon.pos.x = this.pos.x;
+            polygon.pos.y = this.pos.y;
+        });
     }
     /**
      * returns body split into convex polygons, or empty array for convex bodies
@@ -773,10 +773,7 @@ class Polygon extends sat_1.Polygon {
             return [];
         }
         const points = (0, optimized_1.map)(this.calcPoints, utils_1.mapVectorToArray);
-        if ((0, poly_decomp_1.isSimple)(points)) {
-            return (0, poly_decomp_1.quickDecomp)(points);
-        }
-        return (0, poly_decomp_1.decomp)(points);
+        return (0, poly_decomp_1.quickDecomp)(points);
     }
     /**
      * updates convex polygons cache in body
@@ -812,9 +809,7 @@ class Polygon extends sat_1.Polygon {
     }
     updateBody() {
         var _a;
-        if (!this.isConvex) {
-            this.updateConvexPolygonPositions();
-        }
+        this.updateConvexPolygonPositions();
         (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
 }
