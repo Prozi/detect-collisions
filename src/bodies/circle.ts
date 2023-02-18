@@ -259,7 +259,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
    * internal for getting offset with applied angle
    */
   protected getOffsetWithAngle(): Vector {
-    if (!this.angle || (!this.offsetCopy.x && !this.offsetCopy.y)) {
+    if ((!this.offsetCopy.x && !this.offsetCopy.y) || !this.angle) {
       return this.offsetCopy;
     }
 

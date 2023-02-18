@@ -18,7 +18,6 @@ import {
   ensurePolygonPoints,
   ensureVectorPoint,
   extendBody,
-  clonePointsArray,
   drawPolygon,
   mapArrayToVector,
   mapVectorToArray,
@@ -94,11 +93,6 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
     | BodyType.Line = BodyType.Polygon;
 
   /**
-   * backup of points used for scaling
-   */
-  protected pointsBackup!: Vector[];
-
-  /**
    * is body centered
    */
   protected centered = false;
@@ -159,8 +153,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    */
   set x(x: number) {
     this.pos.x = x;
-    this.updateConvexPolygonPositions();
-    this.system?.insert(this);
+    this.updateBody();
   }
 
   get y(): number {
@@ -173,8 +166,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    */
   set y(y: number) {
     this.pos.y = y;
-    this.updateConvexPolygonPositions();
-    this.system?.insert(this);
+    this.updateBody();
   }
 
   /**
@@ -211,23 +203,29 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   setPosition(x: number, y: number): void {
     this.pos.x = x;
     this.pos.y = y;
-    this.updateConvexPolygonPositions();
-    this.system?.insert(this);
+    this.updateBody();
   }
 
   /**
    * update scale
    */
   setScale(x: number, y: number = x): void {
+    const pointsWithoutScale = map(this.points, (point: Vector) => ({
+      x: point.x / this.scaleVector.x,
+      y: point.y / this.scaleVector.y,
+    }));
+
     this.scaleVector.x = x;
     this.scaleVector.y = y;
 
-    forEach(this.points, (point: SATVector, i: number) => {
-      point.x = this.pointsBackup[i].x * x;
-      point.y = this.pointsBackup[i].y * y;
-    });
+    super.setPoints(
+      map(this.points, (point: SATVector, index: number) => {
+        point.x = pointsWithoutScale[index].x * x;
+        point.y = pointsWithoutScale[index].y * y;
 
-    super.setPoints(this.points);
+        return point;
+      })
+    );
   }
 
   /**
@@ -273,7 +271,6 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   setPoints(points: SATVector[]): Polygon {
     super.setPoints(points);
     this.updateIsConvex();
-    this.pointsBackup = clonePointsArray(points);
 
     return this;
   }
@@ -283,7 +280,6 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    */
   translate(x: number, y: number): Polygon {
     super.translate(x, y);
-    this.pointsBackup = clonePointsArray(this.points);
 
     return this;
   }
@@ -293,7 +289,6 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    */
   rotate(angle: number): Polygon {
     super.rotate(angle);
-    this.pointsBackup = clonePointsArray(this.points);
 
     return this;
   }
@@ -371,5 +366,12 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
     // everything with empty array or one element array
     this.isConvex = convex.length <= 1;
     this.updateConvexPolygons(convex);
+  }
+
+  protected updateBody(): void {
+    if (!this.isConvex) {
+      this.updateConvexPolygonPositions();
+    }
+    this.system?.insert(this);
   }
 }

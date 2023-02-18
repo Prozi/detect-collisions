@@ -22,7 +22,6 @@ import {
   BodyOptions,
   PotentialVector,
   SATPolygon,
-  SATTest,
   BodyType,
   Vector,
 } from "./model";

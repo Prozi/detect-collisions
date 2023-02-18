@@ -61,10 +61,8 @@ class Polygon extends sat_1.Polygon {
      * @deprecated use setPosition(x, y) instead
      */
     set x(x) {
-        var _a;
         this.pos.x = x;
-        this.updateConvexPolygonPositions();
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
+        this.updateBody();
     }
     get y() {
         return this.pos.y;
@@ -74,10 +72,8 @@ class Polygon extends sat_1.Polygon {
      * @deprecated use setPosition(x, y) instead
      */
     set y(y) {
-        var _a;
         this.pos.y = y;
-        this.updateConvexPolygonPositions();
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
+        this.updateBody();
     }
     /**
      * allow exact getting of scale x - use setScale(x, y) to set
@@ -107,23 +103,25 @@ class Polygon extends sat_1.Polygon {
      * update position
      */
     setPosition(x, y) {
-        var _a;
         this.pos.x = x;
         this.pos.y = y;
-        this.updateConvexPolygonPositions();
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
+        this.updateBody();
     }
     /**
      * update scale
      */
     setScale(x, y = x) {
+        const pointsWithoutScale = (0, optimized_1.map)(this.points, (point) => ({
+            x: point.x / this.scaleVector.x,
+            y: point.y / this.scaleVector.y,
+        }));
         this.scaleVector.x = x;
         this.scaleVector.y = y;
-        (0, optimized_1.forEach)(this.points, (point, i) => {
-            point.x = this.pointsBackup[i].x * x;
-            point.y = this.pointsBackup[i].y * y;
-        });
-        super.setPoints(this.points);
+        super.setPoints((0, optimized_1.map)(this.points, (point, index) => {
+            point.x = pointsWithoutScale[index].x * x;
+            point.y = pointsWithoutScale[index].y * y;
+            return point;
+        }));
     }
     /**
      * get body bounding box, without padding
@@ -163,7 +161,6 @@ class Polygon extends sat_1.Polygon {
     setPoints(points) {
         super.setPoints(points);
         this.updateIsConvex();
-        this.pointsBackup = (0, utils_1.clonePointsArray)(points);
         return this;
     }
     /**
@@ -171,7 +168,6 @@ class Polygon extends sat_1.Polygon {
      */
     translate(x, y) {
         super.translate(x, y);
-        this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
         return this;
     }
     /**
@@ -179,7 +175,6 @@ class Polygon extends sat_1.Polygon {
      */
     rotate(angle) {
         super.rotate(angle);
-        this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
         return this;
     }
     /**
@@ -239,6 +234,13 @@ class Polygon extends sat_1.Polygon {
         // everything with empty array or one element array
         this.isConvex = convex.length <= 1;
         this.updateConvexPolygons(convex);
+    }
+    updateBody() {
+        var _a;
+        if (!this.isConvex) {
+            this.updateConvexPolygonPositions();
+        }
+        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
 }
 exports.Polygon = Polygon;
