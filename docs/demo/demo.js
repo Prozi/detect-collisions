@@ -3810,7 +3810,7 @@ module.exports.height = height;
   \****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const { System, getBounceDirection, cos, sin } = __webpack_require__(/*! ../.. */ "./dist/index.js");
+const { System, getBounceDirection } = __webpack_require__(/*! ../.. */ "./dist/index.js");
 const { width, height } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js");
 const seededRandom = (__webpack_require__(/*! random-seed */ "./node_modules/random-seed/index.js").create)("@Prozi").random;
 
