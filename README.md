@@ -219,7 +219,7 @@ system.checkOne(body, (response: Response) => {
 })
 ```
 
-It is possible to skip the broad-phase search entirely and call `checkCollision()` directly on two bodies. although this is very not recommended as the BVH (rbush) broad-phase-search with bounding boxes makes the collision checking a lot more efficient.
+It is possible to skip the broad-phase search entirely and call `checkCollision()` directly on two bodies. Although this is **very not recommended** as the BVH (rbush) broad-phase-search with bounding boxes makes the collision checking **a lot more efficient**.
 
 ```javascript
 if (system.checkCollision(polygon, line)) {
@@ -305,8 +305,10 @@ Bodies can be individually drawn as well.
 ```javascript
 context.strokeStyle = "#FFFFFF"
 context.beginPath()
-polygon.draw(context)
-circle.draw(context)
+// draw specific body
+body.draw(context)
+// draw whole system
+system.draw(context)
 context.stroke()
 ```
 
@@ -315,6 +317,7 @@ The BVH can also be drawn to help test [Bounding Volume Hierarchy](https://en.wi
 ```javascript
 context.strokeStyle = "#FFFFFF"
 context.beginPath()
+// draw bounding volume hierarchy of the system
 system.drawBVH(context)
 context.stroke()
 ```
@@ -351,6 +354,13 @@ if (hit) {
 - point is the `Vector { x, y }` with coordinates of (closest) intersection
 - body is the reference to the closest body
 
+## Contribute
+
+Feel free to contribute, open a merge request. Some code style pointers:
+
+- use `npm run precommit` script before commiting your merge request
+- avoid use of `any` type
+
 ## FAQ
 
 ### Why shouldn't I just use a physics engine?
@@ -380,20 +390,20 @@ only using Detect-Collisions and with different _N_ amounts of dynamic, moving b
 typical output:
 
 ```bash
-┌─────────┬───────┬─────────────────────┐
-│ (index) │ value │        name         │
-├─────────┼───────┼─────────────────────┤
-│    0    │  317  │     'Total FPS'     │
-│    1    │  124  │ 'FPS / 1000 items'  │
-│    2    │  57   │ 'FPS / 2000 items'  │
-│    3    │  34   │ 'FPS / 3000 items'  │
-│    4    │  24   │ 'FPS / 4000 items'  │
-│    5    │  22   │ 'FPS / 5000 items'  │
-│    6    │  15   │ 'FPS / 6000 items'  │
-│    7    │  13   │ 'FPS / 7000 items'  │
-│    8    │  10   │ 'FPS / 8000 items'  │
-│    9    │   9   │ 'FPS / 9000 items'  │
-│   10    │   9   │ 'FPS / 10000 items' │
-└─────────┴───────┴─────────────────────┘
+┌─────────┬─────────┬─────┐
+│ (index) │  items  │ FPS │
+├─────────┼─────────┼─────┤
+│    0    │ 'total' │ 365 │
+│    1    │  1000   │ 119 │
+│    2    │  2000   │ 68  │
+│    3    │  3000   │ 48  │
+│    4    │  4000   │ 34  │
+│    5    │  5000   │ 24  │
+│    6    │  6000   │ 20  │
+│    7    │  7000   │ 16  │
+│    8    │  8000   │ 13  │
+│    9    │  9000   │ 13  │
+│   10    │  10000  │ 10  │
+└─────────┴─────────┴─────┘
 Done in 14.58s.
 ```

@@ -24,16 +24,16 @@ const run = (items) => {
 
     const fps = frames / (duration / 1000);
     summary.push({
-      name: `FPS / ${items} items`,
-      value: +fps.toFixed(2),
+      items,
+      FPS: +fps.toFixed(2),
     });
 
     if (items < 10000) {
       run(items + 1000);
     } else {
       summary.unshift({
-        value: summary.reduce((sum, entry) => sum + entry.value, 0),
-        name: "Total FPS",
+        items: "total",
+        FPS: +summary.reduce((sum, entry) => sum + entry.FPS, 0).toFixed(2),
       });
       console.table(summary);
       process.exit(0);
