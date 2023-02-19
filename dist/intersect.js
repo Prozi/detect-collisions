@@ -4,23 +4,25 @@ exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLine
 const sat_1 = require("sat");
 const utils_1 = require("./utils");
 const optimized_1 = require("./optimized");
-function polygonInCircle({ pos, calcPoints }, circle) {
-    return (0, optimized_1.every)(calcPoints, (p) => (0, sat_1.pointInCircle)({ x: p.x + pos.x, y: p.y + pos.y }, circle));
+function polygonInCircle(polygon, circle) {
+    return (0, optimized_1.every)(polygon.calcPoints, (p) => (0, sat_1.pointInCircle)({ x: p.x + polygon.pos.x, y: p.y + polygon.pos.y }, circle));
 }
 exports.polygonInCircle = polygonInCircle;
-function pointInPolygon(a, b) {
-    return (0, optimized_1.some)((0, utils_1.ensureConvex)(b), (convex) => (0, sat_1.pointInPolygon)(a, convex));
+function pointInPolygon(point, polygon) {
+    return (0, optimized_1.some)((0, utils_1.ensureConvex)(polygon), (convex) => (0, sat_1.pointInPolygon)(point, convex));
 }
 exports.pointInPolygon = pointInPolygon;
-function polygonInPolygon({ pos, calcPoints }, b) {
-    return (0, optimized_1.every)(calcPoints, (p) => pointInPolygon({ x: p.x + pos.x, y: p.y + pos.y }, b));
+function polygonInPolygon(polygonA, polygonB) {
+    return (0, optimized_1.every)(polygonA.calcPoints, (point) => pointInPolygon({ x: point.x + polygonA.pos.x, y: point.y + polygonA.pos.y }, polygonB));
 }
 exports.polygonInPolygon = polygonInPolygon;
 /**
  * https://stackoverflow.com/a/68197894/1749528
  */
-function pointOnCircle(p, { r, pos }) {
-    return ((p.x - pos.x) * (p.x - pos.x) + (p.y - pos.y) * (p.y - pos.y) === r * r);
+function pointOnCircle(point, circle) {
+    return ((point.x - circle.pos.x) * (point.x - circle.pos.x) +
+        (point.y - circle.pos.y) * (point.y - circle.pos.y) ===
+        circle.r * circle.r);
 }
 exports.pointOnCircle = pointOnCircle;
 /**
@@ -45,17 +47,17 @@ function circleInPolygon(circle, polygon) {
     if (circle.r === 0) {
         return false;
     }
-    // Necessary add polygon pos to points
-    const points = (0, optimized_1.map)(polygon.calcPoints, ({ x, y }) => ({
-        x: x + polygon.pos.x,
-        y: y + polygon.pos.y,
-    }));
     // If the center of the circle is not within the polygon,
     // then the circle may overlap, but it'll never be "contained"
     // so return false
     if (!pointInPolygon(circle.pos, polygon)) {
         return false;
     }
+    // Necessary add polygon pos to points
+    const points = (0, optimized_1.map)(polygon.calcPoints, ({ x, y }) => ({
+        x: x + polygon.pos.x,
+        y: y + polygon.pos.y,
+    }));
     // If the center of the circle is within the polygon,
     // the circle is not outside of the polygon completely.
     // so return false.

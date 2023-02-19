@@ -2,13 +2,13 @@ import { Vector } from "./model";
 import { Circle } from "./bodies/circle";
 import { Polygon } from "./bodies/polygon";
 import { Line } from "./bodies/line";
-export declare function polygonInCircle({ pos, calcPoints }: Polygon, circle: Pick<Circle, "pos" | "r">): boolean;
-export declare function pointInPolygon(a: Vector, b: Polygon): boolean;
-export declare function polygonInPolygon({ pos, calcPoints }: Polygon, b: Polygon): boolean;
+export declare function polygonInCircle(polygon: Polygon, circle: Pick<Circle, "pos" | "r">): boolean;
+export declare function pointInPolygon(point: Vector, polygon: Polygon): boolean;
+export declare function polygonInPolygon(polygonA: Polygon, polygonB: Polygon): boolean;
 /**
  * https://stackoverflow.com/a/68197894/1749528
  */
-export declare function pointOnCircle(p: Vector, { r, pos }: Pick<Circle, "pos" | "r">): boolean;
+export declare function pointOnCircle(point: Vector, circle: Pick<Circle, "pos" | "r">): boolean;
 /**
  * https://stackoverflow.com/a/68197894/1749528
  */

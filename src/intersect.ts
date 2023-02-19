@@ -8,26 +8,32 @@ import { ensureConvex } from "./utils";
 import { forEach, map, some, every } from "./optimized";
 
 export function polygonInCircle(
-  { pos, calcPoints }: Polygon,
+  polygon: Polygon,
   circle: Pick<Circle, "pos" | "r">
 ): boolean {
-  return every(calcPoints, (p) =>
-    pointInCircle({ x: p.x + pos.x, y: p.y + pos.y } as SATVector, circle)
+  return every(polygon.calcPoints, (p) =>
+    pointInCircle(
+      { x: p.x + polygon.pos.x, y: p.y + polygon.pos.y } as SATVector,
+      circle
+    )
   );
 }
 
-export function pointInPolygon(a: Vector, b: Polygon): boolean {
-  return some(ensureConvex(b), (convex) =>
-    pointInConvexPolygon(a as SATVector, convex)
+export function pointInPolygon(point: Vector, polygon: Polygon): boolean {
+  return some(ensureConvex(polygon), (convex) =>
+    pointInConvexPolygon(point as SATVector, convex)
   );
 }
 
 export function polygonInPolygon(
-  { pos, calcPoints }: Polygon,
-  b: Polygon
+  polygonA: Polygon,
+  polygonB: Polygon
 ): boolean {
-  return every(calcPoints, (p) =>
-    pointInPolygon({ x: p.x + pos.x, y: p.y + pos.y }, b)
+  return every(polygonA.calcPoints, (point) =>
+    pointInPolygon(
+      { x: point.x + polygonA.pos.x, y: point.y + polygonA.pos.y },
+      polygonB
+    )
   );
 }
 
@@ -35,11 +41,13 @@ export function polygonInPolygon(
  * https://stackoverflow.com/a/68197894/1749528
  */
 export function pointOnCircle(
-  p: Vector,
-  { r, pos }: Pick<Circle, "pos" | "r">
+  point: Vector,
+  circle: Pick<Circle, "pos" | "r">
 ): boolean {
   return (
-    (p.x - pos.x) * (p.x - pos.x) + (p.y - pos.y) * (p.y - pos.y) === r * r
+    (point.x - circle.pos.x) * (point.x - circle.pos.x) +
+      (point.y - circle.pos.y) * (point.y - circle.pos.y) ===
+    circle.r * circle.r
   );
 }
 
@@ -73,18 +81,18 @@ export function circleInPolygon(
     return false;
   }
 
-  // Necessary add polygon pos to points
-  const points = map(polygon.calcPoints, ({ x, y }: SATVector) => ({
-    x: x + polygon.pos.x,
-    y: y + polygon.pos.y,
-  })) as SATVector[];
-
   // If the center of the circle is not within the polygon,
   // then the circle may overlap, but it'll never be "contained"
   // so return false
   if (!pointInPolygon(circle.pos, polygon)) {
     return false;
   }
+
+  // Necessary add polygon pos to points
+  const points = map(polygon.calcPoints, ({ x, y }: SATVector) => ({
+    x: x + polygon.pos.x,
+    y: y + polygon.pos.y,
+  })) as SATVector[];
 
   // If the center of the circle is within the polygon,
   // the circle is not outside of the polygon completely.
