@@ -48,6 +48,10 @@ export declare function extendBody(body: Body, options?: BodyOptions): void;
  */
 export declare function bodyMoved(body: Body): boolean;
 /**
+ * returns true if two boxes not intersect
+ */
+export declare function notIntersectAABB(a: BBox, b: BBox): boolean;
+/**
  * checks if two boxes intersect
  */
 export declare function intersectAABB(a: BBox, b: BBox): boolean;

@@ -148,15 +148,19 @@ export function bodyMoved(body: Body): boolean {
 }
 
 /**
+ * returns true if two boxes not intersect
+ */
+export function notIntersectAABB(a: BBox, b: BBox): boolean {
+  return (
+    b.minX > a.maxX || b.minY > a.maxY || b.maxX < a.minX || b.maxY < a.minY
+  );
+}
+
+/**
  * checks if two boxes intersect
  */
 export function intersectAABB(a: BBox, b: BBox): boolean {
-  return !(
-    b.minX > a.maxX ||
-    b.minY > a.maxY ||
-    b.maxX < a.minX ||
-    b.maxY < a.minY
-  );
+  return !notIntersectAABB(a, b);
 }
 
 /**

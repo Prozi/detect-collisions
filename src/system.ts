@@ -16,9 +16,9 @@ import {
   distance,
   checkAInB,
   ensureConvex,
-  intersectAABB,
   bodyMoved,
   getSATTest,
+  notIntersectAABB,
 } from "./utils";
 import { intersectLineCircle, intersectLinePolygon } from "./intersect";
 import { filter, forEach, some } from "./optimized";
@@ -157,7 +157,7 @@ export class System extends BaseSystem {
     // check without padding bbox
     if (
       (bodyA.padding || bodyB.padding) &&
-      !intersectAABB(bodyA.bbox || bodyA, bodyB.bbox || bodyB)
+      notIntersectAABB(bodyA.bbox || bodyA, bodyB.bbox || bodyB)
     ) {
       return false;
     }

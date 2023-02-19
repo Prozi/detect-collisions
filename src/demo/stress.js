@@ -10,7 +10,7 @@ class Stress {
   constructor(count = 2000) {
     const size = Math.sqrt((width * height) / (count * 50));
 
-    this.physics = new System();
+    this.physics = new System(5);
     this.bodies = [];
     this.polygons = 0;
     this.boxes = 0;
@@ -131,7 +131,7 @@ class Stress {
     const direction = (random(0, 360) * Math.PI) / 180;
     const options = {
       isCentered: true,
-      padding: size * 0.5,
+      padding: (minSize + maxSize) * 0.2,
     };
 
     let body;

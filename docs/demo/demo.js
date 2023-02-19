@@ -1286,7 +1286,7 @@ class System extends base_system_1.BaseSystem {
     checkCollision(bodyA, bodyB, response = this.response) {
         // check without padding bbox
         if ((bodyA.padding || bodyB.padding) &&
-            !(0, utils_1.intersectAABB)(bodyA.bbox || bodyA, bodyB.bbox || bodyB)) {
+            (0, utils_1.notIntersectAABB)(bodyA.bbox || bodyA, bodyB.bbox || bodyB)) {
             return false;
         }
         const sat = (0, utils_1.getSATTest)(bodyA, bodyB);
@@ -1384,7 +1384,7 @@ exports.System = System;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.drawPolygon = exports.getSATTest = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
+exports.drawPolygon = exports.getSATTest = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const intersect_1 = __webpack_require__(/*! ./intersect */ "./dist/intersect.js");
 const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
@@ -1495,13 +1495,17 @@ function bodyMoved(body) {
 }
 exports.bodyMoved = bodyMoved;
 /**
+ * returns true if two boxes not intersect
+ */
+function notIntersectAABB(a, b) {
+    return (b.minX > a.maxX || b.minY > a.maxY || b.maxX < a.minX || b.maxY < a.minY);
+}
+exports.notIntersectAABB = notIntersectAABB;
+/**
  * checks if two boxes intersect
  */
 function intersectAABB(a, b) {
-    return !(b.minX > a.maxX ||
-        b.minY > a.maxY ||
-        b.maxX < a.minX ||
-        b.maxY < a.minY);
+    return !notIntersectAABB(a, b);
 }
 exports.intersectAABB = intersectAABB;
 /**
@@ -3817,7 +3821,7 @@ class Stress {
   constructor(count = 2000) {
     const size = Math.sqrt((width * height) / (count * 50));
 
-    this.physics = new System();
+    this.physics = new System(5);
     this.bodies = [];
     this.polygons = 0;
     this.boxes = 0;
@@ -3938,7 +3942,7 @@ class Stress {
     const direction = (random(0, 360) * Math.PI) / 180;
     const options = {
       isCentered: true,
-      padding: size * 0.5,
+      padding: (minSize + maxSize) * 0.2,
     };
 
     let body;

@@ -115,7 +115,7 @@ class System extends base_system_1.BaseSystem {
     checkCollision(bodyA, bodyB, response = this.response) {
         // check without padding bbox
         if ((bodyA.padding || bodyB.padding) &&
-            !(0, utils_1.intersectAABB)(bodyA.bbox || bodyA, bodyB.bbox || bodyB)) {
+            (0, utils_1.notIntersectAABB)(bodyA.bbox || bodyA, bodyB.bbox || bodyB)) {
             return false;
         }
         const sat = (0, utils_1.getSATTest)(bodyA, bodyB);

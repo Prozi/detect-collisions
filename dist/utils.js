@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.drawPolygon = exports.getSATTest = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
+exports.drawPolygon = exports.getSATTest = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
 const sat_1 = require("sat");
 const intersect_1 = require("./intersect");
 const model_1 = require("./model");
@@ -111,13 +111,17 @@ function bodyMoved(body) {
 }
 exports.bodyMoved = bodyMoved;
 /**
+ * returns true if two boxes not intersect
+ */
+function notIntersectAABB(a, b) {
+    return (b.minX > a.maxX || b.minY > a.maxY || b.maxX < a.minX || b.maxY < a.minY);
+}
+exports.notIntersectAABB = notIntersectAABB;
+/**
  * checks if two boxes intersect
  */
 function intersectAABB(a, b) {
-    return !(b.minX > a.maxX ||
-        b.minY > a.maxY ||
-        b.maxX < a.minX ||
-        b.maxY < a.minY);
+    return !notIntersectAABB(a, b);
 }
 exports.intersectAABB = intersectAABB;
 /**
