@@ -119,14 +119,17 @@ export class System extends BaseSystem {
       return false;
     }
 
-    return some(this.search(body), (candidate: Body) => {
+    const bodies = this.search(body);
+    const checkCollision = (candidate: Body) => {
       if (
         candidate !== body &&
         this.checkCollision(body, candidate, response)
       ) {
         return callback(response);
       }
-    });
+    };
+
+    return some(bodies, checkCollision);
   }
 
   /**
@@ -136,9 +139,12 @@ export class System extends BaseSystem {
     callback: (response: Response) => void | boolean,
     response = this.response
   ): boolean {
-    return some(this.all(), (body: Body) => {
+    const bodies = this.all();
+    const checkOne = (body: Body) => {
       return this.checkOne(body, callback, response);
-    });
+    };
+
+    return some(bodies, checkOne);
   }
 
   /**
@@ -154,7 +160,7 @@ export class System extends BaseSystem {
    * check do 2 objects collide
    */
   checkCollision(bodyA: Body, bodyB: Body, response = this.response): boolean {
-    // check without padding bbox
+    // if any of bodies has padding, we can short return false by assesing the bbox without padding
     if (
       (bodyA.padding || bodyB.padding) &&
       notIntersectAABB(bodyA.bbox || bodyA, bodyB.bbox || bodyB)

@@ -86,20 +86,24 @@ class System extends base_system_1.BaseSystem {
         if (body.isStatic) {
             return false;
         }
-        return (0, optimized_1.some)(this.search(body), (candidate) => {
+        const bodies = this.search(body);
+        const checkCollision = (candidate) => {
             if (candidate !== body &&
                 this.checkCollision(body, candidate, response)) {
                 return callback(response);
             }
-        });
+        };
+        return (0, optimized_1.some)(bodies, checkCollision);
     }
     /**
      * check all colliders collisions with callback
      */
     checkAll(callback, response = this.response) {
-        return (0, optimized_1.some)(this.all(), (body) => {
+        const bodies = this.all();
+        const checkOne = (body) => {
             return this.checkOne(body, callback, response);
-        });
+        };
+        return (0, optimized_1.some)(bodies, checkOne);
     }
     /**
      * get object potential colliders
@@ -113,7 +117,7 @@ class System extends base_system_1.BaseSystem {
      * check do 2 objects collide
      */
     checkCollision(bodyA, bodyB, response = this.response) {
-        // check without padding bbox
+        // if any of bodies has padding, we can short return false by assesing the bbox without padding
         if ((bodyA.padding || bodyB.padding) &&
             (0, utils_1.notIntersectAABB)(bodyA.bbox || bodyA, bodyB.bbox || bodyB)) {
             return false;

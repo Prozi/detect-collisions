@@ -82,7 +82,7 @@ export declare function ensureConvex<T extends Body = Circle | Point | Polygon>(
 /**
  * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
  */
-export declare function getBounceDirection(body: Vector, collider: Vector): Vector;
+export declare function getBounceDirection(body: Vector, collider: Vector): SATVector;
 /**
  * returns correct sat.js testing function based on body types
  */

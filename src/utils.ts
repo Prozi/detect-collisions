@@ -259,7 +259,7 @@ export function ensureConvex<T extends Body = Circle | Point | Polygon>(
 /**
  * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
  */
-export function getBounceDirection(body: Vector, collider: Vector): Vector {
+export function getBounceDirection(body: Vector, collider: Vector): SATVector {
   const v2 = new SATVector(collider.x - body.x, collider.y - body.y);
   const v1 = new SATVector(body.x - collider.x, body.y - collider.y);
   const len = v1.dot(v2.normalize()) * 2;

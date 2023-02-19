@@ -1286,20 +1286,24 @@ class System extends base_system_1.BaseSystem {
         if (body.isStatic) {
             return false;
         }
-        return (0, optimized_1.some)(this.search(body), (candidate) => {
+        const bodies = this.search(body);
+        const checkCollision = (candidate) => {
             if (candidate !== body &&
                 this.checkCollision(body, candidate, response)) {
                 return callback(response);
             }
-        });
+        };
+        return (0, optimized_1.some)(bodies, checkCollision);
     }
     /**
      * check all colliders collisions with callback
      */
     checkAll(callback, response = this.response) {
-        return (0, optimized_1.some)(this.all(), (body) => {
+        const bodies = this.all();
+        const checkOne = (body) => {
             return this.checkOne(body, callback, response);
-        });
+        };
+        return (0, optimized_1.some)(bodies, checkOne);
     }
     /**
      * get object potential colliders
@@ -1313,7 +1317,7 @@ class System extends base_system_1.BaseSystem {
      * check do 2 objects collide
      */
     checkCollision(bodyA, bodyB, response = this.response) {
-        // check without padding bbox
+        // if any of bodies has padding, we can short return false by assesing the bbox without padding
         if ((bodyA.padding || bodyB.padding) &&
             (0, utils_1.notIntersectAABB)(bodyA.bbox || bodyA, bodyB.bbox || bodyB)) {
             return false;
@@ -3862,26 +3866,22 @@ class Stress {
 
     // World bounds
     this.bounds = [
-      this.physics.createLine(
-        { x: 0, y: 0 },
-        { x: width, y: 0 },
-        { isStatic: true, isCentered: true }
-      ),
-      this.physics.createLine(
-        { x: width, y: 0 },
-        { x: width, y: height },
-        { isStatic: true, isCentered: true }
-      ),
-      this.physics.createLine(
-        { x: width, y: height },
-        { x: 0, y: height },
-        { isStatic: true, isCentered: true }
-      ),
-      this.physics.createLine(
-        { x: 0, y: height },
-        { x: 0, y: 0 },
-        { isStatic: true, isCentered: true }
-      ),
+      this.physics.createBox({ x: 0, y: 0 }, width, 10, {
+        isStatic: true,
+        isCentered: true,
+      }),
+      this.physics.createBox({ x: width - 10, y: 0 }, 10, height, {
+        isStatic: true,
+        isCentered: true,
+      }),
+      this.physics.createBox({ x: 0, y: height - 10 }, width, 10, {
+        isStatic: true,
+        isCentered: true,
+      }),
+      this.physics.createBox({ x: 0, y: 0 }, 10, height, {
+        isStatic: true,
+        isCentered: true,
+      }),
     ];
 
     for (let i = 0; i < count; ++i) {
@@ -3895,6 +3895,7 @@ class Stress {
     <div><b>Ellipses:</b> ${this.ellipses}</div>
     <div><b>Lines:</b> ${this.lines}</div>`;
 
+    this.lastTime = Date.now();
     this.start = () => {
       const frame = () => {
         this.update();
@@ -3907,42 +3908,46 @@ class Stress {
   }
 
   update() {
-    const timeScale = 0.5;
+    const now = Date.now();
+    const timeScale = (now - this.lastTime) / 60;
+    this.lastTime = now;
 
-    this.bodies.forEach((body) => {
-      body.setAngle(body.angle + body.rotationSpeed * timeScale);
+    this.bodies.forEach(this.updateBody.bind(this, timeScale));
+  }
 
-      if (seededRandom() < 0.05 * timeScale) {
-        body.targetScale.x = 0.5 + seededRandom();
-      }
+  updateBody(timeScale, body) {
+    body.setAngle(body.angle + body.rotationSpeed * timeScale);
 
-      if (seededRandom() < 0.05 * timeScale) {
-        body.targetScale.y = 0.5 + seededRandom();
-      }
+    if (seededRandom() < 0.05 * timeScale) {
+      body.targetScale.x = 0.5 + seededRandom();
+    }
 
-      if (Math.abs(body.targetScale.x - body.scaleX) > 0.01) {
-        body.setScale(
-          body.scaleX +
-            Math.sign(body.targetScale.x - body.scaleX) * 0.02 * timeScale,
-          body.scaleY +
-            Math.sign(body.targetScale.y - body.scaleY) * 0.02 * timeScale
-        );
-      }
+    if (seededRandom() < 0.05 * timeScale) {
+      body.targetScale.y = 0.5 + seededRandom();
+    }
 
-      // as last step update position, and bounding box
-      body.setPosition(
-        body.x + body.directionX * timeScale,
-        body.y + body.directionY * timeScale
+    if (Math.abs(body.targetScale.x - body.scaleX) > 0.01) {
+      body.setScale(
+        body.scaleX +
+          Math.sign(body.targetScale.x - body.scaleX) * 0.02 * timeScale,
+        body.scaleY +
+          Math.sign(body.targetScale.y - body.scaleY) * 0.02 * timeScale
       );
-    });
+    }
 
-    // console.time("bodies separate");
-    this.physics.checkAll(({ a, b, overlapV }) => {
-      this.bounce(a, b, overlapV);
-      a.rotationSpeed = (seededRandom() - seededRandom()) * 0.1;
-      a.setPosition(a.x - overlapV.x, a.y - overlapV.y);
-    });
-    // console.timeEnd("bodies separate");
+    // as last step update position, and bounding box
+    body.setPosition(
+      body.x + body.directionX * timeScale,
+      body.y + body.directionY * timeScale
+    );
+
+    this.physics.checkOne(body, this.checkBounce.bind(this));
+  }
+
+  checkBounce({ a, b, overlapV }) {
+    this.bounce(a, b, overlapV);
+    a.rotationSpeed = (seededRandom() - seededRandom()) * 0.1;
+    a.setPosition(a.x - overlapV.x, a.y - overlapV.y);
   }
 
   bounce(a, b, overlapV) {
@@ -3957,7 +3962,12 @@ class Stress {
       return;
     }
 
-    const { x, y } = getBounceDirection(a, b);
+    const bounce = getBounceDirection(a, b);
+    bounce.scale(b.size * 0.5 * (b.scaleX + b.scaleY)).add({
+      x: a.directionX * a.size,
+      y: a.directionY * a.size * 0.5 * (a.scaleX + a.scaleY),
+    });
+    const { x, y } = bounce.normalize();
 
     a.directionX = x;
     a.directionY = y;
@@ -3981,7 +3991,7 @@ class Stress {
       case 0:
         body = this.physics.createCircle(
           { x, y },
-          random(minSize, maxSize),
+          random(minSize, maxSize) / 2,
           options
         );
 
@@ -4041,6 +4051,7 @@ class Stress {
     body.setAngle((random(0, 360) * Math.PI) / 180);
 
     body.targetScale = { x: 1, y: 1 };
+    body.size = (minSize + maxSize) / 2;
 
     body.directionX = Math.cos(direction);
     body.directionY = Math.sin(direction);
