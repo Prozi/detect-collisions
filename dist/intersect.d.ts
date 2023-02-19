@@ -26,6 +26,12 @@ export declare function circleOutsidePolygon(circle: Pick<Circle, "pos" | "r">, 
  */
 export declare function intersectLineCircle(line: Pick<Line, "start" | "end">, { pos, r }: Pick<Circle, "pos" | "r">): Vector[];
 /**
+ * faster implementation of intersectLineLine
+ * https://stackoverflow.com/a/16725715/1749528
+ */
+export declare function intersectLineLineFast(line1: Pick<Line, "start" | "end">, line2: Pick<Line, "start" | "end">): boolean;
+/**
+ * returns the point of intersection
  * https://stackoverflow.com/a/24392281/1749528
  */
 export declare function intersectLineLine(line1: Pick<Line, "start" | "end">, line2: Pick<Line, "start" | "end">): Vector | null;

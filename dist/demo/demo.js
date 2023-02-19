@@ -864,7 +864,7 @@ __exportStar(__webpack_require__(/*! ./intersect */ "./dist/intersect.js"), expo
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineCircle = exports.circleOutsidePolygon = exports.circleInPolygon = exports.circleInCircle = exports.pointOnCircle = exports.polygonInPolygon = exports.pointInPolygon = exports.polygonInCircle = void 0;
+exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineLineFast = exports.intersectLineCircle = exports.circleOutsidePolygon = exports.circleInPolygon = exports.circleInCircle = exports.pointOnCircle = exports.polygonInPolygon = exports.pointInPolygon = exports.polygonInCircle = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils.js");
 const optimized_1 = __webpack_require__(/*! ./optimized */ "./dist/optimized.js");
@@ -929,9 +929,10 @@ function circleInPolygon(circle, polygon) {
     // If any line-segment of the polygon intersects the circle,
     // the circle is not "contained"
     // so return false
-    if ((0, optimized_1.some)(points, (_point, i) => {
-        const start = i === 0 ? points[0] : points[i];
-        const end = i === 0 ? points[points.length - 1] : points[i + 1] || points[i];
+    if ((0, optimized_1.some)(points, (end, index) => {
+        const start = index
+            ? points[index - 1]
+            : points[points.length - 1];
         return intersectLineCircle({ start, end }, circle).length > 0;
     })) {
         return false;
@@ -967,9 +968,10 @@ function circleOutsidePolygon(circle, polygon) {
     // If any line-segment of the polygon intersects the circle,
     // the circle is not "contained"
     // so return false
-    if ((0, optimized_1.some)(points, (_point, i) => {
-        const start = i === 0 ? points[0] : points[i];
-        const end = i === 0 ? points[points.length - 1] : points[i + 1] || points[i];
+    if ((0, optimized_1.some)(points, (end, index) => {
+        const start = index
+            ? points[index - 1]
+            : points[points.length - 1];
         return intersectLineCircle({ start, end }, circle).length > 0;
     })) {
         return false;
@@ -1005,6 +1007,26 @@ function intersectLineCircle(line, { pos, r }) {
 }
 exports.intersectLineCircle = intersectLineCircle;
 /**
+ * helper for intersectLineLineFast
+ */
+function isTurn(point1, point2, point3) {
+    const A = (point3.x - point1.x) * (point2.y - point1.y);
+    const B = (point2.x - point1.x) * (point3.y - point1.y);
+    return A > B + Number.EPSILON ? 1 : A + Number.EPSILON < B ? -1 : 0;
+}
+/**
+ * faster implementation of intersectLineLine
+ * https://stackoverflow.com/a/16725715/1749528
+ */
+function intersectLineLineFast(line1, line2) {
+    return (isTurn(line1.start, line2.start, line2.end) !==
+        isTurn(line1.end, line2.start, line2.end) &&
+        isTurn(line1.start, line1.end, line2.start) !==
+            isTurn(line1.start, line1.end, line2.end));
+}
+exports.intersectLineLineFast = intersectLineLineFast;
+/**
+ * returns the point of intersection
  * https://stackoverflow.com/a/24392281/1749528
  */
 function intersectLineLine(line1, line2) {
@@ -1028,7 +1050,8 @@ function intersectLineLine(line1, line2) {
 }
 exports.intersectLineLine = intersectLineLine;
 function intersectLinePolygon(line, polygon) {
-    return (0, optimized_1.filter)((0, optimized_1.map)(polygon.calcPoints, (to, index) => {
+    const results = [];
+    (0, optimized_1.forEach)(polygon.calcPoints, (to, index) => {
         const from = index
             ? polygon.calcPoints[index - 1]
             : polygon.calcPoints[polygon.calcPoints.length - 1];
@@ -1036,8 +1059,12 @@ function intersectLinePolygon(line, polygon) {
             start: { x: from.x + polygon.pos.x, y: from.y + polygon.pos.y },
             end: { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y },
         };
-        return intersectLineLine(line, side);
-    }), (test) => !!test);
+        const hit = intersectLineLine(line, side);
+        if (hit) {
+            results.push(hit);
+        }
+    });
+    return results;
 }
 exports.intersectLinePolygon = intersectLinePolygon;
 //# sourceMappingURL=intersect.js.map

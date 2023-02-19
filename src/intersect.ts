@@ -5,7 +5,7 @@ import { Circle } from "./bodies/circle";
 import { Polygon } from "./bodies/polygon";
 import { Line } from "./bodies/line";
 import { ensureConvex } from "./utils";
-import { filter, map, some, every } from "./optimized";
+import { forEach, map, some, every } from "./optimized";
 
 export function polygonInCircle(
   { pos, calcPoints }: Polygon,
@@ -97,10 +97,10 @@ export function circleInPolygon(
   // the circle is not "contained"
   // so return false
   if (
-    some(points, (_point, i) => {
-      const start: Vector = i === 0 ? points[0] : points[i];
-      const end: Vector =
-        i === 0 ? points[points.length - 1] : points[i + 1] || points[i];
+    some(points, (end, index) => {
+      const start: Vector = index
+        ? points[index - 1]
+        : points[points.length - 1];
 
       return intersectLineCircle({ start, end }, circle).length > 0;
     })
@@ -152,10 +152,10 @@ export function circleOutsidePolygon(
   // the circle is not "contained"
   // so return false
   if (
-    some(points, (_point, i) => {
-      const start: Vector = i === 0 ? points[0] : points[i];
-      const end: Vector =
-        i === 0 ? points[points.length - 1] : points[i + 1] || points[i];
+    some(points, (end, index) => {
+      const start: Vector = index
+        ? points[index - 1]
+        : points[points.length - 1];
 
       return intersectLineCircle({ start, end }, circle).length > 0;
     })
@@ -202,6 +202,33 @@ export function intersectLineCircle(
 }
 
 /**
+ * helper for intersectLineLineFast
+ */
+function isTurn(point1: Vector, point2: Vector, point3: Vector) {
+  const A = (point3.x - point1.x) * (point2.y - point1.y);
+  const B = (point2.x - point1.x) * (point3.y - point1.y);
+
+  return A > B + Number.EPSILON ? 1 : A + Number.EPSILON < B ? -1 : 0;
+}
+
+/**
+ * faster implementation of intersectLineLine
+ * https://stackoverflow.com/a/16725715/1749528
+ */
+export function intersectLineLineFast(
+  line1: Pick<Line, "start" | "end">,
+  line2: Pick<Line, "start" | "end">
+): boolean {
+  return (
+    isTurn(line1.start, line2.start, line2.end) !==
+      isTurn(line1.end, line2.start, line2.end) &&
+    isTurn(line1.start, line1.end, line2.start) !==
+      isTurn(line1.start, line1.end, line2.end)
+  );
+}
+
+/**
+ * returns the point of intersection
  * https://stackoverflow.com/a/24392281/1749528
  */
 export function intersectLineLine(
@@ -237,18 +264,23 @@ export function intersectLineLine(
 }
 
 export function intersectLinePolygon(line: Line, polygon: Polygon): Vector[] {
-  return filter(
-    map(polygon.calcPoints, (to: Vector, index: number) => {
-      const from: Vector = index
-        ? polygon.calcPoints[index - 1]
-        : polygon.calcPoints[polygon.calcPoints.length - 1];
-      const side = {
-        start: { x: from.x + polygon.pos.x, y: from.y + polygon.pos.y },
-        end: { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y },
-      };
+  const results: Vector[] = [];
 
-      return intersectLineLine(line, side);
-    }),
-    (test: Vector | null) => !!test
-  ) as Vector[];
+  forEach(polygon.calcPoints, (to: Vector, index: number) => {
+    const from: Vector = index
+      ? polygon.calcPoints[index - 1]
+      : polygon.calcPoints[polygon.calcPoints.length - 1];
+    const side = {
+      start: { x: from.x + polygon.pos.x, y: from.y + polygon.pos.y },
+      end: { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y },
+    };
+
+    const hit = intersectLineLine(line, side);
+
+    if (hit) {
+      results.push(hit);
+    }
+  });
+
+  return results;
 }
