@@ -12,12 +12,13 @@ This library combines:
 
 - efficiency of [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy) (BVH) for broad-phase searching
 - accuracy of [Separating Axis Theorem](https://en.wikipedia.org/wiki/Separating_axis_theorem) (SAT) for narrow-phase collision testing
-- decomposing of [Concave Polygons](https://en.wikipedia.org/wiki/Polygon_triangulation) into convex ones so you can use concave polygons
+- decomposing of [Concave Polygons](https://mpen.ca/406/bayazit) into convex ones so you can use concave polygons
 
 ## Demos
 
 - [Tank](https://prozi.github.io/detect-collisions/demo/)
 - [Stress Test](https://prozi.github.io/detect-collisions/demo/?stress)
+- [Stackblitz](https://stackblitz.com/edit/detect-collisions)
 
 ## Installation
 

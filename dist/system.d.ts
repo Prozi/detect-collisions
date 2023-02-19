@@ -1,6 +1,7 @@
 /// <reference types="sat" />
 import RBush from "rbush";
 import { BaseSystem } from "./base-system";
+import { Line } from "./bodies/line";
 import { Body, Leaf, RaycastHit, Response, Vector } from "./model";
 /**
  * collision system
@@ -10,7 +11,7 @@ export declare class System extends BaseSystem {
      * the last collision result
      */
     response: Response;
-    private ray;
+    protected ray: Line;
     /**
      * remove body aabb from collision tree
      */

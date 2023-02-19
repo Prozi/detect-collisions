@@ -1,7 +1,9 @@
+import { isSimple } from "poly-decomp";
 import { BBox } from "rbush";
 import { Polygon as SATPolygon } from "sat";
 import { BodyOptions, BodyProps, DecompPolygon, PotentialVector, SATVector, BodyType, Vector } from "../model";
 import { System } from "../system";
+export { isSimple };
 /**
  * collider - polygon
  */
@@ -139,6 +141,10 @@ export declare class Polygon extends SATPolygon implements BBox, BodyProps {
      */
     rotate(angle: number): Polygon;
     /**
+     * if true, polygon is not an invalid, self-crossing polygon
+     */
+    isSimple(): boolean;
+    /**
      * update the position of the decomposed convex polygons (if any), called
      * after the position of the body has changed
      */
@@ -155,6 +161,9 @@ export declare class Polygon extends SATPolygon implements BBox, BodyProps {
      * after points update set is convex
      */
     protected updateIsConvex(): void;
+    /**
+     * inner function for after position change update aabb in system and convex inner polygons
+     */
     protected updateBody(): void;
 }
 //# sourceMappingURL=polygon.d.ts.map

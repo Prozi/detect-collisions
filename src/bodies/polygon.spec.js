@@ -39,6 +39,7 @@ describe("GIVEN Polygon", () => {
   describe("AND you set options", () => {
     it("THEN the parameters are set", () => {
       const { System } = require("../../src");
+
       const physics = new System();
       const body = physics.createPolygon({}, [{}], {
         isStatic: true,
@@ -76,6 +77,7 @@ describe("GIVEN Polygon", () => {
   describe("AND has clockwise points", () => {
     it("THEN it collides properly", () => {
       const { System } = require("../../src");
+
       const physics = new System();
       const circle = physics.createCircle(
         {
@@ -100,6 +102,7 @@ describe("GIVEN Polygon", () => {
   describe("AND has counter-clockwise points", () => {
     it("THEN it collides properly", () => {
       const { System } = require("../../src");
+
       const physics = new System();
       const circle = physics.createCircle(
         {
@@ -124,6 +127,7 @@ describe("GIVEN Polygon", () => {
   describe("AND is concave (not convex) polygon", () => {
     it("THEN it collides properly", () => {
       const { System } = require("../../src");
+
       const physics = new System();
       const concave = physics.createPolygon({ x: 0, y: 0 }, [
         { x: 190, y: 147 },
@@ -148,6 +152,7 @@ describe("GIVEN Polygon", () => {
 
     it("THEN it collides properly", () => {
       const { System } = require("../../src");
+
       const physics = new System();
       const concave = physics.createPolygon({ x: 0, y: 0 }, [
         { x: -11.25, y: -6.76 },
@@ -173,6 +178,7 @@ describe("GIVEN Polygon", () => {
   describe("AND you scale it", () => {
     it("THEN it rescales properly", () => {
       const { System } = require("../../src");
+
       const physics = new System();
       const polygon = physics.createPolygon({ x: 0, y: 0 }, [
         { x: -10, y: -10 },
@@ -201,6 +207,7 @@ describe("GIVEN Polygon", () => {
 
     it("THEN it rescales properly with rotation", () => {
       const { System } = require("../../src");
+
       const physics = new System();
       const polygon = physics.createPolygon({ x: 0, y: 0 }, [
         { x: -10, y: -10 },
@@ -222,6 +229,7 @@ describe("GIVEN Polygon", () => {
 
     it("THEN it rescales properly with angle", () => {
       const { System } = require("../../src");
+
       const physics = new System();
       const polygon = physics.createPolygon({ x: 0, y: 0 }, [
         { x: -10, y: -10 },
@@ -243,6 +251,7 @@ describe("GIVEN Polygon", () => {
 
     it("THEN you can get and set scale, scaleX, scaleY", () => {
       const { System } = require("../../src");
+
       const physics = new System();
       const polygon = physics.createPolygon({ x: 0, y: 0 }, [
         { x: -10, y: -10 },
@@ -257,6 +266,38 @@ describe("GIVEN Polygon", () => {
       polygon.setScale(2, 3);
       expect(polygon.scaleX).toBe(2);
       expect(polygon.scaleY).toBe(3);
+    });
+
+    it("THEN isSimple works correctly for example polygons", () => {
+      const { Polygon } = require("../../src");
+
+      const simpleConvex = new Polygon({}, [
+        { x: 144.890625, y: 389.609375 },
+        { x: 144.890625, y: 211.6875 },
+        { x: 289.6171875, y: 231.3203125 },
+        { x: 297.53125, y: 407.0859375 },
+      ]);
+      const simpleConcave = new Polygon({}, [
+        { x: 144.890625, y: 389.609375 },
+        { x: 144.890625, y: 211.6875 },
+        { x: 289.6171875, y: 231.3203125 },
+        { x: 297.53125, y: 407.0859375 },
+        { x: 223.2890625, y: 303.015625 },
+      ]);
+      const selfIntersecting = new Polygon({}, [
+        { x: 124.1953125, y: 209.5546875 },
+        { x: 276.203125, y: 396.7109375 },
+        { x: 99.5546875, y: 363.4140625 },
+        { x: 305.1015625, y: 215.703125 },
+      ]);
+
+      expect(simpleConvex.isConvex).toBe(true);
+      expect(simpleConvex.isSimple()).toBe(true);
+
+      expect(simpleConcave.isConvex).toBe(false);
+      expect(simpleConcave.isSimple()).toBe(true);
+
+      expect(selfIntersecting.isSimple()).toBe(false);
     });
   });
 });

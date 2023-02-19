@@ -32,7 +32,7 @@ export class System extends BaseSystem {
    */
   response: Response = new Response();
 
-  private ray!: Line;
+  protected ray!: Line;
 
   /**
    * remove body aabb from collision tree

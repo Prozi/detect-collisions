@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Polygon = void 0;
+exports.Polygon = exports.isSimple = void 0;
 const poly_decomp_1 = require("poly-decomp");
+Object.defineProperty(exports, "isSimple", { enumerable: true, get: function () { return poly_decomp_1.isSimple; } });
 const sat_1 = require("sat");
 const model_1 = require("../model");
 const optimized_1 = require("../optimized");
@@ -177,6 +178,12 @@ class Polygon extends sat_1.Polygon {
         return this;
     }
     /**
+     * if true, polygon is not an invalid, self-crossing polygon
+     */
+    isSimple() {
+        return (0, poly_decomp_1.isSimple)(this.calcPoints.map(utils_1.mapVectorToArray));
+    }
+    /**
      * update the position of the decomposed convex polygons (if any), called
      * after the position of the body has changed
      */
@@ -232,6 +239,9 @@ class Polygon extends sat_1.Polygon {
         this.isConvex = convex.length <= 1;
         this.updateConvexPolygons(convex);
     }
+    /**
+     * inner function for after position change update aabb in system and convex inner polygons
+     */
     updateBody() {
         var _a;
         this.updateConvexPolygonPositions();

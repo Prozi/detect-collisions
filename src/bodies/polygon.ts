@@ -1,4 +1,4 @@
-import { quickDecomp } from "poly-decomp";
+import { isSimple, quickDecomp } from "poly-decomp";
 import { BBox } from "rbush";
 import { Polygon as SATPolygon } from "sat";
 
@@ -23,6 +23,8 @@ import {
   mapArrayToVector,
   mapVectorToArray,
 } from "../utils";
+
+export { isSimple };
 
 /**
  * collider - polygon
@@ -298,6 +300,13 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   }
 
   /**
+   * if true, polygon is not an invalid, self-crossing polygon
+   */
+  isSimple(): boolean {
+    return isSimple(this.calcPoints.map(mapVectorToArray));
+  }
+
+  /**
    * update the position of the decomposed convex polygons (if any), called
    * after the position of the body has changed
    */
@@ -370,6 +379,9 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
     this.updateConvexPolygons(convex);
   }
 
+  /**
+   * inner function for after position change update aabb in system and convex inner polygons
+   */
   protected updateBody(): void {
     this.updateConvexPolygonPositions();
     this.system?.insert(this);
