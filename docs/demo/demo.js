@@ -280,7 +280,7 @@ class Circle extends sat_1.Circle {
      * update scale
      */
     setScale(scale, _ignoredParameter) {
-        this.r = this.unscaledRadius * scale;
+        this.r = this.unscaledRadius * Math.abs(scale);
     }
     /**
      * set rotation
@@ -322,6 +322,7 @@ class Circle extends sat_1.Circle {
     draw(context) {
         const x = this.pos.x + this.offset.x;
         const y = this.pos.y + this.offset.y;
+        const r = Math.abs(this.r);
         if (this.isTrigger) {
             const max = Math.max(8, this.r);
             for (let i = 0; i < max; i++) {
@@ -335,8 +336,8 @@ class Circle extends sat_1.Circle {
             }
         }
         else {
-            context.moveTo(x + this.r, y);
-            context.arc(x, y, this.r, 0, Math.PI * 2);
+            context.moveTo(x + r, y);
+            context.arc(x, y, r, 0, Math.PI * 2);
         }
     }
     /**
@@ -686,11 +687,11 @@ class Polygon extends sat_1.Polygon {
      * update scale
      */
     setScale(x, y = x) {
-        this.scaleVector.x = x;
-        this.scaleVector.y = y;
+        this.scaleVector.x = Math.abs(x);
+        this.scaleVector.y = Math.abs(y);
         super.setPoints((0, optimized_1.map)(this.points, (point, index) => {
-            point.x = this.pointsBackup[index].x * x;
-            point.y = this.pointsBackup[index].y * y;
+            point.x = this.pointsBackup[index].x * this.scaleVector.x;
+            point.y = this.pointsBackup[index].y * this.scaleVector.y;
             return point;
         }));
     }

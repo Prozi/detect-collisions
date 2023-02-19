@@ -111,11 +111,11 @@ class Polygon extends sat_1.Polygon {
      * update scale
      */
     setScale(x, y = x) {
-        this.scaleVector.x = x;
-        this.scaleVector.y = y;
+        this.scaleVector.x = Math.abs(x);
+        this.scaleVector.y = Math.abs(y);
         super.setPoints((0, optimized_1.map)(this.points, (point, index) => {
-            point.x = this.pointsBackup[index].x * x;
-            point.y = this.pointsBackup[index].y * y;
+            point.x = this.pointsBackup[index].x * this.scaleVector.x;
+            point.y = this.pointsBackup[index].y * this.scaleVector.y;
             return point;
         }));
     }

@@ -184,7 +184,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
    * update scale
    */
   setScale(scale: number, _ignoredParameter?: number): void {
-    this.r = this.unscaledRadius * scale;
+    this.r = this.unscaledRadius * Math.abs(scale);
   }
 
   /**
@@ -235,6 +235,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
   draw(context: CanvasRenderingContext2D) {
     const x = this.pos.x + this.offset.x;
     const y = this.pos.y + this.offset.y;
+    const r = Math.abs(this.r);
 
     if (this.isTrigger) {
       const max = Math.max(8, this.r);
@@ -250,8 +251,8 @@ export class Circle extends SATCircle implements BBox, BodyProps {
         dashLineTo(context, fromX, fromY, toX, toY);
       }
     } else {
-      context.moveTo(x + this.r, y);
-      context.arc(x, y, this.r, 0, Math.PI * 2);
+      context.moveTo(x + r, y);
+      context.arc(x, y, r, 0, Math.PI * 2);
     }
   }
 

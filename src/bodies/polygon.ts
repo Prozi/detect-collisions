@@ -216,13 +216,13 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    * update scale
    */
   setScale(x: number, y: number = x): void {
-    this.scaleVector.x = x;
-    this.scaleVector.y = y;
+    this.scaleVector.x = Math.abs(x);
+    this.scaleVector.y = Math.abs(y);
 
     super.setPoints(
       map(this.points, (point: SATVector, index: number) => {
-        point.x = this.pointsBackup[index].x * x;
-        point.y = this.pointsBackup[index].y * y;
+        point.x = this.pointsBackup[index].x * this.scaleVector.x;
+        point.y = this.pointsBackup[index].y * this.scaleVector.y;
 
         return point;
       })

@@ -99,7 +99,7 @@ class Circle extends sat_1.Circle {
      * update scale
      */
     setScale(scale, _ignoredParameter) {
-        this.r = this.unscaledRadius * scale;
+        this.r = this.unscaledRadius * Math.abs(scale);
     }
     /**
      * set rotation
@@ -141,6 +141,7 @@ class Circle extends sat_1.Circle {
     draw(context) {
         const x = this.pos.x + this.offset.x;
         const y = this.pos.y + this.offset.y;
+        const r = Math.abs(this.r);
         if (this.isTrigger) {
             const max = Math.max(8, this.r);
             for (let i = 0; i < max; i++) {
@@ -154,8 +155,8 @@ class Circle extends sat_1.Circle {
             }
         }
         else {
-            context.moveTo(x + this.r, y);
-            context.arc(x, y, this.r, 0, Math.PI * 2);
+            context.moveTo(x + r, y);
+            context.arc(x, y, r, 0, Math.PI * 2);
         }
     }
     /**
