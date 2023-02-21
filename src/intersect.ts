@@ -1,11 +1,24 @@
 import { pointInCircle, pointInPolygon as pointInConvexPolygon } from "sat";
 
-import { SATVector, Vector } from "./model";
+import { Body, BodyType, SATPolygon, SATVector, Vector } from "./model";
 import { Circle } from "./bodies/circle";
 import { Polygon } from "./bodies/polygon";
 import { Line } from "./bodies/line";
-import { ensureConvex } from "./utils";
 import { forEach, map, some, every } from "./optimized";
+import { Point } from "./bodies/point";
+
+/**
+ * replace body with array of related convex polygons
+ */
+export function ensureConvex<T extends Body = Circle | Point | Polygon>(
+  body: T
+): (T | SATPolygon)[] {
+  if (body.isConvex || body.type !== BodyType.Polygon) {
+    return [body];
+  }
+
+  return body.convexPolygons;
+}
 
 export function polygonInCircle(
   polygon: Polygon,

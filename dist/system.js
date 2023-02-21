@@ -129,8 +129,8 @@ class System extends base_system_1.BaseSystem {
             return sat(bodyA, bodyB, response);
         }
         // more complex (non convex) cases
-        const convexBodiesA = (0, utils_1.ensureConvex)(bodyA);
-        const convexBodiesB = (0, utils_1.ensureConvex)(bodyB);
+        const convexBodiesA = (0, intersect_1.ensureConvex)(bodyA);
+        const convexBodiesB = (0, intersect_1.ensureConvex)(bodyB);
         const overlapV = new model_1.SATVector();
         let collided = false;
         (0, optimized_1.forEach)(convexBodiesA, (convexBodyA) => {
