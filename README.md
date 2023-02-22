@@ -360,7 +360,8 @@ if (hit) {
 Feel free to contribute, open a merge request. Some code style pointers:
 
 - use `npm run precommit` script before commiting your merge request
-- avoid use of `any` type
+- use [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/#summary)
+- avoid the use of `any`
 
 ## FAQ
 
