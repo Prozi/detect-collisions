@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.drawPolygon = exports.getSATTest = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
+exports.drawPolygon = exports.getSATTest = exports.getBounceDirection = exports.mapArrayToVector = exports.mapVectorToArray = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
 const sat_1 = require("sat");
 const intersect_1 = require("./intersect");
 const model_1 = require("./model");
@@ -186,16 +186,6 @@ function mapArrayToVector([x, y] = [0, 0]) {
     return { x, y };
 }
 exports.mapArrayToVector = mapArrayToVector;
-/**
- * replace body with array of related convex polygons
- */
-function ensureConvex(body) {
-    if (body.isConvex || body.type !== model_1.BodyType.Polygon) {
-        return [body];
-    }
-    return body.convexPolygons;
-}
-exports.ensureConvex = ensureConvex;
 /**
  * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
  */

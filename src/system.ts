@@ -15,12 +15,15 @@ import {
 import {
   distance,
   checkAInB,
-  ensureConvex,
   bodyMoved,
   getSATTest,
   notIntersectAABB,
 } from "./utils";
-import { intersectLineCircle, intersectLinePolygon } from "./intersect";
+import {
+  intersectLineCircle,
+  intersectLinePolygon,
+  ensureConvex,
+} from "./intersect";
 import { filter, forEach, some } from "./optimized";
 
 /**

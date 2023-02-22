@@ -875,16 +875,26 @@ __exportStar(__webpack_require__(/*! ./intersect */ "./dist/intersect.js"), expo
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineLineFast = exports.intersectLineCircle = exports.circleOutsidePolygon = exports.circleInPolygon = exports.circleInCircle = exports.pointOnCircle = exports.polygonInPolygon = exports.pointInPolygon = exports.polygonInCircle = void 0;
+exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineLineFast = exports.intersectLineCircle = exports.circleOutsidePolygon = exports.circleInPolygon = exports.circleInCircle = exports.pointOnCircle = exports.polygonInPolygon = exports.pointInPolygon = exports.polygonInCircle = exports.ensureConvex = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
-const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils.js");
+const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
 const optimized_1 = __webpack_require__(/*! ./optimized */ "./dist/optimized.js");
+/**
+ * replace body with array of related convex polygons
+ */
+function ensureConvex(body) {
+    if (body.isConvex || body.type !== model_1.BodyType.Polygon) {
+        return [body];
+    }
+    return body.convexPolygons;
+}
+exports.ensureConvex = ensureConvex;
 function polygonInCircle(polygon, circle) {
     return (0, optimized_1.every)(polygon.calcPoints, (p) => (0, sat_1.pointInCircle)({ x: p.x + polygon.pos.x, y: p.y + polygon.pos.y }, circle));
 }
 exports.polygonInCircle = polygonInCircle;
 function pointInPolygon(point, polygon) {
-    return (0, optimized_1.some)((0, utils_1.ensureConvex)(polygon), (convex) => (0, sat_1.pointInPolygon)(point, convex));
+    return (0, optimized_1.some)(ensureConvex(polygon), (convex) => (0, sat_1.pointInPolygon)(point, convex));
 }
 exports.pointInPolygon = pointInPolygon;
 function polygonInPolygon(polygonA, polygonB) {
@@ -1340,8 +1350,8 @@ class System extends base_system_1.BaseSystem {
             return sat(bodyA, bodyB, response);
         }
         // more complex (non convex) cases
-        const convexBodiesA = (0, utils_1.ensureConvex)(bodyA);
-        const convexBodiesB = (0, utils_1.ensureConvex)(bodyB);
+        const convexBodiesA = (0, intersect_1.ensureConvex)(bodyA);
+        const convexBodiesB = (0, intersect_1.ensureConvex)(bodyB);
         const overlapV = new model_1.SATVector();
         let collided = false;
         (0, optimized_1.forEach)(convexBodiesA, (convexBodyA) => {
@@ -1428,7 +1438,7 @@ exports.System = System;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.drawPolygon = exports.getSATTest = exports.getBounceDirection = exports.ensureConvex = exports.mapArrayToVector = exports.mapVectorToArray = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
+exports.drawPolygon = exports.getSATTest = exports.getBounceDirection = exports.mapArrayToVector = exports.mapVectorToArray = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const intersect_1 = __webpack_require__(/*! ./intersect */ "./dist/intersect.js");
 const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
@@ -1614,16 +1624,6 @@ function mapArrayToVector([x, y] = [0, 0]) {
     return { x, y };
 }
 exports.mapArrayToVector = mapArrayToVector;
-/**
- * replace body with array of related convex polygons
- */
-function ensureConvex(body) {
-    if (body.isConvex || body.type !== model_1.BodyType.Polygon) {
-        return [body];
-    }
-    return body.convexPolygons;
-}
-exports.ensureConvex = ensureConvex;
 /**
  * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
  */

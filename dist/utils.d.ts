@@ -1,8 +1,6 @@
 import { BBox } from "rbush";
 import { Point as DecompPoint } from "poly-decomp";
 import { testCircleCircle, testCirclePolygon, testPolygonCircle, testPolygonPolygon, Vector as SATVector } from "sat";
-import { Circle } from "./bodies/circle";
-import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
 import { Body, BodyOptions, PotentialVector, SATPolygon, Vector } from "./model";
 export declare const DEG2RAD: number;
@@ -75,10 +73,6 @@ export declare function mapVectorToArray({ x, y }?: Vector): DecompPoint;
  * change format from SAT.js to poly-decomp
  */
 export declare function mapArrayToVector([x, y]?: DecompPoint): Vector;
-/**
- * replace body with array of related convex polygons
- */
-export declare function ensureConvex<T extends Body = Circle | Point | Polygon>(body: T): (T | SATPolygon)[];
 /**
  * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
  */

@@ -7,8 +7,6 @@ import {
   testPolygonPolygon,
   Vector as SATVector,
 } from "sat";
-import { Circle } from "./bodies/circle";
-import { Point } from "./bodies/point";
 
 import { Polygon } from "./bodies/polygon";
 import {
@@ -240,19 +238,6 @@ export function mapVectorToArray(
  */
 export function mapArrayToVector([x, y]: DecompPoint = [0, 0]): Vector {
   return { x, y };
-}
-
-/**
- * replace body with array of related convex polygons
- */
-export function ensureConvex<T extends Body = Circle | Point | Polygon>(
-  body: T
-): (T | SATPolygon)[] {
-  if (body.isConvex || body.type !== BodyType.Polygon) {
-    return [body];
-  }
-
-  return body.convexPolygons;
 }
 
 /**

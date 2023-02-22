@@ -1,15 +1,25 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineLineFast = exports.intersectLineCircle = exports.circleOutsidePolygon = exports.circleInPolygon = exports.circleInCircle = exports.pointOnCircle = exports.polygonInPolygon = exports.pointInPolygon = exports.polygonInCircle = void 0;
+exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineLineFast = exports.intersectLineCircle = exports.circleOutsidePolygon = exports.circleInPolygon = exports.circleInCircle = exports.pointOnCircle = exports.polygonInPolygon = exports.pointInPolygon = exports.polygonInCircle = exports.ensureConvex = void 0;
 const sat_1 = require("sat");
-const utils_1 = require("./utils");
+const model_1 = require("./model");
 const optimized_1 = require("./optimized");
+/**
+ * replace body with array of related convex polygons
+ */
+function ensureConvex(body) {
+    if (body.isConvex || body.type !== model_1.BodyType.Polygon) {
+        return [body];
+    }
+    return body.convexPolygons;
+}
+exports.ensureConvex = ensureConvex;
 function polygonInCircle(polygon, circle) {
     return (0, optimized_1.every)(polygon.calcPoints, (p) => (0, sat_1.pointInCircle)({ x: p.x + polygon.pos.x, y: p.y + polygon.pos.y }, circle));
 }
 exports.polygonInCircle = polygonInCircle;
 function pointInPolygon(point, polygon) {
-    return (0, optimized_1.some)((0, utils_1.ensureConvex)(polygon), (convex) => (0, sat_1.pointInPolygon)(point, convex));
+    return (0, optimized_1.some)(ensureConvex(polygon), (convex) => (0, sat_1.pointInPolygon)(point, convex));
 }
 exports.pointInPolygon = pointInPolygon;
 function polygonInPolygon(polygonA, polygonB) {
