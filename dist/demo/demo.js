@@ -3826,7 +3826,7 @@ function loop(callback) {
 
   function frame() {
     const now = Date.now();
-    const timeScale = (now - time) / (1000 / 60);
+    const timeScale = Math.min(1000, now - time) / (1000 / 60);
 
     callback(timeScale);
 
@@ -3920,7 +3920,7 @@ class Stress {
 
   update() {
     const now = Date.now();
-    const timeScale = (now - this.lastTime) / 60;
+    const timeScale = Math.min(1000, now - this.lastTime) / 60;
     this.lastTime = now;
 
     this.bodies.forEach(this.updateBody.bind(this, timeScale));
