@@ -44,8 +44,6 @@ class Polygon extends sat_1.Polygon {
         const x = centroid.x * (isCentered ? 1 : -1);
         const y = centroid.y * (isCentered ? 1 : -1);
         this.translate(-x, -y);
-        this.pos.x += x;
-        this.pos.y += y;
         this.centered = isCentered;
     }
     /**
@@ -133,10 +131,16 @@ class Polygon extends sat_1.Polygon {
         };
     }
     /**
-     * Draws collider on a CanvasRenderingContext2D's current path
+     * Draws exact collider on canvas context
      */
     draw(context) {
         (0, utils_1.drawPolygon)(context, this, this.isTrigger);
+    }
+    /**
+     * Draws Bounding Box on canvas context
+     */
+    drawBVH(context) {
+        (0, utils_1.drawBVH)(context, this);
     }
     /**
      * get body centroid without applied angle

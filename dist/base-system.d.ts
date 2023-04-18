@@ -11,11 +11,11 @@ import { Body, BodyOptions, ChildrenData, Data, PotentialVector, RBush, Vector }
 export declare class BaseSystem extends RBush<Body> implements Data {
     data: ChildrenData;
     /**
-     * draw bodies
+     * draw exact bodies colliders outline
      */
     draw(context: CanvasRenderingContext2D): void;
     /**
-     * draw hierarchy
+     * draw bounding boxes hierarchy outline
      */
     drawBVH(context: CanvasRenderingContext2D): void;
     /**

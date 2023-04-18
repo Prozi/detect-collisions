@@ -15,7 +15,7 @@ import {
   Vector,
 } from "./model";
 import { forEach } from "./optimized";
-import { createBox, drawPolygon } from "./utils";
+import { drawBVH } from "./utils";
 
 /**
  * very base collision system
@@ -24,7 +24,7 @@ export class BaseSystem extends RBush<Body> implements Data {
   data!: ChildrenData;
 
   /**
-   * draw bodies
+   * draw exact bodies colliders outline
    */
   draw(context: CanvasRenderingContext2D): void {
     forEach(this.all(), (body: Body) => {
@@ -33,17 +33,14 @@ export class BaseSystem extends RBush<Body> implements Data {
   }
 
   /**
-   * draw hierarchy
+   * draw bounding boxes hierarchy outline
    */
   drawBVH(context: CanvasRenderingContext2D): void {
-    const drawChildren = ({ minX: x, maxX, minY: y, maxY, children }: Leaf) => {
-      drawPolygon(context, {
-        pos: { x, y },
-        calcPoints: createBox(maxX - x, maxY - y),
-      });
+    const drawChildren = (body: Leaf) => {
+      drawBVH(context, body);
 
-      if (children) {
-        forEach(children, drawChildren);
+      if (body.children) {
+        forEach(body.children, drawChildren);
       }
     };
 

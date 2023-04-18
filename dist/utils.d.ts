@@ -87,4 +87,8 @@ export declare function getSATTest(body: Body, wall: Body): typeof testCircleCir
 export declare function drawPolygon(context: CanvasRenderingContext2D, { pos, calcPoints, }: Pick<Polygon | SATPolygon, "calcPoints"> & {
     pos: Vector;
 }, isTrigger?: boolean): void;
+/**
+ * draw body bounding body
+ */
+export declare function drawBVH(context: CanvasRenderingContext2D, body: Body): void;
 //# sourceMappingURL=utils.d.ts.map

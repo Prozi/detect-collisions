@@ -121,9 +121,13 @@ export declare class Polygon extends SATPolygon implements BBox, BodyProps {
      */
     getAABBAsBBox(): BBox;
     /**
-     * Draws collider on a CanvasRenderingContext2D's current path
+     * Draws exact collider on canvas context
      */
     draw(context: CanvasRenderingContext2D): void;
+    /**
+     * Draws Bounding Box on canvas context
+     */
+    drawBVH(context: CanvasRenderingContext2D): void;
     /**
      * get body centroid without applied angle
      */

@@ -22,6 +22,7 @@ import {
   drawPolygon,
   mapArrayToVector,
   mapVectorToArray,
+  drawBVH,
 } from "../utils";
 
 export { isSimple };
@@ -139,8 +140,6 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
     const x = centroid.x * (isCentered ? 1 : -1);
     const y = centroid.y * (isCentered ? 1 : -1);
     this.translate(-x, -y);
-    this.pos.x += x;
-    this.pos.y += y;
     this.centered = isCentered;
   }
 
@@ -246,10 +245,17 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   }
 
   /**
-   * Draws collider on a CanvasRenderingContext2D's current path
+   * Draws exact collider on canvas context
    */
   draw(context: CanvasRenderingContext2D) {
     drawPolygon(context, this, this.isTrigger);
+  }
+
+  /**
+   * Draws Bounding Box on canvas context
+   */
+  drawBVH(context: CanvasRenderingContext2D) {
+    drawBVH(context, this);
   }
 
   /**

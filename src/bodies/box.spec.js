@@ -92,14 +92,16 @@ describe("GIVEN Box", () => {
   it("THEN center() works correctly", () => {
     const { Box } = require("../../src");
 
-    const box = new Box({}, 100, 100);
+    const x = Math.PI;
+    const y = Math.PI;
+    const box = new Box({ x, y }, 100, 100);
 
     box.isCentered = true;
 
     expect(box.points[0].x).toBe(-box.width / 2);
     expect(box.points[0].y).toBe(-box.height / 2);
-    expect(box.x).toBe(box.width / 2);
-    expect(box.y).toBe(box.height / 2);
+    expect(box.x).toBe(x);
+    expect(box.y).toBe(y);
   });
 
   it("THEN even without inserting to system, gives collision results", () => {

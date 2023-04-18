@@ -24,19 +24,15 @@ class Stress {
     this.bounds = [
       this.physics.createBox({ x: 0, y: 0 }, width, 10, {
         isStatic: true,
-        isCentered: true,
       }),
       this.physics.createBox({ x: width - 10, y: 0 }, 10, height, {
         isStatic: true,
-        isCentered: true,
       }),
       this.physics.createBox({ x: 0, y: height - 10 }, width, 10, {
         isStatic: true,
-        isCentered: true,
       }),
       this.physics.createBox({ x: 0, y: 0 }, 10, height, {
         isStatic: true,
-        isCentered: true,
       }),
     ];
 

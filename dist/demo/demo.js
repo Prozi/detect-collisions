@@ -25,7 +25,7 @@ const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils.js");
  */
 class BaseSystem extends model_1.RBush {
     /**
-     * draw bodies
+     * draw exact bodies colliders outline
      */
     draw(context) {
         (0, optimized_1.forEach)(this.all(), (body) => {
@@ -33,16 +33,13 @@ class BaseSystem extends model_1.RBush {
         });
     }
     /**
-     * draw hierarchy
+     * draw bounding boxes hierarchy outline
      */
     drawBVH(context) {
-        const drawChildren = ({ minX: x, maxX, minY: y, maxY, children }) => {
-            (0, utils_1.drawPolygon)(context, {
-                pos: { x, y },
-                calcPoints: (0, utils_1.createBox)(maxX - x, maxY - y),
-            });
-            if (children) {
-                (0, optimized_1.forEach)(children, drawChildren);
+        const drawChildren = (body) => {
+            (0, utils_1.drawBVH)(context, body);
+            if (body.children) {
+                (0, optimized_1.forEach)(body.children, drawChildren);
             }
         };
         (0, optimized_1.forEach)(this.data.children, drawChildren);
@@ -341,6 +338,12 @@ class Circle extends sat_1.Circle {
         }
     }
     /**
+     * Draws Bounding Box on canvas context
+     */
+    drawBVH(context) {
+        (0, utils_1.drawBVH)(context, this);
+    }
+    /**
      * internal for getting offset with applied angle
      */
     getOffsetWithAngle() {
@@ -620,8 +623,6 @@ class Polygon extends sat_1.Polygon {
         const x = centroid.x * (isCentered ? 1 : -1);
         const y = centroid.y * (isCentered ? 1 : -1);
         this.translate(-x, -y);
-        this.pos.x += x;
-        this.pos.y += y;
         this.centered = isCentered;
     }
     /**
@@ -709,10 +710,16 @@ class Polygon extends sat_1.Polygon {
         };
     }
     /**
-     * Draws collider on a CanvasRenderingContext2D's current path
+     * Draws exact collider on canvas context
      */
     draw(context) {
         (0, utils_1.drawPolygon)(context, this, this.isTrigger);
+    }
+    /**
+     * Draws Bounding Box on canvas context
+     */
+    drawBVH(context) {
+        (0, utils_1.drawBVH)(context, this);
     }
     /**
      * get body centroid without applied angle
@@ -1438,7 +1445,7 @@ exports.System = System;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.drawPolygon = exports.getSATTest = exports.getBounceDirection = exports.mapArrayToVector = exports.mapVectorToArray = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
+exports.drawBVH = exports.drawPolygon = exports.getSATTest = exports.getBounceDirection = exports.mapArrayToVector = exports.mapVectorToArray = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const intersect_1 = __webpack_require__(/*! ./intersect */ "./dist/intersect.js");
 const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
@@ -1670,6 +1677,16 @@ function drawPolygon(context, { pos, calcPoints, }, isTrigger = false) {
     });
 }
 exports.drawPolygon = drawPolygon;
+/**
+ * draw body bounding body
+ */
+function drawBVH(context, body) {
+    drawPolygon(context, {
+        pos: { x: body.minX, y: body.minY },
+        calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY),
+    });
+}
+exports.drawBVH = drawBVH;
 //# sourceMappingURL=utils.js.map
 
 /***/ }),
@@ -3879,19 +3896,15 @@ class Stress {
     this.bounds = [
       this.physics.createBox({ x: 0, y: 0 }, width, 10, {
         isStatic: true,
-        isCentered: true,
       }),
       this.physics.createBox({ x: width - 10, y: 0 }, 10, height, {
         isStatic: true,
-        isCentered: true,
       }),
       this.physics.createBox({ x: 0, y: height - 10 }, width, 10, {
         isStatic: true,
-        isCentered: true,
       }),
       this.physics.createBox({ x: 0, y: 0 }, 10, height, {
         isStatic: true,
-        isCentered: true,
       }),
     ];
 

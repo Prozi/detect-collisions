@@ -296,3 +296,13 @@ export function drawPolygon(
     }
   });
 }
+
+/**
+ * draw body bounding body
+ */
+export function drawBVH(context: CanvasRenderingContext2D, body: Body) {
+  drawPolygon(context, {
+    pos: { x: body.minX, y: body.minY },
+    calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY),
+  });
+}

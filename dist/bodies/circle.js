@@ -160,6 +160,12 @@ class Circle extends sat_1.Circle {
         }
     }
     /**
+     * Draws Bounding Box on canvas context
+     */
+    drawBVH(context) {
+        (0, utils_1.drawBVH)(context, this);
+    }
+    /**
      * internal for getting offset with applied angle
      */
     getOffsetWithAngle() {

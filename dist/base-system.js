@@ -15,7 +15,7 @@ const utils_1 = require("./utils");
  */
 class BaseSystem extends model_1.RBush {
     /**
-     * draw bodies
+     * draw exact bodies colliders outline
      */
     draw(context) {
         (0, optimized_1.forEach)(this.all(), (body) => {
@@ -23,16 +23,13 @@ class BaseSystem extends model_1.RBush {
         });
     }
     /**
-     * draw hierarchy
+     * draw bounding boxes hierarchy outline
      */
     drawBVH(context) {
-        const drawChildren = ({ minX: x, maxX, minY: y, maxY, children }) => {
-            (0, utils_1.drawPolygon)(context, {
-                pos: { x, y },
-                calcPoints: (0, utils_1.createBox)(maxX - x, maxY - y),
-            });
-            if (children) {
-                (0, optimized_1.forEach)(children, drawChildren);
+        const drawChildren = (body) => {
+            (0, utils_1.drawBVH)(context, body);
+            if (body.children) {
+                (0, optimized_1.forEach)(body.children, drawChildren);
             }
         };
         (0, optimized_1.forEach)(this.data.children, drawChildren);

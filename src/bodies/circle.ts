@@ -10,7 +10,7 @@ import {
   Vector,
 } from "../model";
 import { System } from "../system";
-import { dashLineTo, ensureVectorPoint, extendBody } from "../utils";
+import { dashLineTo, drawBVH, ensureVectorPoint, extendBody } from "../utils";
 
 /**
  * collider - circle
@@ -254,6 +254,13 @@ export class Circle extends SATCircle implements BBox, BodyProps {
       context.moveTo(x + r, y);
       context.arc(x, y, r, 0, Math.PI * 2);
     }
+  }
+
+  /**
+   * Draws Bounding Box on canvas context
+   */
+  drawBVH(context: CanvasRenderingContext2D) {
+    drawBVH(context, this);
   }
 
   /**

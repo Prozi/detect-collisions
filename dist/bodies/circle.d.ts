@@ -130,6 +130,10 @@ export declare class Circle extends SATCircle implements BBox, BodyProps {
      */
     draw(context: CanvasRenderingContext2D): void;
     /**
+     * Draws Bounding Box on canvas context
+     */
+    drawBVH(context: CanvasRenderingContext2D): void;
+    /**
      * internal for getting offset with applied angle
      */
     protected getOffsetWithAngle(): Vector;

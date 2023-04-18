@@ -147,9 +147,13 @@ export interface BodyProps extends Required<BodyOptions> {
      */
     setOffset(offset: Vector): Circle | SATPolygon;
     /**
+     * draw the bounding box
+     */
+    drawBVH(context: CanvasRenderingContext2D): void;
+    /**
      * draw the collider
      */
-    draw(context: CanvasRenderingContext2D): void;
+    drawBVH(context: CanvasRenderingContext2D): void;
     /**
      * return bounding box without padding
      */
