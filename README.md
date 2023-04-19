@@ -269,23 +269,32 @@ system.separate()
 ```javascript
 // create self-destructing collider
 const testCollision = ({ x, y }, radius = 10) => {
+  // create and add to tree
   const circle = system.createCircle({ x, y }, radius)
-  const potentials = system.getPotentials(circle)
-  const collided = potentials.some((body) =>
-    system.checkCollision(circle, body)
-  )
+  // init as false
+  let collided = false
 
+  system.checkOne(circle, () => {
+    // mark as true
+    collided = true
+    // ends iterating after first collision
+    return true
+  })
+
+  // remove from tree
   system.remove(circle)
 
-  return collided
+  return collided ? system.response : null
 }
 ```
 
 ## Concave Polygons
 
-Hollow / non-convex polygons are fully supported since v6.3.0
+Hollow / non-convex polygons are fully supported* since v6.8.0
 
-the `System.response.aInB` and `System.response.bInA` is currently because of complexity and speed reasons only checking the bounding boxes of compared bodies. for more informations relate to [this issue on github](https://github.com/Prozi/detect-collisions/issues/33) and [this merged pull request](https://github.com/Prozi/detect-collisions/pull/34)
+*) as long as the polygon is not invalid
+- read [Closed GitHub Issue #45](https://github.com/Prozi/detect-collisions/issues/45)
+- try on [Stackblitz](https://stackblitz.com/edit/detect-collisions)
 
 ## Rendering
 
@@ -318,6 +327,8 @@ The BVH can also be drawn to help test [Bounding Volume Hierarchy](https://en.wi
 ```javascript
 context.strokeStyle = "#FFFFFF"
 context.beginPath()
+// draw specific body bounding box
+body.drawBVH(context)
 // draw bounding volume hierarchy of the system
 system.drawBVH(context)
 context.stroke()
