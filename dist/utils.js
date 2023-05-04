@@ -242,4 +242,3 @@ function drawBVH(context, body) {
     });
 }
 exports.drawBVH = drawBVH;
-//# sourceMappingURL=utils.js.map

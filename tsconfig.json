@@ -5,7 +5,7 @@
     "esModuleInterop": true,
     "strict": true,
     "allowJs": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "declaration": true,
     "declarationMap": true,
     "moduleResolution": "node",

@@ -61,4 +61,3 @@ class Line extends polygon_1.Polygon {
     }
 }
 exports.Line = Line;
-//# sourceMappingURL=line.js.map

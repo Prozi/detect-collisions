@@ -95,4 +95,3 @@ insertionBenchmark
     .catch((err) => {
     console.warn(err.message || err);
 });
-//# sourceMappingURL=insertion.bench.js.map

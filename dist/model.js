@@ -23,4 +23,3 @@ var BodyType;
     BodyType["Point"] = "Point";
     BodyType["Polygon"] = "Polygon";
 })(BodyType = exports.BodyType || (exports.BodyType = {}));
-//# sourceMappingURL=model.js.map

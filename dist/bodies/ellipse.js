@@ -88,4 +88,3 @@ class Ellipse extends polygon_1.Polygon {
     }
 }
 exports.Ellipse = Ellipse;
-//# sourceMappingURL=ellipse.js.map

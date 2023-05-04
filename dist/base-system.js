@@ -84,4 +84,3 @@ class BaseSystem extends model_1.RBush {
     }
 }
 exports.BaseSystem = BaseSystem;
-//# sourceMappingURL=base-system.js.map

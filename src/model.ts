@@ -183,7 +183,7 @@ export interface BodyProps extends Required<BodyOptions> {
   /**
    * draw the collider
    */
-  drawBVH(context: CanvasRenderingContext2D): void;
+  draw(context: CanvasRenderingContext2D): void;
 
   /**
    * return bounding box without padding

@@ -215,4 +215,3 @@ function intersectLinePolygon(line, polygon) {
     return results;
 }
 exports.intersectLinePolygon = intersectLinePolygon;
-//# sourceMappingURL=intersect.js.map

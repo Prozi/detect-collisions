@@ -94,7 +94,7 @@ class BaseSystem extends model_1.RBush {
     }
 }
 exports.BaseSystem = BaseSystem;
-//# sourceMappingURL=base-system.js.map
+
 
 /***/ }),
 
@@ -165,7 +165,7 @@ class Box extends polygon_1.Polygon {
     }
 }
 exports.Box = Box;
-//# sourceMappingURL=box.js.map
+
 
 /***/ }),
 
@@ -358,7 +358,7 @@ class Circle extends sat_1.Circle {
     }
 }
 exports.Circle = Circle;
-//# sourceMappingURL=circle.js.map
+
 
 /***/ }),
 
@@ -459,7 +459,7 @@ class Ellipse extends polygon_1.Polygon {
     }
 }
 exports.Ellipse = Ellipse;
-//# sourceMappingURL=ellipse.js.map
+
 
 /***/ }),
 
@@ -533,7 +533,7 @@ class Line extends polygon_1.Polygon {
     }
 }
 exports.Line = Line;
-//# sourceMappingURL=line.js.map
+
 
 /***/ }),
 
@@ -566,7 +566,7 @@ class Point extends box_1.Box {
     }
 }
 exports.Point = Point;
-//# sourceMappingURL=point.js.map
+
 
 /***/ }),
 
@@ -832,7 +832,7 @@ class Polygon extends sat_1.Polygon {
     }
 }
 exports.Polygon = Polygon;
-//# sourceMappingURL=polygon.js.map
+
 
 /***/ }),
 
@@ -869,7 +869,7 @@ __exportStar(__webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js"), 
 __exportStar(__webpack_require__(/*! ./system */ "./dist/system.js"), exports);
 __exportStar(__webpack_require__(/*! ./utils */ "./dist/utils.js"), exports);
 __exportStar(__webpack_require__(/*! ./intersect */ "./dist/intersect.js"), exports);
-//# sourceMappingURL=index.js.map
+
 
 /***/ }),
 
@@ -1097,7 +1097,7 @@ function intersectLinePolygon(line, polygon) {
     return results;
 }
 exports.intersectLinePolygon = intersectLinePolygon;
-//# sourceMappingURL=intersect.js.map
+
 
 /***/ }),
 
@@ -1133,7 +1133,7 @@ var BodyType;
     BodyType["Point"] = "Point";
     BodyType["Polygon"] = "Polygon";
 })(BodyType = exports.BodyType || (exports.BodyType = {}));
-//# sourceMappingURL=model.js.map
+
 
 /***/ }),
 
@@ -1215,7 +1215,7 @@ const map = (array, callback) => {
     return output;
 };
 exports.map = map;
-//# sourceMappingURL=optimized.js.map
+
 
 /***/ }),
 
@@ -1432,7 +1432,7 @@ class System extends base_system_1.BaseSystem {
     }
 }
 exports.System = System;
-//# sourceMappingURL=system.js.map
+
 
 /***/ }),
 
@@ -1687,7 +1687,7 @@ function drawBVH(context, body) {
     });
 }
 exports.drawBVH = drawBVH;
-//# sourceMappingURL=utils.js.map
+
 
 /***/ }),
 

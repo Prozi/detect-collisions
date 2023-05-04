@@ -204,4 +204,3 @@ class System extends base_system_1.BaseSystem {
     }
 }
 exports.System = System;
-//# sourceMappingURL=system.js.map

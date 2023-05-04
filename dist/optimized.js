@@ -69,4 +69,3 @@ const map = (array, callback) => {
     return output;
 };
 exports.map = map;
-//# sourceMappingURL=optimized.js.map

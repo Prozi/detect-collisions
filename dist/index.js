@@ -24,4 +24,3 @@ __exportStar(require("./bodies/line"), exports);
 __exportStar(require("./system"), exports);
 __exportStar(require("./utils"), exports);
 __exportStar(require("./intersect"), exports);
-//# sourceMappingURL=index.js.map

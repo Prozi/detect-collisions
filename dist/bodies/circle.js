@@ -180,4 +180,3 @@ class Circle extends sat_1.Circle {
     }
 }
 exports.Circle = Circle;
-//# sourceMappingURL=circle.js.map
