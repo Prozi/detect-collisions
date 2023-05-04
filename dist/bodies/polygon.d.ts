@@ -170,4 +170,3 @@ export declare class Polygon extends SATPolygon implements BBox, BodyProps {
      */
     protected updateBody(): void;
 }
-//# sourceMappingURL=polygon.d.ts.map

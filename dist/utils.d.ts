@@ -91,4 +91,3 @@ export declare function drawPolygon(context: CanvasRenderingContext2D, { pos, ca
  * draw body bounding body
  */
 export declare function drawBVH(context: CanvasRenderingContext2D, body: Body): void;
-//# sourceMappingURL=utils.d.ts.map

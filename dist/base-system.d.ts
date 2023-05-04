@@ -43,4 +43,3 @@ export declare class BaseSystem extends RBush<Body> implements Data {
      */
     createPolygon(position: PotentialVector, points: PotentialVector[], options?: BodyOptions): Polygon;
 }
-//# sourceMappingURL=base-system.d.ts.map

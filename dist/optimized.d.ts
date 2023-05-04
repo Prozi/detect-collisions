@@ -28,4 +28,3 @@ export declare const filter: <T>(array: T[], callback: (item: T, index: number) 
  * basic benchmark: https://jsbench.me/oyle77vbpc
  */
 export declare const map: <T, Y>(array: T[], callback: (item: T, index: number) => Y) => Y[];
-//# sourceMappingURL=optimized.d.ts.map

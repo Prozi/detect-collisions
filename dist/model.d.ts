@@ -160,4 +160,3 @@ export interface BodyProps extends Required<BodyOptions> {
     getAABBAsBBox(): BBox;
 }
 export type SATTest<T extends {} = Circle | Polygon | SATPolygon, Y extends {} = Circle | Polygon | SATPolygon> = (a: T, b: Y, r: Response) => boolean;
-//# sourceMappingURL=model.d.ts.map

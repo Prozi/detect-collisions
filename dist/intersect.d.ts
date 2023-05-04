@@ -42,4 +42,3 @@ export declare function intersectLineLineFast(line1: Pick<Line, "start" | "end">
  */
 export declare function intersectLineLine(line1: Pick<Line, "start" | "end">, line2: Pick<Line, "start" | "end">): Vector | null;
 export declare function intersectLinePolygon(line: Line, polygon: Polygon): Vector[];
-//# sourceMappingURL=intersect.d.ts.map

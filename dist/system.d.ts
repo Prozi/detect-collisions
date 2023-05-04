@@ -61,4 +61,3 @@ export declare class System extends BaseSystem {
         children?: Leaf[];
     }): Body | undefined;
 }
-//# sourceMappingURL=system.d.ts.map

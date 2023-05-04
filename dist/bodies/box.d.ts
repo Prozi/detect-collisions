@@ -45,4 +45,3 @@ export declare class Box extends Polygon {
      */
     protected updateIsConvex(): void;
 }
-//# sourceMappingURL=box.d.ts.map

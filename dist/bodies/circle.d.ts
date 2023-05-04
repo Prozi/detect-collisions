@@ -138,4 +138,3 @@ export declare class Circle extends SATCircle implements BBox, BodyProps {
      */
     protected getOffsetWithAngle(): Vector;
 }
-//# sourceMappingURL=circle.d.ts.map

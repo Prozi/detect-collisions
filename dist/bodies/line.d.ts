@@ -27,4 +27,3 @@ export declare class Line extends Polygon {
      */
     protected updateIsConvex(): void;
 }
-//# sourceMappingURL=line.d.ts.map

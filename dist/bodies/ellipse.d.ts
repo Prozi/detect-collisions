@@ -63,4 +63,3 @@ export declare class Ellipse extends Polygon {
      */
     protected updateIsConvex(): void;
 }
-//# sourceMappingURL=ellipse.d.ts.map
