@@ -36,7 +36,7 @@ export declare class System<TBody extends Body = Body> extends BaseSystem<TBody>
     /**
      * check one collider collisions with callback
      */
-    checkOne(body: Body, callback: (response: Response) => void | boolean, response?: Response): boolean;
+    checkOne(body: TBody, callback: (response: Response) => void | boolean, response?: Response): boolean;
     /**
      * check all colliders collisions with callback
      */
@@ -53,7 +53,7 @@ export declare class System<TBody extends Body = Body> extends BaseSystem<TBody>
     /**
      * raycast to get collider of ray from start to end
      */
-    raycast(start: Vector, end: Vector, allow?: (body: TBody) => boolean): RaycastHit | null;
+    raycast(start: Vector, end: Vector, allow?: (body: TBody) => boolean): RaycastHit<TBody> | null;
     /**
      * used to find body deep inside data with finder function returning boolean found or not
      */

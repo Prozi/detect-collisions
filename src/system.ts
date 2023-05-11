@@ -113,7 +113,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
    * check one collider collisions with callback
    */
   checkOne(
-    body: Body,
+    body: TBody,
     callback: (response: Response) => void | boolean,
     response = this.response
   ): boolean {
@@ -126,7 +126,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     const checkCollision = (candidate: TBody) => {
       if (
         candidate !== body &&
-        this.checkCollision(body as TBody, candidate, response)
+        this.checkCollision(body, candidate, response)
       ) {
         return callback(response);
       }
@@ -221,9 +221,9 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     start: Vector,
     end: Vector,
     allow: (body: TBody) => boolean = () => true
-  ): RaycastHit | null {
+  ): RaycastHit<TBody> | null {
     let minDistance = Infinity;
-    let result: RaycastHit | null = null;
+    let result: RaycastHit<TBody> | null = null;
 
     if (!this.ray) {
       this.ray = new Line(start, end, { isTrigger: true });
@@ -234,7 +234,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
 
     this.insert(this.ray as TBody);
 
-    this.checkOne(this.ray, ({ b: body }) => {
+    this.checkOne(this.ray as TBody, ({ b: body }) => {
       if (!allow(body)) {
         return false;
       }

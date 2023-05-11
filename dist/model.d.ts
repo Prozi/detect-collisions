@@ -66,9 +66,9 @@ export interface BodyOptions {
 /**
  * system.raycast(from, to) result
  */
-export interface RaycastHit {
+export interface RaycastHit<TBody> {
     point: Vector;
-    body: Body;
+    body: TBody;
 }
 /**
  * potential vector

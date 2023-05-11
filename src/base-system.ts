@@ -30,7 +30,7 @@ export class BaseSystem<TBody extends Body>
    * draw exact bodies colliders outline
    */
   draw(context: CanvasRenderingContext2D): void {
-    forEach(this.all(), (body: Body) => {
+    forEach(this.all(), (body: TBody) => {
       body.draw(context);
     });
   }
