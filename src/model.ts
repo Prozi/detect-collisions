@@ -32,22 +32,22 @@ export enum BodyType {
 /**
  * body with children (rbush)
  */
-export type Leaf = Body & {
-  children?: Leaf[];
+export type Leaf<TBody extends Body> = TBody & {
+  children?: Leaf<TBody>[];
 };
 
 /**
  * rbush data
  */
-export interface ChildrenData {
-  children: Leaf[];
+export interface ChildrenData<TBody extends Body> {
+  children: Leaf<TBody>[];
 }
 
 /**
  * for use of private function of sat.js
  */
-export interface Data {
-  data: ChildrenData;
+export interface Data<TBody extends Body> {
+  data: ChildrenData<TBody>;
 }
 
 /**
@@ -119,7 +119,8 @@ export type Body = Point | Line | Ellipse | Circle | Box | Polygon;
 /**
  * each body contains those regardless of type
  */
-export interface BodyProps extends Required<BodyOptions> {
+export interface BodyProps<TBody extends Body = Body>
+  extends Required<BodyOptions> {
   /**
    * type of body
    */
@@ -143,7 +144,7 @@ export interface BodyProps extends Required<BodyOptions> {
   /**
    * collisions system reference
    */
-  system?: System;
+  system?: System<TBody>;
 
   /**
    * scale getter (x)
@@ -194,4 +195,4 @@ export interface BodyProps extends Required<BodyOptions> {
 export type SATTest<
   T extends {} = Circle | Polygon | SATPolygon,
   Y extends {} = Circle | Polygon | SATPolygon
-> = (a: T, b: Y, r: Response) => boolean;
+> = (bodyA: T, bodyB: Y, response: Response) => boolean;

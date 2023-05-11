@@ -3,14 +3,14 @@ import RBush from "rbush";
 import { BaseSystem } from "./base-system";
 import { Line } from "./bodies/line";
 import {
-  Body,
   Leaf,
   RaycastHit,
   Response,
   SATVector,
   SATTest,
-  BodyType,
   Vector,
+  Body,
+  BodyType,
 } from "./model";
 import {
   distance,
@@ -29,7 +29,7 @@ import { filter, forEach, some } from "./optimized";
 /**
  * collision system
  */
-export class System extends BaseSystem {
+export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   /**
    * the last collision result
    */
@@ -40,7 +40,7 @@ export class System extends BaseSystem {
   /**
    * remove body aabb from collision tree
    */
-  remove(body: Body, equals?: (a: Body, b: Body) => boolean): RBush<Body> {
+  remove(body: TBody, equals?: (a: TBody, b: TBody) => boolean): RBush<TBody> {
     body.system = undefined;
 
     return super.remove(body, equals);
@@ -50,7 +50,7 @@ export class System extends BaseSystem {
    * re-insert body into collision tree and update its aabb
    * every body can be part of only one system
    */
-  insert(body: Body): RBush<Body> {
+  insert(body: TBody): RBush<TBody> {
     body.bbox = body.getAABBAsBBox();
 
     if (body.system) {
@@ -79,7 +79,7 @@ export class System extends BaseSystem {
   /**
    * alias for insert, updates body in collision tree
    */
-  updateBody(body: Body): void {
+  updateBody(body: TBody): void {
     this.insert(body);
   }
 
@@ -87,7 +87,7 @@ export class System extends BaseSystem {
    * update all bodies aabb
    */
   update(): void {
-    forEach(this.all(), (body: Body) => {
+    forEach(this.all(), (body: TBody) => {
       // no need to every cycle update static body aabb
       if (!body.isStatic) {
         this.insert(body);
@@ -123,10 +123,10 @@ export class System extends BaseSystem {
     }
 
     const bodies = this.search(body);
-    const checkCollision = (candidate: Body) => {
+    const checkCollision = (candidate: TBody) => {
       if (
         candidate !== body &&
-        this.checkCollision(body, candidate, response)
+        this.checkCollision(body as TBody, candidate, response)
       ) {
         return callback(response);
       }
@@ -143,7 +143,7 @@ export class System extends BaseSystem {
     response = this.response
   ): boolean {
     const bodies = this.all();
-    const checkOne = (body: Body) => {
+    const checkOne = (body: TBody) => {
       return this.checkOne(body, callback, response);
     };
 
@@ -154,15 +154,19 @@ export class System extends BaseSystem {
    * get object potential colliders
    * @deprecated because it's slower to use than checkOne() or checkAll()
    */
-  getPotentials(body: Body): Body[] {
+  getPotentials(body: TBody): TBody[] {
     // filter here is required as collides with self
-    return filter(this.search(body), (candidate: Body) => candidate !== body);
+    return filter(this.search(body), (candidate: TBody) => candidate !== body);
   }
 
   /**
    * check do 2 objects collide
    */
-  checkCollision(bodyA: Body, bodyB: Body, response = this.response): boolean {
+  checkCollision(
+    bodyA: TBody,
+    bodyB: TBody,
+    response = this.response
+  ): boolean {
     // if any of bodies has padding, we can short return false by assesing the bbox without padding
     if (
       (bodyA.padding || bodyB.padding) &&
@@ -216,7 +220,7 @@ export class System extends BaseSystem {
   raycast(
     start: Vector,
     end: Vector,
-    allow: (body: Body) => boolean = () => true
+    allow: (body: TBody) => boolean = () => true
   ): RaycastHit | null {
     let minDistance = Infinity;
     let result: RaycastHit | null = null;
@@ -228,7 +232,7 @@ export class System extends BaseSystem {
       this.ray.end = end;
     }
 
-    this.insert(this.ray);
+    this.insert(this.ray as TBody);
 
     this.checkOne(this.ray, ({ b: body }) => {
       if (!allow(body)) {
@@ -250,7 +254,7 @@ export class System extends BaseSystem {
       });
     });
 
-    this.remove(this.ray);
+    this.remove(this.ray as TBody);
 
     return result;
   }
@@ -259,9 +263,13 @@ export class System extends BaseSystem {
    * used to find body deep inside data with finder function returning boolean found or not
    */
   traverse(
-    find: (child: Leaf, children: Leaf[], index: number) => boolean | void,
-    { children }: { children?: Leaf[] } = this.data
-  ): Body | undefined {
+    find: (
+      child: Leaf<TBody>,
+      children: Leaf<TBody>[],
+      index: number
+    ) => boolean | void,
+    { children }: { children?: Leaf<TBody>[] } = this.data
+  ): TBody | undefined {
     return children?.find((body, index) => {
       if (!body) {
         return false;

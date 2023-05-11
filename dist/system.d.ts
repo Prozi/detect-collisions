@@ -2,11 +2,11 @@
 import RBush from "rbush";
 import { BaseSystem } from "./base-system";
 import { Line } from "./bodies/line";
-import { Body, Leaf, RaycastHit, Response, Vector } from "./model";
+import { Leaf, RaycastHit, Response, Vector, Body } from "./model";
 /**
  * collision system
  */
-export declare class System extends BaseSystem {
+export declare class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     /**
      * the last collision result
      */
@@ -15,16 +15,16 @@ export declare class System extends BaseSystem {
     /**
      * remove body aabb from collision tree
      */
-    remove(body: Body, equals?: (a: Body, b: Body) => boolean): RBush<Body>;
+    remove(body: TBody, equals?: (a: TBody, b: TBody) => boolean): RBush<TBody>;
     /**
      * re-insert body into collision tree and update its aabb
      * every body can be part of only one system
      */
-    insert(body: Body): RBush<Body>;
+    insert(body: TBody): RBush<TBody>;
     /**
      * alias for insert, updates body in collision tree
      */
-    updateBody(body: Body): void;
+    updateBody(body: TBody): void;
     /**
      * update all bodies aabb
      */
@@ -45,19 +45,19 @@ export declare class System extends BaseSystem {
      * get object potential colliders
      * @deprecated because it's slower to use than checkOne() or checkAll()
      */
-    getPotentials(body: Body): Body[];
+    getPotentials(body: TBody): TBody[];
     /**
      * check do 2 objects collide
      */
-    checkCollision(bodyA: Body, bodyB: Body, response?: Response): boolean;
+    checkCollision(bodyA: TBody, bodyB: TBody, response?: Response): boolean;
     /**
      * raycast to get collider of ray from start to end
      */
-    raycast(start: Vector, end: Vector, allow?: (body: Body) => boolean): RaycastHit | null;
+    raycast(start: Vector, end: Vector, allow?: (body: TBody) => boolean): RaycastHit | null;
     /**
      * used to find body deep inside data with finder function returning boolean found or not
      */
-    traverse(find: (child: Leaf, children: Leaf[], index: number) => boolean | void, { children }?: {
-        children?: Leaf[];
-    }): Body | undefined;
+    traverse(find: (child: Leaf<TBody>, children: Leaf<TBody>[], index: number) => boolean | void, { children }?: {
+        children?: Leaf<TBody>[];
+    }): TBody | undefined;
 }

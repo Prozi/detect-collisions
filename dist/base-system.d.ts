@@ -8,8 +8,8 @@ import { Body, BodyOptions, ChildrenData, Data, PotentialVector, RBush, Vector }
 /**
  * very base collision system
  */
-export declare class BaseSystem extends RBush<Body> implements Data {
-    data: ChildrenData;
+export declare class BaseSystem<TBody extends Body> extends RBush<TBody> implements Data<TBody> {
+    data: ChildrenData<TBody>;
     /**
      * draw exact bodies colliders outline
      */

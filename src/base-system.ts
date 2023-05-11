@@ -20,8 +20,11 @@ import { drawBVH } from "./utils";
 /**
  * very base collision system
  */
-export class BaseSystem extends RBush<Body> implements Data {
-  data!: ChildrenData;
+export class BaseSystem<TBody extends Body>
+  extends RBush<TBody>
+  implements Data<TBody>
+{
+  data!: ChildrenData<TBody>;
 
   /**
    * draw exact bodies colliders outline
@@ -36,8 +39,8 @@ export class BaseSystem extends RBush<Body> implements Data {
    * draw bounding boxes hierarchy outline
    */
   drawBVH(context: CanvasRenderingContext2D): void {
-    const drawChildren = (body: Leaf) => {
-      drawBVH(context, body);
+    const drawChildren = (body: Leaf<TBody>) => {
+      drawBVH(context, body as TBody);
 
       if (body.children) {
         forEach(body.children, drawChildren);
@@ -53,7 +56,7 @@ export class BaseSystem extends RBush<Body> implements Data {
   createPoint(position: PotentialVector, options?: BodyOptions): Point {
     const point = new Point(position, options);
 
-    this.insert(point);
+    this.insert(point as TBody);
 
     return point;
   }
@@ -64,7 +67,7 @@ export class BaseSystem extends RBush<Body> implements Data {
   createLine(start: Vector, end: Vector, options?: BodyOptions): Line {
     const line = new Line(start, end, options);
 
-    this.insert(line);
+    this.insert(line as TBody);
 
     return line;
   }
@@ -79,7 +82,7 @@ export class BaseSystem extends RBush<Body> implements Data {
   ): Circle {
     const circle = new Circle(position, radius, options);
 
-    this.insert(circle);
+    this.insert(circle as TBody);
 
     return circle;
   }
@@ -95,7 +98,7 @@ export class BaseSystem extends RBush<Body> implements Data {
   ): Box {
     const box = new Box(position, width, height, options);
 
-    this.insert(box);
+    this.insert(box as TBody);
 
     return box;
   }
@@ -112,7 +115,7 @@ export class BaseSystem extends RBush<Body> implements Data {
   ): Ellipse {
     const ellipse = new Ellipse(position, radiusX, radiusY, step, options);
 
-    this.insert(ellipse);
+    this.insert(ellipse as TBody);
 
     return ellipse;
   }
@@ -127,7 +130,7 @@ export class BaseSystem extends RBush<Body> implements Data {
   ): Polygon {
     const polygon = new Polygon(position, points, options);
 
-    this.insert(polygon);
+    this.insert(polygon as TBody);
 
     return polygon;
   }

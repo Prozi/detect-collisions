@@ -14,14 +14,19 @@
 <ul class="tsd-breadcrumb">
 <li><a href="../modules.html">Detect-Collisions</a></li>
 <li><a href="System.html">System</a></li></ul>
-<h1>Class System</h1></div>
+<h1>Class System&lt;TBody&gt;</h1></div>
 <section class="tsd-panel tsd-comment">
 <div class="tsd-comment tsd-typography"><p>collision system</p>
-</div></section>
+</div></section> 
+<section class="tsd-panel">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameter-list">
+<li>
+<h4><span class="tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol"> extends </span><a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a> = <a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a></h4></li></ul></section> 
 <section class="tsd-panel tsd-hierarchy">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
-<li><span class="tsd-signature-type ">BaseSystem</span>
+<li><span class="tsd-signature-type ">BaseSystem</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">&gt;</span>
 <ul class="tsd-hierarchy">
 <li><span class="target">System</span></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
@@ -78,12 +83,17 @@
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="constructor" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>constructor</span><a href="#constructor" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited tsd-is-external">
-<li class="tsd-signature tsd-anchor-link" id="constructor.new_System"><span class="tsd-kind-constructor-signature">new <wbr/>System</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">maxEntries</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="System.html" class="tsd-signature-type tsd-kind-class">System</a><a href="#constructor.new_System" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="constructor.new_System"><span class="tsd-kind-constructor-signature">new <wbr/>System</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">maxEntries</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="System.html" class="tsd-signature-type tsd-kind-class">System</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">&gt;</span><a href="#constructor.new_System" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Constructs an <code>RBush</code>, a high-performance 2D spatial index for points and
 rectangles. Based on an optimized <strong>R-tree</strong> data structure with
 <strong>bulk-insertion</strong> support.</p>
 </div>
+<section class="tsd-panel">
+<h4>Type Parameters</h4>
+<ul class="tsd-type-parameter-list">
+<li>
+<h4><span class="tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol"> extends </span><a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a> = <a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a></h4></li></ul></section>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
@@ -95,18 +105,18 @@ rectangles. Based on an optimized <strong>R-tree</strong> data structure with
                   value means faster insertion and slower search, and
                   vice versa.</p>
 </div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="System.html" class="tsd-signature-type tsd-kind-class">System</a></h4><aside class="tsd-sources">
-<p>Inherited from BaseSystem.constructor</p>
+<h4 class="tsd-returns-title">Returns <a href="System.html" class="tsd-signature-type tsd-kind-class">System</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<p>Inherited from BaseSystem&lt;TBody&gt;.constructor</p>
 <ul>
 <li>Defined in node_modules/@types/rbush/index.d.ts:26</li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="data" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>data</span><a href="#data" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature"><span class="tsd-kind-property">data</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/ChildrenData.html" class="tsd-signature-type tsd-kind-interface">ChildrenData</a></div><aside class="tsd-sources">
+<div class="tsd-signature"><span class="tsd-kind-property">data</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/ChildrenData.html" class="tsd-signature-type tsd-kind-interface">ChildrenData</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">&gt;</span></div><aside class="tsd-sources">
 <p>Inherited from BaseSystem.data</p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L24">src/base-system.ts:24</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L27">src/base-system.ts:27</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-protected"><a id="ray" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>ray</span><a href="#ray" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">ray</span><span class="tsd-signature-symbol">:</span> <a href="Line.html" class="tsd-signature-type tsd-kind-class">Line</a></div><aside class="tsd-sources">
@@ -124,11 +134,11 @@ rectangles. Based on an optimized <strong>R-tree</strong> data structure with
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="all" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>all</span><a href="#all" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited tsd-is-external">
-<li class="tsd-signature tsd-anchor-link" id="all.all-1"><span class="tsd-kind-call-signature">all</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a><span class="tsd-signature-symbol">[]</span><a href="#all.all-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="all.all-1"><span class="tsd-kind-call-signature">all</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">[]</span><a href="#all.all-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Returns all items contained in the tree.</p>
 </div>
-<h4 class="tsd-returns-title">Returns <a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <p>Inherited from BaseSystem.all</p>
 <ul>
 <li>Defined in node_modules/@types/rbush/index.d.ts:83</li></ul></aside></li></ul></section>
@@ -171,9 +181,9 @@ rectangles. Based on an optimized <strong>R-tree</strong> data structure with
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">bodyA</span>: <a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a></h5></li>
+<h5><span class="tsd-kind-parameter">bodyA</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TBody</span></h5></li>
 <li>
-<h5><span class="tsd-kind-parameter">bodyB</span>: <a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a></h5></li>
+<h5><span class="tsd-kind-parameter">bodyB</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TBody</span></h5></li>
 <li>
 <h5><span class="tsd-kind-parameter">response</span>: <a href="Response.html" class="tsd-signature-type tsd-kind-class">Response</a><span class="tsd-signature-symbol"> = ...</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4><aside class="tsd-sources">
@@ -212,11 +222,11 @@ rectangles. Based on an optimized <strong>R-tree</strong> data structure with
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="clear" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>clear</span><a href="#clear" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited tsd-is-external">
-<li class="tsd-signature tsd-anchor-link" id="clear.clear-1"><span class="tsd-kind-call-signature">clear</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="RBush.html" class="tsd-signature-type tsd-kind-class">RBush</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a><span class="tsd-signature-symbol">&gt;</span><a href="#clear.clear-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="clear.clear-1"><span class="tsd-kind-call-signature">clear</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="RBush.html" class="tsd-signature-type tsd-kind-class">RBush</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">&gt;</span><a href="#clear.clear-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Removes all items.</p>
 </div>
-<h4 class="tsd-returns-title">Returns <a href="RBush.html" class="tsd-signature-type tsd-kind-class">RBush</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<h4 class="tsd-returns-title">Returns <a href="RBush.html" class="tsd-signature-type tsd-kind-class">RBush</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from BaseSystem.clear</p>
 <ul>
 <li>Defined in node_modules/@types/rbush/index.d.ts:67</li></ul></aside></li></ul></section>
@@ -259,11 +269,11 @@ custom item format by overriding <code>toBBox()</code>, <code>compareMinX()</cod
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">a</span>: <a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a></h5>
+<h5><span class="tsd-kind-parameter">a</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TBody</span></h5>
 <div class="tsd-comment tsd-typography"><p>The first item to compare.</p>
 </div></li>
 <li>
-<h5><span class="tsd-kind-parameter">b</span>: <a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a></h5>
+<h5><span class="tsd-kind-parameter">b</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TBody</span></h5>
 <div class="tsd-comment tsd-typography"><p>The second item to compare.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
@@ -290,11 +300,11 @@ custom item format by overriding <code>toBBox()</code>, <code>compareMinX()</cod
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">a</span>: <a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a></h5>
+<h5><span class="tsd-kind-parameter">a</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TBody</span></h5>
 <div class="tsd-comment tsd-typography"><p>The first item to compare.</p>
 </div></li>
 <li>
-<h5><span class="tsd-kind-parameter">b</span>: <a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a></h5>
+<h5><span class="tsd-kind-parameter">b</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TBody</span></h5>
 <div class="tsd-comment tsd-typography"><p>The second item to compare.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
@@ -322,7 +332,7 @@ custom item format by overriding <code>toBBox()</code>, <code>compareMinX()</cod
 <h4 class="tsd-returns-title">Returns <a href="Box.html" class="tsd-signature-type tsd-kind-class">Box</a></h4><aside class="tsd-sources">
 <p>Inherited from BaseSystem.createBox</p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L90">src/base-system.ts:90</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L93">src/base-system.ts:93</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="createCircle" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>create<wbr/>Circle</span><a href="#createCircle" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
@@ -342,7 +352,7 @@ custom item format by overriding <code>toBBox()</code>, <code>compareMinX()</cod
 <h4 class="tsd-returns-title">Returns <a href="Circle.html" class="tsd-signature-type tsd-kind-class">Circle</a></h4><aside class="tsd-sources">
 <p>Inherited from BaseSystem.createCircle</p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L75">src/base-system.ts:75</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L78">src/base-system.ts:78</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="createEllipse" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>create<wbr/>Ellipse</span><a href="#createEllipse" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
@@ -366,7 +376,7 @@ custom item format by overriding <code>toBBox()</code>, <code>compareMinX()</cod
 <h4 class="tsd-returns-title">Returns <a href="Ellipse.html" class="tsd-signature-type tsd-kind-class">Ellipse</a></h4><aside class="tsd-sources">
 <p>Inherited from BaseSystem.createEllipse</p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L106">src/base-system.ts:106</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L109">src/base-system.ts:109</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="createLine" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>create<wbr/>Line</span><a href="#createLine" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
@@ -386,7 +396,7 @@ custom item format by overriding <code>toBBox()</code>, <code>compareMinX()</cod
 <h4 class="tsd-returns-title">Returns <a href="Line.html" class="tsd-signature-type tsd-kind-class">Line</a></h4><aside class="tsd-sources">
 <p>Inherited from BaseSystem.createLine</p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L64">src/base-system.ts:64</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L67">src/base-system.ts:67</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="createPoint" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>create<wbr/>Point</span><a href="#createPoint" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
@@ -404,7 +414,7 @@ custom item format by overriding <code>toBBox()</code>, <code>compareMinX()</cod
 <h4 class="tsd-returns-title">Returns <a href="Point.html" class="tsd-signature-type tsd-kind-class">Point</a></h4><aside class="tsd-sources">
 <p>Inherited from BaseSystem.createPoint</p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L53">src/base-system.ts:53</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L56">src/base-system.ts:56</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="createPolygon" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>create<wbr/>Polygon</span><a href="#createPolygon" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
@@ -424,7 +434,7 @@ custom item format by overriding <code>toBBox()</code>, <code>compareMinX()</cod
 <h4 class="tsd-returns-title">Returns <a href="Polygon.html" class="tsd-signature-type tsd-kind-class">Polygon</a></h4><aside class="tsd-sources">
 <p>Inherited from BaseSystem.createPolygon</p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L123">src/base-system.ts:123</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L126">src/base-system.ts:126</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="draw" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>draw</span><a href="#draw" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
@@ -440,7 +450,7 @@ custom item format by overriding <code>toBBox()</code>, <code>compareMinX()</cod
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Inherited from BaseSystem.draw</p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L29">src/base-system.ts:29</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L32">src/base-system.ts:32</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="drawBVH" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>drawBVH</span><a href="#drawBVH" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited">
@@ -456,11 +466,11 @@ custom item format by overriding <code>toBBox()</code>, <code>compareMinX()</cod
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Inherited from BaseSystem.drawBVH</p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L38">src/base-system.ts:38</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L41">src/base-system.ts:41</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="fromJSON" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>fromJSON</span><a href="#fromJSON" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited tsd-is-external">
-<li class="tsd-signature tsd-anchor-link" id="fromJSON.fromJSON-1"><span class="tsd-kind-call-signature">fromJSON</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">data</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="RBush.html" class="tsd-signature-type tsd-kind-class">RBush</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a><span class="tsd-signature-symbol">&gt;</span><a href="#fromJSON.fromJSON-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="fromJSON.fromJSON-1"><span class="tsd-kind-call-signature">fromJSON</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">data</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="RBush.html" class="tsd-signature-type tsd-kind-class">RBush</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">&gt;</span><a href="#fromJSON.fromJSON-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Imports previously exported data into the tree (i.e., data that was
 emitted by <code>toJSON()</code>).</p>
@@ -478,14 +488,14 @@ in both trees for export/import to work properly.</p>
 <h5><span class="tsd-kind-parameter">data</span>: <span class="tsd-signature-type">any</span></h5>
 <div class="tsd-comment tsd-typography"><p>The previously exported JSON data.</p>
 </div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="RBush.html" class="tsd-signature-type tsd-kind-class">RBush</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<h4 class="tsd-returns-title">Returns <a href="RBush.html" class="tsd-signature-type tsd-kind-class">RBush</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from BaseSystem.fromJSON</p>
 <ul>
 <li>Defined in node_modules/@types/rbush/index.d.ts:189</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getPotentials" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Potentials</span><a href="#getPotentials" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="getPotentials.getPotentials-1"><span class="tsd-kind-call-signature">get<wbr/>Potentials</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">body</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a><span class="tsd-signature-symbol">[]</span><a href="#getPotentials.getPotentials-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="getPotentials.getPotentials-1"><span class="tsd-kind-call-signature">get<wbr/>Potentials</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">body</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">[]</span><a href="#getPotentials.getPotentials-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>get object potential colliders</p>
 
@@ -495,14 +505,14 @@ in both trees for export/import to work properly.</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">body</span>: <a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
+<h5><span class="tsd-kind-parameter">body</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TBody</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <ul>
 <li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L157">src/system.ts:157</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="insert" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>insert</span><a href="#insert" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="insert.insert-1"><span class="tsd-kind-call-signature">insert</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">body</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="RBush.html" class="tsd-signature-type tsd-kind-class">RBush</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a><span class="tsd-signature-symbol">&gt;</span><a href="#insert.insert-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="insert.insert-1"><span class="tsd-kind-call-signature">insert</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">body</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="RBush.html" class="tsd-signature-type tsd-kind-class">RBush</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">&gt;</span><a href="#insert.insert-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>re-insert body into collision tree and update its aabb
 every body can be part of only one system</p>
@@ -511,15 +521,15 @@ every body can be part of only one system</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">body</span>: <a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="RBush.html" class="tsd-signature-type tsd-kind-class">RBush</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<h5><span class="tsd-kind-parameter">body</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TBody</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <a href="RBush.html" class="tsd-signature-type tsd-kind-class">RBush</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides BaseSystem.insert</p>
 <ul>
 <li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L53">src/system.ts:53</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="load" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>load</span><a href="#load" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited tsd-is-external">
-<li class="tsd-signature tsd-anchor-link" id="load.load-1"><span class="tsd-kind-call-signature">load</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">items</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="RBush.html" class="tsd-signature-type tsd-kind-class">RBush</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a><span class="tsd-signature-symbol">&gt;</span><a href="#load.load-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="load.load-1"><span class="tsd-kind-call-signature">load</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">items</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="RBush.html" class="tsd-signature-type tsd-kind-class">RBush</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">&gt;</span><a href="#load.load-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Bulk-inserts the given items into the tree.</p>
 <p>Bulk insertion is usually ~2-3 times faster than inserting items one by
@@ -535,10 +545,10 @@ performance worse if the data is scattered.</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">items</span>: <span class="tsd-signature-symbol">readonly </span><a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a><span class="tsd-signature-symbol">[]</span></h5>
+<h5><span class="tsd-kind-parameter">items</span>: <span class="tsd-signature-symbol">readonly </span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">[]</span></h5>
 <div class="tsd-comment tsd-typography"><p>The items to load.</p>
 </div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="RBush.html" class="tsd-signature-type tsd-kind-class">RBush</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<h4 class="tsd-returns-title">Returns <a href="RBush.html" class="tsd-signature-type tsd-kind-class">RBush</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from BaseSystem.load</p>
 <ul>
 <li>Defined in node_modules/@types/rbush/index.d.ts:50</li></ul></aside></li></ul></section>
@@ -567,15 +577,15 @@ performance worse if the data is scattered.</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">body</span>: <a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a></h5></li></ul></div>
+<h5><span class="tsd-kind-parameter">body</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TBody</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4></li></ul></li></ul></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">null</span><span class="tsd-signature-symbol"> | </span><a href="../interfaces/RaycastHit.html" class="tsd-signature-type tsd-kind-interface">RaycastHit</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L216">src/system.ts:216</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L220">src/system.ts:220</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="remove" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove</span><a href="#remove" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="remove.remove-1"><span class="tsd-kind-call-signature">remove</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">body</span>, <span class="tsd-kind-parameter">equals</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="RBush.html" class="tsd-signature-type tsd-kind-class">RBush</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a><span class="tsd-signature-symbol">&gt;</span><a href="#remove.remove-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="remove.remove-1"><span class="tsd-kind-call-signature">remove</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">body</span>, <span class="tsd-kind-parameter">equals</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="RBush.html" class="tsd-signature-type tsd-kind-class">RBush</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">&gt;</span><a href="#remove.remove-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>remove body aabb from collision tree</p>
 </div>
@@ -583,7 +593,7 @@ performance worse if the data is scattered.</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">body</span>: <a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a></h5></li>
+<h5><span class="tsd-kind-parameter">body</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TBody</span></h5></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">equals</span>: <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">a</span>, <span class="tsd-kind-parameter">b</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">)</span></h5>
 <ul class="tsd-parameters">
@@ -595,18 +605,18 @@ performance worse if the data is scattered.</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">a</span>: <a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a></h5></li>
+<h5><span class="tsd-kind-parameter">a</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TBody</span></h5></li>
 <li>
-<h5><span class="tsd-kind-parameter">b</span>: <a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a></h5></li></ul></div>
+<h5><span class="tsd-kind-parameter">b</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TBody</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4></li></ul></li></ul></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="RBush.html" class="tsd-signature-type tsd-kind-class">RBush</a><span class="tsd-signature-symbol">&lt;</span><a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<h4 class="tsd-returns-title">Returns <a href="RBush.html" class="tsd-signature-type tsd-kind-class">RBush</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides BaseSystem.remove</p>
 <ul>
 <li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L43">src/system.ts:43</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external"><a id="search" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>search</span><a href="#search" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-inherited tsd-is-external">
-<li class="tsd-signature tsd-anchor-link" id="search.search-1"><span class="tsd-kind-call-signature">search</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">box</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a><span class="tsd-signature-symbol">[]</span><a href="#search.search-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="search.search-1"><span class="tsd-kind-call-signature">search</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">box</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">[]</span><a href="#search.search-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>Returns an array of data items (points or rectangles) that the given
 bounding box intersects.</p>
@@ -619,7 +629,7 @@ bounding box intersects.</p>
 <h5><span class="tsd-kind-parameter">box</span>: <a href="../interfaces/BBox.html" class="tsd-signature-type tsd-kind-interface">BBox</a></h5>
 <div class="tsd-comment tsd-typography"><p>The bounding box in which to search.</p>
 </div></li></ul></div>
-<h4 class="tsd-returns-title">Returns <a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">[]</span></h4><aside class="tsd-sources">
 <p>Inherited from BaseSystem.search</p>
 <ul>
 <li>Defined in node_modules/@types/rbush/index.d.ts:78</li></ul></aside></li></ul></section>
@@ -651,7 +661,7 @@ custom item format by overriding <code>toBBox()</code>, <code>compareMinX()</cod
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">item</span>: <a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a></h5>
+<h5><span class="tsd-kind-parameter">item</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TBody</span></h5>
 <div class="tsd-comment tsd-typography"><p>The item whose bounding box should be returned.</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../interfaces/BBox.html" class="tsd-signature-type tsd-kind-interface">BBox</a></h4><aside class="tsd-sources">
@@ -678,7 +688,7 @@ in both trees for export/import to work properly.</p>
 <section class="tsd-panel tsd-member"><a id="traverse" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>traverse</span><a href="#traverse" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="traverse.traverse-1"><span class="tsd-kind-call-signature">traverse</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">find</span>, <span class="tsd-kind-parameter">__namedParameters</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a><a href="#traverse.traverse-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="traverse.traverse-1"><span class="tsd-kind-call-signature">traverse</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">find</span>, <span class="tsd-kind-parameter">__namedParameters</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><a href="#traverse.traverse-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>used to find body deep inside data with finder function returning boolean found or not</p>
 </div>
@@ -696,20 +706,20 @@ in both trees for export/import to work properly.</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">child</span>: <a href="../types/Leaf.html" class="tsd-signature-type tsd-kind-type-alias">Leaf</a></h5></li>
+<h5><span class="tsd-kind-parameter">child</span>: <a href="../types/Leaf.html" class="tsd-signature-type tsd-kind-type-alias">Leaf</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">&gt;</span></h5></li>
 <li>
-<h5><span class="tsd-kind-parameter">children</span>: <a href="../types/Leaf.html" class="tsd-signature-type tsd-kind-type-alias">Leaf</a><span class="tsd-signature-symbol">[]</span></h5></li>
+<h5><span class="tsd-kind-parameter">children</span>: <a href="../types/Leaf.html" class="tsd-signature-type tsd-kind-type-alias">Leaf</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h5></li>
 <li>
 <h5><span class="tsd-kind-parameter">index</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">void</span></h4></li></ul></li></ul></li>
 <li>
-<h5><span class="tsd-kind-parameter">__namedParameters</span>: <span class="tsd-signature-symbol">{ </span><br/><span>    </span><span class="tsd-kind-property">children</span><span class="tsd-signature-symbol">?: </span><a href="../types/Leaf.html" class="tsd-signature-type tsd-kind-type-alias">Leaf</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol"> = ...</span></h5>
+<h5><span class="tsd-kind-parameter">__namedParameters</span>: <span class="tsd-signature-symbol">{ </span><br/><span>    </span><span class="tsd-kind-property">children</span><span class="tsd-signature-symbol">?: </span><a href="../types/Leaf.html" class="tsd-signature-type tsd-kind-type-alias">Leaf</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">; </span><br/><span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol"> = ...</span></h5>
 <ul class="tsd-parameters">
 <li class="tsd-parameter">
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-property">children</span><span class="tsd-signature-symbol">?: </span><a href="../types/Leaf.html" class="tsd-signature-type tsd-kind-type-alias">Leaf</a><span class="tsd-signature-symbol">[]</span></h5></li></ul></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a></h4><aside class="tsd-sources">
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-property">children</span><span class="tsd-signature-symbol">?: </span><a href="../types/Leaf.html" class="tsd-signature-type tsd-kind-type-alias">Leaf</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></h5></li></ul></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type tsd-kind-type-parameter">TBody</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L261">src/system.ts:261</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L265">src/system.ts:265</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="update" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>update</span><a href="#update" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -731,7 +741,7 @@ in both trees for export/import to work properly.</p>
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><span class="tsd-kind-parameter">body</span>: <a href="../types/Body.html" class="tsd-signature-type tsd-kind-type-alias">Body</a></h5></li></ul></div>
+<h5><span class="tsd-kind-parameter">body</span>: <span class="tsd-signature-type tsd-kind-type-parameter">TBody</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
 <li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L82">src/system.ts:82</a></li></ul></aside></li></ul></section></section></div>

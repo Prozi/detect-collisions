@@ -49,9 +49,9 @@ Bodies have various properties:
 
 Bodies contain additional properties (`BodyOptions`) that can be set in runtime or during creation:
 
-- `angle: number`: Angle in radians, use `deg2rad(degrees: number)` for conversion. Use `setAngle(angle: number)` to change in runtime.
-- `isStatic: boolean`: If set to true, the body won't separate.
-- `isTrigger: boolean`: If set to true, the body won't trigger collisions.
+- `angle: number`: Angle in radians, use `deg2rad(degrees: number)` for conversion. Use `setAngle(angle: number)` to change it during runtime.
+- `isStatic: boolean`: If set to true, the body won't move during `system.separare()`. For walls.
+- `isTrigger: boolean`: If set to true, the body won't move during `system.separate()`. For projectiles.
 - `isCentered: boolean`: If set to true, offset is set to center for rotation purposes.
 - `padding: number`: Bounding box padding, optimizes costly updates.
 
@@ -131,7 +131,7 @@ system.checkOne(body, (response: Response) => {
 })
 ```
 
-For a direct collision check without broad-phase search, use `system.checkCollision(body1,  body2)`. However, this isn't recommended due to efficiency loss.
+For a direct collision check without broad-phase search, use `system.checkCollision(body1, body2)`. However, this isn't recommended due to efficiency loss.
 
 Access detailed collision information in the system.response object, which includes properties like `a, b, overlap, overlapN, overlapV, aInB, and bInA`.
 
