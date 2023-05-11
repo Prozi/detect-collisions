@@ -49,7 +49,7 @@ Bodies have various properties:
 
 Bodies contain additional properties (`BodyOptions`) that can be set in runtime or during creation:
 
-- `angle: number`: Angle in radians, use `deg2rad(degrees: number)` for conversion.
+- `angle: number`: Angle in radians, use `deg2rad(degrees: number)` for conversion. Use `setAngle(angle: number)` to change in runtime.
 - `isStatic: boolean`: If set to true, the body won't separate.
 - `isTrigger: boolean`: If set to true, the body won't trigger collisions.
 - `isCentered: boolean`: If set to true, offset is set to center for rotation purposes.
@@ -196,11 +196,7 @@ const testCollision = ({ x, y }, radius = 10) => {
   // create and add to tree
   const circle = system.createCircle({ x, y }, radius)
   // init as false
-  let collided = false
-
-  system.checkOne(circle, () => {
-    // mark as true
-    collided = true
+  const collided = system.checkOne(circle, () => {
     // ends iterating after first collision
     return true
   })
