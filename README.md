@@ -6,7 +6,7 @@
 
 ## Introduction
 
-Detect-Collisions is a fast TypeScript library for detecting collisions among varied entities. It uses Bounding Volume Hierarchy (BVH) and the Separating Axis Theorem (SAT) for efficient collision detection. Uniquely, it manages rotation, scale of bodies, and supports decomposing concave polygons into convex ones. It also optimizes detection with body padding. Ideal for gaming, simulations, or projects needing advanced collision detection, Detect-Collisions offers customization and fast performance.
+Detect-Collisions is a robust TypeScript library for detecting collisions among varied entities. It uses Bounding Volume Hierarchy (BVH) and the Separating Axis Theorem (SAT) for efficient collision detection. Uniquely, it manages rotation, scale of bodies, and supports decomposing concave polygons into convex ones. It also optimizes detection with body padding. Ideal for gaming, simulations, or projects needing advanced collision detection, Detect-Collisions offers customization and fast performance.
 
 ## Demos
 
@@ -166,9 +166,9 @@ system.checkAll((response: Response) => {
 
 ### Step 7: System Separation
 
-There is an easy way to handle overlap and separation of bodies during collisions. Use system.separate() after updating the system. This function takes into account isTrigger and isStatic flags on bodies.
+There is an easy way to handle overlap and separation of bodies during collisions. Use system.separate() after updating the system. This function takes into account `isTrigger` and `isStatic` flags on bodies.
 
-```
+```ts
 system.separate()
 ```
 
@@ -284,7 +284,7 @@ We welcome contributions! Feel free to open a merge request. When doing so, plea
 
 ### Why not use a physics engine?
 
-While physics engines like [Matter.ts](https://github.com/liabru/matter-ts) or [Planck.ts](https://github.com/shakiba/planck.ts) are recommended for projects that need comprehensive physics simulation, not all projects require such complexity. In fact, using a physics engine solely for collision detection can lead to unnecessary overhead and complications due to built-in assumptions (gravity, velocity, friction, etc.). Detect-Collisions is purpose-built for efficient and robust collision detection, making it an excellent choice for projects that primarily require this functionality. It can also serve as the foundation for a custom physics engine.
+While physics engines like [Matter-js](https://github.com/liabru/matter-js) or [Planck.js](https://github.com/shakiba/planck.js) are recommended for projects that need comprehensive physics simulation, not all projects require such complexity. In fact, using a physics engine solely for collision detection can lead to unnecessary overhead and complications due to built-in assumptions (gravity, velocity, friction, etc.). Detect-Collisions is purpose-built for efficient and robust collision detection, making it an excellent choice for projects that primarily require this functionality. It can also serve as the foundation for a custom physics engine.
 
 ## Benchmark
 
@@ -317,4 +317,4 @@ typical output:
 │   10    │  10000  │ 13  │
 └─────────┴─────────┴─────┘
 Done in 14.58s.
-```
+```ts
