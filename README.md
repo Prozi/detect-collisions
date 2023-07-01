@@ -41,7 +41,7 @@ const system = new System()
 
 Bodies have various properties:
 
-- **Position Attributes**: `pos: Vector`, `x: number`, `y: number`. Setting `body.pos.x` or `body.pos.y` doesn't update the bounding box while setting `body.x` or `body.y` directly does. To set position and update bounding box use `setPosition(x, y)`.
+- **Position Attributes**: `pos: Vector`, `x: number`, `y: number`. Setting `body.pos.x` or `body.pos.y` doesn't update the bounding box while setting `body.x` or `body.y` directly does. To set both at the same time, use `setPosition(x, y)`.
 
 - **Scale, Offset**: Bodies have `scale: number` shorthand property and `setScale(x, y)` method for scaling. The `offset: Vector` property and `setOffset({ x, y }: Vector)` method are for offset from body center for rotation purposes.
 
@@ -126,13 +126,22 @@ const polygon = system.createPolygon(position, points, options)
 - `setAngle(angle: number)`:
   - Sets the rotation angle of the body to the specified value.
   - Used for rotating the body around its center.
-  - Angle in radians, use `deg2rad(degrees: number)` for conversion. 
+  - Angle in radians, use `deg2rad(degrees: number)` for conversion.
 
 - `setOffset(offset: Vector)`:
   - Sets the offset of the body from its center.
   - Used to position the body's collision shape more accurately.
 
+- `updateBody()`:
+  - Updates body AABB in collision tree, please call this after all manipulations are done
+
 ### Step 5: Collision Detection and Resolution
+
+If you decide to go with `body.updateBody()` approach just make sure every body has it called after any manipulations, but maybe an easier route is just to call `system.update()` which will iterate over all bodies and update their bounding box.
+
+```ts
+system.update()
+```
 
 Check collisions for all bodies or a single body:
 

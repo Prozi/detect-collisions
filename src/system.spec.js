@@ -23,6 +23,23 @@ describe("GIVEN System", () => {
     expect(circle.pos.y).toBe(-1);
   });
 
+  it("THEN update() un-dirties the bodies", () => {
+    const { System } = require("../src");
+
+    const system = new System();
+    const poly = system.createPolygon({ x: -100, y: -100 }, [
+      { x: 0, y: 0 },
+      { x: 10, y: 0 },
+      { x: 10, y: 10 },
+      { x: 0, y: 10 },
+    ]);
+
+    poly.setPosition(poly.x + 100, poly.y + 100);
+    expect(poly.dirty).toBe(true);
+    system.update();
+    expect(poly.dirty).toBe(false);
+  });
+
   describe("WHEN raycast is called", () => {
     it("THEN works correctly on Ellipse", () => {
       const { System } = require(".");

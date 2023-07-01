@@ -93,6 +93,8 @@ class Stress {
       body.y + body.directionY * timeScale
     );
 
+    body.updateBody();
+
     this.physics.checkOne(body, this.checkBounce.bind(this));
   }
 

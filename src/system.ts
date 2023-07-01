@@ -78,10 +78,10 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   }
 
   /**
-   * alias for insert, updates body in collision tree
+   * updates body in collision tree
    */
   updateBody(body: TBody): void {
-    this.insert(body);
+    body.updateBody();
   }
 
   /**
@@ -89,10 +89,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
    */
   update(): void {
     forEach(this.all(), (body: TBody) => {
-      // no need to every cycle update static body aabb
-      if (!body.isStatic) {
-        this.insert(body);
-      }
+      this.updateBody(body);
     });
   }
 
@@ -118,9 +115,6 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     callback: CheckCollisionCallback = () => true,
     response = this.response
   ): boolean {
-    // first, lazy update body bbox if needed
-    body.updateBody();
-
     // no need to check static body collision
     if (body.isStatic) {
       return false;
