@@ -45,6 +45,7 @@
 <h3 class="tsd-index-heading">Properties</h3>
 <div class="tsd-index-list"><a href="BodyProps.html#angle" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF984D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-1024-path"></rect><path d="M9.354 16V7.24H12.174C12.99 7.24 13.638 7.476 14.118 7.948C14.606 8.412 14.85 9.036 14.85 9.82C14.85 10.604 14.606 11.232 14.118 11.704C13.638 12.168 12.99 12.4 12.174 12.4H10.434V16H9.354ZM10.434 11.428H12.174C12.646 11.428 13.022 11.284 13.302 10.996C13.59 10.7 13.734 10.308 13.734 9.82C13.734 9.324 13.59 8.932 13.302 8.644C13.022 8.356 12.646 8.212 12.174 8.212H10.434V11.428Z" fill="var(--color-text)" id="icon-1024-text"></path></svg><span>angle</span></a>
 <a href="BodyProps.html#bbox" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>bbox</span></a>
+<a href="BodyProps.html#dirty" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>dirty</span></a>
 <a href="BodyProps.html#isCentered" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Centered</span></a>
 <a href="BodyProps.html#isConvex" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Convex</span></a>
 <a href="BodyProps.html#isStatic" class="tsd-index-link tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Static</span></a>
@@ -86,6 +87,13 @@
 </div><aside class="tsd-sources">
 <ul>
 <li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L137">src/model.ts:137</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member"><a id="dirty" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>dirty</span><a href="#dirty" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">dirty</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+<div class="tsd-comment tsd-typography"><p>was the body modified and needs update in the next checkCollision</p>
+</div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L152">src/model.ts:152</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited"><a id="isCentered" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>is<wbr/>Centered</span><a href="#isCentered" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">is<wbr/>Centered</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -157,7 +165,7 @@
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L152">src/model.ts:152</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L157">src/model.ts:157</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="scaleY" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>scaleY</span><a href="#scaleY" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -167,7 +175,7 @@
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L157">src/model.ts:157</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L162">src/model.ts:162</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member"><a id="draw" class="tsd-anchor"></a>
@@ -184,7 +192,7 @@
 <h5><span class="tsd-kind-parameter">context</span>: <span class="tsd-signature-type ">CanvasRenderingContext2D</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L187">src/model.ts:187</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L192">src/model.ts:192</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="drawBVH" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>drawBVH</span><a href="#drawBVH" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -199,7 +207,7 @@
 <h5><span class="tsd-kind-parameter">context</span>: <span class="tsd-signature-type ">CanvasRenderingContext2D</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L182">src/model.ts:182</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L187">src/model.ts:187</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getAABBAsBBox" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>getAABBAsBBox</span><a href="#getAABBAsBBox" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -209,7 +217,7 @@
 </div>
 <h4 class="tsd-returns-title">Returns <a href="BBox.html" class="tsd-signature-type tsd-kind-interface">BBox</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L192">src/model.ts:192</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L197">src/model.ts:197</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setAngle" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Angle</span><a href="#setAngle" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -224,7 +232,7 @@
 <h5><span class="tsd-kind-parameter">angle</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/SATPolygon.html" class="tsd-signature-type tsd-kind-class">SATPolygon</a><span class="tsd-signature-symbol"> | </span><a href="../classes/Circle.html" class="tsd-signature-type tsd-kind-class">Circle</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L172">src/model.ts:172</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L177">src/model.ts:177</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setOffset" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Offset</span><a href="#setOffset" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -239,11 +247,11 @@
 <h5><span class="tsd-kind-parameter">offset</span>: <a href="Vector.html" class="tsd-signature-type tsd-kind-interface">Vector</a></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="../classes/SATPolygon.html" class="tsd-signature-type tsd-kind-class">SATPolygon</a><span class="tsd-signature-symbol"> | </span><a href="../classes/Circle.html" class="tsd-signature-type tsd-kind-class">Circle</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L177">src/model.ts:177</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L182">src/model.ts:182</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setPosition" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Position</span><a href="#setPosition" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="setPosition.setPosition-1"><span class="tsd-kind-call-signature">set<wbr/>Position</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">x</span>, <span class="tsd-kind-parameter">y</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#setPosition.setPosition-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="setPosition.setPosition-1"><span class="tsd-kind-call-signature">set<wbr/>Position</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">x</span>, <span class="tsd-kind-parameter">y</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/SATPolygon.html" class="tsd-signature-type tsd-kind-class">SATPolygon</a><span class="tsd-signature-symbol"> | </span><a href="../classes/Circle.html" class="tsd-signature-type tsd-kind-class">Circle</a><a href="#setPosition.setPosition-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>update position, and cached convexes positions</p>
 </div>
@@ -254,13 +262,13 @@
 <h5><span class="tsd-kind-parameter">x</span>: <span class="tsd-signature-type">number</span></h5></li>
 <li>
 <h5><span class="tsd-kind-parameter">y</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<h4 class="tsd-returns-title">Returns <a href="../classes/SATPolygon.html" class="tsd-signature-type tsd-kind-class">SATPolygon</a><span class="tsd-signature-symbol"> | </span><a href="../classes/Circle.html" class="tsd-signature-type tsd-kind-class">Circle</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L162">src/model.ts:162</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L167">src/model.ts:167</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setScale" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Scale</span><a href="#setScale" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="setScale.setScale-1"><span class="tsd-kind-call-signature">set<wbr/>Scale</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">x</span>, <span class="tsd-kind-parameter">y</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#setScale.setScale-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="setScale.setScale-1"><span class="tsd-kind-call-signature">set<wbr/>Scale</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">x</span>, <span class="tsd-kind-parameter">y</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../classes/SATPolygon.html" class="tsd-signature-type tsd-kind-class">SATPolygon</a><span class="tsd-signature-symbol"> | </span><a href="../classes/Circle.html" class="tsd-signature-type tsd-kind-class">Circle</a><a href="#setScale.setScale-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>for setting scale</p>
 </div>
@@ -271,9 +279,9 @@
 <h5><span class="tsd-kind-parameter">x</span>: <span class="tsd-signature-type">number</span></h5></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">y</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<h4 class="tsd-returns-title">Returns <a href="../classes/SATPolygon.html" class="tsd-signature-type tsd-kind-class">SATPolygon</a><span class="tsd-signature-symbol"> | </span><a href="../classes/Circle.html" class="tsd-signature-type tsd-kind-class">Circle</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L167">src/model.ts:167</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L172">src/model.ts:172</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -295,6 +303,7 @@
 <ul>
 <li><a href="#angle" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>angle</span></a></li>
 <li><a href="#bbox" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>bbox</span></a></li>
+<li><a href="#dirty" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>dirty</span></a></li>
 <li><a href="#isCentered" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Centered</span></a></li>
 <li><a href="#isConvex" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Convex</span></a></li>
 <li><a href="#isStatic" class="tsd-is-inherited"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Static</span></a></li>

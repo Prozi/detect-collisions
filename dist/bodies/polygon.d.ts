@@ -53,6 +53,10 @@ export declare class Polygon extends SATPolygon implements BBox, BodyProps {
      */
     system?: System;
     /**
+     * was the polygon modified and needs update in the next checkCollision
+     */
+    dirty: boolean;
+    /**
      * type of body
      */
     readonly type: BodyType.Polygon | BodyType.Box | BodyType.Point | BodyType.Ellipse | BodyType.Line;
@@ -83,13 +87,11 @@ export declare class Polygon extends SATPolygon implements BBox, BodyProps {
     get x(): number;
     /**
      * updating this.pos.x by this.x = x updates AABB
-     * @deprecated use setPosition(x, y) instead
      */
     set x(x: number);
     get y(): number;
     /**
      * updating this.pos.y by this.y = y updates AABB
-     * @deprecated use setPosition(x, y) instead
      */
     set y(y: number);
     /**
@@ -111,11 +113,13 @@ export declare class Polygon extends SATPolygon implements BBox, BodyProps {
     /**
      * update position
      */
-    setPosition(x: number, y: number): void;
+    setPosition(x: number, y: number): SATPolygon;
     /**
      * update scale
      */
-    setScale(x: number, y?: number): void;
+    setScale(x: number, y?: number): SATPolygon;
+    setAngle(angle: number): SATPolygon;
+    setOffset(offset: SATVector): SATPolygon;
     /**
      * get body bounding box, without padding
      */
@@ -149,6 +153,10 @@ export declare class Polygon extends SATPolygon implements BBox, BodyProps {
      */
     isSimple(): boolean;
     /**
+     * inner function for after position change update aabb in system and convex inner polygons
+     */
+    updateBody(): void;
+    /**
      * update the position of the decomposed convex polygons (if any), called
      * after the position of the body has changed
      */
@@ -165,8 +173,4 @@ export declare class Polygon extends SATPolygon implements BBox, BodyProps {
      * after points update set is convex
      */
     protected updateIsConvex(): void;
-    /**
-     * inner function for after position change update aabb in system and convex inner polygons
-     */
-    protected updateBody(): void;
 }

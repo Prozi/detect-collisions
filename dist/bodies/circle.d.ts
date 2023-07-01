@@ -54,6 +54,10 @@ export declare class Circle extends SATCircle implements BBox, BodyProps {
      * reference to collision system
      */
     system?: System;
+    /**
+     * was the polygon modified and needs update in the next checkCollision
+     */
+    dirty: boolean;
     readonly isConvex = true;
     /**
      * circle type
@@ -77,7 +81,6 @@ export declare class Circle extends SATCircle implements BBox, BodyProps {
     get x(): number;
     /**
      * updating this.pos.x by this.x = x updates AABB
-     * @deprecated use setPosition(x, y) instead
      */
     set x(x: number);
     /**
@@ -86,7 +89,6 @@ export declare class Circle extends SATCircle implements BBox, BodyProps {
     get y(): number;
     /**
      * updating this.pos.y by this.y = y updates AABB
-     * @deprecated use setPosition(x, y) instead
      */
     set y(y: number);
     /**
@@ -108,11 +110,11 @@ export declare class Circle extends SATCircle implements BBox, BodyProps {
     /**
      * update position
      */
-    setPosition(x: number, y: number): void;
+    setPosition(x: number, y: number): Circle;
     /**
      * update scale
      */
-    setScale(scale: number, _ignoredParameter?: number): void;
+    setScale(scale: number, _ignoredParameter?: number): Circle;
     /**
      * set rotation
      */
@@ -133,6 +135,10 @@ export declare class Circle extends SATCircle implements BBox, BodyProps {
      * Draws Bounding Box on canvas context
      */
     drawBVH(context: CanvasRenderingContext2D): void;
+    /**
+     * inner function for after position change update aabb in system
+     */
+    updateBody(): void;
     /**
      * internal for getting offset with applied angle
      */

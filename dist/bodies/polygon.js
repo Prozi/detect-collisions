@@ -17,6 +17,10 @@ class Polygon extends sat_1.Polygon {
     constructor(position, points, options) {
         super((0, utils_1.ensureVectorPoint)(position), (0, utils_1.ensurePolygonPoints)(points));
         /**
+         * was the polygon modified and needs update in the next checkCollision
+         */
+        this.dirty = false;
+        /**
          * type of body
          */
         this.type = model_1.BodyType.Polygon;
@@ -57,22 +61,20 @@ class Polygon extends sat_1.Polygon {
     }
     /**
      * updating this.pos.x by this.x = x updates AABB
-     * @deprecated use setPosition(x, y) instead
      */
     set x(x) {
         this.pos.x = x;
-        this.updateBody();
+        this.dirty = true;
     }
     get y() {
         return this.pos.y;
     }
     /**
      * updating this.pos.y by this.y = y updates AABB
-     * @deprecated use setPosition(x, y) instead
      */
     set y(y) {
         this.pos.y = y;
-        this.updateBody();
+        this.dirty = true;
     }
     /**
      * allow exact getting of scale x - use setScale(x, y) to set
@@ -104,7 +106,8 @@ class Polygon extends sat_1.Polygon {
     setPosition(x, y) {
         this.pos.x = x;
         this.pos.y = y;
-        this.updateBody();
+        this.dirty = true;
+        return this;
     }
     /**
      * update scale
@@ -117,6 +120,18 @@ class Polygon extends sat_1.Polygon {
             point.y = this.pointsBackup[index].y * this.scaleVector.y;
             return point;
         }));
+        this.dirty = true;
+        return this;
+    }
+    setAngle(angle) {
+        super.setAngle(angle);
+        this.dirty = true;
+        return this;
+    }
+    setOffset(offset) {
+        super.setOffset(offset);
+        this.dirty = true;
+        return this;
     }
     /**
      * get body bounding box, without padding
@@ -188,6 +203,17 @@ class Polygon extends sat_1.Polygon {
         return (0, poly_decomp_1.isSimple)(this.calcPoints.map(utils_1.mapVectorToArray));
     }
     /**
+     * inner function for after position change update aabb in system and convex inner polygons
+     */
+    updateBody() {
+        var _a;
+        if (this.dirty) {
+            this.updateConvexPolygonPositions();
+            (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
+            this.dirty = false;
+        }
+    }
+    /**
      * update the position of the decomposed convex polygons (if any), called
      * after the position of the body has changed
      */
@@ -242,14 +268,6 @@ class Polygon extends sat_1.Polygon {
         // everything with empty array or one element array
         this.isConvex = convex.length <= 1;
         this.updateConvexPolygons(convex);
-    }
-    /**
-     * inner function for after position change update aabb in system and convex inner polygons
-     */
-    updateBody() {
-        var _a;
-        this.updateConvexPolygonPositions();
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
     }
 }
 exports.Polygon = Polygon;

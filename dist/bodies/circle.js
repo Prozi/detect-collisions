@@ -17,6 +17,10 @@ class Circle extends sat_1.Circle {
          * offset copy without angle applied
          */
         this.offsetCopy = { x: 0, y: 0 };
+        /**
+         * was the polygon modified and needs update in the next checkCollision
+         */
+        this.dirty = false;
         /*
          * circles are convex
          */
@@ -40,12 +44,10 @@ class Circle extends sat_1.Circle {
     }
     /**
      * updating this.pos.x by this.x = x updates AABB
-     * @deprecated use setPosition(x, y) instead
      */
     set x(x) {
-        var _a;
         this.pos.x = x;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
+        this.dirty = true;
     }
     /**
      * get this.pos.y
@@ -55,12 +57,10 @@ class Circle extends sat_1.Circle {
     }
     /**
      * updating this.pos.y by this.y = y updates AABB
-     * @deprecated use setPosition(x, y) instead
      */
     set y(y) {
-        var _a;
         this.pos.y = y;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
+        this.dirty = true;
     }
     /**
      * allow get scale
@@ -90,16 +90,18 @@ class Circle extends sat_1.Circle {
      * update position
      */
     setPosition(x, y) {
-        var _a;
         this.pos.x = x;
         this.pos.y = y;
-        (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
+        this.dirty = true;
+        return this;
     }
     /**
      * update scale
      */
     setScale(scale, _ignoredParameter) {
         this.r = this.unscaledRadius * Math.abs(scale);
+        this.dirty = true;
+        return this;
     }
     /**
      * set rotation
@@ -109,6 +111,7 @@ class Circle extends sat_1.Circle {
         const { x, y } = this.getOffsetWithAngle();
         this.offset.x = x;
         this.offset.y = y;
+        this.dirty = true;
         return this;
     }
     /**
@@ -120,6 +123,7 @@ class Circle extends sat_1.Circle {
         const { x, y } = this.getOffsetWithAngle();
         this.offset.x = x;
         this.offset.y = y;
+        this.dirty = true;
         return this;
     }
     /**
@@ -164,6 +168,16 @@ class Circle extends sat_1.Circle {
      */
     drawBVH(context) {
         (0, utils_1.drawBVH)(context, this);
+    }
+    /**
+     * inner function for after position change update aabb in system
+     */
+    updateBody() {
+        var _a;
+        if (this.dirty) {
+            (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
+            this.dirty = false;
+        }
     }
     /**
      * internal for getting offset with applied angle

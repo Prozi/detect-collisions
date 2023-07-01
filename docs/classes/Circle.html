@@ -44,6 +44,7 @@
 <h3 class="tsd-index-heading">Properties</h3>
 <div class="tsd-index-list"><a href="Circle.html#angle" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="#FF984D" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="12" id="icon-1024-path"></rect><path d="M9.354 16V7.24H12.174C12.99 7.24 13.638 7.476 14.118 7.948C14.606 8.412 14.85 9.036 14.85 9.82C14.85 10.604 14.606 11.232 14.118 11.704C13.638 12.168 12.99 12.4 12.174 12.4H10.434V16H9.354ZM10.434 11.428H12.174C12.646 11.428 13.022 11.284 13.302 10.996C13.59 10.7 13.734 10.308 13.734 9.82C13.734 9.324 13.59 8.932 13.302 8.644C13.022 8.356 12.646 8.212 12.174 8.212H10.434V11.428Z" fill="var(--color-text)" id="icon-1024-text"></path></svg><span>angle</span></a>
 <a href="Circle.html#bbox" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>bbox</span></a>
+<a href="Circle.html#dirty" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>dirty</span></a>
 <a href="Circle.html#isCentered" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Centered</span></a>
 <a href="Circle.html#isConvex" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Convex</span></a>
 <a href="Circle.html#isStatic" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Static</span></a>
@@ -79,6 +80,7 @@
 <a href="Circle.html#setOffset" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>set<wbr/>Offset</span></a>
 <a href="Circle.html#setPosition" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>set<wbr/>Position</span></a>
 <a href="Circle.html#setScale" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>set<wbr/>Scale</span></a>
+<a href="Circle.html#updateBody" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>update<wbr/>Body</span></a>
 </div></section></div></details></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Constructors</h2>
@@ -101,7 +103,7 @@
 <h4 class="tsd-returns-title">Returns <a href="Circle.html" class="tsd-signature-type tsd-kind-class">Circle</a></h4><aside class="tsd-sources">
 <p>Overrides <a href="SATCircle.html">SATCircle</a>.<a href="SATCircle.html#constructor">constructor</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L102">src/bodies/circle.ts:102</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L107">src/bodies/circle.ts:107</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member"><a id="angle" class="tsd-anchor"></a>
@@ -120,6 +122,14 @@
 <p>Implementation of <a href="../interfaces/BodyProps.html">BodyProps</a>.<a href="../interfaces/BodyProps.html#bbox">bbox</a></p>
 <ul>
 <li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L42">src/bodies/circle.ts:42</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member"><a id="dirty" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>dirty</span><a href="#dirty" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature"><span class="tsd-kind-property">dirty</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div>
+<div class="tsd-comment tsd-typography"><p>was the polygon modified and needs update in the next checkCollision</p>
+</div><aside class="tsd-sources">
+<p>Implementation of <a href="../interfaces/BodyProps.html">BodyProps</a>.<a href="../interfaces/BodyProps.html#dirty">dirty</a></p>
+<ul>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L82">src/bodies/circle.ts:82</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="isCentered" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>is<wbr/>Centered</span><a href="#isCentered" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">is<wbr/>Centered</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> = true</span></div>
@@ -127,7 +137,7 @@
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/BodyProps.html">BodyProps</a>.<a href="../interfaces/BodyProps.html#isCentered">isCentered</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L92">src/bodies/circle.ts:92</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L97">src/bodies/circle.ts:97</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="isConvex" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagReadonly">Readonly</code> <span>is<wbr/>Convex</span><a href="#isConvex" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">is<wbr/>Convex</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">true</span><span class="tsd-signature-symbol"> = true</span></div>
@@ -135,7 +145,7 @@
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/BodyProps.html">BodyProps</a>.<a href="../interfaces/BodyProps.html#isConvex">isConvex</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L82">src/bodies/circle.ts:82</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L87">src/bodies/circle.ts:87</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member"><a id="isStatic" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>is<wbr/>Static</span><a href="#isStatic" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">is<wbr/>Static</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -234,14 +244,14 @@
 </div><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/BodyProps.html">BodyProps</a>.<a href="../interfaces/BodyProps.html#type">type</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L87">src/bodies/circle.ts:87</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L92">src/bodies/circle.ts:92</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-protected"><a id="unscaledRadius" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>unscaled<wbr/>Radius</span><a href="#unscaledRadius" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">unscaled<wbr/>Radius</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>saved initial radius - internal</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L97">src/bodies/circle.ts:97</a></li></ul></aside></section></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L102">src/bodies/circle.ts:102</a></li></ul></aside></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Accessors</h2>
 <section class="tsd-panel tsd-member"><a id="scale" class="tsd-anchor"></a>
@@ -253,7 +263,7 @@
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L149">src/bodies/circle.ts:149</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L152">src/bodies/circle.ts:152</a></li></ul></aside></li>
 <li class="tsd-signature" id="scale.scale-2"><span class="tsd-signature-symbol">set</span> scale<span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">scale</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>shorthand for setScale()</p>
@@ -265,7 +275,7 @@
 <h5><span class="tsd-kind-parameter">scale</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L156">src/bodies/circle.ts:156</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L159">src/bodies/circle.ts:159</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="scaleX" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>scaleX</span><a href="#scaleX" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -276,7 +286,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <p>Implementation of BodyProps.scaleX</p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L163">src/bodies/circle.ts:163</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L166">src/bodies/circle.ts:166</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="scaleY" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>scaleY</span><a href="#scaleY" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -287,7 +297,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <p>Implementation of BodyProps.scaleY</p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L170">src/bodies/circle.ts:170</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L173">src/bodies/circle.ts:173</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="x" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>x</span><a href="#x" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -297,12 +307,10 @@
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L117">src/bodies/circle.ts:117</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L122">src/bodies/circle.ts:122</a></li></ul></aside></li>
 <li class="tsd-signature" id="x.x-2"><span class="tsd-signature-symbol">set</span> x<span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">x</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>updating this.pos.x by this.x = x updates AABB</p>
-
-<h3>Deprecated</h3><p>use setPosition(x, y) instead</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -311,7 +319,7 @@
 <h5><span class="tsd-kind-parameter">x</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L125">src/bodies/circle.ts:125</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L129">src/bodies/circle.ts:129</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="y" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>y</span><a href="#y" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -321,12 +329,10 @@
 </div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L133">src/bodies/circle.ts:133</a></li></ul></aside></li>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L137">src/bodies/circle.ts:137</a></li></ul></aside></li>
 <li class="tsd-signature" id="y.y-2"><span class="tsd-signature-symbol">set</span> y<span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">y</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>updating this.pos.y by this.y = y updates AABB</p>
-
-<h3>Deprecated</h3><p>use setPosition(x, y) instead</p>
 </div>
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -335,7 +341,7 @@
 <h5><span class="tsd-kind-parameter">y</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L141">src/bodies/circle.ts:141</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L144">src/bodies/circle.ts:144</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member"><a id="draw" class="tsd-anchor"></a>
@@ -353,7 +359,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/BodyProps.html">BodyProps</a>.<a href="../interfaces/BodyProps.html#draw">draw</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L235">src/bodies/circle.ts:235</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L245">src/bodies/circle.ts:245</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="drawBVH" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>drawBVH</span><a href="#drawBVH" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -369,7 +375,7 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/BodyProps.html">BodyProps</a>.<a href="../interfaces/BodyProps.html#drawBVH">drawBVH</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L262">src/bodies/circle.ts:262</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L272">src/bodies/circle.ts:272</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="getAABBAsBBox" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>getAABBAsBBox</span><a href="#getAABBAsBBox" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -380,7 +386,7 @@
 <h4 class="tsd-returns-title">Returns <a href="../interfaces/BBox.html" class="tsd-signature-type tsd-kind-interface">BBox</a></h4><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/BodyProps.html">BodyProps</a>.<a href="../interfaces/BodyProps.html#getAABBAsBBox">getAABBAsBBox</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L220">src/bodies/circle.ts:220</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L230">src/bodies/circle.ts:230</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-is-protected"><a id="getOffsetWithAngle" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>get<wbr/>Offset<wbr/>With<wbr/>Angle</span><a href="#getOffsetWithAngle" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-is-protected">
@@ -390,7 +396,7 @@
 </div>
 <h4 class="tsd-returns-title">Returns <a href="../interfaces/Vector.html" class="tsd-signature-type tsd-kind-interface">Vector</a></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L269">src/bodies/circle.ts:269</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L289">src/bodies/circle.ts:289</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setAngle" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Angle</span><a href="#setAngle" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -406,7 +412,7 @@
 <h4 class="tsd-returns-title">Returns <a href="Circle.html" class="tsd-signature-type tsd-kind-class">Circle</a></h4><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/BodyProps.html">BodyProps</a>.<a href="../interfaces/BodyProps.html#setAngle">setAngle</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L193">src/bodies/circle.ts:193</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L201">src/bodies/circle.ts:201</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setOffset" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Offset</span><a href="#setOffset" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -422,11 +428,11 @@
 <h4 class="tsd-returns-title">Returns <a href="Circle.html" class="tsd-signature-type tsd-kind-class">Circle</a></h4><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/BodyProps.html">BodyProps</a>.<a href="../interfaces/BodyProps.html#setOffset">setOffset</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L206">src/bodies/circle.ts:206</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L215">src/bodies/circle.ts:215</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setPosition" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Position</span><a href="#setPosition" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="setPosition.setPosition-1"><span class="tsd-kind-call-signature">set<wbr/>Position</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">x</span>, <span class="tsd-kind-parameter">y</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#setPosition.setPosition-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="setPosition.setPosition-1"><span class="tsd-kind-call-signature">set<wbr/>Position</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">x</span>, <span class="tsd-kind-parameter">y</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Circle.html" class="tsd-signature-type tsd-kind-class">Circle</a><a href="#setPosition.setPosition-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>update position</p>
 </div>
@@ -437,14 +443,14 @@
 <h5><span class="tsd-kind-parameter">x</span>: <span class="tsd-signature-type">number</span></h5></li>
 <li>
 <h5><span class="tsd-kind-parameter">y</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<h4 class="tsd-returns-title">Returns <a href="Circle.html" class="tsd-signature-type tsd-kind-class">Circle</a></h4><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/BodyProps.html">BodyProps</a>.<a href="../interfaces/BodyProps.html#setPosition">setPosition</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L177">src/bodies/circle.ts:177</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L180">src/bodies/circle.ts:180</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setScale" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Scale</span><a href="#setScale" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="setScale.setScale-1"><span class="tsd-kind-call-signature">set<wbr/>Scale</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">scale</span>, <span class="tsd-kind-parameter">_ignoredParameter</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#setScale.setScale-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="setScale.setScale-1"><span class="tsd-kind-call-signature">set<wbr/>Scale</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">scale</span>, <span class="tsd-kind-parameter">_ignoredParameter</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="Circle.html" class="tsd-signature-type tsd-kind-class">Circle</a><a href="#setScale.setScale-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>update scale</p>
 </div>
@@ -455,10 +461,20 @@
 <h5><span class="tsd-kind-parameter">scale</span>: <span class="tsd-signature-type">number</span></h5></li>
 <li>
 <h5><code class="tsd-tag ts-flagOptional">Optional</code> <span class="tsd-kind-parameter">_ignoredParameter</span>: <span class="tsd-signature-type">number</span></h5></li></ul></div>
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<h4 class="tsd-returns-title">Returns <a href="Circle.html" class="tsd-signature-type tsd-kind-class">Circle</a></h4><aside class="tsd-sources">
 <p>Implementation of <a href="../interfaces/BodyProps.html">BodyProps</a>.<a href="../interfaces/BodyProps.html#setScale">setScale</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L186">src/bodies/circle.ts:186</a></li></ul></aside></li></ul></section></section></div>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L191">src/bodies/circle.ts:191</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member"><a id="updateBody" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>update<wbr/>Body</span><a href="#updateBody" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="tsd-signature tsd-anchor-link" id="updateBody.updateBody-1"><span class="tsd-kind-call-signature">update<wbr/>Body</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#updateBody.updateBody-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>inner function for after position change update aabb in system</p>
+</div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L279">src/bodies/circle.ts:279</a></li></ul></aside></li></ul></section></section></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -481,6 +497,7 @@
 <li><a href="#constructor" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-512-path"></use><use href="#icon-512-text"></use></svg><span>constructor</span></a></li>
 <li><a href="#angle" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>angle</span></a></li>
 <li><a href="#bbox" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>bbox</span></a></li>
+<li><a href="#dirty" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>dirty</span></a></li>
 <li><a href="#isCentered" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Centered</span></a></li>
 <li><a href="#isConvex" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Convex</span></a></li>
 <li><a href="#isStatic" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>is<wbr/>Static</span></a></li>
@@ -509,7 +526,8 @@
 <li><a href="#setAngle" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>set<wbr/>Angle</span></a></li>
 <li><a href="#setOffset" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>set<wbr/>Offset</span></a></li>
 <li><a href="#setPosition" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>set<wbr/>Position</span></a></li>
-<li><a href="#setScale" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>set<wbr/>Scale</span></a></li></ul></div></details></div>
+<li><a href="#setScale" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>set<wbr/>Scale</span></a></li>
+<li><a href="#updateBody" class=""><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>update<wbr/>Body</span></a></li></ul></div></details></div>
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="../modules.html"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-namespace)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-4-path"></rect><path d="M9.33 16V7.24H10.77L13.446 14.74C13.43 14.54 13.41 14.296 13.386 14.008C13.37 13.712 13.354 13.404 13.338 13.084C13.33 12.756 13.326 12.448 13.326 12.16V7.24H14.37V16H12.93L10.266 8.5C10.282 8.692 10.298 8.936 10.314 9.232C10.33 9.52 10.342 9.828 10.35 10.156C10.366 10.476 10.374 10.784 10.374 11.08V16H9.33Z" fill="var(--color-text)" id="icon-4-text"></path></svg><span>Detect-<wbr/>Collisions</span></a>
 <ul class="tsd-small-nested-navigation">
