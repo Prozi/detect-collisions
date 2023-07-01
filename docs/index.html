@@ -30,7 +30,7 @@
 </code><button>Copy</button></pre>
 <a id="md:step-2-understand-body-attributes" class="tsd-anchor"></a><h3><a href="#md:step-2-understand-body-attributes">Step 2: Understand Body Attributes</a></h3><p>Bodies have various properties:</p>
 <ul>
-<li><p><strong>Position Attributes</strong>: <code>pos: Vector</code>, <code>x: number</code>, <code>y: number</code>. Setting <code>body.pos.x</code> or <code>body.pos.y</code> doesn&#39;t update the bounding box while setting <code>body.x</code> or <code>body.y</code> directly does. To set position and update bounding box use <code>setPosition(x, y)</code>.</p>
+<li><p><strong>Position Attributes</strong>: <code>pos: Vector</code>, <code>x: number</code>, <code>y: number</code>. Setting <code>body.pos.x</code> or <code>body.pos.y</code> doesn&#39;t update the bounding box while setting <code>body.x</code> or <code>body.y</code> directly does. To set both at the same time, use <code>setPosition(x, y)</code>.</p>
 </li>
 <li><p><strong>Scale, Offset</strong>: Bodies have <code>scale: number</code> shorthand property and <code>setScale(x, y)</code> method for scaling. The <code>offset: Vector</code> property and <code>setOffset({ x, y }: Vector)</code> method are for offset from body center for rotation purposes.</p>
 </li>
@@ -84,8 +84,16 @@
 <li>Used to position the body&#39;s collision shape more accurately.</li>
 </ul>
 </li>
+<li><p><code>updateBody()</code>:</p>
+<ul>
+<li>Updates body AABB in collision tree, please call this after all manipulations are done</li>
 </ul>
-<a id="md:step-5-collision-detection-and-resolution" class="tsd-anchor"></a><h3><a href="#md:step-5-collision-detection-and-resolution">Step 5: Collision Detection and Resolution</a></h3><p>Check collisions for all bodies or a single body:</p>
+</li>
+</ul>
+<a id="md:step-5-collision-detection-and-resolution" class="tsd-anchor"></a><h3><a href="#md:step-5-collision-detection-and-resolution">Step 5: Collision Detection and Resolution</a></h3><p>If you decide to go with <code>body.updateBody()</code> approach just make sure every body has it called after any manipulations, but maybe an easier route is just to call <code>system.update()</code> which will iterate over all bodies and update their bounding box.</p>
+<pre><code class="language-ts"><span class="hl-5">system</span><span class="hl-1">.</span><span class="hl-0">update</span><span class="hl-1">()</span>
+</code><button>Copy</button></pre>
+<p>Check collisions for all bodies or a single body:</p>
 <pre><code class="language-ts"><span class="hl-5">system</span><span class="hl-1">.</span><span class="hl-0">checkAll</span><span class="hl-1">((</span><span class="hl-5">response</span><span class="hl-1">: </span><span class="hl-8">Response</span><span class="hl-1">) </span><span class="hl-3">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-7">/* ... */</span><br/><span class="hl-1">})</span><br/><span class="hl-5">system</span><span class="hl-1">.</span><span class="hl-0">checkOne</span><span class="hl-1">(</span><span class="hl-5">body</span><span class="hl-1">, (</span><span class="hl-5">response</span><span class="hl-1">: </span><span class="hl-8">Response</span><span class="hl-1">) </span><span class="hl-3">=&gt;</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-7">/* ... */</span><br/><span class="hl-1">})</span>
 </code><button>Copy</button></pre>
 <p>For a direct collision check without broad-phase search, use <code>system.checkCollision(body1, body2)</code>. However, this isn&#39;t recommended due to efficiency loss.</p>

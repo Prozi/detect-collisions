@@ -50,20 +50,17 @@ class System extends base_system_1.BaseSystem {
         return super.insert(body);
     }
     /**
-     * alias for insert, updates body in collision tree
+     * updates body in collision tree
      */
     updateBody(body) {
-        this.insert(body);
+        body.updateBody();
     }
     /**
      * update all bodies aabb
      */
     update() {
         (0, optimized_1.forEach)(this.all(), (body) => {
-            // no need to every cycle update static body aabb
-            if (!body.isStatic) {
-                this.insert(body);
-            }
+            this.updateBody(body);
         });
     }
     /**
@@ -82,8 +79,6 @@ class System extends base_system_1.BaseSystem {
      * check one collider collisions with callback
      */
     checkOne(body, callback = () => true, response = this.response) {
-        // first, lazy update body bbox if needed
-        body.updateBody();
         // no need to check static body collision
         if (body.isStatic) {
             return false;

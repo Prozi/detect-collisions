@@ -22,7 +22,7 @@ export declare class System<TBody extends Body = Body> extends BaseSystem<TBody>
      */
     insert(body: TBody): RBush<TBody>;
     /**
-     * alias for insert, updates body in collision tree
+     * updates body in collision tree
      */
     updateBody(body: TBody): void;
     /**
