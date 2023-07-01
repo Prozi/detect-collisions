@@ -118,7 +118,6 @@ const polygon = system.createPolygon(position, points, options)
 
 - `setPosition(x: number, y: number)`:
   - Sets the position of the body to the specified `(x, y)` coordinates in the 2D space.
-  - Updates the bounding box of the body and any cached convexes associated with it
 
 - `setScale(x: number, y?: number)`:
   - Sets the scale of the body along the x-axis and y-axis (optional).
