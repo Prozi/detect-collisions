@@ -9,6 +9,7 @@ import { Polygon } from "./bodies/polygon";
 import { System } from "./system";
 export { Polygon as DecompPolygon, Point as DecompPoint } from "poly-decomp";
 export { RBush, BBox, Response, SATVector, SATPolygon, SATCircle };
+export type CheckCollisionCallback = (response: Response) => void | boolean;
 /**
  * types
  */

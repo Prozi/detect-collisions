@@ -1341,7 +1341,7 @@ class System extends base_system_1.BaseSystem {
     /**
      * check one collider collisions with callback
      */
-    checkOne(body, callback, response = this.response) {
+    checkOne(body, callback = () => true, response = this.response) {
         // first, lazy update body bbox if needed
         body.updateBody();
         // no need to check static body collision

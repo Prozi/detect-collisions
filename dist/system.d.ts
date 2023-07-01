@@ -2,7 +2,7 @@
 import RBush from "rbush";
 import { BaseSystem } from "./base-system";
 import { Line } from "./bodies/line";
-import { Leaf, RaycastHit, Response, Vector, Body } from "./model";
+import { Leaf, RaycastHit, Response, Vector, Body, CheckCollisionCallback } from "./model";
 /**
  * collision system
  */
@@ -36,7 +36,7 @@ export declare class System<TBody extends Body = Body> extends BaseSystem<TBody>
     /**
      * check one collider collisions with callback
      */
-    checkOne(body: TBody, callback: (response: Response) => void | boolean, response?: Response): boolean;
+    checkOne(body: TBody, callback?: CheckCollisionCallback, response?: Response): boolean;
     /**
      * check all colliders collisions with callback
      */
