@@ -11,6 +11,7 @@ import {
   Vector,
   Body,
   BodyType,
+  CheckCollisionCallback,
 } from "./model";
 import {
   distance,
@@ -114,7 +115,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
    */
   checkOne(
     body: TBody,
-    callback: (response: Response) => void | boolean,
+    callback: CheckCollisionCallback = () => true,
     response = this.response
   ): boolean {
     // first, lazy update body bbox if needed

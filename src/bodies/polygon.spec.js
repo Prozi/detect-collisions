@@ -36,6 +36,78 @@ describe("GIVEN Polygon", () => {
     expect(poly.pos.y).toBe(10);
   });
 
+  it("THEN setPosition() doesn't make bbox missed in checkCollision()", () => {
+    const { System } = require("../../src");
+
+    const system = new System();
+    const poly = system.createPolygon({}, [
+      { x: 0, y: 0 },
+      { x: 10, y: 0 },
+      { x: 10, y: 10 },
+      { x: 0, y: 10 },
+    ]);
+
+    system.createBox({}, 100, 100, { isStatic: true });
+
+    expect(system.checkOne(poly)).toBe(true);
+    poly.setPosition(200, 200);
+    expect(system.checkOne(poly)).toBe(false);
+  });
+
+  it("THEN setAngle() doesn't make bbox missed in checkCollision()", () => {
+    const { System, deg2rad } = require("../../src");
+
+    const system = new System();
+    const poly = system.createPolygon({ x: -10, y: -10 }, [
+      { x: 0, y: 0 },
+      { x: 10, y: 0 },
+      { x: 10, y: 10 },
+      { x: 0, y: 10 },
+    ]);
+
+    system.createBox({}, 100, 100, { isStatic: true });
+
+    expect(system.checkOne(poly)).toBe(true);
+    poly.setAngle(deg2rad(45));
+    expect(system.checkOne(poly)).toBe(false);
+  });
+
+  it("THEN setOffset() doesn't make bbox missed in checkCollision()", () => {
+    const { System } = require("../../src");
+
+    const system = new System();
+    const poly = system.createPolygon({}, [
+      { x: 0, y: 0 },
+      { x: 10, y: 0 },
+      { x: 10, y: 10 },
+      { x: 0, y: 10 },
+    ]);
+
+    system.createBox({}, 100, 100, { isStatic: true });
+
+    expect(system.checkOne(poly)).toBe(true);
+    poly.setOffset(-20, -20);
+    expect(system.checkOne(poly)).toBe(false);
+  });
+
+  it("THEN setScale() doesn't make bbox missed in checkCollision()", () => {
+    const { System } = require("../../src");
+
+    const system = new System();
+    const poly = system.createPolygon({ x: -5, y: -5 }, [
+      { x: 0, y: 0 },
+      { x: 10, y: 0 },
+      { x: 10, y: 10 },
+      { x: 0, y: 10 },
+    ]);
+
+    system.createBox({}, 100, 100, { isStatic: true });
+
+    expect(system.checkOne(poly)).toBe(true);
+    poly.setScale(0.1);
+    expect(system.checkOne(poly)).toBe(false);
+  });
+
   describe("AND you set options", () => {
     it("THEN the parameters are set", () => {
       const { System } = require("../../src");
