@@ -147,6 +147,11 @@ export interface BodyProps<TBody extends Body = Body>
   system?: System<TBody>;
 
   /**
+   * was the body modified and needs update in the next checkCollision
+   */
+  dirty: boolean;
+
+  /**
    * scale getter (x)
    */
   get scaleX(): number;
@@ -159,12 +164,12 @@ export interface BodyProps<TBody extends Body = Body>
   /**
    * update position, and cached convexes positions
    */
-  setPosition(x: number, y: number): void;
+  setPosition(x: number, y: number): Circle | SATPolygon;
 
   /**
    * for setting scale
    */
-  setScale(x: number, y?: number): void;
+  setScale(x: number, y?: number): Circle | SATPolygon;
 
   /**
    * for setting angle

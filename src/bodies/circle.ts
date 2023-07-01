@@ -76,6 +76,11 @@ export class Circle extends SATCircle implements BBox, BodyProps {
    */
   system?: System;
 
+  /**
+   * was the polygon modified and needs update in the next checkCollision
+   */
+  dirty = false;
+
   /*
    * circles are convex
    */
@@ -120,11 +125,10 @@ export class Circle extends SATCircle implements BBox, BodyProps {
 
   /**
    * updating this.pos.x by this.x = x updates AABB
-   * @deprecated use setPosition(x, y) instead
    */
   set x(x: number) {
     this.pos.x = x;
-    this.system?.insert(this);
+    this.dirty = true;
   }
 
   /**
@@ -136,11 +140,10 @@ export class Circle extends SATCircle implements BBox, BodyProps {
 
   /**
    * updating this.pos.y by this.y = y updates AABB
-   * @deprecated use setPosition(x, y) instead
    */
   set y(y: number) {
     this.pos.y = y;
-    this.system?.insert(this);
+    this.dirty = true;
   }
 
   /**
@@ -174,17 +177,22 @@ export class Circle extends SATCircle implements BBox, BodyProps {
   /**
    * update position
    */
-  setPosition(x: number, y: number): void {
+  setPosition(x: number, y: number): Circle {
     this.pos.x = x;
     this.pos.y = y;
-    this.system?.insert(this);
+    this.dirty = true;
+
+    return this;
   }
 
   /**
    * update scale
    */
-  setScale(scale: number, _ignoredParameter?: number): void {
+  setScale(scale: number, _ignoredParameter?: number): Circle {
     this.r = this.unscaledRadius * Math.abs(scale);
+    this.dirty = true;
+
+    return this;
   }
 
   /**
@@ -196,6 +204,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
     const { x, y } = this.getOffsetWithAngle();
     this.offset.x = x;
     this.offset.y = y;
+    this.dirty = true;
 
     return this;
   }
@@ -210,6 +219,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
     const { x, y } = this.getOffsetWithAngle();
     this.offset.x = x;
     this.offset.y = y;
+    this.dirty = true;
 
     return this;
   }
@@ -261,6 +271,16 @@ export class Circle extends SATCircle implements BBox, BodyProps {
    */
   drawBVH(context: CanvasRenderingContext2D) {
     drawBVH(context, this);
+  }
+
+  /**
+   * inner function for after position change update aabb in system
+   */
+  updateBody(): void {
+    if (this.dirty) {
+      this.system?.insert(this);
+      this.dirty = false;
+    }
   }
 
   /**

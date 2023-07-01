@@ -117,6 +117,9 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     callback: (response: Response) => void | boolean,
     response = this.response
   ): boolean {
+    // first, lazy update body bbox if needed
+    body.updateBody();
+
     // no need to check static body collision
     if (body.isStatic) {
       return false;

@@ -49,7 +49,7 @@ Bodies have various properties:
 
 Bodies contain additional properties (`BodyOptions`) that can be set in runtime or during creation:
 
-- `angle: number`: Angle in radians, use `deg2rad(degrees: number)` for conversion. Use `setAngle(angle: number)` to change it during runtime.
+- `angle: number`: Use `setAngle(angle: number)` to change it during runtime.
 - `isStatic: boolean`: If set to true, the body won't move during `system.separare()`. For walls.
 - `isTrigger: boolean`: If set to true, the body won't move during `system.separate()`. For projectiles.
 - `isCentered: boolean`: If set to true, offset is set to center for rotation purposes.
@@ -116,7 +116,22 @@ const polygon = system.createPolygon(position, points, options)
 
 ### Step 4: Manipulate Bodies
 
-Move a body using `body.setPosition(x, y)`. Remove it with `system.remove(body)`. When a body moves, its bounding box in the collision tree needs an update, which is automatically done using `body.setPosition(x, y)`.
+- `setPosition(x: number, y: number)`:
+  - Sets the position of the body to the specified `(x, y)` coordinates in the 2D space.
+  - Updates the bounding box of the body and any cached convexes associated with it
+
+- `setScale(x: number, y?: number)`:
+  - Sets the scale of the body along the x-axis and y-axis (optional).
+  - Allows resizing the body.
+
+- `setAngle(angle: number)`:
+  - Sets the rotation angle of the body to the specified value.
+  - Used for rotating the body around its center.
+  - Angle in radians, use `deg2rad(degrees: number)` for conversion. 
+
+- `setOffset(offset: Vector)`:
+  - Sets the offset of the body from its center.
+  - Used to position the body's collision shape more accurately.
 
 ### Step 5: Collision Detection and Resolution
 

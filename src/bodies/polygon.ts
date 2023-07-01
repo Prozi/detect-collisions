@@ -87,6 +87,11 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   system?: System;
 
   /**
+   * was the polygon modified and needs update in the next checkCollision
+   */
+  dirty = false;
+
+  /**
    * type of body
    */
   readonly type:
@@ -156,11 +161,10 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
 
   /**
    * updating this.pos.x by this.x = x updates AABB
-   * @deprecated use setPosition(x, y) instead
    */
   set x(x: number) {
     this.pos.x = x;
-    this.updateBody();
+    this.dirty = true;
   }
 
   get y(): number {
@@ -169,11 +173,10 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
 
   /**
    * updating this.pos.y by this.y = y updates AABB
-   * @deprecated use setPosition(x, y) instead
    */
   set y(y: number) {
     this.pos.y = y;
-    this.updateBody();
+    this.dirty = true;
   }
 
   /**
@@ -207,16 +210,18 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   /**
    * update position
    */
-  setPosition(x: number, y: number): void {
+  setPosition(x: number, y: number): SATPolygon {
     this.pos.x = x;
     this.pos.y = y;
-    this.updateBody();
+    this.dirty = true;
+
+    return this;
   }
 
   /**
    * update scale
    */
-  setScale(x: number, y: number = x): void {
+  setScale(x: number, y: number = x): SATPolygon {
     this.scaleVector.x = Math.abs(x);
     this.scaleVector.y = Math.abs(y);
 
@@ -228,6 +233,24 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
         return point;
       })
     );
+
+    this.dirty = true;
+
+    return this;
+  }
+
+  setAngle(angle: number): SATPolygon {
+    super.setAngle(angle);
+    this.dirty = true;
+
+    return this;
+  }
+
+  setOffset(offset: SATVector): SATPolygon {
+    super.setOffset(offset);
+    this.dirty = true;
+
+    return this;
   }
 
   /**
@@ -313,6 +336,17 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   }
 
   /**
+   * inner function for after position change update aabb in system and convex inner polygons
+   */
+  updateBody(): void {
+    if (this.dirty) {
+      this.updateConvexPolygonPositions();
+      this.system?.insert(this);
+      this.dirty = false;
+    }
+  }
+
+  /**
    * update the position of the decomposed convex polygons (if any), called
    * after the position of the body has changed
    */
@@ -383,13 +417,5 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
     // everything with empty array or one element array
     this.isConvex = convex.length <= 1;
     this.updateConvexPolygons(convex);
-  }
-
-  /**
-   * inner function for after position change update aabb in system and convex inner polygons
-   */
-  protected updateBody(): void {
-    this.updateConvexPolygonPositions();
-    this.system?.insert(this);
   }
 }
