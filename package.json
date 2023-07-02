@@ -86,6 +86,7 @@
   "resolutions": {
     "minimist": "^1.2.6",
     "terser": "^5.14.2",
-    "json5": "^2.2.2"
+    "json5": "^2.2.2",
+    "semver": "^7.5.3"
   }
 }
