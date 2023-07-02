@@ -110,19 +110,19 @@ export declare class Circle extends SATCircle implements BBox, BodyProps {
     /**
      * update position
      */
-    setPosition(x: number, y: number): Circle;
+    setPosition(x: number, y: number, update?: boolean): Circle;
     /**
      * update scale
      */
-    setScale(scale: number, _ignoredParameter?: number): Circle;
+    setScale(scaleX: number, _scaleY?: number, update?: boolean): Circle;
     /**
      * set rotation
      */
-    setAngle(angle: number): Circle;
+    setAngle(angle: number, update?: boolean): Circle;
     /**
      * set offset from center
      */
-    setOffset(offset: Vector): Circle;
+    setOffset(offset: Vector, update?: boolean): Circle;
     /**
      * get body bounding box, without padding
      */

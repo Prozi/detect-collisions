@@ -267,41 +267,53 @@ class Circle extends sat_1.Circle {
     /**
      * update position
      */
-    setPosition(x, y) {
+    setPosition(x, y, update = true) {
         this.pos.x = x;
         this.pos.y = y;
         this.dirty = true;
+        if (update) {
+            this.updateBody();
+        }
         return this;
     }
     /**
      * update scale
      */
-    setScale(scale, _ignoredParameter) {
-        this.r = this.unscaledRadius * Math.abs(scale);
+    setScale(scaleX, _scaleY = scaleX, update = true) {
+        this.r = this.unscaledRadius * Math.abs(scaleX);
         this.dirty = true;
+        if (update) {
+            this.updateBody();
+        }
         return this;
     }
     /**
      * set rotation
      */
-    setAngle(angle) {
+    setAngle(angle, update = true) {
         this.angle = angle;
         const { x, y } = this.getOffsetWithAngle();
         this.offset.x = x;
         this.offset.y = y;
         this.dirty = true;
+        if (update) {
+            this.updateBody();
+        }
         return this;
     }
     /**
      * set offset from center
      */
-    setOffset(offset) {
+    setOffset(offset, update = true) {
         this.offsetCopy.x = offset.x;
         this.offsetCopy.y = offset.y;
         const { x, y } = this.getOffsetWithAngle();
         this.offset.x = x;
         this.offset.y = y;
         this.dirty = true;
+        if (update) {
+            this.updateBody();
+        }
         return this;
     }
     /**
@@ -696,16 +708,19 @@ class Polygon extends sat_1.Polygon {
     /**
      * update position
      */
-    setPosition(x, y) {
+    setPosition(x, y, update = true) {
         this.pos.x = x;
         this.pos.y = y;
         this.dirty = true;
+        if (update) {
+            this.updateBody();
+        }
         return this;
     }
     /**
      * update scale
      */
-    setScale(x, y = x) {
+    setScale(x, y = x, update = true) {
         this.scaleVector.x = Math.abs(x);
         this.scaleVector.y = Math.abs(y);
         super.setPoints((0, optimized_1.map)(this.points, (point, index) => {
@@ -714,16 +729,25 @@ class Polygon extends sat_1.Polygon {
             return point;
         }));
         this.dirty = true;
+        if (update) {
+            this.updateBody();
+        }
         return this;
     }
-    setAngle(angle) {
+    setAngle(angle, update = true) {
         super.setAngle(angle);
         this.dirty = true;
+        if (update) {
+            this.updateBody();
+        }
         return this;
     }
-    setOffset(offset) {
+    setOffset(offset, update = true) {
         super.setOffset(offset);
         this.dirty = true;
+        if (update) {
+            this.updateBody();
+        }
         return this;
     }
     /**
@@ -811,7 +835,7 @@ class Polygon extends sat_1.Polygon {
      * after the position of the body has changed
      */
     updateConvexPolygonPositions() {
-        if (this.isConvex) {
+        if (this.isConvex || !this.convexPolygons) {
             return;
         }
         (0, optimized_1.forEach)(this.convexPolygons, (polygon) => {
@@ -3969,7 +3993,7 @@ class Stress {
   }
 
   updateBody(timeScale, body) {
-    body.setAngle(body.angle + body.rotationSpeed * timeScale);
+    body.setAngle(body.angle + body.rotationSpeed * timeScale, false);
 
     if (seededRandom() < 0.05 * timeScale) {
       body.targetScale.x = 0.5 + seededRandom();
@@ -3980,12 +4004,14 @@ class Stress {
     }
 
     if (Math.abs(body.targetScale.x - body.scaleX) > 0.01) {
-      body.setScale(
+      const scaleX =
         body.scaleX +
-          Math.sign(body.targetScale.x - body.scaleX) * 0.02 * timeScale,
+        Math.sign(body.targetScale.x - body.scaleX) * 0.02 * timeScale;
+      const scaleY =
         body.scaleY +
-          Math.sign(body.targetScale.y - body.scaleY) * 0.02 * timeScale
-      );
+        Math.sign(body.targetScale.y - body.scaleY) * 0.02 * timeScale;
+
+      body.setScale(scaleX, scaleY, false);
     }
 
     // as last step update position, and bounding box
@@ -3993,8 +4019,6 @@ class Stress {
       body.x + body.directionX * timeScale,
       body.y + body.directionY * timeScale
     );
-
-    body.updateBody();
 
     this.physics.checkOne(body, this.checkBounce.bind(this));
   }

@@ -113,13 +113,13 @@ export declare class Polygon extends SATPolygon implements BBox, BodyProps {
     /**
      * update position
      */
-    setPosition(x: number, y: number): SATPolygon;
+    setPosition(x: number, y: number, update?: boolean): SATPolygon;
     /**
      * update scale
      */
-    setScale(x: number, y?: number): SATPolygon;
-    setAngle(angle: number): SATPolygon;
-    setOffset(offset: SATVector): SATPolygon;
+    setScale(x: number, y?: number, update?: boolean): SATPolygon;
+    setAngle(angle: number, update?: boolean): SATPolygon;
+    setOffset(offset: SATVector, update?: boolean): SATPolygon;
     /**
      * get body bounding box, without padding
      */

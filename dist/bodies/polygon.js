@@ -103,16 +103,19 @@ class Polygon extends sat_1.Polygon {
     /**
      * update position
      */
-    setPosition(x, y) {
+    setPosition(x, y, update = true) {
         this.pos.x = x;
         this.pos.y = y;
         this.dirty = true;
+        if (update) {
+            this.updateBody();
+        }
         return this;
     }
     /**
      * update scale
      */
-    setScale(x, y = x) {
+    setScale(x, y = x, update = true) {
         this.scaleVector.x = Math.abs(x);
         this.scaleVector.y = Math.abs(y);
         super.setPoints((0, optimized_1.map)(this.points, (point, index) => {
@@ -121,16 +124,25 @@ class Polygon extends sat_1.Polygon {
             return point;
         }));
         this.dirty = true;
+        if (update) {
+            this.updateBody();
+        }
         return this;
     }
-    setAngle(angle) {
+    setAngle(angle, update = true) {
         super.setAngle(angle);
         this.dirty = true;
+        if (update) {
+            this.updateBody();
+        }
         return this;
     }
-    setOffset(offset) {
+    setOffset(offset, update = true) {
         super.setOffset(offset);
         this.dirty = true;
+        if (update) {
+            this.updateBody();
+        }
         return this;
     }
     /**
@@ -218,7 +230,7 @@ class Polygon extends sat_1.Polygon {
      * after the position of the body has changed
      */
     updateConvexPolygonPositions() {
-        if (this.isConvex) {
+        if (this.isConvex || !this.convexPolygons) {
             return;
         }
         (0, optimized_1.forEach)(this.convexPolygons, (polygon) => {

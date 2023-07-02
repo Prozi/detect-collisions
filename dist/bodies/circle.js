@@ -89,41 +89,53 @@ class Circle extends sat_1.Circle {
     /**
      * update position
      */
-    setPosition(x, y) {
+    setPosition(x, y, update = true) {
         this.pos.x = x;
         this.pos.y = y;
         this.dirty = true;
+        if (update) {
+            this.updateBody();
+        }
         return this;
     }
     /**
      * update scale
      */
-    setScale(scale, _ignoredParameter) {
-        this.r = this.unscaledRadius * Math.abs(scale);
+    setScale(scaleX, _scaleY = scaleX, update = true) {
+        this.r = this.unscaledRadius * Math.abs(scaleX);
         this.dirty = true;
+        if (update) {
+            this.updateBody();
+        }
         return this;
     }
     /**
      * set rotation
      */
-    setAngle(angle) {
+    setAngle(angle, update = true) {
         this.angle = angle;
         const { x, y } = this.getOffsetWithAngle();
         this.offset.x = x;
         this.offset.y = y;
         this.dirty = true;
+        if (update) {
+            this.updateBody();
+        }
         return this;
     }
     /**
      * set offset from center
      */
-    setOffset(offset) {
+    setOffset(offset, update = true) {
         this.offsetCopy.x = offset.x;
         this.offsetCopy.y = offset.y;
         const { x, y } = this.getOffsetWithAngle();
         this.offset.x = x;
         this.offset.y = y;
         this.dirty = true;
+        if (update) {
+            this.updateBody();
+        }
         return this;
     }
     /**
