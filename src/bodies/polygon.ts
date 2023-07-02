@@ -213,11 +213,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   setPosition(x: number, y: number, update = true): SATPolygon {
     this.pos.x = x;
     this.pos.y = y;
-
-    this.dirty = true;
-    if (update) {
-      this.updateBody();
-    }
+    this.markAsDirty(update);
 
     return this;
   }
@@ -238,30 +234,21 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
       })
     );
 
-    this.dirty = true;
-    if (update) {
-      this.updateBody();
-    }
+    this.markAsDirty(update);
 
     return this;
   }
 
   setAngle(angle: number, update = true): SATPolygon {
     super.setAngle(angle);
-    this.dirty = true;
-    if (update) {
-      this.updateBody();
-    }
+    this.markAsDirty(update);
 
     return this;
   }
 
   setOffset(offset: SATVector, update = true): SATPolygon {
     super.setOffset(offset);
-    this.dirty = true;
-    if (update) {
-      this.updateBody();
-    }
+    this.markAsDirty(update);
 
     return this;
   }
@@ -351,11 +338,22 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   /**
    * inner function for after position change update aabb in system and convex inner polygons
    */
-  updateBody(): void {
-    if (this.dirty) {
+  updateBody(update = this.dirty): void {
+    if (update) {
       this.updateConvexPolygonPositions();
       this.system?.insert(this);
       this.dirty = false;
+    }
+  }
+
+  /**
+   * update instantly or mark as dirty
+   */
+  protected markAsDirty(update: boolean): void {
+    if (update) {
+      this.updateBody(true);
+    } else {
+      this.dirty = true;
     }
   }
 

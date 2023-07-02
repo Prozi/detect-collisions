@@ -288,10 +288,21 @@ export class Circle extends SATCircle implements BBox, BodyProps {
   /**
    * inner function for after position change update aabb in system
    */
-  updateBody(): void {
-    if (this.dirty) {
+  updateBody(update = this.dirty): void {
+    if (update) {
       this.system?.insert(this);
       this.dirty = false;
+    }
+  }
+
+  /**
+   * update instantly or mark as dirty
+   */
+  protected markAsDirty(update: boolean): void {
+    if (update) {
+      this.updateBody(true);
+    } else {
+      this.dirty = true;
     }
   }
 
