@@ -3983,10 +3983,10 @@ class Stress {
     <div><b>Lines:</b> ${this.lines}</div>`;
 
     this.lastTime = Date.now();
-    this.start = () => {
-      this.updateBody = this.updateBody.bind(this);
-      this.checkBounce = this.checkBounce.bind(this);
+    this.updateBody = this.updateBody.bind(this);
+    this.checkBounce = this.checkBounce.bind(this);
 
+    this.start = () => {
       const frame = () => {
         this.update();
 
