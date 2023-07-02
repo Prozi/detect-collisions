@@ -362,11 +362,22 @@ class Circle extends sat_1.Circle {
     /**
      * inner function for after position change update aabb in system
      */
-    updateBody() {
+    updateBody(update = this.dirty) {
         var _a;
-        if (this.dirty) {
+        if (update) {
             (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
             this.dirty = false;
+        }
+    }
+    /**
+     * update instantly or mark as dirty
+     */
+    markAsDirty(update) {
+        if (update) {
+            this.updateBody(true);
+        }
+        else {
+            this.dirty = true;
         }
     }
     /**
@@ -711,10 +722,7 @@ class Polygon extends sat_1.Polygon {
     setPosition(x, y, update = true) {
         this.pos.x = x;
         this.pos.y = y;
-        this.dirty = true;
-        if (update) {
-            this.updateBody();
-        }
+        this.markAsDirty(update);
         return this;
     }
     /**
@@ -728,26 +736,17 @@ class Polygon extends sat_1.Polygon {
             point.y = this.pointsBackup[index].y * this.scaleVector.y;
             return point;
         }));
-        this.dirty = true;
-        if (update) {
-            this.updateBody();
-        }
+        this.markAsDirty(update);
         return this;
     }
     setAngle(angle, update = true) {
         super.setAngle(angle);
-        this.dirty = true;
-        if (update) {
-            this.updateBody();
-        }
+        this.markAsDirty(update);
         return this;
     }
     setOffset(offset, update = true) {
         super.setOffset(offset);
-        this.dirty = true;
-        if (update) {
-            this.updateBody();
-        }
+        this.markAsDirty(update);
         return this;
     }
     /**
@@ -822,12 +821,23 @@ class Polygon extends sat_1.Polygon {
     /**
      * inner function for after position change update aabb in system and convex inner polygons
      */
-    updateBody() {
+    updateBody(update = this.dirty) {
         var _a;
-        if (this.dirty) {
+        if (update) {
             this.updateConvexPolygonPositions();
             (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
             this.dirty = false;
+        }
+    }
+    /**
+     * update instantly or mark as dirty
+     */
+    markAsDirty(update) {
+        if (update) {
+            this.updateBody(true);
+        }
+        else {
+            this.dirty = true;
         }
     }
     /**
@@ -3903,7 +3913,7 @@ function loop(callback) {
     time = now;
   }
 
-  return setInterval(frame, 1000 / 60);
+  return setInterval(frame);
 }
 
 module.exports.TestCanvas = TestCanvas;
@@ -3974,6 +3984,9 @@ class Stress {
 
     this.lastTime = Date.now();
     this.start = () => {
+      this.updateBody = this.updateBody.bind(this);
+      this.checkBounce = this.checkBounce.bind(this);
+
       const frame = () => {
         this.update();
 
@@ -3986,41 +3999,40 @@ class Stress {
 
   update() {
     const now = Date.now();
-    const timeScale = Math.min(1000, now - this.lastTime) / 60;
+    this.timeScale = Math.min(1000, now - this.lastTime) / 60;
     this.lastTime = now;
-
-    this.bodies.forEach(this.updateBody.bind(this, timeScale));
+    this.bodies.forEach(this.updateBody);
   }
 
-  updateBody(timeScale, body) {
-    body.setAngle(body.angle + body.rotationSpeed * timeScale, false);
+  updateBody(body) {
+    body.setAngle(body.angle + body.rotationSpeed * this.timeScale, false);
 
-    if (seededRandom() < 0.05 * timeScale) {
+    if (seededRandom() < 0.05 * this.timeScale) {
       body.targetScale.x = 0.5 + seededRandom();
     }
 
-    if (seededRandom() < 0.05 * timeScale) {
+    if (seededRandom() < 0.05 * this.timeScale) {
       body.targetScale.y = 0.5 + seededRandom();
     }
 
     if (Math.abs(body.targetScale.x - body.scaleX) > 0.01) {
       const scaleX =
         body.scaleX +
-        Math.sign(body.targetScale.x - body.scaleX) * 0.02 * timeScale;
+        Math.sign(body.targetScale.x - body.scaleX) * 0.02 * this.timeScale;
       const scaleY =
         body.scaleY +
-        Math.sign(body.targetScale.y - body.scaleY) * 0.02 * timeScale;
+        Math.sign(body.targetScale.y - body.scaleY) * 0.02 * this.timeScale;
 
       body.setScale(scaleX, scaleY, false);
     }
 
     // as last step update position, and bounding box
     body.setPosition(
-      body.x + body.directionX * timeScale,
-      body.y + body.directionY * timeScale
+      body.x + body.directionX * this.timeScale,
+      body.y + body.directionY * this.timeScale
     );
 
-    this.physics.checkOne(body, this.checkBounce.bind(this));
+    this.physics.checkOne(body, this.checkBounce);
   }
 
   checkBounce({ a, b, overlapV }) {

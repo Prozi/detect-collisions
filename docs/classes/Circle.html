@@ -77,6 +77,7 @@
 <a href="Circle.html#drawBVH" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>drawBVH</span></a>
 <a href="Circle.html#getAABBAsBBox" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>getAABBAsBBox</span></a>
 <a href="Circle.html#getOffsetWithAngle" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Offset<wbr/>With<wbr/>Angle</span></a>
+<a href="Circle.html#markAsDirty" class="tsd-index-link tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>mark<wbr/>As<wbr/>Dirty</span></a>
 <a href="Circle.html#setAngle" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Angle</span></a>
 <a href="Circle.html#setOffset" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Offset</span></a>
 <a href="Circle.html#setPosition" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Position</span></a>
@@ -427,6 +428,22 @@
 <h4 class="tsd-returns-title">Returns <a href="../interfaces/Vector.html" class="tsd-signature-type tsd-kind-interface">Vector</a></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
+<li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L312">src/bodies/circle.ts:312</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-is-protected"><a id="markAsDirty" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>mark<wbr/>As<wbr/>Dirty</span><a href="#markAsDirty" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-is-protected">
+<li class="tsd-signature tsd-anchor-link" id="markAsDirty.markAsDirty-1"><span class="tsd-kind-call-signature">mark<wbr/>As<wbr/>Dirty</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">update</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#markAsDirty.markAsDirty-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>update instantly or mark as dirty</p>
+</div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">update</span>: <span class="tsd-signature-type">boolean</span></h5></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+<div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
+<ul>
 <li>Defined in <a href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L301">src/bodies/circle.ts:301</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member"><a id="setAngle" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>set<wbr/>Angle</span><a href="#setAngle" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
@@ -511,10 +528,15 @@
 <section class="tsd-panel tsd-member"><a id="updateBody" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>update<wbr/>Body</span><a href="#updateBody" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
-<li class="tsd-signature tsd-anchor-link" id="updateBody.updateBody-1"><span class="tsd-kind-call-signature">update<wbr/>Body</span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#updateBody.updateBody-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="updateBody.updateBody-1"><span class="tsd-kind-call-signature">update<wbr/>Body</span><span class="tsd-signature-symbol">(</span><span class="tsd-kind-parameter">update</span><span class="tsd-signature-symbol">?</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span><a href="#updateBody.updateBody-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24"><use href="#icon-anchor"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-comment tsd-typography"><p>inner function for after position change update aabb in system</p>
 </div>
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5><span class="tsd-kind-parameter">update</span>: <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = ...</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 <div class="tsd-comment tsd-typography"></div><aside class="tsd-sources">
 <ul>
@@ -567,6 +589,7 @@
 <li><a href="#drawBVH" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>drawBVH</span></a></li>
 <li><a href="#getAABBAsBBox" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>getAABBAsBBox</span></a></li>
 <li><a href="#getOffsetWithAngle" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>get<wbr/>Offset<wbr/>With<wbr/>Angle</span></a></li>
+<li><a href="#markAsDirty" class="tsd-is-protected"><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>mark<wbr/>As<wbr/>Dirty</span></a></li>
 <li><a href="#setAngle" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Angle</span></a></li>
 <li><a href="#setOffset" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Offset</span></a></li>
 <li><a href="#setPosition" class=""><svg class="tsd-kind-icon" viewBox="0 0 24 24"><use href="#icon-2048"></use></svg><span>set<wbr/>Position</span></a></li>
