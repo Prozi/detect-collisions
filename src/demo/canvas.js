@@ -89,7 +89,7 @@ function loop(callback) {
     time = now;
   }
 
-  return setInterval(frame, 1000 / 60);
+  return setInterval(frame);
 }
 
 module.exports.TestCanvas = TestCanvas;

@@ -1,44 +1,35 @@
-require("pixi-shim");
-const Stress = require("./stress");
+require("pixi-shim")
+const Stress = require("./stress")
+const { Bench } = require("tinybench")
 
-const duration = +(process.argv[2] || 1000);
-const summary = [];
+let test
 
-const run = (items) => {
-  const test = new Stress(items);
-
-  let frames = 0;
-  let timeout;
-
-  const benchFrame = () => {
-    test.update();
-    frames++;
-    timeout = setTimeout(benchFrame);
-  };
-
-  benchFrame();
-
-  setTimeout(() => {
-    clearTimeout(timeout);
-    test.physics.clear();
-
-    const fps = frames / (duration / 1000);
-    summary.push({
-      items,
-      FPS: +fps.toFixed(2),
-    });
-
-    if (items < 10000) {
-      run(items + 1000);
-    } else {
-      summary.unshift({
-        items: "total",
-        FPS: +summary.reduce((sum, entry) => sum + entry.FPS, 0).toFixed(2),
-      });
-      console.table(summary);
-      process.exit(0);
+const bench = new Bench({
+  time: 1000,
+  setup: ({ opts }) => {
+    if (test) {
+      test.physics.clear()
     }
-  }, duration);
-};
 
-run(1000);
+    test = new Stress(opts.items)
+  },
+})
+
+const recursiveAddTest = (items) => {
+  bench.add(
+    `stress test, items=${items}`,
+    () => test.update(),
+    { items }
+  )
+
+  if (items < 10000) {
+    recursiveAddTest(items + 1000)
+  }
+}
+
+recursiveAddTest(1000)
+
+bench.run().then(() => {
+  console.table(bench.table())
+  process.exit(0)
+})
