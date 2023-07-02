@@ -1,5 +1,5 @@
 const { System, getBounceDirection } = require("../..");
-const { width, height } = require("./canvas");
+const { width, height, loop } = require("./canvas");
 const seededRandom = require("random-seed").create("@Prozi").random;
 
 function random(min, max) {
@@ -52,13 +52,7 @@ class Stress {
     this.checkBounce = this.checkBounce.bind(this);
 
     this.start = () => {
-      const frame = () => {
-        this.update();
-
-        requestAnimationFrame(frame);
-      };
-
-      requestAnimationFrame(frame);
+      loop(this.update.bind(this));
     };
   }
 

@@ -32,7 +32,7 @@ class TestCanvas {
     this.frame = 0;
     this.started = Date.now();
 
-    loop(() => this.update());
+    loop(this.update.bind(this));
   }
 
   update() {
@@ -78,18 +78,10 @@ class TestCanvas {
 }
 
 function loop(callback) {
-  let time = Date.now();
-
-  function frame() {
-    const now = Date.now();
-    const timeScale = Math.min(1000, now - time) / (1000 / 60);
-
-    callback(timeScale);
-
-    time = now;
-  }
-
-  return setInterval(frame);
+  // interval for fps instead of setTimeout
+  // and ms = 1 which is lowest nonzero value
+  // for responsiveness of user input
+  setInterval(callback, 1);
 }
 
 module.exports.TestCanvas = TestCanvas;

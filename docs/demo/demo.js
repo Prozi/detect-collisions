@@ -3856,7 +3856,7 @@ class TestCanvas {
     this.frame = 0;
     this.started = Date.now();
 
-    loop(() => this.update());
+    loop(this.update.bind(this));
   }
 
   update() {
@@ -3902,18 +3902,10 @@ class TestCanvas {
 }
 
 function loop(callback) {
-  let time = Date.now();
-
-  function frame() {
-    const now = Date.now();
-    const timeScale = Math.min(1000, now - time) / (1000 / 60);
-
-    callback(timeScale);
-
-    time = now;
-  }
-
-  return setInterval(frame);
+  // interval for fps instead of setTimeout
+  // and ms = 1 which is lowest nonzero value
+  // for responsiveness of user input
+  setInterval(callback, 1);
 }
 
 module.exports.TestCanvas = TestCanvas;
@@ -3934,7 +3926,7 @@ module.exports.height = height;
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 const { System, getBounceDirection } = __webpack_require__(/*! ../.. */ "./dist/index.js");
-const { width, height } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js");
+const { width, height, loop } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js");
 const seededRandom = (__webpack_require__(/*! random-seed */ "./node_modules/random-seed/index.js").create)("@Prozi").random;
 
 function random(min, max) {
@@ -3987,13 +3979,7 @@ class Stress {
     this.checkBounce = this.checkBounce.bind(this);
 
     this.start = () => {
-      const frame = () => {
-        this.update();
-
-        requestAnimationFrame(frame);
-      };
-
-      requestAnimationFrame(frame);
+      loop(this.update.bind(this));
     };
   }
 
@@ -4218,34 +4204,38 @@ class Tank {
     }
 
     this.createMap();
+    this.lastTime = Date.now();
 
-    loop((timeScale) => this.update(timeScale));
+    this.start = () => {
+      loop(this.update.bind(this));
+    };
   }
 
-  update(timeScale) {
-    this.handleInput(timeScale);
+  update() {
+    const now = Date.now();
+    this.timeScale = Math.min(1000, now - this.lastTime) / 60;
+    this.lastTime = now;
+    this.handleInput();
     this.processGameLogic();
     this.handleCollisions();
     this.updateTurret();
   }
 
-  handleInput(timeScale) {
+  handleInput() {
     if (this.up) {
-      this.player.velocity += 0.2 * timeScale;
+      this.player.velocity += 0.2 * this.timeScale;
     }
 
     if (this.down) {
-      this.player.velocity -= 0.2 * timeScale;
+      this.player.velocity -= 0.2 * this.timeScale;
     }
 
     if (this.left) {
-      this.player.setAngle(this.player.angle - 0.03 * timeScale);
-      this.physics.updateBody(this.player);
+      this.player.setAngle(this.player.angle - 0.2 * this.timeScale);
     }
 
     if (this.right) {
-      this.player.setAngle(this.player.angle + 0.03 * timeScale);
-      this.physics.updateBody(this.player);
+      this.player.setAngle(this.player.angle + 0.2 * this.timeScale);
     }
   }
 
@@ -4254,13 +4244,19 @@ class Tank {
     const y = Math.sin(this.player.angle);
 
     if (this.player.velocity > 0) {
-      this.player.velocity -= 0.05;
+      this.player.velocity = Math.max(
+        this.player.velocity - 0.1 * this.timeScale,
+        0
+      );
 
-      if (this.player.velocity > 3) {
-        this.player.velocity = 3;
+      if (this.player.velocity > 2) {
+        this.player.velocity = 2;
       }
     } else if (this.player.velocity < 0) {
-      this.player.velocity += 0.05;
+      this.player.velocity = Math.min(
+        this.player.velocity + 0.1 * this.timeScale,
+        0
+      );
 
       if (this.player.velocity < -2) {
         this.player.velocity = -2;
@@ -4300,7 +4296,7 @@ class Tank {
   }
 
   updateTurret() {
-    this.playerTurret.setAngle(this.player.angle);
+    this.playerTurret.setAngle(this.player.angle, false);
     this.playerTurret.setPosition(this.player.x, this.player.y);
 
     const hit = this.physics.raycast(
