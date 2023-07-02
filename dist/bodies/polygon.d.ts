@@ -155,7 +155,11 @@ export declare class Polygon extends SATPolygon implements BBox, BodyProps {
     /**
      * inner function for after position change update aabb in system and convex inner polygons
      */
-    updateBody(): void;
+    updateBody(update?: boolean): void;
+    /**
+     * update instantly or mark as dirty
+     */
+    protected markAsDirty(update: boolean): void;
     /**
      * update the position of the decomposed convex polygons (if any), called
      * after the position of the body has changed

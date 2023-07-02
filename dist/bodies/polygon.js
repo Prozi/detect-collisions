@@ -106,10 +106,7 @@ class Polygon extends sat_1.Polygon {
     setPosition(x, y, update = true) {
         this.pos.x = x;
         this.pos.y = y;
-        this.dirty = true;
-        if (update) {
-            this.updateBody();
-        }
+        this.markAsDirty(update);
         return this;
     }
     /**
@@ -123,26 +120,17 @@ class Polygon extends sat_1.Polygon {
             point.y = this.pointsBackup[index].y * this.scaleVector.y;
             return point;
         }));
-        this.dirty = true;
-        if (update) {
-            this.updateBody();
-        }
+        this.markAsDirty(update);
         return this;
     }
     setAngle(angle, update = true) {
         super.setAngle(angle);
-        this.dirty = true;
-        if (update) {
-            this.updateBody();
-        }
+        this.markAsDirty(update);
         return this;
     }
     setOffset(offset, update = true) {
         super.setOffset(offset);
-        this.dirty = true;
-        if (update) {
-            this.updateBody();
-        }
+        this.markAsDirty(update);
         return this;
     }
     /**
@@ -217,12 +205,23 @@ class Polygon extends sat_1.Polygon {
     /**
      * inner function for after position change update aabb in system and convex inner polygons
      */
-    updateBody() {
+    updateBody(update = this.dirty) {
         var _a;
-        if (this.dirty) {
+        if (update) {
             this.updateConvexPolygonPositions();
             (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
             this.dirty = false;
+        }
+    }
+    /**
+     * update instantly or mark as dirty
+     */
+    markAsDirty(update) {
+        if (update) {
+            this.updateBody(true);
+        }
+        else {
+            this.dirty = true;
         }
     }
     /**

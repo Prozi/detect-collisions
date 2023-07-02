@@ -184,11 +184,22 @@ class Circle extends sat_1.Circle {
     /**
      * inner function for after position change update aabb in system
      */
-    updateBody() {
+    updateBody(update = this.dirty) {
         var _a;
-        if (this.dirty) {
+        if (update) {
             (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
             this.dirty = false;
+        }
+    }
+    /**
+     * update instantly or mark as dirty
+     */
+    markAsDirty(update) {
+        if (update) {
+            this.updateBody(true);
+        }
+        else {
+            this.dirty = true;
         }
     }
     /**
