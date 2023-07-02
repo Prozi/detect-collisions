@@ -122,7 +122,7 @@ Notice the last parameter of each of the below 4 functions defaults to `true` if
 
   - Sets the position of the body to the specified `(x, y)` coordinates in the 2D space.
 
-- `setScale(x: number, y?: number, update = true)`:
+- `setScale(x: number, y = x, update = true)`:
 
   - Sets the scale of the body along the x-axis and y-axis (optional).
   - Allows resizing the body.
