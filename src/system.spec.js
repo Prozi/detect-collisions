@@ -34,7 +34,7 @@ describe("GIVEN System", () => {
       { x: 0, y: 10 },
     ]);
 
-    poly.setPosition(poly.x + 100, poly.y + 100);
+    poly.setPosition(poly.x + 100, poly.y + 100, false);
     expect(poly.dirty).toBe(true);
     system.update();
     expect(poly.dirty).toBe(false);

@@ -210,10 +210,14 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   /**
    * update position
    */
-  setPosition(x: number, y: number): SATPolygon {
+  setPosition(x: number, y: number, update = true): SATPolygon {
     this.pos.x = x;
     this.pos.y = y;
+
     this.dirty = true;
+    if (update) {
+      this.updateBody();
+    }
 
     return this;
   }
@@ -221,7 +225,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   /**
    * update scale
    */
-  setScale(x: number, y: number = x): SATPolygon {
+  setScale(x: number, y: number = x, update = true): SATPolygon {
     this.scaleVector.x = Math.abs(x);
     this.scaleVector.y = Math.abs(y);
 
@@ -235,20 +239,29 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
     );
 
     this.dirty = true;
+    if (update) {
+      this.updateBody();
+    }
 
     return this;
   }
 
-  setAngle(angle: number): SATPolygon {
+  setAngle(angle: number, update = true): SATPolygon {
     super.setAngle(angle);
     this.dirty = true;
+    if (update) {
+      this.updateBody();
+    }
 
     return this;
   }
 
-  setOffset(offset: SATVector): SATPolygon {
+  setOffset(offset: SATVector, update = true): SATPolygon {
     super.setOffset(offset);
     this.dirty = true;
+    if (update) {
+      this.updateBody();
+    }
 
     return this;
   }
@@ -351,7 +364,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    * after the position of the body has changed
    */
   protected updateConvexPolygonPositions() {
-    if (this.isConvex) {
+    if (this.isConvex || !this.convexPolygons) {
       return;
     }
 

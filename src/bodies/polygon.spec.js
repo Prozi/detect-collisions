@@ -36,6 +36,42 @@ describe("GIVEN Polygon", () => {
     expect(poly.pos.y).toBe(10);
   });
 
+  it("THEN setPosition() by default leaves a clean body", () => {
+    const { Polygon } = require("../../src");
+
+    const poly = new Polygon({}, [{}]);
+
+    poly.setPosition(10, 10);
+    expect(poly.dirty).toBe(false);
+  });
+
+  it("THEN setAngle() by default leaves a clean body", () => {
+    const { Polygon } = require("../../src");
+
+    const poly = new Polygon({}, [{}]);
+
+    poly.setAngle(Math.PI);
+    expect(poly.dirty).toBe(false);
+  });
+
+  it("THEN setOffset() by default leaves a clean body", () => {
+    const { Polygon } = require("../../src");
+
+    const poly = new Polygon({}, [{}]);
+
+    poly.setOffset(10);
+    expect(poly.dirty).toBe(false);
+  });
+
+  it("THEN setScale() by default leaves a clean body", () => {
+    const { Polygon } = require("../../src");
+
+    const poly = new Polygon({}, [{}]);
+
+    poly.setScale(5);
+    expect(poly.dirty).toBe(false);
+  });
+
   it("THEN setPosition() doesn't make bbox missed in checkCollision()", () => {
     const { System } = require("../../src");
 

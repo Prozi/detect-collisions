@@ -166,22 +166,22 @@ export interface BodyProps<TBody extends Body = Body>
   /**
    * update position, and cached convexes positions
    */
-  setPosition(x: number, y: number): Circle | SATPolygon;
+  setPosition(x: number, y: number, update?: boolean): Circle | SATPolygon;
 
   /**
    * for setting scale
    */
-  setScale(x: number, y?: number): Circle | SATPolygon;
+  setScale(x: number, y: number, update?: boolean): Circle | SATPolygon;
 
   /**
    * for setting angle
    */
-  setAngle(angle: number): Circle | SATPolygon;
+  setAngle(angle: number, update?: boolean): Circle | SATPolygon;
 
   /**
    * for setting offset from center
    */
-  setOffset(offset: Vector): Circle | SATPolygon;
+  setOffset(offset: Vector, update?: boolean): Circle | SATPolygon;
 
   /**
    * draw the bounding box

@@ -68,7 +68,7 @@ class Stress {
   }
 
   updateBody(timeScale, body) {
-    body.setAngle(body.angle + body.rotationSpeed * timeScale);
+    body.setAngle(body.angle + body.rotationSpeed * timeScale, false);
 
     if (seededRandom() < 0.05 * timeScale) {
       body.targetScale.x = 0.5 + seededRandom();
@@ -79,12 +79,14 @@ class Stress {
     }
 
     if (Math.abs(body.targetScale.x - body.scaleX) > 0.01) {
-      body.setScale(
+      const scaleX =
         body.scaleX +
-          Math.sign(body.targetScale.x - body.scaleX) * 0.02 * timeScale,
+        Math.sign(body.targetScale.x - body.scaleX) * 0.02 * timeScale;
+      const scaleY =
         body.scaleY +
-          Math.sign(body.targetScale.y - body.scaleY) * 0.02 * timeScale
-      );
+        Math.sign(body.targetScale.y - body.scaleY) * 0.02 * timeScale;
+
+      body.setScale(scaleX, scaleY, false);
     }
 
     // as last step update position, and bounding box
@@ -92,8 +94,6 @@ class Stress {
       body.x + body.directionX * timeScale,
       body.y + body.directionY * timeScale
     );
-
-    body.updateBody();
 
     this.physics.checkOne(body, this.checkBounce.bind(this));
   }
