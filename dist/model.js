@@ -22,4 +22,4 @@ var BodyType;
     BodyType["Box"] = "Box";
     BodyType["Point"] = "Point";
     BodyType["Polygon"] = "Polygon";
-})(BodyType = exports.BodyType || (exports.BodyType = {}));
+})(BodyType || (exports.BodyType = BodyType = {}));
