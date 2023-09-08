@@ -1755,15 +1755,13 @@ exports.drawBVH = drawBVH;
  */
 function cloneResponse(response) {
     const clone = new sat_1.Response();
-    if (response) {
-        clone.a = response.a;
-        clone.b = response.b;
-        clone.overlap = response.overlap;
-        clone.overlapN = response.overlapN.clone();
-        clone.overlapV = response.overlapV.clone();
-        clone.aInB = response.aInB;
-        clone.bInA = response.bInA;
-    }
+    clone.a = response.a;
+    clone.b = response.b;
+    clone.overlap = response.overlap;
+    clone.overlapN = response.overlapN.clone();
+    clone.overlapV = response.overlapV.clone();
+    clone.aInB = response.aInB;
+    clone.bInA = response.bInA;
     return clone;
 }
 exports.cloneResponse = cloneResponse;

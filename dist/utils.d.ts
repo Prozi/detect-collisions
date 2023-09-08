@@ -94,4 +94,4 @@ export declare function drawBVH(context: CanvasRenderingContext2D, body: Body): 
 /**
  * clone response object returning new response with previous ones values
  */
-export declare function cloneResponse(response?: Response): Response;
+export declare function cloneResponse(response: Response): Response;

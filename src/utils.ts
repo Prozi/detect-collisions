@@ -311,18 +311,16 @@ export function drawBVH(context: CanvasRenderingContext2D, body: Body) {
 /**
  * clone response object returning new response with previous ones values
  */
-export function cloneResponse(response?: Response) {
+export function cloneResponse(response: Response) {
   const clone = new Response();
 
-  if (response) {
-    clone.a = response.a;
-    clone.b = response.b;
-    clone.overlap = response.overlap;
-    clone.overlapN = response.overlapN.clone();
-    clone.overlapV = response.overlapV.clone();
-    clone.aInB = response.aInB;
-    clone.bInA = response.bInA;
-  }
+  clone.a = response.a;
+  clone.b = response.b;
+  clone.overlap = response.overlap;
+  clone.overlapN = response.overlapN.clone();
+  clone.overlapV = response.overlapV.clone();
+  clone.aInB = response.aInB;
+  clone.bInA = response.bInA;
 
   return clone;
 }
