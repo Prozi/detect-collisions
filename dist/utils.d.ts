@@ -1,6 +1,6 @@
 import { BBox } from "rbush";
 import { Point as DecompPoint } from "poly-decomp";
-import { testCircleCircle, testCirclePolygon, testPolygonCircle, testPolygonPolygon, Vector as SATVector } from "sat";
+import { Response, testCircleCircle, testCirclePolygon, testPolygonCircle, testPolygonPolygon, Vector as SATVector } from "sat";
 import { Polygon } from "./bodies/polygon";
 import { Body, BodyOptions, PotentialVector, SATPolygon, Vector } from "./model";
 export declare const DEG2RAD: number;
@@ -91,3 +91,7 @@ export declare function drawPolygon(context: CanvasRenderingContext2D, { pos, ca
  * draw body bounding body
  */
 export declare function drawBVH(context: CanvasRenderingContext2D, body: Body): void;
+/**
+ * clone response object returning new response with previous ones values
+ */
+export declare function cloneResponse(response?: Response): Response;

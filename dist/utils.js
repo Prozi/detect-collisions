@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.drawBVH = exports.drawPolygon = exports.getSATTest = exports.getBounceDirection = exports.mapArrayToVector = exports.mapVectorToArray = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
+exports.cloneResponse = exports.drawBVH = exports.drawPolygon = exports.getSATTest = exports.getBounceDirection = exports.mapArrayToVector = exports.mapVectorToArray = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
 const sat_1 = require("sat");
 const intersect_1 = require("./intersect");
 const model_1 = require("./model");
@@ -242,3 +242,20 @@ function drawBVH(context, body) {
     });
 }
 exports.drawBVH = drawBVH;
+/**
+ * clone response object returning new response with previous ones values
+ */
+function cloneResponse(response) {
+    const clone = new sat_1.Response();
+    if (response) {
+        clone.a = response.a;
+        clone.b = response.b;
+        clone.overlap = response.overlap;
+        clone.overlapN = response.overlapN.clone();
+        clone.overlapV = response.overlapV.clone();
+        clone.aInB = response.aInB;
+        clone.bInA = response.bInA;
+    }
+    return clone;
+}
+exports.cloneResponse = cloneResponse;
