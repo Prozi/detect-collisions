@@ -19,7 +19,7 @@ describe("GIVEN Point", () => {
         {
           isStatic: true,
           isTrigger: true,
-        }
+        },
       );
 
       expect(body.isStatic).toBe(true);

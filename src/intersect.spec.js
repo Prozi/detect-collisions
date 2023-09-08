@@ -51,7 +51,7 @@ describe("GIVEN Intersect Utils", () => {
         { x: -13.25, y: 7.5 },
         { x: -13.25, y: -7.51 },
         { x: -11.25, y: -7.51 },
-      ].map(({ x, y }) => ({ x: x * 10, y: y * 10 }))
+      ].map(({ x, y }) => ({ x: x * 10, y: y * 10 })),
     );
     const convex = physics.createCircle({ x: 71.2, y: 37.5 }, 1);
 
@@ -80,7 +80,7 @@ describe("GIVEN Intersect Utils", () => {
         { x: -13.25, y: 7.5 },
         { x: -13.25, y: -7.51 },
         { x: -11.25, y: -7.51 },
-      ].map(({ x, y }) => ({ x: x * 0.01, y: y * 0.01 }))
+      ].map(({ x, y }) => ({ x: x * 0.01, y: y * 0.01 })),
     );
 
     physics.checkCollision(concave, convex);
@@ -100,7 +100,7 @@ describe("GIVEN Intersect Utils", () => {
         { x: 400, y: 274 },
         { x: 360, y: 395 },
         { x: 80, y: 350 },
-      ].map(({ x, y }) => ({ x: x * 2, y: y * 2 }))
+      ].map(({ x, y }) => ({ x: x * 2, y: y * 2 })),
     );
     const concaveInside = physics.createPolygon({ x: 0, y: 0 }, [
       { x: 190, y: 147 },
@@ -128,7 +128,7 @@ describe("GIVEN Intersect Utils", () => {
       {
         x: 349.64532105529213 + 152.89343950920775,
         y: 12.880947397260442 + 123.4220026097263,
-      }
+      },
     );
 
     const points = [
@@ -424,7 +424,7 @@ describe("GIVEN Intersect Utils", () => {
 
     const area = physics.createPolygon(
       { x: 144.71938174052755, y: 113.40348796741262 },
-      points
+      points,
     );
 
     const circle = physics.createCircle({ x: 200, y: 232 }, 3);

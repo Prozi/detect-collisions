@@ -33,7 +33,7 @@ export class Box extends Polygon {
     position: PotentialVector,
     width: number,
     height: number,
-    options?: BodyOptions
+    options?: BodyOptions,
   ) {
     super(position, createBox(width, height), options);
 

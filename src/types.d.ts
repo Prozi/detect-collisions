@@ -8,11 +8,11 @@ declare module "poly-decomp" {
   export function decomp(polygon: Polygon): Polygon[];
   export function removeCollinearPoints(
     polygon: Polygon,
-    thresholdAngle: number
+    thresholdAngle: number,
   ): number;
   export function removeDuplicatePoints(
     polygon: Polygon,
-    precision: number
+    precision: number,
   ): void;
 }
 

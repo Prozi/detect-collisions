@@ -31,7 +31,7 @@ export class Ellipse extends Polygon {
     radiusX: number,
     radiusY: number = radiusX,
     step: number = (radiusX + radiusY) / Math.PI,
-    options?: BodyOptions
+    options?: BodyOptions,
   ) {
     super(position, createEllipse(radiusX, radiusY, step), options);
 

@@ -3907,7 +3907,7 @@ class TestCanvas {
     this.context.fillText(
       `FPS: ${this.fps ? this.fps.toFixed(0) : "?"}`,
       24,
-      48
+      48,
     );
 
     if (this.test.drawCallback) {
@@ -4030,7 +4030,7 @@ class Stress {
     // as last step update position, and bounding box
     body.setPosition(
       body.x + body.directionX * this.timeScale,
-      body.y + body.directionY * this.timeScale
+      body.y + body.directionY * this.timeScale,
     );
 
     this.physics.checkOne(body, this.checkBounce);
@@ -4084,7 +4084,7 @@ class Stress {
         body = this.physics.createCircle(
           { x, y },
           random(minSize, maxSize) / 2,
-          options
+          options,
         );
 
         ++this.circles;
@@ -4103,7 +4103,7 @@ class Stress {
           { x, y },
           random(minSize, maxSize),
           random(minSize, maxSize),
-          options
+          options,
         );
 
         ++this.boxes;
@@ -4116,7 +4116,7 @@ class Stress {
             x: x + random(minSize, maxSize),
             y: y + random(minSize, maxSize),
           },
-          options
+          options,
         );
 
         ++this.lines;
@@ -4131,7 +4131,7 @@ class Stress {
             { x: random(minSize, maxSize), y: -random(minSize, maxSize) },
             { x: -random(minSize, maxSize), y: -random(minSize, maxSize) },
           ],
-          options
+          options,
         );
 
         ++this.polygons;
@@ -4190,7 +4190,7 @@ class Tank {
         { x: -11.25, y: -7.51 },
       ]
         .map(mapVectorToArray)
-        .map(([x, y]) => [x * 10, y * 10])
+        .map(([x, y]) => [x * 10, y * 10]),
     );
 
     this.up = false;
@@ -4261,7 +4261,7 @@ class Tank {
     if (this.player.velocity > 0) {
       this.player.velocity = Math.max(
         this.player.velocity - 0.1 * this.timeScale,
-        0
+        0,
       );
 
       if (this.player.velocity > 2) {
@@ -4270,7 +4270,7 @@ class Tank {
     } else if (this.player.velocity < 0) {
       this.player.velocity = Math.min(
         this.player.velocity + 0.1 * this.timeScale,
-        0
+        0,
       );
 
       if (this.player.velocity < -2) {
@@ -4285,7 +4285,7 @@ class Tank {
     if (this.player.velocity) {
       this.player.setPosition(
         this.player.x + x * this.player.velocity,
-        this.player.y + y * this.player.velocity
+        this.player.y + y * this.player.velocity,
       );
     }
   }
@@ -4317,7 +4317,7 @@ class Tank {
     const hit = this.physics.raycast(
       this.playerTurret.start,
       this.playerTurret.end,
-      (test) => test !== this.player
+      (test) => test !== this.player,
     );
 
     this.drawCallback = () => {
@@ -4336,13 +4336,13 @@ class Tank {
         ? this.physics.createCircle(
             { x: this.scaleX(x), y: this.scaleY(y) },
             this.scaleX(size / 2),
-            { isCentered: true }
+            { isCentered: true },
           )
         : this.physics.createBox(
             { x: this.scaleX(x - size / 2), y: this.scaleY(y - size / 2) },
             this.scaleX(size),
             this.scaleX(size),
-            { isCentered: true }
+            { isCentered: true },
           );
 
     player.velocity = 0;
@@ -4353,7 +4353,7 @@ class Tank {
     this.playerTurret = this.physics.createLine(
       player,
       { x: player.x + this.scaleX(20) + this.scaleY(20), y: player.y },
-      { angle: 0.2, isTrigger: true }
+      { angle: 0.2, isTrigger: true },
     );
 
     return player;
@@ -4370,7 +4370,7 @@ class Tank {
   createCircle(x, y, radius) {
     this.physics.createCircle(
       { x: this.scaleX(x), y: this.scaleY(y) },
-      this.scaleX(radius)
+      this.scaleX(radius),
     );
   }
 
@@ -4380,7 +4380,7 @@ class Tank {
       this.scaleX(radiusX),
       this.scaleY(radiusY),
       step,
-      { angle }
+      { angle },
     );
   }
 
@@ -4393,7 +4393,7 @@ class Tank {
     return this.physics.createPolygon(
       { x: this.scaleX(x), y: this.scaleY(y) },
       scaledPoints,
-      { angle }
+      { angle },
     );
   }
 
@@ -4427,7 +4427,7 @@ class Tank {
         [50, 50],
         [-50, 50],
       ],
-      0.4
+      0.4,
     );
     this.createPolygon(
       190,
@@ -4438,7 +4438,7 @@ class Tank {
         [20, 20],
         [-20, 20],
       ],
-      0.4
+      0.4,
     );
     this.createCircle(170, 140, 6);
     this.createCircle(185, 155, 6);
@@ -4455,7 +4455,7 @@ class Tank {
         [150, 30],
         [-150, 30],
       ],
-      0.4
+      0.4,
     );
 
     // HQ
@@ -4468,7 +4468,7 @@ class Tank {
         [50, 50],
         [-50, 50],
       ],
-      0.2
+      0.2,
     );
     this.createCircle(180, 490, 12);
     this.createCircle(175, 540, 12);
@@ -4483,7 +4483,7 @@ class Tank {
         [60, 20],
         [-60, 20],
       ],
-      1.7
+      1.7,
     );
     this.createPolygon(
       350,
@@ -4494,7 +4494,7 @@ class Tank {
         [60, 20],
         [-60, 20],
       ],
-      1.7
+      1.7,
     );
 
     // Mountains

@@ -127,7 +127,7 @@ describe("GIVEN Box", () => {
 
     // the list of bodies colliding
     const collisions = potentials.filter((body) =>
-      system.checkCollision(box, body)
+      system.checkCollision(box, body),
     );
 
     // correct result is 3

@@ -201,5 +201,5 @@ export interface BodyProps<TBody extends Body = Body>
 
 export type SATTest<
   T extends {} = Circle | Polygon | SATPolygon,
-  Y extends {} = Circle | Polygon | SATPolygon
+  Y extends {} = Circle | Polygon | SATPolygon,
 > = (bodyA: T, bodyB: Y, response: Response) => boolean;

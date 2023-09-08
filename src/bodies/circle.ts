@@ -107,7 +107,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
   constructor(
     position: PotentialVector,
     radius: number,
-    options?: BodyOptions
+    options?: BodyOptions,
   ) {
     super(ensureVectorPoint(position), radius);
 

@@ -122,7 +122,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   constructor(
     position: PotentialVector,
     points: PotentialVector[],
-    options?: BodyOptions
+    options?: BodyOptions,
   ) {
     super(ensureVectorPoint(position), ensurePolygonPoints(points));
 
@@ -231,7 +231,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
         point.y = this.pointsBackup[index].y * this.scaleVector.y;
 
         return point;
-      })
+      }),
     );
 
     this.markAsDirty(update);
@@ -392,7 +392,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    * updates convex polygons cache in body
    */
   protected updateConvexPolygons(
-    convex: DecompPolygon[] = this.getConvex()
+    convex: DecompPolygon[] = this.getConvex(),
   ): void {
     if (this.isConvex) {
       return;
@@ -411,7 +411,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
       this.convexPolygons[index].pos.x = this.pos.x;
       this.convexPolygons[index].pos.y = this.pos.y;
       this.convexPolygons[index].setPoints(
-        ensurePolygonPoints(map(points, mapArrayToVector))
+        ensurePolygonPoints(map(points, mapArrayToVector)),
       );
     });
 

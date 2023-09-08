@@ -21,7 +21,7 @@ const recursiveAddTest = (items) => {
     () => {
       test.update();
     },
-    { items }
+    { items },
   );
 
   if (items < 10000) {

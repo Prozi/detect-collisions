@@ -192,7 +192,7 @@ describe("GIVEN Polygon", () => {
           x: -1311,
           y: 1642,
         },
-        3
+        3,
       );
 
       const polygon = physics.createPolygon(
@@ -200,7 +200,7 @@ describe("GIVEN Polygon", () => {
           x: -1418,
           y: 1675,
         },
-        polygonPoints
+        polygonPoints,
       );
 
       expect(physics.checkCollision(circle, polygon)).toBe(true);
@@ -217,7 +217,7 @@ describe("GIVEN Polygon", () => {
           x: -1311,
           y: 1642,
         },
-        3
+        3,
       );
 
       const polygon = physics.createPolygon(
@@ -225,7 +225,7 @@ describe("GIVEN Polygon", () => {
           x: -1418,
           y: 1675,
         },
-        polygonPoints.reverse()
+        polygonPoints.reverse(),
       );
 
       expect(physics.checkCollision(circle, polygon)).toBe(true);

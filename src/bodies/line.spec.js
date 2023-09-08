@@ -56,7 +56,7 @@ describe("GIVEN Line", () => {
         {
           isStatic: true,
           isTrigger: true,
-        }
+        },
       );
 
       expect(body.isStatic).toBe(true);

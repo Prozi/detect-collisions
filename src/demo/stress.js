@@ -88,7 +88,7 @@ class Stress {
     // as last step update position, and bounding box
     body.setPosition(
       body.x + body.directionX * this.timeScale,
-      body.y + body.directionY * this.timeScale
+      body.y + body.directionY * this.timeScale,
     );
 
     this.physics.checkOne(body, this.checkBounce);
@@ -142,7 +142,7 @@ class Stress {
         body = this.physics.createCircle(
           { x, y },
           random(minSize, maxSize) / 2,
-          options
+          options,
         );
 
         ++this.circles;
@@ -161,7 +161,7 @@ class Stress {
           { x, y },
           random(minSize, maxSize),
           random(minSize, maxSize),
-          options
+          options,
         );
 
         ++this.boxes;
@@ -174,7 +174,7 @@ class Stress {
             x: x + random(minSize, maxSize),
             y: y + random(minSize, maxSize),
           },
-          options
+          options,
         );
 
         ++this.lines;
@@ -189,7 +189,7 @@ class Stress {
             { x: random(minSize, maxSize), y: -random(minSize, maxSize) },
             { x: -random(minSize, maxSize), y: -random(minSize, maxSize) },
           ],
-          options
+          options,
         );
 
         ++this.polygons;

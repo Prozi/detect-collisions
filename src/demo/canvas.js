@@ -68,7 +68,7 @@ class TestCanvas {
     this.context.fillText(
       `FPS: ${this.fps ? this.fps.toFixed(0) : "?"}`,
       24,
-      48
+      48,
     );
 
     if (this.test.drawCallback) {

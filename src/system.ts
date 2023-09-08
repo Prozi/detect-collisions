@@ -113,7 +113,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   checkOne(
     body: TBody,
     callback: CheckCollisionCallback = () => true,
-    response = this.response
+    response = this.response,
   ): boolean {
     // no need to check static body collision
     if (body.isStatic) {
@@ -138,7 +138,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
    */
   checkAll(
     callback: (response: Response) => void | boolean,
-    response = this.response
+    response = this.response,
   ): boolean {
     const bodies = this.all();
     const checkOne = (body: TBody) => {
@@ -163,7 +163,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   checkCollision(
     bodyA: TBody,
     bodyB: TBody,
-    response = this.response
+    response = this.response,
   ): boolean {
     // if any of bodies has padding, we can short return false by assesing the bbox without padding
     if (
@@ -218,7 +218,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   raycast(
     start: Vector,
     end: Vector,
-    allow: (body: TBody) => boolean = () => true
+    allow: (body: TBody) => boolean = () => true,
   ): RaycastHit<TBody> | null {
     let minDistance = Infinity;
     let result: RaycastHit<TBody> | null = null;
@@ -264,9 +264,9 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     find: (
       child: Leaf<TBody>,
       children: Leaf<TBody>[],
-      index: number
+      index: number,
     ) => boolean | void,
-    { children }: { children?: Leaf<TBody>[] } = this.data
+    { children }: { children?: Leaf<TBody>[] } = this.data,
   ): TBody | undefined {
     return children?.find((body, index) => {
       if (!body) {

@@ -49,7 +49,7 @@ export function rad2deg(radians: number) {
 export function createEllipse(
   radiusX: number,
   radiusY: number = radiusX,
-  step = 1
+  step = 1,
 ): SATVector[] {
   const steps: number = Math.PI * Math.hypot(radiusX, radiusY) * 2;
   const length: number = Math.max(8, Math.ceil(steps / Math.max(1, step)));
@@ -200,7 +200,7 @@ export function dashLineTo(
   toX: number,
   toY: number,
   dash = 2,
-  gap = 4
+  gap = 4,
 ): void {
   const xDiff = toX - fromX;
   const yDiff = toY - fromY;
@@ -229,7 +229,7 @@ export function dashLineTo(
  * change format from poly-decomp to SAT.js
  */
 export function mapVectorToArray(
-  { x, y }: Vector = { x: 0, y: 0 }
+  { x, y }: Vector = { x: 0, y: 0 },
 ): DecompPoint {
   return [x, y];
 }
@@ -272,7 +272,7 @@ export function drawPolygon(
     pos,
     calcPoints,
   }: Pick<Polygon | SATPolygon, "calcPoints"> & { pos: Vector },
-  isTrigger = false
+  isTrigger = false,
 ): void {
   const lastPoint = calcPoints[calcPoints.length - 1];
   const fromX = pos.x + lastPoint.x;

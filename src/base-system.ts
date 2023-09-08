@@ -78,7 +78,7 @@ export class BaseSystem<TBody extends Body>
   createCircle(
     position: PotentialVector,
     radius: number,
-    options?: BodyOptions
+    options?: BodyOptions,
   ): Circle {
     const circle = new Circle(position, radius, options);
 
@@ -94,7 +94,7 @@ export class BaseSystem<TBody extends Body>
     position: PotentialVector,
     width: number,
     height: number,
-    options?: BodyOptions
+    options?: BodyOptions,
   ): Box {
     const box = new Box(position, width, height, options);
 
@@ -111,7 +111,7 @@ export class BaseSystem<TBody extends Body>
     radiusX: number,
     radiusY: number = radiusX,
     step?: number,
-    options?: BodyOptions
+    options?: BodyOptions,
   ): Ellipse {
     const ellipse = new Ellipse(position, radiusX, radiusY, step, options);
 
@@ -126,7 +126,7 @@ export class BaseSystem<TBody extends Body>
   createPolygon(
     position: PotentialVector,
     points: PotentialVector[],
-    options?: BodyOptions
+    options?: BodyOptions,
   ): Polygon {
     const polygon = new Polygon(position, points, options);
 

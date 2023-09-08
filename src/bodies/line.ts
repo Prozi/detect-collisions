@@ -27,7 +27,7 @@ export class Line extends Polygon {
         { x: 0, y: 0 },
         { x: end.x - start.x, y: end.y - start.y },
       ],
-      options
+      options,
     );
 
     if (this.calcPoints.length === 1 || !end) {
@@ -65,7 +65,7 @@ export class Line extends Polygon {
   getCentroid(): SATVector {
     return new SATVector(
       (this.end.x - this.start.x) / 2,
-      (this.end.y - this.start.y) / 2
+      (this.end.y - this.start.y) / 2,
     );
   }
 

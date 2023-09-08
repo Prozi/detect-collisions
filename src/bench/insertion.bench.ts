@@ -23,14 +23,14 @@ for (let ndx = 0; ndx < BODY_COUNT; ndx++) {
       new SATVector(0, 0),
       new SATVector(0, 1),
       new SATVector(1, 0),
-    ])
+    ]),
   );
   overlappingTriangles.push(
     new Polygon(new SATVector(0, 0), [
       new SATVector(0, 0),
       new SATVector(0, 1),
       new SATVector(1, 0),
-    ])
+    ]),
   );
   nonoverlappingRectangles.push(
     new Polygon(new SATVector(0, 0), [
@@ -38,7 +38,7 @@ for (let ndx = 0; ndx < BODY_COUNT; ndx++) {
       new SATVector(0, 1),
       new SATVector(1, 1),
       new SATVector(1, 0),
-    ])
+    ]),
   );
   overlappingRectangles.push(
     new Polygon(new SATVector(0, 0), [
@@ -46,7 +46,7 @@ for (let ndx = 0; ndx < BODY_COUNT; ndx++) {
       new SATVector(0, 1),
       new SATVector(1, 1),
       new SATVector(1, 0),
-    ])
+    ]),
   );
 }
 
@@ -102,12 +102,12 @@ insertionBenchmark
         "Task Name": name,
         "Average Time (s)": parseFloat((result?.mean ?? 0 * 1000).toFixed(3)),
         "Standard Deviation (s)": parseFloat(
-          (result?.sd ?? 0 * 1000).toFixed(3)
+          (result?.sd ?? 0 * 1000).toFixed(3),
         ),
         hz: parseFloat((result?.hz ?? 0).toFixed(3)),
         "p99 (s)": parseFloat((result?.p99 ?? 0 * 1000).toFixed(3)),
         "p995 (s)": parseFloat((result?.p995 ?? 0 * 1000).toFixed(3)),
-      }))
+      })),
     );
   })
   .catch((err) => {
