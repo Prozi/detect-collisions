@@ -823,10 +823,10 @@
   resolved "https://registry.npmjs.org/@types/retry/-/retry-0.12.0.tgz"
   integrity sha512-wWKOClTTiizcZhXnPY4wikVAwmdYHp8q6DmC+EJUzAMsycb7HB32Kh9RN4+0gExjmPmZSAQjgURXIGATPegAvA==
 
-"@types/sat@^0.0.32":
-  version "0.0.32"
-  resolved "https://registry.yarnpkg.com/@types/sat/-/sat-0.0.32.tgz#d69c02a1487119439c59c6140ade278e71dce65f"
-  integrity sha512-8NNFy0zS/k1N7d9aJ0PpqV2hJoMLxlLN17GAqItd1t60CBvzfKRC9uWUzBNuhup51aUy9o87toQk/NWHctWRtw==
+"@types/sat@^0.0.35":
+  version "0.0.35"
+  resolved "https://registry.yarnpkg.com/@types/sat/-/sat-0.0.35.tgz#c53f55c568506f53a89ec448fd00d8be1e8abc83"
+  integrity sha512-e6hhgprjvfncsniUtblt2Q8yV+cMf/Vqxl4CrnhkwPML4Lb7F+1fMNZs+UJ4L6yp2j/vDH8oHpNaubM0rgHXTQ==
 
 "@types/serve-index@^1.9.1":
   version "1.9.1"
