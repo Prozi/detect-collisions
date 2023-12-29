@@ -58,7 +58,7 @@
   },
   "homepage": "https://prozi.github.io/detect-collisions/",
   "dependencies": {
-    "@types/rbush": "^3.0.0",
+    "@types/rbush": "^3.0.3",
     "@types/sat": "^0.0.32",
     "poly-decomp": "^0.3.0",
     "rbush": "^3.0.1",
