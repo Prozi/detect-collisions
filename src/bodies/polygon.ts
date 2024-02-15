@@ -164,7 +164,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    */
   set x(x: number) {
     this.pos.x = x;
-    this.dirty = true;
+    this.markAsDirty();
   }
 
   get y(): number {
@@ -176,7 +176,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    */
   set y(y: number) {
     this.pos.y = y;
-    this.dirty = true;
+    this.markAsDirty();
   }
 
   /**
@@ -349,7 +349,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   /**
    * update instantly or mark as dirty
    */
-  protected markAsDirty(update: boolean): void {
+  protected markAsDirty(update = false): void {
     if (update) {
       this.updateBody(true);
     } else {

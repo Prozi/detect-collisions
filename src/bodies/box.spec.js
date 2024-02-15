@@ -80,8 +80,6 @@ describe("GIVEN Box", () => {
 
     physics.getPotentials(circle2).forEach((collider) => {
       if (physics.checkCollision(circle2, collider)) {
-        console.log("getPotentials works on Box with angle");
-
         case2works = true;
       }
     });

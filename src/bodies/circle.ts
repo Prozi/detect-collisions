@@ -128,7 +128,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
    */
   set x(x: number) {
     this.pos.x = x;
-    this.dirty = true;
+    this.markAsDirty();
   }
 
   /**
@@ -143,7 +143,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
    */
   set y(y: number) {
     this.pos.y = y;
-    this.dirty = true;
+    this.markAsDirty();
   }
 
   /**
@@ -180,10 +180,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
   setPosition(x: number, y: number, update = true): Circle {
     this.pos.x = x;
     this.pos.y = y;
-    this.dirty = true;
-    if (update) {
-      this.updateBody();
-    }
+    this.markAsDirty(update);
 
     return this;
   }
@@ -193,10 +190,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
    */
   setScale(scaleX: number, _scaleY = scaleX, update = true): Circle {
     this.r = this.unscaledRadius * Math.abs(scaleX);
-    this.dirty = true;
-    if (update) {
-      this.updateBody();
-    }
+    this.markAsDirty(update);
 
     return this;
   }
@@ -210,10 +204,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
     const { x, y } = this.getOffsetWithAngle();
     this.offset.x = x;
     this.offset.y = y;
-    this.dirty = true;
-    if (update) {
-      this.updateBody();
-    }
+    this.markAsDirty(update);
 
     return this;
   }
@@ -228,10 +219,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
     const { x, y } = this.getOffsetWithAngle();
     this.offset.x = x;
     this.offset.y = y;
-    this.dirty = true;
-    if (update) {
-      this.updateBody();
-    }
+    this.markAsDirty(update);
 
     return this;
   }
@@ -298,7 +286,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
   /**
    * update instantly or mark as dirty
    */
-  protected markAsDirty(update: boolean): void {
+  protected markAsDirty(update = false): void {
     if (update) {
       this.updateBody(true);
     } else {

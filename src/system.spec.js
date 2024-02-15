@@ -6,6 +6,53 @@ const expectToBeNear = (value, check, tolerance = 1) => {
 };
 
 describe("GIVEN System", () => {
+  it("THEN collides precisely with both colliders at the same time", () => {
+    const { System } = require(".");
+    const physics = new System();
+    const testBox = physics.createBox({ x: -5, y: -5 }, 25, 25, {
+      isCentered: true,
+    });
+    const lineBottom = physics.createLine(
+      { x: 0, y: 0 },
+      { x: 100, y: 0 },
+      { isStatic: true },
+    );
+    const lineDiagonal = physics.createLine(
+      { x: 0, y: 0 },
+      { x: 50, y: 50 },
+      { isStatic: true },
+    );
+
+    lineBottom.isWall = true;
+    lineDiagonal.isWall = true;
+    testBox.isPlayer = true;
+
+    // <-- you need to sum the negative offsets
+    const aggregated = [];
+
+    // <-- the test
+    physics.checkAll(({ a, b, overlapV }) => {
+      if (a.isPlayer && b.isWall) {
+        aggregated.push({ x: overlapV.x, y: overlapV.y });
+      }
+    });
+
+    // <-- substract the offsets
+    testBox.pos.x -= aggregated.reduce((sum, overlap) => sum + overlap.x, 0);
+    testBox.pos.y -= aggregated.reduce((sum, overlap) => sum + overlap.y, 0);
+
+    // <-- after it's done update body
+    testBox.updateBody();
+
+    // <-- works
+    physics.checkAll(({ a, b }) => {
+      console.log({ a: a.pos, b: b.pos });
+
+      // <-- doesn't collide or run this code
+      expect(true).toBe(false);
+    });
+  });
+
   it("THEN you can change position within tree", () => {
     const { System } = require(".");
 
@@ -43,7 +90,6 @@ describe("GIVEN System", () => {
   describe("WHEN raycast is called", () => {
     it("THEN works correctly on Ellipse", () => {
       const { System } = require(".");
-
       const physics = new System();
 
       physics.createEllipse({ x: 100, y: 100 }, 30);
@@ -56,7 +102,6 @@ describe("GIVEN System", () => {
 
     it("THEN works correctly on Box", () => {
       const { System } = require(".");
-
       const physics = new System();
 
       const box = physics.createBox({ x: 50, y: 50 }, 100, 100);
@@ -68,7 +113,6 @@ describe("GIVEN System", () => {
 
     it("THEN works correctly on Polygon", () => {
       const { System } = require(".");
-
       const physics = new System();
 
       physics.createPolygon({ x: 50, y: 50 }, [
@@ -86,7 +130,6 @@ describe("GIVEN System", () => {
 
     it("THEN works correctly on Line", () => {
       const { System } = require(".");
-
       const physics = new System();
 
       physics.createLine({ x: 100, y: 0 }, { x: 0, y: 100 });
@@ -99,7 +142,6 @@ describe("GIVEN System", () => {
 
     it("THEN works correctly on Point", () => {
       const { System } = require(".");
-
       const physics = new System();
 
       physics.createPoint({ x: 50, y: 50 });
@@ -112,7 +154,6 @@ describe("GIVEN System", () => {
 
     it("THEN works correctly on Circle", () => {
       const { System } = require(".");
-
       const physics = new System();
 
       physics.createCircle({ x: 100, y: 100 }, 30);
