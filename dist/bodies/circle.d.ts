@@ -142,7 +142,7 @@ export declare class Circle extends SATCircle implements BBox, BodyProps {
     /**
      * update instantly or mark as dirty
      */
-    protected markAsDirty(update: boolean): void;
+    protected markAsDirty(update?: boolean): void;
     /**
      * internal for getting offset with applied angle
      */

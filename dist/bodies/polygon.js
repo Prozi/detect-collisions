@@ -64,7 +64,7 @@ class Polygon extends sat_1.Polygon {
      */
     set x(x) {
         this.pos.x = x;
-        this.dirty = true;
+        this.markAsDirty();
     }
     get y() {
         return this.pos.y;
@@ -74,7 +74,7 @@ class Polygon extends sat_1.Polygon {
      */
     set y(y) {
         this.pos.y = y;
-        this.dirty = true;
+        this.markAsDirty();
     }
     /**
      * allow exact getting of scale x - use setScale(x, y) to set
@@ -216,7 +216,7 @@ class Polygon extends sat_1.Polygon {
     /**
      * update instantly or mark as dirty
      */
-    markAsDirty(update) {
+    markAsDirty(update = false) {
         if (update) {
             this.updateBody(true);
         }

@@ -47,7 +47,7 @@ class Circle extends sat_1.Circle {
      */
     set x(x) {
         this.pos.x = x;
-        this.dirty = true;
+        this.markAsDirty();
     }
     /**
      * get this.pos.y
@@ -60,7 +60,7 @@ class Circle extends sat_1.Circle {
      */
     set y(y) {
         this.pos.y = y;
-        this.dirty = true;
+        this.markAsDirty();
     }
     /**
      * allow get scale
@@ -92,10 +92,7 @@ class Circle extends sat_1.Circle {
     setPosition(x, y, update = true) {
         this.pos.x = x;
         this.pos.y = y;
-        this.dirty = true;
-        if (update) {
-            this.updateBody();
-        }
+        this.markAsDirty(update);
         return this;
     }
     /**
@@ -103,10 +100,7 @@ class Circle extends sat_1.Circle {
      */
     setScale(scaleX, _scaleY = scaleX, update = true) {
         this.r = this.unscaledRadius * Math.abs(scaleX);
-        this.dirty = true;
-        if (update) {
-            this.updateBody();
-        }
+        this.markAsDirty(update);
         return this;
     }
     /**
@@ -117,10 +111,7 @@ class Circle extends sat_1.Circle {
         const { x, y } = this.getOffsetWithAngle();
         this.offset.x = x;
         this.offset.y = y;
-        this.dirty = true;
-        if (update) {
-            this.updateBody();
-        }
+        this.markAsDirty(update);
         return this;
     }
     /**
@@ -132,10 +123,7 @@ class Circle extends sat_1.Circle {
         const { x, y } = this.getOffsetWithAngle();
         this.offset.x = x;
         this.offset.y = y;
-        this.dirty = true;
-        if (update) {
-            this.updateBody();
-        }
+        this.markAsDirty(update);
         return this;
     }
     /**
@@ -194,7 +182,7 @@ class Circle extends sat_1.Circle {
     /**
      * update instantly or mark as dirty
      */
-    markAsDirty(update) {
+    markAsDirty(update = false) {
         if (update) {
             this.updateBody(true);
         }
