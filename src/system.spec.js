@@ -6,7 +6,7 @@ const expectToBeNear = (value, check, tolerance = 1) => {
 };
 
 describe("GIVEN System", () => {
-  it("THEN collides precisely with both colliders at the same time", () => {
+  it("THEN separateBody works with 2 colliders at the same time", () => {
     const { System } = require(".");
     const physics = new System();
     const testBox = physics.createBox({ x: -5, y: -5 }, 25, 25, {
@@ -27,22 +27,8 @@ describe("GIVEN System", () => {
     lineDiagonal.isWall = true;
     testBox.isPlayer = true;
 
-    // <-- you need to sum the negative offsets
-    const aggregated = [];
-
     // <-- the test
-    physics.checkAll(({ a, b, overlapV }) => {
-      if (a.isPlayer && b.isWall) {
-        aggregated.push({ x: overlapV.x, y: overlapV.y });
-      }
-    });
-
-    // <-- substract the offsets
-    testBox.pos.x -= aggregated.reduce((sum, overlap) => sum + overlap.x, 0);
-    testBox.pos.y -= aggregated.reduce((sum, overlap) => sum + overlap.y, 0);
-
-    // <-- after it's done update body
-    testBox.updateBody();
+    physics.separate();
 
     // <-- works
     physics.checkAll(({ a, b }) => {

@@ -64,19 +64,30 @@ class System extends base_system_1.BaseSystem {
         });
     }
     /**
-     * separate (move away) colliders
+     * separate (move away) bodies
      */
     separate() {
-        this.checkAll(({ a, overlapV }) => {
-            // static bodies and triggers do not move back / separate
-            if (a.isTrigger) {
-                return false;
-            }
-            a.setPosition(a.x - overlapV.x, a.y - overlapV.y);
+        this.all().forEach((body) => {
+            this.separateBody(body);
         });
     }
     /**
-     * check one collider collisions with callback
+     * separate (move away) 1 body
+     */
+    separateBody(body) {
+        if (body.isStatic || body.isTrigger) {
+            return;
+        }
+        const offsets = { x: 0, y: 0 };
+        const addOffsets = ({ overlapV: { x, y } }) => {
+            offsets.x += x;
+            offsets.y += y;
+        };
+        this.checkOne(body, addOffsets);
+        body.setPosition(body.x - offsets.x, body.y - offsets.y);
+    }
+    /**
+     * check one body collisions with callback
      */
     checkOne(body, callback = () => true, response = this.response) {
         // no need to check static body collision
@@ -93,14 +104,13 @@ class System extends base_system_1.BaseSystem {
         return (0, optimized_1.some)(bodies, checkCollision);
     }
     /**
-     * check all colliders collisions with callback
+     * check all bodies collisions with callback
      */
     checkAll(callback, response = this.response) {
-        const bodies = this.all();
         const checkOne = (body) => {
             return this.checkOne(body, callback, response);
         };
-        return (0, optimized_1.some)(bodies, checkOne);
+        return (0, optimized_1.some)(this.all(), checkOne);
     }
     /**
      * get object potential colliders

@@ -30,15 +30,19 @@ export declare class System<TBody extends Body = Body> extends BaseSystem<TBody>
      */
     update(): void;
     /**
-     * separate (move away) colliders
+     * separate (move away) bodies
      */
     separate(): void;
     /**
-     * check one collider collisions with callback
+     * separate (move away) 1 body
+     */
+    separateBody(body: TBody): void;
+    /**
+     * check one body collisions with callback
      */
     checkOne(body: TBody, callback?: CheckCollisionCallback, response?: Response): boolean;
     /**
-     * check all colliders collisions with callback
+     * check all bodies collisions with callback
      */
     checkAll(callback: (response: Response) => void | boolean, response?: Response): boolean;
     /**

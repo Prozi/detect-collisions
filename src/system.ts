@@ -94,21 +94,34 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   }
 
   /**
-   * separate (move away) colliders
+   * separate (move away) bodies
    */
   separate(): void {
-    this.checkAll(({ a, overlapV }: Response) => {
-      // static bodies and triggers do not move back / separate
-      if (a.isTrigger) {
-        return false;
-      }
-
-      a.setPosition(a.x - overlapV.x, a.y - overlapV.y);
+    this.all().forEach((body) => {
+      this.separateBody(body);
     });
   }
 
   /**
-   * check one collider collisions with callback
+   * separate (move away) 1 body
+   */
+  separateBody(body: TBody): void {
+    if (body.isStatic || body.isTrigger) {
+      return;
+    }
+
+    const offsets = { x: 0, y: 0 };
+    const addOffsets = ({ overlapV: { x, y } }: Response) => {
+      offsets.x += x;
+      offsets.y += y;
+    };
+
+    this.checkOne(body, addOffsets);
+    body.setPosition(body.x - offsets.x, body.y - offsets.y);
+  }
+
+  /**
+   * check one body collisions with callback
    */
   checkOne(
     body: TBody,
@@ -134,18 +147,17 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   }
 
   /**
-   * check all colliders collisions with callback
+   * check all bodies collisions with callback
    */
   checkAll(
     callback: (response: Response) => void | boolean,
     response = this.response,
   ): boolean {
-    const bodies = this.all();
     const checkOne = (body: TBody) => {
       return this.checkOne(body, callback, response);
     };
 
-    return some(bodies, checkOne);
+    return some(this.all(), checkOne);
   }
 
   /**

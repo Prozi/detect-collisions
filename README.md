@@ -208,7 +208,13 @@ There is an easy way to handle overlap and separation of bodies during collision
 system.separate()
 ```
 
-This function provides a simple way to handle collisions without needing to manually calculate and negate overlap.
+This function provides a simple way to handle collisions of whole system, without needing to manually calculate and negate overlap.
+
+```ts
+system.separateBody(body)
+```
+
+This function provides a simple way to handle collisions of one body, without needing to manually calculate and negate overlap.
 
 ### Step 8: Cleaning Up
 

@@ -103,7 +103,10 @@
 <a id="md:step-7-system-separation" class="tsd-anchor"></a><h3><a href="#md:step-7-system-separation">Step 7: System Separation</a></h3><p>There is an easy way to handle overlap and separation of bodies during collisions. Use system.separate() after updating the system. This function takes into account <code>isTrigger</code> and <code>isStatic</code> flags on bodies.</p>
 <pre><code class="language-ts"><span class="hl-5">system</span><span class="hl-1">.</span><span class="hl-0">separate</span><span class="hl-1">()</span>
 </code><button>Copy</button></pre>
-<p>This function provides a simple way to handle collisions without needing to manually calculate and negate overlap.</p>
+<p>This function provides a simple way to handle collisions of whole system, without needing to manually calculate and negate overlap.</p>
+<pre><code class="language-ts"><span class="hl-5">system</span><span class="hl-1">.</span><span class="hl-0">separateBody</span><span class="hl-1">(</span><span class="hl-5">body</span><span class="hl-1">)</span>
+</code><button>Copy</button></pre>
+<p>This function provides a simple way to handle collisions of one body, without needing to manually calculate and negate overlap.</p>
 <a id="md:step-8-cleaning-up" class="tsd-anchor"></a><h3><a href="#md:step-8-cleaning-up">Step 8: Cleaning Up</a></h3><p>When you&#39;re done with a body, you should remove it from the system to free up memory and keep the collision checks efficient. You can do this with the remove method:</p>
 <pre><code class="language-ts"><span class="hl-5">system</span><span class="hl-1">.</span><span class="hl-0">remove</span><span class="hl-1">(</span><span class="hl-5">body</span><span class="hl-1">)</span>
 </code><button>Copy</button></pre>
