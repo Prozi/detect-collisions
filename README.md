@@ -171,15 +171,6 @@ For a direct collision check without broad-phase search, use `system.checkCollis
 
 Access detailed collision information in the system.response object, which includes properties like `a, b, overlap, overlapN, overlapV, aInB, and bInA`.
 
-In case of overlap during collision, subtract the overlap vector from the position of the body to eliminate the collision. This can be achieved as follows:
-
-```ts
-if (system.checkCollision(player, wall)) {
-  const { overlapV } = system.response
-  player.setPosition(player.x - overlapV.x, player.y - overlapV.y)
-}
-```
-
 ### Step 6: Collision Response
 
 After detecting a collision, you may want to respond or "react" to it in some way. This could be as simple as stopping a character from moving through a wall, or as complex as calculating the resulting velocities of a multi-object collision in a physics simulation.
@@ -187,20 +178,19 @@ After detecting a collision, you may want to respond or "react" to it in some wa
 Here's a simple example:
 
 ```ts
-system.checkAll((response: Response) => {
-  if (response.a.isPlayer && response.b.isWall) {
+system.checkAll(({ a: body, b: collider }: Response) => {
+  if (body.isPlayer && collider.isWall) {
     // Player can't move through walls
-    const { overlapV } = response
-    response.a.setPosition(response.a.x - overlapV.x, response.a.y - overlapV.y)
-  } else if (response.a.isBullet && response.b.isEnemy) {
+    system.separateBody(body)
+  } else if (body.isBullet && collider.isEnemy) {
     // Bullet hits enemy
-    system.remove(response.a) // Remove bullet
-    response.b.takeDamage() // Damage enemy
+    system.remove(body) // Remove bullet
+    collider.takeDamage() // Damage enemy
   }
 })
 ```
 
-### Step 7: System Separation
+### Step 7: Body Separation
 
 There is an easy way to handle overlap and separation of bodies during collisions. Use system.separate() after updating the system. This function takes into account `isTrigger` and `isStatic` flags on bodies.
 
