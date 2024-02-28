@@ -11,6 +11,7 @@ import {
 } from "../model";
 import { System } from "../system";
 import { dashLineTo, drawBVH, ensureVectorPoint, extendBody } from "../utils";
+import { BaseSystem } from "../base-system";
 
 /**
  * collider - circle
@@ -74,7 +75,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
   /**
    * reference to collision system
    */
-  system?: System;
+  system?: BaseSystem;
 
   /**
    * was the polygon modified and needs update in the next checkCollision

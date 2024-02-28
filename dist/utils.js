@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cloneResponse = exports.drawBVH = exports.drawPolygon = exports.getSATTest = exports.getBounceDirection = exports.mapArrayToVector = exports.mapVectorToArray = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
+exports.returnTrue = exports.cloneResponse = exports.drawBVH = exports.drawPolygon = exports.getSATTest = exports.getBounceDirection = exports.mapArrayToVector = exports.mapVectorToArray = exports.dashLineTo = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
 const sat_1 = require("sat");
 const intersect_1 = require("./intersect");
 const model_1 = require("./model");
@@ -257,3 +257,7 @@ function cloneResponse(response) {
     return clone;
 }
 exports.cloneResponse = cloneResponse;
+function returnTrue() {
+    return true;
+}
+exports.returnTrue = returnTrue;

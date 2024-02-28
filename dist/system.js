@@ -19,51 +19,6 @@ class System extends base_system_1.BaseSystem {
         this.response = new model_1.Response();
     }
     /**
-     * remove body aabb from collision tree
-     */
-    remove(body, equals) {
-        body.system = undefined;
-        return super.remove(body, equals);
-    }
-    /**
-     * re-insert body into collision tree and update its aabb
-     * every body can be part of only one system
-     */
-    insert(body) {
-        body.bbox = body.getAABBAsBBox();
-        if (body.system) {
-            // allow end if body inserted and not moved
-            if (!(0, utils_1.bodyMoved)(body)) {
-                return this;
-            }
-            // old bounding box *needs* to be removed
-            body.system.remove(body);
-        }
-        // only then we update min, max
-        body.minX = body.bbox.minX - body.padding;
-        body.minY = body.bbox.minY - body.padding;
-        body.maxX = body.bbox.maxX + body.padding;
-        body.maxY = body.bbox.maxY + body.padding;
-        // set system for later body.system.updateBody(body)
-        body.system = this;
-        // reinsert bounding box to collision tree
-        return super.insert(body);
-    }
-    /**
-     * updates body in collision tree
-     */
-    updateBody(body) {
-        body.updateBody();
-    }
-    /**
-     * update all bodies aabb
-     */
-    update() {
-        (0, optimized_1.forEach)(this.all(), (body) => {
-            this.updateBody(body);
-        });
-    }
-    /**
      * separate (move away) bodies
      */
     separate() {
@@ -91,7 +46,7 @@ class System extends base_system_1.BaseSystem {
     /**
      * check one body collisions with callback
      */
-    checkOne(body, callback = () => true, response = this.response) {
+    checkOne(body, callback = utils_1.returnTrue, response = this.response) {
         // no need to check static body collision
         if (body.isStatic) {
             return false;
@@ -115,48 +70,50 @@ class System extends base_system_1.BaseSystem {
         return (0, optimized_1.some)(this.all(), checkOne);
     }
     /**
-     * get object potential colliders
-     * @deprecated because it's slower to use than checkOne() or checkAll()
-     */
-    getPotentials(body) {
-        // filter here is required as collides with self
-        return (0, optimized_1.filter)(this.search(body), (candidate) => candidate !== body);
-    }
-    /**
      * check do 2 objects collide
      */
     checkCollision(bodyA, bodyB, response = this.response) {
-        // if any of bodies has padding, we can short return false by assesing the bbox without padding
+        // if any of bodies is not inserted
+        if (!bodyA.bbox || !bodyB.bbox) {
+            return false;
+        }
+        // if any of bodies has padding, we can assess the bboxes without padding
         if ((bodyA.padding || bodyB.padding) &&
-            (0, utils_1.notIntersectAABB)(bodyA.bbox || bodyA, bodyB.bbox || bodyB)) {
+            (0, utils_1.notIntersectAABB)(bodyA.bbox, bodyB.bbox)) {
             return false;
         }
         const sat = (0, utils_1.getSATTest)(bodyA, bodyB);
         // 99% of cases
         if (bodyA.isConvex && bodyB.isConvex) {
+            // always first clear response
             response.clear();
             return sat(bodyA, bodyB, response);
         }
         // more complex (non convex) cases
         const convexBodiesA = (0, intersect_1.ensureConvex)(bodyA);
         const convexBodiesB = (0, intersect_1.ensureConvex)(bodyB);
-        const overlapV = new model_1.SATVector();
+        let overlapX = 0;
+        let overlapY = 0;
         let collided = false;
         (0, optimized_1.forEach)(convexBodiesA, (convexBodyA) => {
             (0, optimized_1.forEach)(convexBodiesB, (convexBodyB) => {
+                // always first clear response
                 response.clear();
                 if (sat(convexBodyA, convexBodyB, response)) {
                     collided = true;
-                    overlapV.add(response.overlapV);
+                    overlapX += response.overlapV.x;
+                    overlapY += response.overlapV.y;
                 }
             });
         });
         if (collided) {
+            const vector = new model_1.SATVector(overlapX, overlapY);
             response.a = bodyA;
             response.b = bodyB;
-            response.overlapV = overlapV;
-            response.overlapN = overlapV.clone().normalize();
-            response.overlap = overlapV.len();
+            response.overlapV.x = overlapX;
+            response.overlapV.y = overlapY;
+            response.overlapN = vector.normalize();
+            response.overlap = vector.len();
             response.aInB = (0, utils_1.checkAInB)(bodyA, bodyB);
             response.bInA = (0, utils_1.checkAInB)(bodyB, bodyA);
         }
@@ -165,7 +122,7 @@ class System extends base_system_1.BaseSystem {
     /**
      * raycast to get collider of ray from start to end
      */
-    raycast(start, end, allow = () => true) {
+    raycast(start, end, allow = utils_1.returnTrue) {
         let minDistance = Infinity;
         let result = null;
         if (!this.ray) {
@@ -193,23 +150,6 @@ class System extends base_system_1.BaseSystem {
         });
         this.remove(this.ray);
         return result;
-    }
-    /**
-     * used to find body deep inside data with finder function returning boolean found or not
-     */
-    traverse(find, { children } = this.data) {
-        return children === null || children === void 0 ? void 0 : children.find((body, index) => {
-            if (!body) {
-                return false;
-            }
-            if (body.type && find(body, children, index)) {
-                return true;
-            }
-            // if callback returns true, ends forEach
-            if (body.children) {
-                this.traverse(find, body);
-            }
-        });
     }
 }
 exports.System = System;

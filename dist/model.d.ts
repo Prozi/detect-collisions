@@ -6,7 +6,7 @@ import { Ellipse } from "./bodies/ellipse";
 import { Line } from "./bodies/line";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
-import { System } from "./system";
+import { BaseSystem } from "./base-system";
 export { Polygon as DecompPolygon, Point as DecompPoint } from "poly-decomp";
 export { RBush, BBox, Response, SATVector, SATPolygon, SATCircle };
 export type CheckCollisionCallback = (response: Response) => void | boolean;
@@ -122,7 +122,7 @@ export interface BodyProps<TBody extends Body = Body> extends Required<BodyOptio
     /**
      * collisions system reference
      */
-    system?: System<TBody>;
+    system?: BaseSystem;
     /**
      * was the body modified and needs update in the next checkCollision
      */
@@ -165,3 +165,4 @@ export interface BodyProps<TBody extends Body = Body> extends Required<BodyOptio
     getAABBAsBBox(): BBox;
 }
 export type SATTest<T extends {} = Circle | Polygon | SATPolygon, Y extends {} = Circle | Polygon | SATPolygon> = (bodyA: T, bodyB: Y, response: Response) => boolean;
+export type TraverseFunction<TBody extends Body = Body> = (child: Leaf<TBody>, children: Leaf<TBody>[], index: number) => boolean | void;

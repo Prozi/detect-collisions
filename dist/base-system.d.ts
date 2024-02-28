@@ -4,20 +4,12 @@ import { Ellipse } from "./bodies/ellipse";
 import { Line } from "./bodies/line";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
-import { Body, BodyOptions, ChildrenData, Data, PotentialVector, RBush, Vector } from "./model";
+import { Body, BodyOptions, ChildrenData, Data, Leaf, PotentialVector, RBush, TraverseFunction, Vector } from "./model";
 /**
- * very base collision system
+ * very base collision system (create, insert, update, draw, remove)
  */
-export declare class BaseSystem<TBody extends Body> extends RBush<TBody> implements Data<TBody> {
+export declare class BaseSystem<TBody extends Body = Body> extends RBush<TBody> implements Data<TBody> {
     data: ChildrenData<TBody>;
-    /**
-     * draw exact bodies colliders outline
-     */
-    draw(context: CanvasRenderingContext2D): void;
-    /**
-     * draw bounding boxes hierarchy outline
-     */
-    drawBVH(context: CanvasRenderingContext2D): void;
     /**
      * create point at position with options and add to system
      */
@@ -42,4 +34,40 @@ export declare class BaseSystem<TBody extends Body> extends RBush<TBody> impleme
      * create polygon at position with options and add to system
      */
     createPolygon(position: PotentialVector, points: PotentialVector[], options?: BodyOptions): Polygon;
+    /**
+     * re-insert body into collision tree and update its aabb
+     * every body can be part of only one system
+     */
+    insert(body: TBody): RBush<TBody>;
+    /**
+     * updates body in collision tree
+     */
+    updateBody(body: TBody): void;
+    /**
+     * update all bodies aabb
+     */
+    update(): void;
+    /**
+     * draw exact bodies colliders outline
+     */
+    draw(context: CanvasRenderingContext2D): void;
+    /**
+     * draw bounding boxes hierarchy outline
+     */
+    drawBVH(context: CanvasRenderingContext2D): void;
+    /**
+     * remove body aabb from collision tree
+     */
+    remove(body: TBody, equals?: (a: TBody, b: TBody) => boolean): RBush<TBody>;
+    /**
+     * get object potential colliders
+     * @deprecated because it's slower to use than checkOne() or checkAll()
+     */
+    getPotentials(body: TBody): TBody[];
+    /**
+     * used to find body deep inside data with finder function returning boolean found or not
+     */
+    traverse(traverseFunction: TraverseFunction<TBody>, { children }?: {
+        children?: Leaf<TBody>[];
+    }): TBody | undefined;
 }

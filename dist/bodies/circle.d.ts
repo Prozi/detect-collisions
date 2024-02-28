@@ -1,7 +1,7 @@
 import { BBox } from "rbush";
 import { Circle as SATCircle } from "sat";
 import { BodyOptions, BodyProps, PotentialVector, SATVector, BodyType, Vector } from "../model";
-import { System } from "../system";
+import { BaseSystem } from "../base-system";
 /**
  * collider - circle
  */
@@ -53,7 +53,7 @@ export declare class Circle extends SATCircle implements BBox, BodyProps {
     /**
      * reference to collision system
      */
-    system?: System;
+    system?: BaseSystem;
     /**
      * was the polygon modified and needs update in the next checkCollision
      */

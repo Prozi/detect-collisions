@@ -102,7 +102,7 @@ describe("GIVEN Box", () => {
     expect(box.y).toBe(y);
   });
 
-  it("THEN even without inserting to system, gives collision results", () => {
+  it("THEN without inserting to system, gives 0 collision results", () => {
     const { Box, System } = require("../../src");
 
     // initialize a collision detection system
@@ -128,7 +128,7 @@ describe("GIVEN Box", () => {
       system.checkCollision(box, body),
     );
 
-    // correct result is 3
-    expect(collisions.length).toBe(3);
+    // correct result is 0
+    expect(collisions.length).toBe(0);
   });
 });

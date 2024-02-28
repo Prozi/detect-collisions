@@ -324,3 +324,7 @@ export function cloneResponse(response: Response) {
 
   return clone;
 }
+
+export function returnTrue() {
+  return true;
+}

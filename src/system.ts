@@ -1,5 +1,3 @@
-import RBush from "rbush";
-
 import { BaseSystem } from "./base-system";
 import { Line } from "./bodies/line";
 import {
@@ -16,16 +14,16 @@ import {
 import {
   distance,
   checkAInB,
-  bodyMoved,
   getSATTest,
   notIntersectAABB,
+  returnTrue,
 } from "./utils";
 import {
   intersectLineCircle,
   intersectLinePolygon,
   ensureConvex,
 } from "./intersect";
-import { filter, forEach, some } from "./optimized";
+import { forEach, some } from "./optimized";
 
 /**
  * collision system
@@ -36,62 +34,10 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
    */
   response: Response = new Response();
 
+  /**
+   * for raycasting
+   */
   protected ray!: Line;
-
-  /**
-   * remove body aabb from collision tree
-   */
-  remove(body: TBody, equals?: (a: TBody, b: TBody) => boolean): RBush<TBody> {
-    body.system = undefined;
-
-    return super.remove(body, equals);
-  }
-
-  /**
-   * re-insert body into collision tree and update its aabb
-   * every body can be part of only one system
-   */
-  insert(body: TBody): RBush<TBody> {
-    body.bbox = body.getAABBAsBBox();
-
-    if (body.system) {
-      // allow end if body inserted and not moved
-      if (!bodyMoved(body)) {
-        return this;
-      }
-
-      // old bounding box *needs* to be removed
-      body.system.remove(body);
-    }
-
-    // only then we update min, max
-    body.minX = body.bbox.minX - body.padding;
-    body.minY = body.bbox.minY - body.padding;
-    body.maxX = body.bbox.maxX + body.padding;
-    body.maxY = body.bbox.maxY + body.padding;
-
-    // set system for later body.system.updateBody(body)
-    body.system = this;
-
-    // reinsert bounding box to collision tree
-    return super.insert(body);
-  }
-
-  /**
-   * updates body in collision tree
-   */
-  updateBody(body: TBody): void {
-    body.updateBody();
-  }
-
-  /**
-   * update all bodies aabb
-   */
-  update(): void {
-    forEach(this.all(), (body: TBody) => {
-      this.updateBody(body);
-    });
-  }
 
   /**
    * separate (move away) bodies
@@ -128,7 +74,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
    */
   checkOne(
     body: TBody,
-    callback: CheckCollisionCallback = () => true,
+    callback: CheckCollisionCallback = returnTrue,
     response = this.response,
   ): boolean {
     // no need to check static body collision
@@ -164,15 +110,6 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   }
 
   /**
-   * get object potential colliders
-   * @deprecated because it's slower to use than checkOne() or checkAll()
-   */
-  getPotentials(body: TBody): TBody[] {
-    // filter here is required as collides with self
-    return filter(this.search(body), (candidate: TBody) => candidate !== body);
-  }
-
-  /**
    * check do 2 objects collide
    */
   checkCollision(
@@ -180,10 +117,15 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     bodyB: TBody,
     response = this.response,
   ): boolean {
-    // if any of bodies has padding, we can short return false by assesing the bbox without padding
+    // if any of bodies is not inserted
+    if (!bodyA.bbox || !bodyB.bbox) {
+      return false;
+    }
+
+    // if any of bodies has padding, we can assess the bboxes without padding
     if (
       (bodyA.padding || bodyB.padding) &&
-      notIntersectAABB(bodyA.bbox || bodyA, bodyB.bbox || bodyB)
+      notIntersectAABB(bodyA.bbox, bodyB.bbox)
     ) {
       return false;
     }
@@ -192,6 +134,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
 
     // 99% of cases
     if (bodyA.isConvex && bodyB.isConvex) {
+      // always first clear response
       response.clear();
 
       return sat(bodyA, bodyB, response);
@@ -200,26 +143,33 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     // more complex (non convex) cases
     const convexBodiesA = ensureConvex(bodyA);
     const convexBodiesB = ensureConvex(bodyB);
-    const overlapV = new SATVector();
+
+    let overlapX = 0;
+    let overlapY = 0;
     let collided = false;
 
     forEach(convexBodiesA, (convexBodyA) => {
       forEach(convexBodiesB, (convexBodyB) => {
+        // always first clear response
         response.clear();
 
         if (sat(convexBodyA, convexBodyB, response)) {
           collided = true;
-          overlapV.add(response.overlapV);
+          overlapX += response.overlapV.x;
+          overlapY += response.overlapV.y;
         }
       });
     });
 
     if (collided) {
+      const vector = new SATVector(overlapX, overlapY);
+
       response.a = bodyA;
       response.b = bodyB;
-      response.overlapV = overlapV;
-      response.overlapN = overlapV.clone().normalize();
-      response.overlap = overlapV.len();
+      response.overlapV.x = overlapX;
+      response.overlapV.y = overlapY;
+      response.overlapN = vector.normalize();
+      response.overlap = vector.len();
       response.aInB = checkAInB(bodyA, bodyB);
       response.bInA = checkAInB(bodyB, bodyA);
     }
@@ -233,7 +183,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   raycast(
     start: Vector,
     end: Vector,
-    allow: (body: TBody) => boolean = () => true,
+    allow: (body: TBody) => boolean = returnTrue,
   ): RaycastHit<TBody> | null {
     let minDistance = Infinity;
     let result: RaycastHit<TBody> | null = null;
@@ -270,32 +220,5 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     this.remove(this.ray as TBody);
 
     return result;
-  }
-
-  /**
-   * used to find body deep inside data with finder function returning boolean found or not
-   */
-  traverse(
-    find: (
-      child: Leaf<TBody>,
-      children: Leaf<TBody>[],
-      index: number,
-    ) => boolean | void,
-    { children }: { children?: Leaf<TBody>[] } = this.data,
-  ): TBody | undefined {
-    return children?.find((body, index) => {
-      if (!body) {
-        return false;
-      }
-
-      if (body.type && find(body, children, index)) {
-        return true;
-      }
-
-      // if callback returns true, ends forEach
-      if (body.children) {
-        this.traverse(find, body);
-      }
-    });
   }
 }

@@ -24,7 +24,7 @@ $ npm install detect-collisions
 
 For detailed documentation on the library's API, refer to the following link:
 
-https://prozi.github.io/detect-collisions/modules.html
+https://prozi.github.io/detect-collisions/
 
 ## Usage
 
