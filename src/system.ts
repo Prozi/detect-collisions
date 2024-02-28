@@ -117,7 +117,10 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     };
 
     this.checkOne(body, addOffsets);
-    body.setPosition(body.x - offsets.x, body.y - offsets.y);
+
+    if (offsets.x || offsets.y) {
+      body.setPosition(body.x - offsets.x, body.y - offsets.y);
+    }
   }
 
   /**

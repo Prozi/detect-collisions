@@ -84,7 +84,9 @@ class System extends base_system_1.BaseSystem {
             offsets.y += y;
         };
         this.checkOne(body, addOffsets);
-        body.setPosition(body.x - offsets.x, body.y - offsets.y);
+        if (offsets.x || offsets.y) {
+            body.setPosition(body.x - offsets.x, body.y - offsets.y);
+        }
     }
     /**
      * check one body collisions with callback

@@ -1366,7 +1366,9 @@ class System extends base_system_1.BaseSystem {
             offsets.y += y;
         };
         this.checkOne(body, addOffsets);
-        body.setPosition(body.x - offsets.x, body.y - offsets.y);
+        if (offsets.x || offsets.y) {
+            body.setPosition(body.x - offsets.x, body.y - offsets.y);
+        }
     }
     /**
      * check one body collisions with callback
@@ -3989,7 +3991,6 @@ class Stress {
 
     this.lastTime = Date.now();
     this.updateBody = this.updateBody.bind(this);
-    this.checkBounce = this.checkBounce.bind(this);
 
     this.start = () => {
       loop(this.update.bind(this));
@@ -4031,36 +4032,39 @@ class Stress {
       body.y + body.directionY * this.timeScale,
     );
 
-    this.physics.checkOne(body, this.checkBounce);
+    // separate + bounce
+    this.bounceBody(body);
   }
 
-  checkBounce({ a, b, overlapV }) {
-    this.bounce(a, b, overlapV);
-    a.rotationSpeed = (seededRandom() - seededRandom()) * 0.1;
-    a.setPosition(a.x - overlapV.x, a.y - overlapV.y);
-  }
+  bounceBody(body) {
+    const bounces = { x: 0, y: 0 };
+    const addBounces = ({ overlapV: { x, y } }) => {
+      bounces.x += x;
+      bounces.y += y;
+    };
 
-  bounce(a, b, overlapV) {
-    if (b.isStatic) {
-      // flip on wall
-      if (Math.abs(overlapV.x) > Math.abs(overlapV.y)) {
-        a.directionX *= -1;
-      } else {
-        a.directionY *= -1;
-      }
+    this.physics.checkOne(body, addBounces);
 
-      return;
+    if (bounces.x || bounces.y) {
+      const size = 0.5 * (body.scaleX + body.scaleY);
+      const bounce = getBounceDirection(body, {
+        x: body.x + bounces.x,
+        y: body.y + bounces.y,
+      });
+
+      bounce.scale(body.size).add({
+        x: body.directionX * size,
+        y: body.directionY * size,
+      });
+
+      const { x, y } = bounce.normalize();
+
+      body.directionX = x;
+      body.directionY = y;
+      body.rotationSpeed = (seededRandom() - seededRandom()) * 0.1;
+
+      body.setPosition(body.x - bounces.x, body.y - bounces.y);
     }
-
-    const bounce = getBounceDirection(a, b);
-    bounce.scale(b.size * 0.5 * (b.scaleX + b.scaleY)).add({
-      x: a.directionX * a.size,
-      y: a.directionY * a.size * 0.5 * (a.scaleX + a.scaleY),
-    });
-    const { x, y } = bounce.normalize();
-
-    a.directionX = x;
-    a.directionY = y;
   }
 
   createShape(large, size) {
