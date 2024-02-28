@@ -1,5 +1,5 @@
-const width = innerWidth || 1024;
-const height = innerHeight || 768;
+const width = window.innerWidth || 1024;
+const height = window.innerHeight || 768;
 
 class TestCanvas {
   constructor(test) {

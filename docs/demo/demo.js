@@ -3825,8 +3825,8 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;// Version 0.9
   \****************************/
 /***/ ((module) => {
 
-const width = innerWidth || 1024;
-const height = innerHeight || 768;
+const width = window.innerWidth || 1024;
+const height = window.innerHeight || 768;
 
 class TestCanvas {
   constructor(test) {
