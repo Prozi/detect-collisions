@@ -327,8 +327,10 @@ $ yarn
 $ yarn benchmark [milliseconds=1000]
 ```
 
-will show you the [Stress Demo](https://prozi.github.io/detect-collisions/demo/?stress) results without drawing,
-only using Detect-Collisions and with different _N_ amounts of dynamic, moving bodies
+- will show you the results of insertion test, and
+- [Stress Demo](https://prozi.github.io/detect-collisions/demo/?stress) live (moving bodies)
+
+with different _N_ amounts of bodies
 
 typical output:
 
