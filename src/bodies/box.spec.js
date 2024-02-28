@@ -128,7 +128,6 @@ describe("GIVEN Box", () => {
       system.checkCollision(box, body),
     );
 
-    // correct result is 0
     expect(collisions.length).toBe(0);
   });
 });

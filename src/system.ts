@@ -117,14 +117,10 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     bodyB: TBody,
     response = this.response,
   ): boolean {
-    // if any of bodies is not inserted
-    if (!bodyA.bbox || !bodyB.bbox) {
-      return false;
-    }
-
-    // if any of bodies has padding, we can assess the bboxes without padding
+    // assess the bodies real aabb without padding
     if (
-      (bodyA.padding || bodyB.padding) &&
+      !bodyA.bbox ||
+      !bodyB.bbox ||
       notIntersectAABB(bodyA.bbox, bodyB.bbox)
     ) {
       return false;

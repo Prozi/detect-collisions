@@ -73,12 +73,9 @@ class System extends base_system_1.BaseSystem {
      * check do 2 objects collide
      */
     checkCollision(bodyA, bodyB, response = this.response) {
-        // if any of bodies is not inserted
-        if (!bodyA.bbox || !bodyB.bbox) {
-            return false;
-        }
-        // if any of bodies has padding, we can assess the bboxes without padding
-        if ((bodyA.padding || bodyB.padding) &&
+        // assess the bodies real aabb without padding
+        if (!bodyA.bbox ||
+            !bodyB.bbox ||
             (0, utils_1.notIntersectAABB)(bodyA.bbox, bodyB.bbox)) {
             return false;
         }
