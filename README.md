@@ -33,8 +33,8 @@ https://prozi.github.io/detect-collisions/modules.html
 Detect-Collisions extends functionalities from RBush. To begin, establish a unique collision system.
 
 ```ts
-const { System } = require("detect-collisions");
-const system = new System();
+const { System } = require("detect-collisions")
+const system = new System()
 ```
 
 ### Step 2: Understand Body Attributes
@@ -64,14 +64,14 @@ Each body type has specific properties, for example, a `Box` has `width` & `heig
 Use `BodyOptions` as the last optional parameter during body creation.
 
 ```ts
-const { deg2rad } = require("detect-collisions");
+const { deg2rad } = require("detect-collisions")
 const options = {
   angle: deg2rad(90),
   isStatic: false,
   isTrigger: false,
   isCentered: false,
   padding: 0,
-};
+}
 ```
 
 Create body of various types using:
@@ -84,34 +84,34 @@ const {
   Line,
   Point,
   Polygon,
-} = require("detect-collisions");
+} = require("detect-collisions")
 
 // create with options, without insert
-const box = new Box(position, width, height, options);
-const circle = new Circle(position, radius, options);
-const ellipse = new Ellipse(position, radiusX, radiusY, step, options);
-const line = new Line(start, end, options);
-const point = new Point(position, options);
-const polygon = new Polygon(position, points, options);
+const box = new Box(position, width, height, options)
+const circle = new Circle(position, radius, options)
+const ellipse = new Ellipse(position, radiusX, radiusY, step, options)
+const line = new Line(start, end, options)
+const point = new Point(position, options)
+const polygon = new Polygon(position, points, options)
 ```
 
 Insert a body into the system:
 
 ```ts
 // insert any of the above
-system.insert(body);
+system.insert(body)
 ```
 
 Create and insert body in one step:
 
 ```ts
 // create with options, and insert
-const box = system.createBox(position, width, height, options);
-const circle = system.createCircle(position, radius, options);
-const ellipse = system.createEllipse(position, radiusX, radiusY, step, options);
-const line = system.createLine(start, end, options);
-const point = system.createPoint(position, options);
-const polygon = system.createPolygon(position, points, options);
+const box = system.createBox(position, width, height, options)
+const circle = system.createCircle(position, radius, options)
+const ellipse = system.createEllipse(position, radiusX, radiusY, step, options)
+const line = system.createLine(start, end, options)
+const point = system.createPoint(position, options)
+const polygon = system.createPolygon(position, points, options)
 ```
 
 ### Step 4: Manipulate Bodies
@@ -157,14 +157,14 @@ Check collisions for all bodies or a single body:
 // all bodies
 const collided = system.checkAll((response: Response) => {
   // if you want to end after first collision
-  return true;
-});
+  return true
+})
 
 // check for one `body`
 const collided = system.checkOne(body, (response: Response) => {
   // if you want to end after first collision
-  return true;
-});
+  return true
+})
 ```
 
 For a direct collision check without broad-phase search, use `system.checkCollision(body1, body2)`. However, this isn't recommended due to efficiency loss.
@@ -175,8 +175,8 @@ In case of overlap during collision, subtract the overlap vector from the positi
 
 ```ts
 if (system.checkCollision(player, wall)) {
-  const { overlapV } = system.response;
-  player.setPosition(player.x - overlapV.x, player.y - overlapV.y);
+  const { overlapV } = system.response
+  player.setPosition(player.x - overlapV.x, player.y - overlapV.y)
 }
 ```
 
@@ -190,17 +190,14 @@ Here's a simple example:
 system.checkAll((response: Response) => {
   if (response.a.isPlayer && response.b.isWall) {
     // Player can't move through walls
-    const { overlapV } = response;
-    response.a.setPosition(
-      response.a.x - overlapV.x,
-      response.a.y - overlapV.y
-    );
+    const { overlapV } = response
+    response.a.setPosition(response.a.x - overlapV.x, response.a.y - overlapV.y)
   } else if (response.a.isBullet && response.b.isEnemy) {
     // Bullet hits enemy
-    system.remove(response.a); // Remove bullet
-    response.b.takeDamage(); // Damage enemy
+    system.remove(response.a) // Remove bullet
+    response.b.takeDamage() // Damage enemy
   }
-});
+})
 ```
 
 ### Step 7: System Separation
@@ -208,7 +205,7 @@ system.checkAll((response: Response) => {
 There is an easy way to handle overlap and separation of bodies during collisions. Use system.separate() after updating the system. This function takes into account `isTrigger` and `isStatic` flags on bodies.
 
 ```ts
-system.separate();
+system.separate()
 ```
 
 This function provides a simple way to handle collisions without needing to manually calculate and negate overlap.
@@ -218,7 +215,7 @@ This function provides a simple way to handle collisions without needing to manu
 When you're done with a body, you should remove it from the system to free up memory and keep the collision checks efficient. You can do this with the remove method:
 
 ```ts
-system.remove(body);
+system.remove(body)
 ```
 
 This will remove the body from the system's internal data structures, preventing it from being included in future collision checks. If you keep a reference to the body, you can insert it again later with `system.insert(body)`.
@@ -233,18 +230,18 @@ And that's it! You're now ready to use the Detect-Collisions library in your pro
 // create self-destructing collider
 const testCollision = ({ x, y }, radius = 10) => {
   // create and add to tree
-  const circle = system.createCircle({ x, y }, radius);
+  const circle = system.createCircle({ x, y }, radius)
   // init as false
   const collided = system.checkOne(circle, () => {
     // ends iterating after first collision
-    return true;
-  });
+    return true
+  })
 
   // remove from tree
-  system.remove(circle);
+  system.remove(circle)
 
-  return collided ? system.response : null;
-};
+  return collided ? system.response : null
+}
 ```
 
 ## Handling Concave Polygons
@@ -256,37 +253,37 @@ As of version 6.8.0, Detect-Collisions fully supports non-convex or hollow polyg
 To facilitate debugging, Detect-Collisions allows you to visually represent the collision bodies. By invoking the `draw()` method and supplying a 2D context of a `<canvas>` element, you can draw all the bodies within a collision system.
 
 ```ts
-const canvas = document.createElement("canvas");
-const context = canvas.getContext("2d");
+const canvas = document.createElement("canvas")
+const context = canvas.getContext("2d")
 
-context.strokeStyle = "#FFFFFF";
-context.beginPath();
-system.draw(context);
-context.stroke();
+context.strokeStyle = "#FFFFFF"
+context.beginPath()
+system.draw(context)
+context.stroke()
 ```
 
 You can also opt to draw individual bodies.
 
 ```ts
-context.strokeStyle = "#FFFFFF";
-context.beginPath();
+context.strokeStyle = "#FFFFFF"
+context.beginPath()
 // draw specific body
-body.draw(context);
+body.draw(context)
 // draw whole system
-system.draw(context);
-context.stroke();
+system.draw(context)
+context.stroke()
 ```
 
 To assess the [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy), you can draw the BVH.
 
 ```ts
-context.strokeStyle = "#FFFFFF";
-context.beginPath();
+context.strokeStyle = "#FFFFFF"
+context.beginPath()
 // draw specific body bounding box
-body.drawBVH(context);
+body.drawBVH(context)
 // draw bounding volume hierarchy of the system
-system.drawBVH(context);
-context.stroke();
+system.drawBVH(context)
+context.stroke()
 ```
 
 ## Raycasting
@@ -294,14 +291,14 @@ context.stroke();
 Detect-Collisions provides the functionality to gather raycast data. Here's how:
 
 ```ts
-const start = { x: 0, y: 0 };
-const end = { x: 0, y: -10 };
-const hit = system.raycast(start, end);
+const start = { x: 0, y: 0 }
+const end = { x: 0, y: -10 }
+const hit = system.raycast(start, end)
 
 if (hit) {
-  const { point, body } = hit;
+  const { point, body } = hit
 
-  console.log({ point, body });
+  console.log({ point, body })
 }
 ```
 
@@ -336,19 +333,29 @@ only using Detect-Collisions and with different _N_ amounts of dynamic, moving b
 typical output:
 
 ```bash
+┌─────────┬─────────────────────────────┬──────────────────┬────────────────────────┬───────────┬─────────┬──────────┐
+│ (index) │          Task Name          │ Average Time (s) │ Standard Deviation (s) │    hz     │ p99 (s) │ p995 (s) │
+├─────────┼─────────────────────────────┼──────────────────┼────────────────────────┼───────────┼─────────┼──────────┤
+│    0    │  'non overlapping circles'  │      0.017       │         0.025          │ 58760.671 │  0.039  │  0.187   │
+│    1    │    'overlapping circles'    │      0.016       │         0.025          │ 61126.568 │  0.026  │  0.174   │
+│    2    │ 'non-overlapping triangles' │      0.059       │         0.033          │ 16978.184 │  0.267  │  0.279   │
+│    3    │   'overlapping triangles'   │      0.062       │         0.033          │ 16053.642 │  0.295  │  0.301   │
+│    4    │   'non-overlapping quad'    │      0.065       │         0.032          │ 15475.071 │  0.273  │   0.29   │
+│    5    │     'overlapping quad'      │      0.065       │         0.032          │ 15499.31  │  0.272  │  0.293   │
+└─────────┴─────────────────────────────┴──────────────────┴────────────────────────┴───────────┴─────────┴──────────┘
+
 ┌─────────┬────────────────────────────┬─────────┬────────────────────┬──────────┬─────────┐
 │ (index) │         Task Name          │ ops/sec │ Average Time (ns)  │  Margin  │ Samples │
 ├─────────┼────────────────────────────┼─────────┼────────────────────┼──────────┼─────────┤
-│    0    │ 'stress test, items=1000'  │  '295'  │ 3385692.610933974  │ '±2.87%' │   296   │
-│    1    │ 'stress test, items=2000'  │  '141'  │ 7059932.731406789  │ '±2.69%' │   142   │
-│    2    │ 'stress test, items=3000'  │  '80'   │ 12414747.956358356 │ '±2.22%' │   81    │
-│    3    │ 'stress test, items=4000'  │  '57'   │ 17436071.825438533 │ '±4.02%' │   58    │
-│    4    │ 'stress test, items=5000'  │  '39'   │ 25130633.383989334 │ '±2.94%' │   40    │
-│    5    │ 'stress test, items=6000'  │  '30'   │ 32609690.800789863 │ '±2.89%' │   31    │
-│    6    │ 'stress test, items=7000'  │  '21'   │ 46937344.686551526 │ '±2.27%' │   22    │
-│    7    │ 'stress test, items=8000'  │  '15'   │ 63767726.480960846 │ '±3.27%' │   16    │
-│    8    │ 'stress test, items=9000'  │  '13'   │ 74750863.00713675  │ '±3.77%' │   14    │
-│    9    │ 'stress test, items=10000' │  '12'   │ 81232352.54104322  │ '±5.38%' │   13    │
+│    0    │ 'stress test, items=1000'  │  '304'  │ 3286157.2195760543 │ '±1.57%' │   305   │
+│    1    │ 'stress test, items=2000'  │  '158'  │ 6301633.584822686  │ '±1.61%' │   159   │
+│    2    │ 'stress test, items=3000'  │  '88'   │ 11331081.471918674 │ '±2.10%' │   89    │
+│    3    │ 'stress test, items=4000'  │  '46'   │ 21423273.978556726 │ '±4.51%' │   47    │
+│    4    │ 'stress test, items=5000'  │  '41'   │ 24252854.19076681  │ '±3.05%' │   42    │
+│    5    │ 'stress test, items=6000'  │  '29'   │ 33564370.93379597  │ '±2.95%' │   30    │
+│    6    │ 'stress test, items=7000'  │  '22'   │  43836614.2179331  │ '±5.22%' │   23    │
+│    7    │ 'stress test, items=8000'  │  '16'   │ 62380963.11776077  │ '±2.69%' │   17    │
+│    8    │ 'stress test, items=9000'  │  '13'   │ 71631407.64326921  │ '±4.61%' │   14    │
+│    9    │ 'stress test, items=10000' │  '11'   │ 88500816.16640091  │ '±3.15%' │   12    │
 └─────────┴────────────────────────────┴─────────┴────────────────────┴──────────┴─────────┘
-✨  Done in 12.21s.
 ```
