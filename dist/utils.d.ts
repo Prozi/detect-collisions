@@ -1,8 +1,8 @@
 import { BBox } from "rbush";
 import { Point as DecompPoint } from "poly-decomp";
-import { Response, testCircleCircle, testCirclePolygon, testPolygonCircle, testPolygonPolygon, Vector as SATVector } from "sat";
+import { Response, Vector as SATVector } from "sat";
 import { Polygon } from "./bodies/polygon";
-import { Body, BodyOptions, PotentialVector, SATPolygon, Vector } from "./model";
+import { Body, BodyOptions, PotentialVector, SATPolygon, Vector, SATTest } from "./model";
 export declare const DEG2RAD: number;
 export declare const RAD2DEG: number;
 /**
@@ -18,27 +18,27 @@ export declare function rad2deg(radians: number): number;
  */
 export declare function createEllipse(radiusX: number, radiusY?: number, step?: number): SATVector[];
 /**
- * creates box polygon points
+ * creates box shaped polygon points
  */
 export declare function createBox(width: number, height: number): SATVector[];
 /**
- * ensure Vector point
+ * ensure SATVector type point result
  */
 export declare function ensureVectorPoint(point?: PotentialVector): SATVector;
 /**
  * ensure Vector points (for polygon) in counter-clockwise order
  */
-export declare function ensurePolygonPoints(points: PotentialVector[]): SATVector[];
+export declare function ensurePolygonPoints(points?: PotentialVector[]): SATVector[];
 /**
  * get distance between two Vector points
  */
-export declare function distance(a: Vector, b: Vector): number;
+export declare function distance(bodyA: Vector, bodyB: Vector): number;
 /**
- * check direction of polygon
+ * check [is clockwise] direction of polygon
  */
 export declare function clockwise(points: Vector[]): boolean;
 /**
- * used for all types of bodies
+ * used for all types of bodies in constructor
  */
 export declare function extendBody(body: Body, options?: BodyOptions): void;
 /**
@@ -48,29 +48,25 @@ export declare function bodyMoved(body: Body): boolean;
 /**
  * returns true if two boxes not intersect
  */
-export declare function notIntersectAABB(a: BBox, b: BBox): boolean;
+export declare function notIntersectAABB(bodyA: BBox, bodyB: BBox): boolean;
 /**
  * checks if two boxes intersect
  */
-export declare function intersectAABB(a: BBox, b: BBox): boolean;
+export declare function intersectAABB(bodyA: BBox, bodyB: BBox): boolean;
 /**
  * checks if body a is in body b
  */
-export declare function checkAInB(a: Body, b: Body): boolean;
+export declare function checkAInB(bodyA: Body, bodyB: Body): boolean;
 /**
  * clone sat vector points array into vector points array
  */
 export declare function clonePointsArray(points: SATVector[]): Vector[];
 /**
- * draws dashed line on canvas context
- */
-export declare function dashLineTo(context: CanvasRenderingContext2D, fromX: number, fromY: number, toX: number, toY: number, dash?: number, gap?: number): void;
-/**
- * change format from poly-decomp to SAT.js
+ * change format from SAT.js to poly-decomp
  */
 export declare function mapVectorToArray({ x, y }?: Vector): DecompPoint;
 /**
- * change format from SAT.js to poly-decomp
+ * change format from poly-decomp to SAT.js
  */
 export declare function mapArrayToVector([x, y]?: DecompPoint): Vector;
 /**
@@ -80,7 +76,11 @@ export declare function getBounceDirection(body: Vector, collider: Vector): SATV
 /**
  * returns correct sat.js testing function based on body types
  */
-export declare function getSATTest(body: Body, wall: Body): typeof testCircleCircle | typeof testCirclePolygon | typeof testPolygonCircle | typeof testPolygonPolygon;
+export declare function getSATTest(bodyA: Body, bodyB: Body): SATTest;
+/**
+ * draws dashed line on canvas context
+ */
+export declare function dashLineTo(context: CanvasRenderingContext2D, fromX: number, fromY: number, toX: number, toY: number, dash?: number, gap?: number): void;
 /**
  * draw polygon
  */
@@ -88,11 +88,14 @@ export declare function drawPolygon(context: CanvasRenderingContext2D, { pos, ca
     pos: Vector;
 }, isTrigger?: boolean): void;
 /**
- * draw body bounding body
+ * draw body bounding body box
  */
 export declare function drawBVH(context: CanvasRenderingContext2D, body: Body): void;
 /**
  * clone response object returning new response with previous ones values
  */
 export declare function cloneResponse(response: Response): Response;
+/**
+ * dummy fn used as default, for optimization
+ */
 export declare function returnTrue(): boolean;

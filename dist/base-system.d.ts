@@ -4,7 +4,7 @@ import { Ellipse } from "./bodies/ellipse";
 import { Line } from "./bodies/line";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
-import { Body, BodyOptions, ChildrenData, Data, Leaf, PotentialVector, RBush, TraverseFunction, Vector } from "./model";
+import { Body, BodyOptions, ChildrenData, Data, InTest, Leaf, PotentialVector, RBush, TraverseFunction, Vector } from "./model";
 /**
  * very base collision system (create, insert, update, draw, remove)
  */
@@ -58,7 +58,7 @@ export declare class BaseSystem<TBody extends Body = Body> extends RBush<TBody> 
     /**
      * remove body aabb from collision tree
      */
-    remove(body: TBody, equals?: (a: TBody, b: TBody) => boolean): RBush<TBody>;
+    remove(body: TBody, equals?: InTest<TBody>): RBush<TBody>;
     /**
      * get object potential colliders
      * @deprecated because it's slower to use than checkOne() or checkAll()

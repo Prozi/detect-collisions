@@ -38,13 +38,13 @@ exports.pointOnCircle = pointOnCircle;
 /**
  * https://stackoverflow.com/a/68197894/1749528
  */
-function circleInCircle(a, b) {
-    const x1 = a.pos.x;
-    const y1 = a.pos.y;
-    const x2 = b.pos.x;
-    const y2 = b.pos.y;
-    const r1 = a.r;
-    const r2 = b.r;
+function circleInCircle(bodyA, bodyB) {
+    const x1 = bodyA.pos.x;
+    const y1 = bodyA.pos.y;
+    const x2 = bodyB.pos.x;
+    const y2 = bodyB.pos.y;
+    const r1 = bodyA.r;
+    const r2 = bodyB.r;
     const distSq = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
     return distSq + r2 === r1 || distSq + r2 < r1;
 }

@@ -18,7 +18,7 @@ export declare function pointOnCircle(point: Vector, circle: Pick<Circle, "pos" 
 /**
  * https://stackoverflow.com/a/68197894/1749528
  */
-export declare function circleInCircle(a: Pick<Circle, "pos" | "r">, b: Pick<Circle, "pos" | "r">): boolean;
+export declare function circleInCircle(bodyA: Pick<Circle, "pos" | "r">, bodyB: Pick<Circle, "pos" | "r">): boolean;
 /**
  * https://stackoverflow.com/a/68197894/1749528
  */
