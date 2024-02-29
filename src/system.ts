@@ -126,7 +126,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
       return false;
     }
 
-    const sat = getSATTest(bodyA, bodyB) as SATTest;
+    const sat = getSATTest(bodyA, bodyB);
 
     // 99% of cases
     if (bodyA.isConvex && bodyB.isConvex) {

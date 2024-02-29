@@ -205,6 +205,11 @@ export type SATTest<
   Y extends {} = Circle | Polygon | SATPolygon,
 > = (bodyA: T, bodyB: Y, response: Response) => boolean;
 
+export type InTest<TBody extends Body = Body> = (
+  bodyA: TBody,
+  bodyB: TBody,
+) => boolean;
+
 export type TraverseFunction<TBody extends Body = Body> = (
   child: Leaf<TBody>,
   children: Leaf<TBody>[],

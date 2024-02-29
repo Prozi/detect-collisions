@@ -23,10 +23,47 @@ import {
   SATPolygon,
   BodyType,
   Vector,
+  SATTest,
+  InTest,
 } from "./model";
 import { forEach, map } from "./optimized";
 
+/* helpers for faster getSATTest() and checkAInB() */
+
+const testMap = {
+  satCircleCircle: testCircleCircle,
+  satCirclePolygon: testCirclePolygon,
+  satPolygonCircle: testPolygonCircle,
+  satPolygonPolygon: testPolygonPolygon,
+  inCircleCircle: circleInCircle,
+  inCirclePolygon: circleInPolygon,
+  inPolygonCircle: polygonInCircle,
+  inPolygonPolygon: polygonInPolygon,
+};
+
+function createMap<T = SATTest | InTest>(
+  bodyType: BodyType.Circle | BodyType.Polygon,
+  testType: "sat" | "in",
+): Record<BodyType, T> {
+  return Object.values(BodyType).reduce(
+    (result, type) => ({
+      ...result,
+      [type]:
+        type === BodyType.Circle
+          ? testMap[`${testType}${bodyType}Circle`]
+          : testMap[`${testType}${bodyType}Polygon`],
+    }),
+    {} as Record<BodyType, T>,
+  );
+}
+
+const circleSATFunctions = createMap<SATTest>(BodyType.Circle, "sat");
+const circleInFunctions = createMap<InTest>(BodyType.Circle, "in");
+const polygonSATFunctions = createMap<SATTest>(BodyType.Polygon, "sat");
+const polygonInFunctions = createMap<InTest>(BodyType.Polygon, "in");
+
 export const DEG2RAD = Math.PI / 180;
+
 export const RAD2DEG = 180 / Math.PI;
 
 /**
@@ -53,18 +90,21 @@ export function createEllipse(
 ): SATVector[] {
   const steps: number = Math.PI * Math.hypot(radiusX, radiusY) * 2;
   const length: number = Math.max(8, Math.ceil(steps / Math.max(1, step)));
+  const ellipse: SATVector[] = [];
 
-  return Array.from({ length }, (_: unknown, index: number) => {
+  for (let index = 0; index < length; index++) {
     const value: number = (index / length) * 2 * Math.PI;
     const x: number = Math.cos(value) * radiusX;
     const y: number = Math.sin(value) * radiusY;
 
-    return new SATVector(x, y);
-  });
+    ellipse.push(new SATVector(x, y));
+  }
+
+  return ellipse;
 }
 
 /**
- * creates box polygon points
+ * creates box shaped polygon points
  */
 export function createBox(width: number, height: number): SATVector[] {
   return [
@@ -76,7 +116,7 @@ export function createBox(width: number, height: number): SATVector[] {
 }
 
 /**
- * ensure Vector point
+ * ensure SATVector type point result
  */
 export function ensureVectorPoint(point: PotentialVector = {}): SATVector {
   return point instanceof SATVector
@@ -87,11 +127,9 @@ export function ensureVectorPoint(point: PotentialVector = {}): SATVector {
 /**
  * ensure Vector points (for polygon) in counter-clockwise order
  */
-export function ensurePolygonPoints(points: PotentialVector[]): SATVector[] {
-  if (!points) {
-    throw new Error("No points array provided");
-  }
-
+export function ensurePolygonPoints(
+  points: PotentialVector[] = [],
+): SATVector[] {
   const polygonPoints: SATVector[] = map(points, ensureVectorPoint);
 
   return clockwise(polygonPoints) ? polygonPoints.reverse() : polygonPoints;
@@ -100,36 +138,41 @@ export function ensurePolygonPoints(points: PotentialVector[]): SATVector[] {
 /**
  * get distance between two Vector points
  */
-export function distance(a: Vector, b: Vector): number {
-  return Math.hypot(a.x - b.x, a.y - b.y);
+export function distance(bodyA: Vector, bodyB: Vector): number {
+  const xDiff = bodyA.x - bodyB.x;
+  const yDiff = bodyA.y - bodyB.y;
+
+  return Math.hypot(xDiff, yDiff);
 }
 
 /**
- * check direction of polygon
+ * check [is clockwise] direction of polygon
  */
 export function clockwise(points: Vector[]): boolean {
+  const length = points.length;
   let sum = 0;
 
-  for (let i = 0; i < points.length; i++) {
-    const v1 = points[i];
-    const v2 = points[(i + 1) % points.length];
+  forEach(points, (v1, index) => {
+    const v2 = points[(index + 1) % length];
 
     sum += (v2.x - v1.x) * (v2.y + v1.y);
-  }
+  });
 
   return sum > 0;
 }
 
 /**
- * used for all types of bodies
+ * used for all types of bodies in constructor
  */
 export function extendBody(body: Body, options?: BodyOptions): void {
   body.isStatic = !!options?.isStatic;
   body.isTrigger = !!options?.isTrigger;
   body.padding = options?.padding || 0;
+
   if (body.type !== BodyType.Circle) {
     body.isCentered = options?.isCentered || false;
   }
+
   body.setAngle(options?.angle || 0);
 }
 
@@ -137,57 +180,84 @@ export function extendBody(body: Body, options?: BodyOptions): void {
  * check if body moved outside of its padding
  */
 export function bodyMoved(body: Body): boolean {
+  const { bbox, minX, minY, maxX, maxY } = body;
+
   return (
-    body.bbox.minX < body.minX ||
-    body.bbox.minY < body.minY ||
-    body.bbox.maxX > body.maxX ||
-    body.bbox.maxY > body.maxY
+    bbox.minX < minX || bbox.minY < minY || bbox.maxX > maxX || bbox.maxY > maxY
   );
 }
 
 /**
  * returns true if two boxes not intersect
  */
-export function notIntersectAABB(a: BBox, b: BBox): boolean {
+export function notIntersectAABB(bodyA: BBox, bodyB: BBox): boolean {
   return (
-    b.minX > a.maxX || b.minY > a.maxY || b.maxX < a.minX || b.maxY < a.minY
+    bodyB.minX > bodyA.maxX ||
+    bodyB.minY > bodyA.maxY ||
+    bodyB.maxX < bodyA.minX ||
+    bodyB.maxY < bodyA.minY
   );
 }
 
 /**
  * checks if two boxes intersect
  */
-export function intersectAABB(a: BBox, b: BBox): boolean {
-  return !notIntersectAABB(a, b);
+export function intersectAABB(bodyA: BBox, bodyB: BBox): boolean {
+  return !notIntersectAABB(bodyA, bodyB);
 }
 
 /**
  * checks if body a is in body b
  */
-export function checkAInB(a: Body, b: Body): boolean {
-  if (a.type === BodyType.Circle) {
-    if (b.type !== BodyType.Circle) {
-      return circleInPolygon(a, b);
-    }
+export function checkAInB(bodyA: Body, bodyB: Body): boolean {
+  const check =
+    bodyA.type === BodyType.Circle ? circleInFunctions : polygonInFunctions;
 
-    return circleInCircle(a, b);
-  }
-
-  if (b.type === BodyType.Circle) {
-    return polygonInCircle(a, b);
-  }
-
-  return polygonInPolygon(a, b);
+  return check[bodyB.type](bodyA, bodyB);
 }
 
 /**
  * clone sat vector points array into vector points array
  */
 export function clonePointsArray(points: SATVector[]): Vector[] {
-  return map(points, ({ x, y }: Vector) => ({
-    x,
-    y,
-  }));
+  return map(points, ({ x, y }: Vector) => ({ x, y }));
+}
+
+/**
+ * change format from SAT.js to poly-decomp
+ */
+export function mapVectorToArray(
+  { x, y }: Vector = { x: 0, y: 0 },
+): DecompPoint {
+  return [x, y];
+}
+
+/**
+ * change format from poly-decomp to SAT.js
+ */
+export function mapArrayToVector([x, y]: DecompPoint = [0, 0]): Vector {
+  return { x, y };
+}
+
+/**
+ * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
+ */
+export function getBounceDirection(body: Vector, collider: Vector): SATVector {
+  const v2 = new SATVector(collider.x - body.x, collider.y - body.y);
+  const v1 = new SATVector(body.x - collider.x, body.y - collider.y);
+  const len = v1.dot(v2.normalize()) * 2;
+
+  return new SATVector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
+}
+
+/**
+ * returns correct sat.js testing function based on body types
+ */
+export function getSATTest(bodyA: Body, bodyB: Body): SATTest {
+  const check =
+    bodyA.type === BodyType.Circle ? circleSATFunctions : polygonSATFunctions;
+
+  return check[bodyB.type];
 }
 
 /**
@@ -214,53 +284,12 @@ export function dashLineTo(
 
   while (dist > 0) {
     const step = Math.min(dist, dash);
-
     context.moveTo(posX, posY);
     context.lineTo(posX + offsetX * step, posY + offsetY * step);
-
     posX += offsetX * (dash + gap);
     posY += offsetY * (dash + gap);
-
     dist -= dash + gap;
   }
-}
-
-/**
- * change format from poly-decomp to SAT.js
- */
-export function mapVectorToArray(
-  { x, y }: Vector = { x: 0, y: 0 },
-): DecompPoint {
-  return [x, y];
-}
-
-/**
- * change format from SAT.js to poly-decomp
- */
-export function mapArrayToVector([x, y]: DecompPoint = [0, 0]): Vector {
-  return { x, y };
-}
-
-/**
- * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
- */
-export function getBounceDirection(body: Vector, collider: Vector): SATVector {
-  const v2 = new SATVector(collider.x - body.x, collider.y - body.y);
-  const v1 = new SATVector(body.x - collider.x, body.y - collider.y);
-  const len = v1.dot(v2.normalize()) * 2;
-
-  return new SATVector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
-}
-
-/**
- * returns correct sat.js testing function based on body types
- */
-export function getSATTest(body: Body, wall: Body) {
-  if (body.type === BodyType.Circle) {
-    return wall.type === BodyType.Circle ? testCircleCircle : testCirclePolygon;
-  }
-
-  return wall.type === BodyType.Circle ? testPolygonCircle : testPolygonPolygon;
 }
 
 /**
@@ -284,13 +313,12 @@ export function drawPolygon(
     context.moveTo(fromX, fromY);
   }
 
-  forEach(calcPoints, (point: Vector, index: number) => {
+  forEach(calcPoints, (point, index) => {
     const toX = pos.x + point.x;
     const toY = pos.y + point.y;
 
     if (isTrigger) {
       const prev = calcPoints[index - 1] || lastPoint;
-
       dashLineTo(context, pos.x + prev.x, pos.y + prev.y, toX, toY);
     } else {
       context.lineTo(toX, toY);
@@ -299,7 +327,7 @@ export function drawPolygon(
 }
 
 /**
- * draw body bounding body
+ * draw body bounding body box
  */
 export function drawBVH(context: CanvasRenderingContext2D, body: Body) {
   drawPolygon(context, {
@@ -313,18 +341,21 @@ export function drawBVH(context: CanvasRenderingContext2D, body: Body) {
  */
 export function cloneResponse(response: Response) {
   const clone = new Response();
-
-  clone.a = response.a;
-  clone.b = response.b;
-  clone.overlap = response.overlap;
-  clone.overlapN = response.overlapN.clone();
-  clone.overlapV = response.overlapV.clone();
-  clone.aInB = response.aInB;
-  clone.bInA = response.bInA;
+  const { a, b, overlap, overlapN, overlapV, aInB, bInA } = response;
+  clone.a = a;
+  clone.b = b;
+  clone.overlap = overlap;
+  clone.overlapN = overlapN.clone();
+  clone.overlapV = overlapV.clone();
+  clone.aInB = aInB;
+  clone.bInA = bInA;
 
   return clone;
 }
 
+/**
+ * dummy fn used as default, for optimization
+ */
 export function returnTrue() {
   return true;
 }

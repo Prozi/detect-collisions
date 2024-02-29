@@ -68,15 +68,15 @@ export function pointOnCircle(
  * https://stackoverflow.com/a/68197894/1749528
  */
 export function circleInCircle(
-  a: Pick<Circle, "pos" | "r">,
-  b: Pick<Circle, "pos" | "r">,
+  bodyA: Pick<Circle, "pos" | "r">,
+  bodyB: Pick<Circle, "pos" | "r">,
 ) {
-  const x1 = a.pos.x;
-  const y1 = a.pos.y;
-  const x2 = b.pos.x;
-  const y2 = b.pos.y;
-  const r1 = a.r;
-  const r2 = b.r;
+  const x1 = bodyA.pos.x;
+  const y1 = bodyA.pos.y;
+  const x2 = bodyB.pos.x;
+  const y2 = bodyB.pos.y;
+  const r1 = bodyA.r;
+  const r2 = bodyB.r;
   const distSq = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 
   return distSq + r2 === r1 || distSq + r2 < r1;

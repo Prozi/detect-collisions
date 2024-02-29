@@ -9,6 +9,7 @@ import {
   BodyOptions,
   ChildrenData,
   Data,
+  InTest,
   Leaf,
   PotentialVector,
   RBush,
@@ -185,7 +186,7 @@ export class BaseSystem<TBody extends Body = Body>
   /**
    * remove body aabb from collision tree
    */
-  remove(body: TBody, equals?: (a: TBody, b: TBody) => boolean): RBush<TBody> {
+  remove(body: TBody, equals?: InTest<TBody>): RBush<TBody> {
     body.system = undefined;
 
     return super.remove(body, equals);

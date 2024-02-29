@@ -32,8 +32,6 @@ describe("GIVEN System", () => {
 
     // <-- works
     physics.checkAll(({ a, b }) => {
-      console.log({ a: a.pos, b: b.pos });
-
       // <-- doesn't collide or run this code
       expect(true).toBe(false);
     });
