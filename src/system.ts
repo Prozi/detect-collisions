@@ -43,7 +43,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
    * separate (move away) bodies
    */
   separate(): void {
-    this.all().forEach((body) => {
+    forEach(this.all(), (body: TBody) => {
       this.separateBody(body);
     });
   }
