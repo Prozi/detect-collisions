@@ -57,7 +57,7 @@ export const filter = <T>(
   array: T[],
   callback: (item: T, index: number) => unknown,
 ): T[] => {
-  const output = [];
+  const output = new Array<T>;
 
   for (let i = 0, l = array.length; i < l; i++) {
     const item = array[i];
@@ -79,9 +79,10 @@ export const map = <T, Y>(
   array: T[],
   callback: (item: T, index: number) => Y,
 ): Y[] => {
-  const output = new Array<Y>(array.length);
+  const l = array.length;
+  const output = new Array<Y>(l);
 
-  for (let i = 0, l = array.length; i < l; i++) {
+  for (let i = 0; i < l; i++) {
     output[i] = callback(array[i], i);
   }
 
