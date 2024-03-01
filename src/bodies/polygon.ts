@@ -197,7 +197,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    * allow approx getting of scale
    */
   get scale(): number {
-    return this.scaleVector.x;
+    return (this.scaleVector.x + this.scaleVector.y) / 2;
   }
 
   /**
