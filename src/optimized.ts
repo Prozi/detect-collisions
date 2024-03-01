@@ -57,7 +57,7 @@ export const filter = <T>(
   array: T[],
   callback: (item: T, index: number) => unknown,
 ): T[] => {
-  const output = new Array<T>;
+  const output = new Array<T>();
 
   for (let i = 0, l = array.length; i < l; i++) {
     const item = array[i];
