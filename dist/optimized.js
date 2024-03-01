@@ -46,7 +46,7 @@ exports.every = every;
  * basic benchmark: https://jsbench.me/o1le77ev4l
  */
 const filter = (array, callback) => {
-    const output = [];
+    const output = new Array();
     for (let i = 0, l = array.length; i < l; i++) {
         const item = array[i];
         if (callback(item, i)) {
@@ -62,8 +62,9 @@ exports.filter = filter;
  * basic benchmark: https://jsbench.me/oyle77vbpc
  */
 const map = (array, callback) => {
-    const output = new Array(array.length);
-    for (let i = 0, l = array.length; i < l; i++) {
+    const l = array.length;
+    const output = new Array(l);
+    for (let i = 0; i < l; i++) {
         output[i] = callback(array[i], i);
     }
     return output;

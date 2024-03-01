@@ -22,7 +22,7 @@ class System extends base_system_1.BaseSystem {
      * separate (move away) bodies
      */
     separate() {
-        this.all().forEach((body) => {
+        (0, optimized_1.forEach)(this.all(), (body) => {
             this.separateBody(body);
         });
     }
