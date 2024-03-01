@@ -46,7 +46,7 @@ exports.every = every;
  * basic benchmark: https://jsbench.me/o1le77ev4l
  */
 const filter = (array, callback) => {
-    const output = new Array();
+    const output = [];
     for (let i = 0, l = array.length; i < l; i++) {
         const item = array[i];
         if (callback(item, i)) {
