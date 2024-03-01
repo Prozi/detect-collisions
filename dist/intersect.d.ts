@@ -7,7 +7,7 @@ import { Point } from "./bodies/point";
 /**
  * replace body with array of related convex polygons
  */
-export declare function ensureConvex<T extends Body = Circle | Point | Polygon>(body: T): (T | SATPolygon)[];
+export declare function ensureConvex<TBody extends Body = Circle | Point | Polygon>(body: TBody): (TBody | SATPolygon)[];
 export declare function polygonInCircle(polygon: Polygon, circle: Pick<Circle, "pos" | "r">): boolean;
 export declare function pointInPolygon(point: Vector, polygon: Polygon): boolean;
 export declare function polygonInPolygon(polygonA: Polygon, polygonB: Polygon): boolean;

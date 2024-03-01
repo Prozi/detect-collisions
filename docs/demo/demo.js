@@ -706,7 +706,7 @@ class Polygon extends sat_1.Polygon {
          * scale Vector of body
          */
         this.scaleVector = { x: 1, y: 1 };
-        if (!(points === null || points === void 0 ? void 0 : points.length)) {
+        if (!points.length) {
             throw new Error("No points in polygon");
         }
         (0, utils_1.extendBody)(this, options);
@@ -766,7 +766,7 @@ class Polygon extends sat_1.Polygon {
      * allow approx getting of scale
      */
     get scale() {
-        return this.scaleVector.x;
+        return (this.scaleVector.x + this.scaleVector.y) / 2;
     }
     /**
      * allow easier setting of scale
