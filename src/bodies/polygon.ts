@@ -126,7 +126,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   ) {
     super(ensureVectorPoint(position), ensurePolygonPoints(points));
 
-    if (!points?.length) {
+    if (!points.length) {
       throw new Error("No points in polygon");
     }
 
