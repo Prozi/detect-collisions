@@ -10,9 +10,9 @@ import { Point } from "./bodies/point";
 /**
  * replace body with array of related convex polygons
  */
-export function ensureConvex<T extends Body = Circle | Point | Polygon>(
-  body: T,
-): (T | SATPolygon)[] {
+export function ensureConvex<TBody extends Body = Circle | Point | Polygon>(
+  body: TBody,
+): (TBody | SATPolygon)[] {
   if (body.isConvex || body.type !== BodyType.Polygon) {
     return [body];
   }
