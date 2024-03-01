@@ -1,7 +1,7 @@
 /// <reference types="sat" />
 import { BaseSystem } from "./base-system";
 import { Line } from "./bodies/line";
-import { RaycastHit, Response, Vector, Body, CheckCollisionCallback } from "./model";
+import { RaycastHit, Response, Vector, Body, CollisionCallback } from "./model";
 /**
  * collision system
  */
@@ -25,11 +25,11 @@ export declare class System<TBody extends Body = Body> extends BaseSystem<TBody>
     /**
      * check one body collisions with callback
      */
-    checkOne(body: TBody, callback?: CheckCollisionCallback, response?: Response): boolean;
+    checkOne(body: TBody, callback?: CollisionCallback, response?: Response): boolean;
     /**
      * check all bodies collisions with callback
      */
-    checkAll(callback: (response: Response) => void | boolean, response?: Response): boolean;
+    checkAll(callback?: CollisionCallback, response?: Response): boolean;
     /**
      * check do 2 objects collide
      */

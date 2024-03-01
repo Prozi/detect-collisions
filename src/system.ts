@@ -1,15 +1,13 @@
 import { BaseSystem } from "./base-system";
 import { Line } from "./bodies/line";
 import {
-  Leaf,
   RaycastHit,
   Response,
   SATVector,
-  SATTest,
   Vector,
   Body,
   BodyType,
-  CheckCollisionCallback,
+  CollisionCallback,
 } from "./model";
 import {
   distance,
@@ -74,7 +72,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
    */
   checkOne(
     body: TBody,
-    callback: CheckCollisionCallback = returnTrue,
+    callback: CollisionCallback = returnTrue,
     response = this.response,
   ): boolean {
     // no need to check static body collision
@@ -99,7 +97,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
    * check all bodies collisions with callback
    */
   checkAll(
-    callback: (response: Response) => void | boolean,
+    callback: CollisionCallback = returnTrue,
     response = this.response,
   ): boolean {
     const checkOne = (body: TBody) => {

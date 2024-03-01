@@ -12,13 +12,12 @@ import { Ellipse } from "./bodies/ellipse";
 import { Line } from "./bodies/line";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
-import { System } from "./system";
 import { BaseSystem } from "./base-system";
 
 export { Polygon as DecompPolygon, Point as DecompPoint } from "poly-decomp";
 export { RBush, BBox, Response, SATVector, SATPolygon, SATCircle };
 
-export type CheckCollisionCallback = (response: Response) => void | boolean;
+export type CollisionCallback = (response: Response) => boolean | void;
 
 /**
  * types

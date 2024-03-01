@@ -63,7 +63,7 @@ class System extends base_system_1.BaseSystem {
     /**
      * check all bodies collisions with callback
      */
-    checkAll(callback, response = this.response) {
+    checkAll(callback = utils_1.returnTrue, response = this.response) {
         const checkOne = (body) => {
             return this.checkOne(body, callback, response);
         };
