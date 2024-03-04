@@ -311,7 +311,7 @@ While physics engines like [Matter-js](https://github.com/liabru/matter-js) or [
 $ git clone https://github.com/Prozi/detect-collisions.git
 $ cd detect-collisions
 $ yarn
-$ yarn benchmark [milliseconds=1000]
+$ yarn benchmark
 ```
 
 - will show you the results of insertion test, and
