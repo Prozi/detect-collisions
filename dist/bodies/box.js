@@ -35,7 +35,7 @@ class Box extends polygon_1.Polygon {
      */
     set width(width) {
         this._width = width;
-        this.setPoints((0, utils_1.createBox)(this._width, this._height));
+        this.afterUpdateSize();
     }
     /**
      * get box height
@@ -48,7 +48,20 @@ class Box extends polygon_1.Polygon {
      */
     set height(height) {
         this._height = height;
+        this.afterUpdateSize();
+    }
+    /**
+     * after setting width/height update translate
+     * see https://github.com/Prozi/detect-collisions/issues/70
+     */
+    afterUpdateSize() {
+        if (this.isCentered) {
+            this.retranslate(false);
+        }
         this.setPoints((0, utils_1.createBox)(this._width, this._height));
+        if (this.isCentered) {
+            this.retranslate();
+        }
     }
     /**
      * do not attempt to use Polygon.updateIsConvex()

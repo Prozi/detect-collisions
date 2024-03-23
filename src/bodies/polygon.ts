@@ -140,11 +140,15 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
     if (this.centered === isCentered) {
       return;
     }
-
     const centroid = this.getCentroidWithoutRotation();
-    const x = centroid.x * (isCentered ? 1 : -1);
-    const y = centroid.y * (isCentered ? 1 : -1);
-    this.translate(-x, -y);
+
+    if (centroid.x || centroid.y) {
+      const x = centroid.x * (isCentered ? 1 : -1);
+      const y = centroid.y * (isCentered ? 1 : -1);
+
+      this.translate(-x, -y);
+    }
+
     this.centered = isCentered;
   }
 
@@ -287,14 +291,19 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   getCentroidWithoutRotation(): Vector {
     // keep angle copy
     const angle = this.angle;
-    // reset angle for get centroid
-    this.setAngle(0);
-    // get centroid
-    const centroid: Vector = this.getCentroid();
-    // revert angle change
-    this.setAngle(angle);
 
-    return centroid;
+    if (angle) {
+      // reset angle for get centroid
+      this.setAngle(0);
+      // get centroid
+      const centroid = this.getCentroid();
+      // revert angle change
+      this.setAngle(angle);
+
+      return centroid;
+    }
+
+    return this.getCentroid();
   }
 
   /**
@@ -343,6 +352,17 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
       this.updateConvexPolygonPositions();
       this.system?.insert(this);
       this.dirty = false;
+    }
+  }
+
+  protected retranslate(isCentered = this.isCentered): void {
+    const centroid = this.getCentroidWithoutRotation();
+
+    if (centroid.x || centroid.y) {
+      const x = centroid.x * (isCentered ? 1 : -1);
+      const y = centroid.y * (isCentered ? 1 : -1);
+
+      this.translate(-x, -y);
     }
   }
 

@@ -130,4 +130,22 @@ describe("GIVEN Box", () => {
 
     expect(collisions.length).toBe(0);
   });
+
+  it("THEN change width / height works with isCentered", () => {
+    const { System, Box } = require("../../src");
+
+    const box = new Box({ x: 5, y: 5 }, 10, 10, { isCentered: true });
+    box.width = 20;
+    box.height = 20;
+
+    const physics = new System();
+    physics.insert(box);
+
+    expect(box.bbox).toStrictEqual({
+      maxX: 15,
+      maxY: 15,
+      minX: -5,
+      minY: -5,
+    });
+  });
 });

@@ -53,8 +53,7 @@ export class Box extends Polygon {
    */
   set width(width: number) {
     this._width = width;
-
-    this.setPoints(createBox(this._width, this._height));
+    this.afterUpdateSize();
   }
 
   /**
@@ -69,8 +68,23 @@ export class Box extends Polygon {
    */
   set height(height: number) {
     this._height = height;
+    this.afterUpdateSize();
+  }
+
+  /**
+   * after setting width/height update translate
+   * see https://github.com/Prozi/detect-collisions/issues/70
+   */
+  protected afterUpdateSize(): void {
+    if (this.isCentered) {
+      this.retranslate(false);
+    }
 
     this.setPoints(createBox(this._width, this._height));
+
+    if (this.isCentered) {
+      this.retranslate();
+    }
   }
 
   /**

@@ -41,6 +41,11 @@ export declare class Box extends Polygon {
      */
     set height(height: number);
     /**
+     * after setting width/height update translate
+     * see https://github.com/Prozi/detect-collisions/issues/70
+     */
+    protected afterUpdateSize(): void;
+    /**
      * do not attempt to use Polygon.updateIsConvex()
      */
     protected updateIsConvex(): void;

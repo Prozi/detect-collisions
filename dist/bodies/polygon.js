@@ -45,9 +45,11 @@ class Polygon extends sat_1.Polygon {
             return;
         }
         const centroid = this.getCentroidWithoutRotation();
-        const x = centroid.x * (isCentered ? 1 : -1);
-        const y = centroid.y * (isCentered ? 1 : -1);
-        this.translate(-x, -y);
+        if (centroid.x || centroid.y) {
+            const x = centroid.x * (isCentered ? 1 : -1);
+            const y = centroid.y * (isCentered ? 1 : -1);
+            this.translate(-x, -y);
+        }
         this.centered = isCentered;
     }
     /**
@@ -163,13 +165,16 @@ class Polygon extends sat_1.Polygon {
     getCentroidWithoutRotation() {
         // keep angle copy
         const angle = this.angle;
-        // reset angle for get centroid
-        this.setAngle(0);
-        // get centroid
-        const centroid = this.getCentroid();
-        // revert angle change
-        this.setAngle(angle);
-        return centroid;
+        if (angle) {
+            // reset angle for get centroid
+            this.setAngle(0);
+            // get centroid
+            const centroid = this.getCentroid();
+            // revert angle change
+            this.setAngle(angle);
+            return centroid;
+        }
+        return this.getCentroid();
     }
     /**
      * sets polygon points to new array of vectors
@@ -211,6 +216,14 @@ class Polygon extends sat_1.Polygon {
             this.updateConvexPolygonPositions();
             (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
             this.dirty = false;
+        }
+    }
+    retranslate(isCentered = this.isCentered) {
+        const centroid = this.getCentroidWithoutRotation();
+        if (centroid.x || centroid.y) {
+            const x = centroid.x * (isCentered ? 1 : -1);
+            const y = centroid.y * (isCentered ? 1 : -1);
+            this.translate(-x, -y);
         }
     }
     /**
