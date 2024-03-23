@@ -155,10 +155,10 @@ Check collisions for all bodies or a single body:
 
 ```ts
 // check if any body collides, end after first collision and return true
-const collided = system.checkAll(() => true)
+const collided = system.checkAll()
 
 // check if 1 body collides, end after first collision and return true
-const collided = system.checkOne(body, () => true)
+const collided = system.checkOne(body)
 ```
 
 For a direct collision check without broad-phase search, use `system.checkCollision(body1, body2)`. However, this isn't recommended due to efficiency loss.
@@ -222,7 +222,7 @@ const testCollision = ({ x, y }, radius = 10) => {
   // create and add to tree
   const circle = system.createCircle({ x, y }, radius)
   // init as false
-  const collided = system.checkOne(circle, () => true)
+  const collided = system.checkOne(circle)
 
   // remove from tree
   system.remove(circle)
