@@ -1,6 +1,6 @@
 {
   "name": "detect-collisions",
-  "version": "9.5.0",
+  "version": "9.5.1",
   "description": "detecting collisions between bodies: Points, Lines, Boxes, Polygons (Concave too), Ellipses and Circles. Also RayCasting. All bodies can have offset, rotation, scale, bounding box padding, can be static (non moving) or be trigger bodies (non colliding).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,7 +17,7 @@
     "build:docs": "typedoc --customCss typedoc.css",
     "postbuild:docs": "npm run docs-from-master",
     "docs": "npm run build:docs && chef-express docs --debug",
-    "docs-from-master": "find docs -name '*.html' -exec sed -i '' -E 's_/blob/[^/]+/_/blob/master/_g' {} +",
+    "docs-from-master": "for f in `find docs -name *.html`; do sed -i '' -r 's_/blob/[^/]+/_/blob/master/_g' $f; done",
     "benchmark": "npm run benchmark-insertion && npm run benchmark-stress",
     "benchmark-stress": "node -r pixi-shim -e 'require(`./dist/benchmarks`).stressBenchmark()'",
     "benchmark-insertion": "node -e 'require(`./dist/benchmarks`).insertionBenchmark()'",
