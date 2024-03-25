@@ -1,5 +1,6 @@
 /* tslint:disable:no-implicit-dependencies */
 import { Bench } from "tinybench";
+
 import { Circle } from "../bodies/circle";
 import { Polygon } from "../bodies/polygon";
 import { SATVector } from "../model";

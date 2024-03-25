@@ -1,7 +1,7 @@
 /// <reference types="sat" />
 import { BaseSystem } from "./base-system";
 import { Line } from "./bodies/line";
-import { RaycastHit, Response, Vector, Body, CollisionCallback } from "./model";
+import { Body, CollisionCallback, RaycastHit, Response, Vector } from "./model";
 /**
  * collision system
  */

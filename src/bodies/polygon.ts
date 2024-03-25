@@ -1,28 +1,28 @@
-import { isSimple, quickDecomp } from "poly-decomp";
+import { isSimple, quickDecomp } from "poly-decomp-es";
 import { BBox } from "rbush";
 import { Polygon as SATPolygon } from "sat";
 
 import {
   BodyOptions,
   BodyProps,
+  BodyType,
   DecompPolygon,
   GetAABBAsBox,
   PotentialVector,
   SATVector,
-  BodyType,
   Vector,
 } from "../model";
 import { forEach, map } from "../optimized";
 import { System } from "../system";
 import {
+  clonePointsArray,
+  drawBVH,
+  drawPolygon,
   ensurePolygonPoints,
   ensureVectorPoint,
   extendBody,
-  clonePointsArray,
-  drawPolygon,
   mapArrayToVector,
   mapVectorToArray,
-  drawBVH,
 } from "../utils";
 
 export { isSimple };

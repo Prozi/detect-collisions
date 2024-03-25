@@ -3717,10 +3717,10 @@ pkg-dir@^4.2.0:
   dependencies:
     find-up "^4.0.0"
 
-poly-decomp@^0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/poly-decomp/-/poly-decomp-0.3.0.tgz#aa499289bbc1a4ca2213e966587fa5bffc1ca5f5"
-  integrity sha512-hWeBxGzPYiybmI4548Fca7Up/0k1qS5+79cVHI9+H33dKya5YNb9hxl0ZnDaDgvrZSuYFBhkCK/HOnqN7gefkQ==
+poly-decomp-es@^0.4.2:
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/poly-decomp-es/-/poly-decomp-es-0.4.2.tgz#2b874984e6f1d0efa3a27d0b13bbf18904a58156"
+  integrity sha512-akjZkaTeyfECMNkMqv0g9gFiU2HjpZ5ubJA/aczw1ILdgWQbv1OPwCi05/9JbY2GnGpjm9k85Jdbd/j/p/lg/g==
 
 prettier@^3.2.5:
   version "3.2.5"

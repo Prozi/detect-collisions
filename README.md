@@ -33,8 +33,8 @@ https://prozi.github.io/detect-collisions/
 Detect-Collisions extends functionalities from RBush. To begin, establish a unique collision system.
 
 ```ts
-const { System } = require("detect-collisions")
-const system = new System()
+const { System } = require("detect-collisions");
+const system = new System();
 ```
 
 ### Step 2: Understand Body Attributes
@@ -64,14 +64,14 @@ Each body type has specific properties, for example, a `Box` has `width` & `heig
 Use `BodyOptions` as the last optional parameter during body creation.
 
 ```ts
-const { deg2rad } = require("detect-collisions")
+const { deg2rad } = require("detect-collisions");
 const options = {
   angle: deg2rad(90),
   isStatic: false,
   isTrigger: false,
   isCentered: false,
   padding: 0,
-}
+};
 ```
 
 Create body of various types using:
@@ -84,34 +84,34 @@ const {
   Line,
   Point,
   Polygon,
-} = require("detect-collisions")
+} = require("detect-collisions");
 
 // create with options, without insert
-const box = new Box(position, width, height, options)
-const circle = new Circle(position, radius, options)
-const ellipse = new Ellipse(position, radiusX, radiusY, step, options)
-const line = new Line(start, end, options)
-const point = new Point(position, options)
-const polygon = new Polygon(position, points, options)
+const box = new Box(position, width, height, options);
+const circle = new Circle(position, radius, options);
+const ellipse = new Ellipse(position, radiusX, radiusY, step, options);
+const line = new Line(start, end, options);
+const point = new Point(position, options);
+const polygon = new Polygon(position, points, options);
 ```
 
 Insert a body into the system:
 
 ```ts
 // insert any of the above
-system.insert(body)
+system.insert(body);
 ```
 
 Create and insert body in one step:
 
 ```ts
 // create with options, and insert
-const box = system.createBox(position, width, height, options)
-const circle = system.createCircle(position, radius, options)
-const ellipse = system.createEllipse(position, radiusX, radiusY, step, options)
-const line = system.createLine(start, end, options)
-const point = system.createPoint(position, options)
-const polygon = system.createPolygon(position, points, options)
+const box = system.createBox(position, width, height, options);
+const circle = system.createCircle(position, radius, options);
+const ellipse = system.createEllipse(position, radiusX, radiusY, step, options);
+const line = system.createLine(start, end, options);
+const point = system.createPoint(position, options);
+const polygon = system.createPolygon(position, points, options);
 ```
 
 ### Step 4: Manipulate Bodies
@@ -155,10 +155,10 @@ Check collisions for all bodies or a single body:
 
 ```ts
 // check if any body collides, end after first collision and return true
-const collided = system.checkAll()
+const collided = system.checkAll();
 
 // check if 1 body collides, end after first collision and return true
-const collided = system.checkOne(body)
+const collided = system.checkOne(body);
 ```
 
 For a direct collision check without broad-phase search, use `system.checkCollision(body1, body2)`. However, this isn't recommended due to efficiency loss.
@@ -175,13 +175,13 @@ Here's a simple example:
 system.checkAll(({ a: body, b: collider }: Response) => {
   if (body.isPlayer && collider.isWall) {
     // Player can't move through walls
-    system.separateBody(body)
+    system.separateBody(body);
   } else if (body.isBullet && collider.isEnemy) {
     // Bullet hits enemy
-    system.remove(body) // Remove bullet
-    collider.takeDamage() // Damage enemy
+    system.remove(body); // Remove bullet
+    collider.takeDamage(); // Damage enemy
   }
-})
+});
 ```
 
 ### Step 7: Body Separation
@@ -189,13 +189,13 @@ system.checkAll(({ a: body, b: collider }: Response) => {
 There is an easy way to handle overlap and separation of bodies during collisions. Use system.separate() after updating the system. This function takes into account `isTrigger` and `isStatic` flags on bodies.
 
 ```ts
-system.separate()
+system.separate();
 ```
 
 This function provides a simple way to handle collisions of whole system, without needing to manually calculate and negate overlap.
 
 ```ts
-system.separateBody(body)
+system.separateBody(body);
 ```
 
 This function provides a simple way to handle collisions of one body, without needing to manually calculate and negate overlap.
@@ -205,7 +205,7 @@ This function provides a simple way to handle collisions of one body, without ne
 When you're done with a body, you should remove it from the system to free up memory and keep the collision checks efficient. You can do this with the remove method:
 
 ```ts
-system.remove(body)
+system.remove(body);
 ```
 
 This will remove the body from the system's internal data structures, preventing it from being included in future collision checks. If you keep a reference to the body, you can insert it again later with `system.insert(body)`.
@@ -220,15 +220,15 @@ And that's it! You're now ready to use the Detect-Collisions library in your pro
 // create self-destructing collider
 const testCollision = ({ x, y }, radius = 10) => {
   // create and add to tree
-  const circle = system.createCircle({ x, y }, radius)
+  const circle = system.createCircle({ x, y }, radius);
   // init as false
-  const collided = system.checkOne(circle)
+  const collided = system.checkOne(circle);
 
   // remove from tree
-  system.remove(circle)
+  system.remove(circle);
 
-  return collided ? system.response : null
-}
+  return collided ? system.response : null;
+};
 ```
 
 ## Handling Concave Polygons
@@ -240,37 +240,37 @@ As of version 6.8.0, Detect-Collisions fully supports non-convex or hollow polyg
 To facilitate debugging, Detect-Collisions allows you to visually represent the collision bodies. By invoking the `draw()` method and supplying a 2D context of a `<canvas>` element, you can draw all the bodies within a collision system.
 
 ```ts
-const canvas = document.createElement("canvas")
-const context = canvas.getContext("2d")
+const canvas = document.createElement("canvas");
+const context = canvas.getContext("2d");
 
-context.strokeStyle = "#FFFFFF"
-context.beginPath()
-system.draw(context)
-context.stroke()
+context.strokeStyle = "#FFFFFF";
+context.beginPath();
+system.draw(context);
+context.stroke();
 ```
 
 You can also opt to draw individual bodies.
 
 ```ts
-context.strokeStyle = "#FFFFFF"
-context.beginPath()
+context.strokeStyle = "#FFFFFF";
+context.beginPath();
 // draw specific body
-body.draw(context)
+body.draw(context);
 // draw whole system
-system.draw(context)
-context.stroke()
+system.draw(context);
+context.stroke();
 ```
 
 To assess the [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy), you can draw the BVH.
 
 ```ts
-context.strokeStyle = "#FFFFFF"
-context.beginPath()
+context.strokeStyle = "#FFFFFF";
+context.beginPath();
 // draw specific body bounding box
-body.drawBVH(context)
+body.drawBVH(context);
 // draw bounding volume hierarchy of the system
-system.drawBVH(context)
-context.stroke()
+system.drawBVH(context);
+context.stroke();
 ```
 
 ## Raycasting
@@ -278,14 +278,14 @@ context.stroke()
 Detect-Collisions provides the functionality to gather raycast data. Here's how:
 
 ```ts
-const start = { x: 0, y: 0 }
-const end = { x: 0, y: -10 }
-const hit = system.raycast(start, end)
+const start = { x: 0, y: 0 };
+const end = { x: 0, y: -10 };
+const hit = system.raycast(start, end);
 
 if (hit) {
-  const { point, body } = hit
+  const { point, body } = hit;
 
-  console.log({ point, body })
+  console.log({ point, body });
 }
 ```
 
@@ -310,8 +310,7 @@ While physics engines like [Matter-js](https://github.com/liabru/matter-js) or [
 ```bash
 $ git clone https://github.com/Prozi/detect-collisions.git
 $ cd detect-collisions
-$ yarn
-$ yarn benchmark
+$ npm i && npm run build
 ```
 
 - will show you the results of insertion test, and

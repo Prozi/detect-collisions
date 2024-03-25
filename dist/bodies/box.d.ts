@@ -1,4 +1,4 @@
-import { BodyOptions, PotentialVector, BodyType } from "../model";
+import { BodyOptions, BodyType, PotentialVector } from "../model";
 import { Polygon } from "./polygon";
 /**
  * collider - box

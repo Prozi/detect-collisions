@@ -1,11 +1,11 @@
 import { pointInCircle, pointInPolygon as pointInConvexPolygon } from "sat";
 
-import { Body, BodyType, SATPolygon, SATVector, Vector } from "./model";
 import { Circle } from "./bodies/circle";
-import { Polygon } from "./bodies/polygon";
 import { Line } from "./bodies/line";
-import { forEach, map, some, every } from "./optimized";
 import { Point } from "./bodies/point";
+import { Polygon } from "./bodies/polygon";
+import { Body, BodyType, SATPolygon, SATVector, Vector } from "./model";
+import { every, forEach, map, some } from "./optimized";
 
 /**
  * replace body with array of related convex polygons

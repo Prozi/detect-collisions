@@ -1,7 +1,7 @@
-import { isSimple } from "poly-decomp";
+import { isSimple } from "poly-decomp-es";
 import { BBox } from "rbush";
 import { Polygon as SATPolygon } from "sat";
-import { BodyOptions, BodyProps, DecompPolygon, PotentialVector, SATVector, BodyType, Vector } from "../model";
+import { BodyOptions, BodyProps, BodyType, DecompPolygon, PotentialVector, SATVector, Vector } from "../model";
 import { System } from "../system";
 export { isSimple };
 /**

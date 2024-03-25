@@ -14,7 +14,7 @@ const testMap = {
     inCircleCircle: intersect_1.circleInCircle,
     inCirclePolygon: intersect_1.circleInPolygon,
     inPolygonCircle: intersect_1.polygonInCircle,
-    inPolygonPolygon: intersect_1.polygonInPolygon,
+    inPolygonPolygon: intersect_1.polygonInPolygon
 };
 function createMap(bodyType, testType) {
     return Object.values(model_1.BodyType).reduce((result, type) => (Object.assign(Object.assign({}, result), { [type]: type === model_1.BodyType.Circle
@@ -65,7 +65,7 @@ function createBox(width, height) {
         new sat_1.Vector(0, 0),
         new sat_1.Vector(width, 0),
         new sat_1.Vector(width, height),
-        new sat_1.Vector(0, height),
+        new sat_1.Vector(0, height)
     ];
 }
 exports.createBox = createBox;
@@ -218,7 +218,7 @@ exports.dashLineTo = dashLineTo;
 /**
  * draw polygon
  */
-function drawPolygon(context, { pos, calcPoints, }, isTrigger = false) {
+function drawPolygon(context, { pos, calcPoints }, isTrigger = false) {
     const lastPoint = calcPoints[calcPoints.length - 1];
     const fromX = pos.x + lastPoint.x;
     const fromY = pos.y + lastPoint.y;
@@ -247,7 +247,7 @@ exports.drawPolygon = drawPolygon;
 function drawBVH(context, body) {
     drawPolygon(context, {
         pos: { x: body.minX, y: body.minY },
-        calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY),
+        calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY)
     });
 }
 exports.drawBVH = drawBVH;

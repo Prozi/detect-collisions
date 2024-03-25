@@ -1,13 +1,13 @@
 import { BBox, default as RBush } from "rbush";
-import { Response, Vector as SATVector, Polygon as SATPolygon, Circle as SATCircle } from "sat";
+import { Circle as SATCircle, Polygon as SATPolygon, Response, Vector as SATVector } from "sat";
+import { BaseSystem } from "./base-system";
 import { Box } from "./bodies/box";
 import { Circle } from "./bodies/circle";
 import { Ellipse } from "./bodies/ellipse";
 import { Line } from "./bodies/line";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
-import { BaseSystem } from "./base-system";
-export { Polygon as DecompPolygon, Point as DecompPoint } from "poly-decomp";
+export { Polygon as DecompPolygon, Point as DecompPoint, isSimple } from "poly-decomp-es";
 export { RBush, BBox, Response, SATVector, SATPolygon, SATCircle };
 export type CollisionCallback = (response: Response) => boolean | void;
 /**

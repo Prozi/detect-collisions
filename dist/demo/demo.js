@@ -397,7 +397,7 @@ class Circle extends sat_1.Circle {
             minX: x - this.r,
             maxX: x + this.r,
             minY: y - this.r,
-            maxY: y + this.r,
+            maxY: y + this.r
         };
     }
     /**
@@ -594,7 +594,7 @@ class Line extends polygon_1.Polygon {
     constructor(start, end, options) {
         super(start, [
             { x: 0, y: 0 },
-            { x: end.x - start.x, y: end.y - start.y },
+            { x: end.x - start.x, y: end.y - start.y }
         ], options);
         /**
          * line type
@@ -612,7 +612,7 @@ class Line extends polygon_1.Polygon {
     get start() {
         return {
             x: this.x + this.calcPoints[0].x,
-            y: this.y + this.calcPoints[0].y,
+            y: this.y + this.calcPoints[0].y
         };
     }
     set start({ x, y }) {
@@ -622,7 +622,7 @@ class Line extends polygon_1.Polygon {
     get end() {
         return {
             x: this.x + this.calcPoints[1].x,
-            y: this.y + this.calcPoints[1].y,
+            y: this.y + this.calcPoints[1].y
         };
     }
     set end({ x, y }) {
@@ -688,8 +688,8 @@ exports.Point = Point;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Polygon = exports.isSimple = void 0;
-const poly_decomp_1 = __webpack_require__(/*! poly-decomp */ "./node_modules/poly-decomp/src/index.js");
-Object.defineProperty(exports, "isSimple", ({ enumerable: true, get: function () { return poly_decomp_1.isSimple; } }));
+const poly_decomp_es_1 = __webpack_require__(/*! poly-decomp-es */ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js");
+Object.defineProperty(exports, "isSimple", ({ enumerable: true, get: function () { return poly_decomp_es_1.isSimple; } }));
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
 const optimized_1 = __webpack_require__(/*! ../optimized */ "./dist/optimized.js");
@@ -831,7 +831,7 @@ class Polygon extends sat_1.Polygon {
             minX: pos.x,
             minY: pos.y,
             maxX: pos.x + w,
-            maxY: pos.y + h,
+            maxY: pos.y + h
         };
     }
     /**
@@ -892,7 +892,7 @@ class Polygon extends sat_1.Polygon {
      * if true, polygon is not an invalid, self-crossing polygon
      */
     isSimple() {
-        return (0, poly_decomp_1.isSimple)(this.calcPoints.map(utils_1.mapVectorToArray));
+        return (0, poly_decomp_es_1.isSimple)(this.calcPoints.map(utils_1.mapVectorToArray));
     }
     /**
      * inner function for after position change update aabb in system and convex inner polygons
@@ -946,7 +946,7 @@ class Polygon extends sat_1.Polygon {
             return [];
         }
         const points = (0, optimized_1.map)(this.calcPoints, utils_1.mapVectorToArray);
-        return (0, poly_decomp_1.quickDecomp)(points);
+        return (0, poly_decomp_es_1.quickDecomp)(points);
     }
     /**
      * updates convex polygons cache in body
@@ -1047,15 +1047,15 @@ function ensureConvex(body) {
 }
 exports.ensureConvex = ensureConvex;
 function polygonInCircle(polygon, circle) {
-    return (0, optimized_1.every)(polygon.calcPoints, (p) => (0, sat_1.pointInCircle)({ x: p.x + polygon.pos.x, y: p.y + polygon.pos.y }, circle));
+    return (0, optimized_1.every)(polygon.calcPoints, p => (0, sat_1.pointInCircle)({ x: p.x + polygon.pos.x, y: p.y + polygon.pos.y }, circle));
 }
 exports.polygonInCircle = polygonInCircle;
 function pointInPolygon(point, polygon) {
-    return (0, optimized_1.some)(ensureConvex(polygon), (convex) => (0, sat_1.pointInPolygon)(point, convex));
+    return (0, optimized_1.some)(ensureConvex(polygon), convex => (0, sat_1.pointInPolygon)(point, convex));
 }
 exports.pointInPolygon = pointInPolygon;
 function polygonInPolygon(polygonA, polygonB) {
-    return (0, optimized_1.every)(polygonA.calcPoints, (point) => pointInPolygon({ x: point.x + polygonA.pos.x, y: point.y + polygonA.pos.y }, polygonB));
+    return (0, optimized_1.every)(polygonA.calcPoints, point => pointInPolygon({ x: point.x + polygonA.pos.x, y: point.y + polygonA.pos.y }, polygonB));
 }
 exports.polygonInPolygon = polygonInPolygon;
 /**
@@ -1098,12 +1098,12 @@ function circleInPolygon(circle, polygon) {
     // Necessary add polygon pos to points
     const points = (0, optimized_1.map)(polygon.calcPoints, ({ x, y }) => ({
         x: x + polygon.pos.x,
-        y: y + polygon.pos.y,
+        y: y + polygon.pos.y
     }));
     // If the center of the circle is within the polygon,
     // the circle is not outside of the polygon completely.
     // so return false.
-    if ((0, optimized_1.some)(points, (point) => (0, sat_1.pointInCircle)(point, circle))) {
+    if ((0, optimized_1.some)(points, point => (0, sat_1.pointInCircle)(point, circle))) {
         return false;
     }
     // If any line-segment of the polygon intersects the circle,
@@ -1137,12 +1137,12 @@ function circleOutsidePolygon(circle, polygon) {
     // Necessary add polygon pos to points
     const points = (0, optimized_1.map)(polygon.calcPoints, ({ x, y }) => ({
         x: x + polygon.pos.x,
-        y: y + polygon.pos.y,
+        y: y + polygon.pos.y
     }));
     // If the center of the circle is within the polygon,
     // the circle is not outside of the polygon completely.
     // so return false.
-    if ((0, optimized_1.some)(points, (point) => (0, sat_1.pointInCircle)(point, circle) || pointOnCircle(point, circle))) {
+    if ((0, optimized_1.some)(points, point => (0, sat_1.pointInCircle)(point, circle) || pointOnCircle(point, circle))) {
         return false;
     }
     // If any line-segment of the polygon intersects the circle,
@@ -1237,7 +1237,7 @@ function intersectLinePolygon(line, polygon) {
             : polygon.calcPoints[polygon.calcPoints.length - 1];
         const side = {
             start: { x: from.x + polygon.pos.x, y: from.y + polygon.pos.y },
-            end: { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y },
+            end: { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y }
         };
         const hit = intersectLineLine(line, side);
         if (hit) {
@@ -1263,14 +1263,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.BodyType = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = void 0;
+exports.BodyType = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = exports.isSimple = void 0;
 const rbush_1 = __importDefault(__webpack_require__(/*! rbush */ "./node_modules/rbush/rbush.min.js"));
 Object.defineProperty(exports, "RBush", ({ enumerable: true, get: function () { return rbush_1.default; } }));
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
+Object.defineProperty(exports, "SATCircle", ({ enumerable: true, get: function () { return sat_1.Circle; } }));
+Object.defineProperty(exports, "SATPolygon", ({ enumerable: true, get: function () { return sat_1.Polygon; } }));
 Object.defineProperty(exports, "Response", ({ enumerable: true, get: function () { return sat_1.Response; } }));
 Object.defineProperty(exports, "SATVector", ({ enumerable: true, get: function () { return sat_1.Vector; } }));
-Object.defineProperty(exports, "SATPolygon", ({ enumerable: true, get: function () { return sat_1.Polygon; } }));
-Object.defineProperty(exports, "SATCircle", ({ enumerable: true, get: function () { return sat_1.Circle; } }));
+var poly_decomp_es_1 = __webpack_require__(/*! poly-decomp-es */ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js");
+Object.defineProperty(exports, "isSimple", ({ enumerable: true, get: function () { return poly_decomp_es_1.isSimple; } }));
 /**
  * types
  */
@@ -1382,10 +1384,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.System = void 0;
 const base_system_1 = __webpack_require__(/*! ./base-system */ "./dist/base-system.js");
 const line_1 = __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js");
-const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
-const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils.js");
 const intersect_1 = __webpack_require__(/*! ./intersect */ "./dist/intersect.js");
+const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
 const optimized_1 = __webpack_require__(/*! ./optimized */ "./dist/optimized.js");
+const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils.js");
 /**
  * collision system
  */
@@ -1471,8 +1473,8 @@ class System extends base_system_1.BaseSystem {
         let overlapX = 0;
         let overlapY = 0;
         let collided = false;
-        (0, optimized_1.forEach)(convexBodiesA, (convexBodyA) => {
-            (0, optimized_1.forEach)(convexBodiesB, (convexBodyB) => {
+        (0, optimized_1.forEach)(convexBodiesA, convexBodyA => {
+            (0, optimized_1.forEach)(convexBodiesB, convexBodyB => {
                 // always first clear response
                 response.clear();
                 if (sat(convexBodyA, convexBodyB, response)) {
@@ -1556,7 +1558,7 @@ const testMap = {
     inCircleCircle: intersect_1.circleInCircle,
     inCirclePolygon: intersect_1.circleInPolygon,
     inPolygonCircle: intersect_1.polygonInCircle,
-    inPolygonPolygon: intersect_1.polygonInPolygon,
+    inPolygonPolygon: intersect_1.polygonInPolygon
 };
 function createMap(bodyType, testType) {
     return Object.values(model_1.BodyType).reduce((result, type) => (Object.assign(Object.assign({}, result), { [type]: type === model_1.BodyType.Circle
@@ -1607,7 +1609,7 @@ function createBox(width, height) {
         new sat_1.Vector(0, 0),
         new sat_1.Vector(width, 0),
         new sat_1.Vector(width, height),
-        new sat_1.Vector(0, height),
+        new sat_1.Vector(0, height)
     ];
 }
 exports.createBox = createBox;
@@ -1760,7 +1762,7 @@ exports.dashLineTo = dashLineTo;
 /**
  * draw polygon
  */
-function drawPolygon(context, { pos, calcPoints, }, isTrigger = false) {
+function drawPolygon(context, { pos, calcPoints }, isTrigger = false) {
     const lastPoint = calcPoints[calcPoints.length - 1];
     const fromX = pos.x + lastPoint.x;
     const fromY = pos.y + lastPoint.y;
@@ -1789,7 +1791,7 @@ exports.drawPolygon = drawPolygon;
 function drawBVH(context, body) {
     drawPolygon(context, {
         pos: { x: body.minX, y: body.minY },
-        calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY),
+        calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY)
     });
 }
 exports.drawBVH = drawBVH;
@@ -1857,669 +1859,658 @@ function serializer(replacer, cycleReplacer) {
 
 /***/ }),
 
-/***/ "./node_modules/poly-decomp/src/index.js":
-/*!***********************************************!*\
-  !*** ./node_modules/poly-decomp/src/index.js ***!
-  \***********************************************/
-/***/ ((module) => {
+/***/ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js":
+/*!************************************************************!*\
+  !*** ./node_modules/poly-decomp-es/dist/poly-decomp-es.js ***!
+  \************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-module.exports = {
-    decomp: polygonDecomp,
-    quickDecomp: polygonQuickDecomp,
-    isSimple: polygonIsSimple,
-    removeCollinearPoints: polygonRemoveCollinearPoints,
-    removeDuplicatePoints: polygonRemoveDuplicatePoints,
-    makeCCW: polygonMakeCCW
-};
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   decomp: () => (/* binding */ decomp),
+/* harmony export */   isSimple: () => (/* binding */ isSimple),
+/* harmony export */   makeCCW: () => (/* binding */ makeCCW),
+/* harmony export */   quickDecomp: () => (/* binding */ quickDecomp),
+/* harmony export */   removeCollinearPoints: () => (/* binding */ removeCollinearPoints),
+/* harmony export */   removeDuplicatePoints: () => (/* binding */ removeDuplicatePoints)
+/* harmony export */ });
+const tmpPoint1 = [0, 0];
+const tmpPoint2 = [0, 0];
+const tmpLine1 = [[0, 0], [0, 0]];
+const tmpLine2 = [[0, 0], [0, 0]];
 
 /**
  * Compute the intersection between two lines.
- * @static
- * @method lineInt
- * @param  {Array}  l1          Line vector 1
- * @param  {Array}  l2          Line vector 2
- * @param  {Number} precision   Precision to use when checking if the lines are parallel
- * @return {Array}              The intersection point.
+ * @param l1 Line vector 1
+ * @param l2 Line vector 2
+ * @param precision Precision to use when checking if the lines are parallel
+ * @return The intersection point.
  */
-function lineInt(l1,l2,precision){
-    precision = precision || 0;
-    var i = [0,0]; // point
-    var a1, b1, c1, a2, b2, c2, det; // scalars
-    a1 = l1[1][1] - l1[0][1];
-    b1 = l1[0][0] - l1[1][0];
-    c1 = a1 * l1[0][0] + b1 * l1[0][1];
-    a2 = l2[1][1] - l2[0][1];
-    b2 = l2[0][0] - l2[1][0];
-    c2 = a2 * l2[0][0] + b2 * l2[0][1];
-    det = a1 * b2 - a2*b1;
-    if (!scalar_eq(det, 0, precision)) { // lines are not parallel
-        i[0] = (b2 * c1 - b1 * c2) / det;
-        i[1] = (a1 * c2 - a2 * c1) / det;
-    }
-    return i;
+function lineInt(l1, l2, precision) {
+  if (precision === void 0) {
+    precision = 0;
+  }
+  precision = precision || 0;
+  const i = [0, 0]; // point
+  const a1 = l1[1][1] - l1[0][1];
+  const b1 = l1[0][0] - l1[1][0];
+  const c1 = a1 * l1[0][0] + b1 * l1[0][1];
+  const a2 = l2[1][1] - l2[0][1];
+  const b2 = l2[0][0] - l2[1][0];
+  const c2 = a2 * l2[0][0] + b2 * l2[0][1];
+  const det = a1 * b2 - a2 * b1;
+  if (!scalarsEqual(det, 0, precision)) {
+    // lines are not parallel
+    i[0] = (b2 * c1 - b1 * c2) / det;
+    i[1] = (a1 * c2 - a2 * c1) / det;
+  }
+  return i;
 }
 
 /**
  * Checks if two line segments intersects.
- * @method segmentsIntersect
- * @param {Array} p1 The start vertex of the first line segment.
- * @param {Array} p2 The end vertex of the first line segment.
- * @param {Array} q1 The start vertex of the second line segment.
- * @param {Array} q2 The end vertex of the second line segment.
- * @return {Boolean} True if the two line segments intersect
+ * @param p1 The start vertex of the first line segment.
+ * @param p2 The end vertex of the first line segment.
+ * @param q1 The start vertex of the second line segment.
+ * @param q2 The end vertex of the second line segment.
+ * @return True if the two line segments intersect
  */
-function lineSegmentsIntersect(p1, p2, q1, q2){
-	var dx = p2[0] - p1[0];
-	var dy = p2[1] - p1[1];
-	var da = q2[0] - q1[0];
-	var db = q2[1] - q1[1];
+function lineSegmentsIntersect(p1, p2, q1, q2) {
+  const dx = p2[0] - p1[0];
+  const dy = p2[1] - p1[1];
+  const da = q2[0] - q1[0];
+  const db = q2[1] - q1[1];
 
-	// segments are parallel
-	if((da*dy - db*dx) === 0){
-		return false;
-	}
-
-	var s = (dx * (q1[1] - p1[1]) + dy * (p1[0] - q1[0])) / (da * dy - db * dx);
-	var t = (da * (p1[1] - q1[1]) + db * (q1[0] - p1[0])) / (db * dx - da * dy);
-
-	return (s>=0 && s<=1 && t>=0 && t<=1);
+  // segments are parallel
+  if (da * dy - db * dx === 0) {
+    return false;
+  }
+  const s = (dx * (q1[1] - p1[1]) + dy * (p1[0] - q1[0])) / (da * dy - db * dx);
+  const t = (da * (p1[1] - q1[1]) + db * (q1[0] - p1[0])) / (db * dx - da * dy);
+  return s >= 0 && s <= 1 && t >= 0 && t <= 1;
 }
 
 /**
  * Get the area of a triangle spanned by the three given points. Note that the area will be negative if the points are not given in counter-clockwise order.
- * @static
- * @method area
- * @param  {Array} a
- * @param  {Array} b
- * @param  {Array} c
- * @return {Number}
+ * @param a point 1
+ * @param b point 2
+ * @param c point 3
+ * @return the area of a triangle spanned by the three given points
  */
-function triangleArea(a,b,c){
-    return (((b[0] - a[0])*(c[1] - a[1]))-((c[0] - a[0])*(b[1] - a[1])));
+function triangleArea(a, b, c) {
+  return (b[0] - a[0]) * (c[1] - a[1]) - (c[0] - a[0]) * (b[1] - a[1]);
 }
-
-function isLeft(a,b,c){
-    return triangleArea(a,b,c) > 0;
+function isLeft(a, b, c) {
+  return triangleArea(a, b, c) > 0;
 }
-
-function isLeftOn(a,b,c) {
-    return triangleArea(a, b, c) >= 0;
+function isLeftOn(a, b, c) {
+  return triangleArea(a, b, c) >= 0;
 }
-
-function isRight(a,b,c) {
-    return triangleArea(a, b, c) < 0;
+function isRight(a, b, c) {
+  return triangleArea(a, b, c) < 0;
 }
-
-function isRightOn(a,b,c) {
-    return triangleArea(a, b, c) <= 0;
+function isRightOn(a, b, c) {
+  return triangleArea(a, b, c) <= 0;
 }
-
-var tmpPoint1 = [],
-    tmpPoint2 = [];
 
 /**
  * Check if three points are collinear
- * @method collinear
- * @param  {Array} a
- * @param  {Array} b
- * @param  {Array} c
- * @param  {Number} [thresholdAngle=0] Threshold angle to use when comparing the vectors. The function will return true if the angle between the resulting vectors is less than this value. Use zero for max precision.
- * @return {Boolean}
+ * @param a point 1
+ * @param b point 2
+ * @param c point 3
+ * @param thresholdAngle angle to use when comparing the vectors. The function will return true if the angle between the resulting vectors is less than this value. Use zero for max precision.
+ * @return whether the points are collinear
  */
-function collinear(a,b,c,thresholdAngle) {
-    if(!thresholdAngle){
-        return triangleArea(a, b, c) === 0;
-    } else {
-        var ab = tmpPoint1,
-            bc = tmpPoint2;
-
-        ab[0] = b[0]-a[0];
-        ab[1] = b[1]-a[1];
-        bc[0] = c[0]-b[0];
-        bc[1] = c[1]-b[1];
-
-        var dot = ab[0]*bc[0] + ab[1]*bc[1],
-            magA = Math.sqrt(ab[0]*ab[0] + ab[1]*ab[1]),
-            magB = Math.sqrt(bc[0]*bc[0] + bc[1]*bc[1]),
-            angle = Math.acos(dot/(magA*magB));
-        return angle < thresholdAngle;
-    }
+function collinear(a, b, c, thresholdAngle) {
+  if (thresholdAngle === void 0) {
+    thresholdAngle = 0;
+  }
+  if (!thresholdAngle) {
+    return triangleArea(a, b, c) === 0;
+  } else {
+    const ab = tmpPoint1;
+    const bc = tmpPoint2;
+    ab[0] = b[0] - a[0];
+    ab[1] = b[1] - a[1];
+    bc[0] = c[0] - b[0];
+    bc[1] = c[1] - b[1];
+    const dot = ab[0] * bc[0] + ab[1] * bc[1];
+    const magA = Math.sqrt(ab[0] * ab[0] + ab[1] * ab[1]);
+    const magB = Math.sqrt(bc[0] * bc[0] + bc[1] * bc[1]);
+    const angle = Math.acos(dot / (magA * magB));
+    return angle < thresholdAngle;
+  }
 }
-
-function sqdist(a,b){
-    var dx = b[0] - a[0];
-    var dy = b[1] - a[1];
-    return dx * dx + dy * dy;
+function sqdist(a, b) {
+  const dx = b[0] - a[0];
+  const dy = b[1] - a[1];
+  return dx * dx + dy * dy;
 }
 
 /**
  * Get a vertex at position i. It does not matter if i is out of bounds, this function will just cycle.
- * @method at
- * @param  {Number} i
- * @return {Array}
+ * @param i vertex position
+ * @return vertex at position i
  */
-function polygonAt(polygon, i){
-    var s = polygon.length;
-    return polygon[i < 0 ? i % s + s : i % s];
+function polygonAt(polygon, i) {
+  const s = polygon.length;
+  return polygon[i < 0 ? i % s + s : i % s];
 }
 
 /**
  * Clear the polygon data
- * @method clear
- * @return {Array}
  */
-function polygonClear(polygon){
-    polygon.length = 0;
+function polygonClear(polygon) {
+  polygon.length = 0;
 }
 
 /**
- * Append points "from" to "to"-1 from an other polygon "poly" onto this one.
- * @method append
- * @param {Polygon} poly The polygon to get points from.
- * @param {Number}  from The vertex index in "poly".
- * @param {Number}  to The end vertex index in "poly". Note that this vertex is NOT included when appending.
- * @return {Array}
+ * Append points "from" to "to" -1 from an other polygon "poly" onto this one.
+ * @param polygon the polygon to append to
+ * @param poly The polygon to get points from.
+ * @param from The vertex index in "poly".
+ * @param to The end vertex index in "poly". Note that this vertex is NOT included when appending.
  */
-function polygonAppend(polygon, poly, from, to){
-    for(var i=from; i<to; i++){
-        polygon.push(poly[i]);
-    }
+function polygonAppend(polygon, poly, from, to) {
+  for (let i = from; i < to; i++) {
+    polygon.push(poly[i]);
+  }
 }
 
 /**
  * Make sure that the polygon vertices are ordered counter-clockwise.
- * @method makeCCW
  */
-function polygonMakeCCW(polygon){
-    var br = 0,
-        v = polygon;
+function makeCCW(polygon) {
+  let br = 0;
+  const v = polygon;
 
-    // find bottom right point
-    for (var i = 1; i < polygon.length; ++i) {
-        if (v[i][1] < v[br][1] || (v[i][1] === v[br][1] && v[i][0] > v[br][0])) {
-            br = i;
-        }
+  // find bottom right point
+  for (let i = 1; i < polygon.length; ++i) {
+    if (v[i][1] < v[br][1] || v[i][1] === v[br][1] && v[i][0] > v[br][0]) {
+      br = i;
     }
+  }
 
-    // reverse poly if clockwise
-    if (!isLeft(polygonAt(polygon, br - 1), polygonAt(polygon, br), polygonAt(polygon, br + 1))) {
-        polygonReverse(polygon);
-        return true;
-    } else {
-        return false;
-    }
+  // reverse poly if clockwise
+  if (!isLeft(polygonAt(polygon, br - 1), polygonAt(polygon, br), polygonAt(polygon, br + 1))) {
+    polygonReverse(polygon);
+    return true;
+  } else {
+    return false;
+  }
 }
 
 /**
  * Reverse the vertices in the polygon
- * @method reverse
  */
-function polygonReverse(polygon){
-    var tmp = [];
-    var N = polygon.length;
-    for(var i=0; i!==N; i++){
-        tmp.push(polygon.pop());
-    }
-    for(var i=0; i!==N; i++){
-		polygon[i] = tmp[i];
-    }
+function polygonReverse(polygon) {
+  const tmp = [];
+  const N = polygon.length;
+  for (let i = 0; i !== N; i++) {
+    tmp.push(polygon.pop());
+  }
+  for (let i = 0; i !== N; i++) {
+    polygon[i] = tmp[i];
+  }
 }
 
 /**
  * Check if a point in the polygon is a reflex point
- * @method isReflex
- * @param  {Number}  i
- * @return {Boolean}
+ * @param i the point in the polygon to check
+ * @return whether the given point in the polygon is a reflex point
  */
-function polygonIsReflex(polygon, i){
-    return isRight(polygonAt(polygon, i - 1), polygonAt(polygon, i), polygonAt(polygon, i + 1));
-}
-
-var tmpLine1=[],
-    tmpLine2=[];
-
-/**
- * Check if two vertices in the polygon can see each other
- * @method canSee
- * @param  {Number} a Vertex index 1
- * @param  {Number} b Vertex index 2
- * @return {Boolean}
- */
-function polygonCanSee(polygon, a,b) {
-    var p, dist, l1=tmpLine1, l2=tmpLine2;
-
-    if (isLeftOn(polygonAt(polygon, a + 1), polygonAt(polygon, a), polygonAt(polygon, b)) && isRightOn(polygonAt(polygon, a - 1), polygonAt(polygon, a), polygonAt(polygon, b))) {
-        return false;
-    }
-    dist = sqdist(polygonAt(polygon, a), polygonAt(polygon, b));
-    for (var i = 0; i !== polygon.length; ++i) { // for each edge
-        if ((i + 1) % polygon.length === a || i === a){ // ignore incident edges
-            continue;
-        }
-        if (isLeftOn(polygonAt(polygon, a), polygonAt(polygon, b), polygonAt(polygon, i + 1)) && isRightOn(polygonAt(polygon, a), polygonAt(polygon, b), polygonAt(polygon, i))) { // if diag intersects an edge
-            l1[0] = polygonAt(polygon, a);
-            l1[1] = polygonAt(polygon, b);
-            l2[0] = polygonAt(polygon, i);
-            l2[1] = polygonAt(polygon, i + 1);
-            p = lineInt(l1,l2);
-            if (sqdist(polygonAt(polygon, a), p) < dist) { // if edge is blocking visibility to b
-                return false;
-            }
-        }
-    }
-
-    return true;
+function polygonIsReflex(polygon, i) {
+  return isRight(polygonAt(polygon, i - 1), polygonAt(polygon, i), polygonAt(polygon, i + 1));
 }
 
 /**
  * Check if two vertices in the polygon can see each other
- * @method canSee2
- * @param  {Number} a Vertex index 1
- * @param  {Number} b Vertex index 2
- * @return {Boolean}
+ * @param a vertex index 1
+ * @param b vertex index 2
+ * @return whether two vertices in the polygon can see each other
  */
-function polygonCanSee2(polygon, a,b) {
+function polygonCanSee(polygon, a, b) {
+  const l1 = tmpLine1;
+  const l2 = tmpLine2;
+  if (isLeftOn(polygonAt(polygon, a + 1), polygonAt(polygon, a), polygonAt(polygon, b)) && isRightOn(polygonAt(polygon, a - 1), polygonAt(polygon, a), polygonAt(polygon, b))) {
+    return false;
+  }
+  const dist = sqdist(polygonAt(polygon, a), polygonAt(polygon, b));
+  for (let i = 0; i !== polygon.length; ++i) {
     // for each edge
-    for (var i = 0; i !== polygon.length; ++i) {
-        // ignore incident edges
-        if (i === a || i === b || (i + 1) % polygon.length === a || (i + 1) % polygon.length === b){
-            continue;
-        }
-        if( lineSegmentsIntersect(polygonAt(polygon, a), polygonAt(polygon, b), polygonAt(polygon, i), polygonAt(polygon, i+1)) ){
-            return false;
-        }
+    if ((i + 1) % polygon.length === a || i === a) {
+      // ignore incident edges
+      continue;
     }
-    return true;
+    if (isLeftOn(polygonAt(polygon, a), polygonAt(polygon, b), polygonAt(polygon, i + 1)) && isRightOn(polygonAt(polygon, a), polygonAt(polygon, b), polygonAt(polygon, i))) {
+      // if diag intersects an edge
+      l1[0] = polygonAt(polygon, a);
+      l1[1] = polygonAt(polygon, b);
+      l2[0] = polygonAt(polygon, i);
+      l2[1] = polygonAt(polygon, i + 1);
+      const p = lineInt(l1, l2);
+      if (sqdist(polygonAt(polygon, a), p) < dist) {
+        // if edge is blocking visibility to b
+        return false;
+      }
+    }
+  }
+  return true;
+}
+
+/**
+ * Check if two vertices in the polygon can see each other
+ * @param a vertex index 1
+ * @param b vertex index 2
+ * @return if two vertices in the polygon can see each other
+ */
+function polygonCanSee2(polygon, a, b) {
+  // for each edge
+  for (let i = 0; i !== polygon.length; ++i) {
+    // ignore incident edges
+    if (i === a || i === b || (i + 1) % polygon.length === a || (i + 1) % polygon.length === b) {
+      continue;
+    }
+    if (lineSegmentsIntersect(polygonAt(polygon, a), polygonAt(polygon, b), polygonAt(polygon, i), polygonAt(polygon, i + 1))) {
+      return false;
+    }
+  }
+  return true;
 }
 
 /**
  * Copy the polygon from vertex i to vertex j.
- * @method copy
- * @param  {Number} i
- * @param  {Number} j
- * @param  {Polygon} [targetPoly]   Optional target polygon to save in.
- * @return {Polygon}                The resulting copy.
+ * @param i the start vertex to copy from
+ * @param j the end vertex to copy from
+ * @param targetPoly optional target polygon to save in.
+ * @return the resulting copy.
  */
-function polygonCopy(polygon, i,j,targetPoly){
-    var p = targetPoly || [];
-    polygonClear(p);
-    if (i < j) {
-        // Insert all vertices from i to j
-        for(var k=i; k<=j; k++){
-            p.push(polygon[k]);
-        }
-
-    } else {
-
-        // Insert vertices 0 to j
-        for(var k=0; k<=j; k++){
-            p.push(polygon[k]);
-        }
-
-        // Insert vertices i to end
-        for(var k=i; k<polygon.length; k++){
-            p.push(polygon[k]);
-        }
+function polygonCopy(polygon, i, j, targetPoly) {
+  if (targetPoly === void 0) {
+    targetPoly = [];
+  }
+  polygonClear(targetPoly);
+  if (i < j) {
+    // Insert all vertices from i to j
+    for (let k = i; k <= j; k++) {
+      targetPoly.push(polygon[k]);
+    }
+  } else {
+    // Insert vertices 0 to j
+    for (let k = 0; k <= j; k++) {
+      targetPoly.push(polygon[k]);
     }
 
-    return p;
+    // Insert vertices i to end
+    for (let k = i; k < polygon.length; k++) {
+      targetPoly.push(polygon[k]);
+    }
+  }
+  return targetPoly;
 }
 
 /**
  * Decomposes the polygon into convex pieces. Returns a list of edges [[p1,p2],[p2,p3],...] that cuts the polygon.
  * Note that this algorithm has complexity O(N^4) and will be very slow for polygons with many vertices.
- * @method getCutEdges
- * @return {Array}
+ * @return a list of edges that cuts the polygon
  */
-function polygonGetCutEdges(polygon) {
-    var min=[], tmp1=[], tmp2=[], tmpPoly = [];
-    var nDiags = Number.MAX_VALUE;
-
-    for (var i = 0; i < polygon.length; ++i) {
-        if (polygonIsReflex(polygon, i)) {
-            for (var j = 0; j < polygon.length; ++j) {
-                if (polygonCanSee(polygon, i, j)) {
-                    tmp1 = polygonGetCutEdges(polygonCopy(polygon, i, j, tmpPoly));
-                    tmp2 = polygonGetCutEdges(polygonCopy(polygon, j, i, tmpPoly));
-
-                    for(var k=0; k<tmp2.length; k++){
-                        tmp1.push(tmp2[k]);
-                    }
-
-                    if (tmp1.length < nDiags) {
-                        min = tmp1;
-                        nDiags = tmp1.length;
-                        min.push([polygonAt(polygon, i), polygonAt(polygon, j)]);
-                    }
-                }
-            }
+function getCutEdges(polygon) {
+  let min = [];
+  let tmp1;
+  let tmp2;
+  const tmpPoly = [];
+  let nDiags = Number.MAX_VALUE;
+  for (let i = 0; i < polygon.length; ++i) {
+    if (polygonIsReflex(polygon, i)) {
+      for (let j = 0; j < polygon.length; ++j) {
+        if (polygonCanSee(polygon, i, j)) {
+          tmp1 = getCutEdges(polygonCopy(polygon, i, j, tmpPoly));
+          tmp2 = getCutEdges(polygonCopy(polygon, j, i, tmpPoly));
+          for (let k = 0; k < tmp2.length; k++) {
+            tmp1.push(tmp2[k]);
+          }
+          if (tmp1.length < nDiags) {
+            min = tmp1;
+            nDiags = tmp1.length;
+            min.push([polygonAt(polygon, i), polygonAt(polygon, j)]);
+          }
         }
+      }
     }
-
-    return min;
+  }
+  return min;
 }
 
 /**
  * Decomposes the polygon into one or more convex sub-Polygons.
- * @method decomp
- * @return {Array} An array or Polygon objects.
+ * @return An array of Polygon objects, or false if decomposition fails
  */
-function polygonDecomp(polygon){
-    var edges = polygonGetCutEdges(polygon);
-    if(edges.length > 0){
-        return polygonSlice(polygon, edges);
-    } else {
-        return [polygon];
-    }
+function decomp(polygon) {
+  const edges = getCutEdges(polygon);
+  if (edges.length > 0) {
+    return slicePolygon(polygon, edges);
+  } else {
+    return [polygon];
+  }
 }
 
 /**
  * Slices the polygon given one or more cut edges. If given one, this function will return two polygons (false on failure). If many, an array of polygons.
- * @method slice
- * @param {Array} cutEdges A list of edges, as returned by .getCutEdges()
- * @return {Array}
+ * @param cutEdges A list of edges, as returned by .getCutEdges()
+ * @return the sliced polygons, or false if the operation was unsuccessful
  */
-function polygonSlice(polygon, cutEdges){
-    if(cutEdges.length === 0){
-		return [polygon];
-    }
-    if(cutEdges instanceof Array && cutEdges.length && cutEdges[0] instanceof Array && cutEdges[0].length===2 && cutEdges[0][0] instanceof Array){
+function slicePolygon(polygon, cutEdges) {
+  if (cutEdges.length === 0) {
+    return [polygon];
+  }
 
-        var polys = [polygon];
-
-        for(var i=0; i<cutEdges.length; i++){
-            var cutEdge = cutEdges[i];
-            // Cut all polys
-            for(var j=0; j<polys.length; j++){
-                var poly = polys[j];
-                var result = polygonSlice(poly, cutEdge);
-                if(result){
-                    // Found poly! Cut and quit
-                    polys.splice(j,1);
-                    polys.push(result[0],result[1]);
-                    break;
-                }
-            }
+  // if given multiple edges
+  if (cutEdges instanceof Array && cutEdges.length && cutEdges[0] instanceof Array && cutEdges[0].length === 2 && cutEdges[0][0] instanceof Array) {
+    const polys = [polygon];
+    for (let i = 0; i < cutEdges.length; i++) {
+      const cutEdge = cutEdges[i];
+      // Cut all polys
+      for (let j = 0; j < polys.length; j++) {
+        const poly = polys[j];
+        const result = slicePolygon(poly, cutEdge);
+        if (result) {
+          // Found poly! Cut and quit
+          polys.splice(j, 1);
+          polys.push(result[0], result[1]);
+          break;
         }
-
-        return polys;
+      }
+    }
+    return polys;
+  } else {
+    // Was given one edge
+    const cutEdge = cutEdges;
+    const i = polygon.indexOf(cutEdge[0]);
+    const j = polygon.indexOf(cutEdge[1]);
+    if (i !== -1 && j !== -1) {
+      return [polygonCopy(polygon, i, j), polygonCopy(polygon, j, i)];
     } else {
-
-        // Was given one edge
-        var cutEdge = cutEdges;
-        var i = polygon.indexOf(cutEdge[0]);
-        var j = polygon.indexOf(cutEdge[1]);
-
-        if(i !== -1 && j !== -1){
-            return [polygonCopy(polygon, i,j),
-                    polygonCopy(polygon, j,i)];
-        } else {
-            return false;
-        }
+      return false;
     }
+  }
 }
 
 /**
  * Checks that the line segments of this polygon do not intersect each other.
- * @method isSimple
- * @param  {Array} path An array of vertices e.g. [[0,0],[0,1],...]
- * @return {Boolean}
+ * @param polygon An array of vertices e.g. [[0,0],[0,1],...]
+ * @return whether line segments of this polygon do not intersect each other.
  * @todo Should it check all segments with all others?
  */
-function polygonIsSimple(polygon){
-    var path = polygon, i;
-    // Check
-    for(i=0; i<path.length-1; i++){
-        for(var j=0; j<i-1; j++){
-            if(lineSegmentsIntersect(path[i], path[i+1], path[j], path[j+1] )){
-                return false;
-            }
-        }
-    }
+function isSimple(polygon) {
+  const path = polygon;
+  let i;
 
-    // Check the segment between the last and the first point to all others
-    for(i=1; i<path.length-2; i++){
-        if(lineSegmentsIntersect(path[0], path[path.length-1], path[i], path[i+1] )){
-            return false;
-        }
+  // Check
+  for (i = 0; i < path.length - 1; i++) {
+    for (let j = 0; j < i - 1; j++) {
+      if (lineSegmentsIntersect(path[i], path[i + 1], path[j], path[j + 1])) {
+        return false;
+      }
     }
+  }
 
-    return true;
+  // Check the segment between the last and the first point to all others
+  for (i = 1; i < path.length - 2; i++) {
+    if (lineSegmentsIntersect(path[0], path[path.length - 1], path[i], path[i + 1])) {
+      return false;
+    }
+  }
+  return true;
 }
-
-function getIntersectionPoint(p1, p2, q1, q2, delta){
-	delta = delta || 0;
-	var a1 = p2[1] - p1[1];
-	var b1 = p1[0] - p2[0];
-	var c1 = (a1 * p1[0]) + (b1 * p1[1]);
-	var a2 = q2[1] - q1[1];
-	var b2 = q1[0] - q2[0];
-	var c2 = (a2 * q1[0]) + (b2 * q1[1]);
-	var det = (a1 * b2) - (a2 * b1);
-
-	if(!scalar_eq(det,0,delta)){
-		return [((b2 * c1) - (b1 * c2)) / det, ((a1 * c2) - (a2 * c1)) / det];
-	} else {
-		return [0,0];
-    }
+function getIntersectionPoint(p1, p2, q1, q2, delta) {
+  if (delta === void 0) {
+    delta = 0;
+  }
+  const a1 = p2[1] - p1[1];
+  const b1 = p1[0] - p2[0];
+  const c1 = a1 * p1[0] + b1 * p1[1];
+  const a2 = q2[1] - q1[1];
+  const b2 = q1[0] - q2[0];
+  const c2 = a2 * q1[0] + b2 * q1[1];
+  const det = a1 * b2 - a2 * b1;
+  if (!scalarsEqual(det, 0, delta)) {
+    return [(b2 * c1 - b1 * c2) / det, (a1 * c2 - a2 * c1) / det];
+  } else {
+    return [0, 0];
+  }
 }
 
 /**
  * Quickly decompose the Polygon into convex sub-polygons.
- * @method quickDecomp
- * @param  {Array} result
- * @param  {Array} [reflexVertices]
- * @param  {Array} [steinerPoints]
- * @param  {Number} [delta]
- * @param  {Number} [maxlevel]
- * @param  {Number} [level]
- * @return {Array}
+ * @param polygon the polygon to decompose
+ * @param result
+ * @param reflexVertices
+ * @param steinerPoints
+ * @param delta
+ * @param maxlevel
+ * @param level
+ * @return the decomposed sub-polygons
  */
-function polygonQuickDecomp(polygon, result,reflexVertices,steinerPoints,delta,maxlevel,level){
-    maxlevel = maxlevel || 100;
-    level = level || 0;
-    delta = delta || 25;
-    result = typeof(result)!=="undefined" ? result : [];
-    reflexVertices = reflexVertices || [];
-    steinerPoints = steinerPoints || [];
+function quickDecomp(polygon, result, reflexVertices, steinerPoints, delta, maxlevel, level) {
+  if (result === void 0) {
+    result = [];
+  }
+  if (reflexVertices === void 0) {
+    reflexVertices = [];
+  }
+  if (steinerPoints === void 0) {
+    steinerPoints = [];
+  }
+  if (delta === void 0) {
+    delta = 25;
+  }
+  if (maxlevel === void 0) {
+    maxlevel = 100;
+  }
+  if (level === void 0) {
+    level = 0;
+  }
+  // Points
+  let upperInt = [0, 0];
+  let lowerInt = [0, 0];
+  let p = [0, 0];
 
-    var upperInt=[0,0], lowerInt=[0,0], p=[0,0]; // Points
-    var upperDist=0, lowerDist=0, d=0, closestDist=0; // scalars
-    var upperIndex=0, lowerIndex=0, closestIndex=0; // Integers
-    var lowerPoly=[], upperPoly=[]; // polygons
-    var poly = polygon,
-        v = polygon;
+  // scalars
+  let upperDist = 0;
+  let lowerDist = 0;
+  let d = 0;
+  let closestDist = 0;
 
-    if(v.length < 3){
-		return result;
-    }
+  // Integers
+  let upperIndex = 0;
+  let lowerIndex = 0;
+  let closestIndex = 0;
 
-    level++;
-    if(level > maxlevel){
-        console.warn("quickDecomp: max level ("+maxlevel+") reached.");
-        return result;
-    }
-
-    for (var i = 0; i < polygon.length; ++i) {
-        if (polygonIsReflex(poly, i)) {
-            reflexVertices.push(poly[i]);
-            upperDist = lowerDist = Number.MAX_VALUE;
-
-
-            for (var j = 0; j < polygon.length; ++j) {
-                if (isLeft(polygonAt(poly, i - 1), polygonAt(poly, i), polygonAt(poly, j)) && isRightOn(polygonAt(poly, i - 1), polygonAt(poly, i), polygonAt(poly, j - 1))) { // if line intersects with an edge
-                    p = getIntersectionPoint(polygonAt(poly, i - 1), polygonAt(poly, i), polygonAt(poly, j), polygonAt(poly, j - 1)); // find the point of intersection
-                    if (isRight(polygonAt(poly, i + 1), polygonAt(poly, i), p)) { // make sure it's inside the poly
-                        d = sqdist(poly[i], p);
-                        if (d < lowerDist) { // keep only the closest intersection
-                            lowerDist = d;
-                            lowerInt = p;
-                            lowerIndex = j;
-                        }
-                    }
-                }
-                if (isLeft(polygonAt(poly, i + 1), polygonAt(poly, i), polygonAt(poly, j + 1)) && isRightOn(polygonAt(poly, i + 1), polygonAt(poly, i), polygonAt(poly, j))) {
-                    p = getIntersectionPoint(polygonAt(poly, i + 1), polygonAt(poly, i), polygonAt(poly, j), polygonAt(poly, j + 1));
-                    if (isLeft(polygonAt(poly, i - 1), polygonAt(poly, i), p)) {
-                        d = sqdist(poly[i], p);
-                        if (d < upperDist) {
-                            upperDist = d;
-                            upperInt = p;
-                            upperIndex = j;
-                        }
-                    }
-                }
-            }
-
-            // if there are no vertices to connect to, choose a point in the middle
-            if (lowerIndex === (upperIndex + 1) % polygon.length) {
-                //console.log("Case 1: Vertex("+i+"), lowerIndex("+lowerIndex+"), upperIndex("+upperIndex+"), poly.size("+polygon.length+")");
-                p[0] = (lowerInt[0] + upperInt[0]) / 2;
-                p[1] = (lowerInt[1] + upperInt[1]) / 2;
-                steinerPoints.push(p);
-
-                if (i < upperIndex) {
-                    //lowerPoly.insert(lowerPoly.end(), poly.begin() + i, poly.begin() + upperIndex + 1);
-                    polygonAppend(lowerPoly, poly, i, upperIndex+1);
-                    lowerPoly.push(p);
-                    upperPoly.push(p);
-                    if (lowerIndex !== 0){
-                        //upperPoly.insert(upperPoly.end(), poly.begin() + lowerIndex, poly.end());
-                        polygonAppend(upperPoly, poly,lowerIndex,poly.length);
-                    }
-                    //upperPoly.insert(upperPoly.end(), poly.begin(), poly.begin() + i + 1);
-                    polygonAppend(upperPoly, poly,0,i+1);
-                } else {
-                    if (i !== 0){
-                        //lowerPoly.insert(lowerPoly.end(), poly.begin() + i, poly.end());
-                        polygonAppend(lowerPoly, poly,i,poly.length);
-                    }
-                    //lowerPoly.insert(lowerPoly.end(), poly.begin(), poly.begin() + upperIndex + 1);
-                    polygonAppend(lowerPoly, poly,0,upperIndex+1);
-                    lowerPoly.push(p);
-                    upperPoly.push(p);
-                    //upperPoly.insert(upperPoly.end(), poly.begin() + lowerIndex, poly.begin() + i + 1);
-                    polygonAppend(upperPoly, poly,lowerIndex,i+1);
-                }
-            } else {
-                // connect to the closest point within the triangle
-                //console.log("Case 2: Vertex("+i+"), closestIndex("+closestIndex+"), poly.size("+polygon.length+")\n");
-
-                if (lowerIndex > upperIndex) {
-                    upperIndex += polygon.length;
-                }
-                closestDist = Number.MAX_VALUE;
-
-                if(upperIndex < lowerIndex){
-                    return result;
-                }
-
-                for (var j = lowerIndex; j <= upperIndex; ++j) {
-                    if (
-                        isLeftOn(polygonAt(poly, i - 1), polygonAt(poly, i), polygonAt(poly, j)) &&
-                        isRightOn(polygonAt(poly, i + 1), polygonAt(poly, i), polygonAt(poly, j))
-                    ) {
-                        d = sqdist(polygonAt(poly, i), polygonAt(poly, j));
-                        if (d < closestDist && polygonCanSee2(poly, i, j)) {
-                            closestDist = d;
-                            closestIndex = j % polygon.length;
-                        }
-                    }
-                }
-
-                if (i < closestIndex) {
-                    polygonAppend(lowerPoly, poly,i,closestIndex+1);
-                    if (closestIndex !== 0){
-                        polygonAppend(upperPoly, poly,closestIndex,v.length);
-                    }
-                    polygonAppend(upperPoly, poly,0,i+1);
-                } else {
-                    if (i !== 0){
-                        polygonAppend(lowerPoly, poly,i,v.length);
-                    }
-                    polygonAppend(lowerPoly, poly,0,closestIndex+1);
-                    polygonAppend(upperPoly, poly,closestIndex,i+1);
-                }
-            }
-
-            // solve smallest poly first
-            if (lowerPoly.length < upperPoly.length) {
-                polygonQuickDecomp(lowerPoly,result,reflexVertices,steinerPoints,delta,maxlevel,level);
-                polygonQuickDecomp(upperPoly,result,reflexVertices,steinerPoints,delta,maxlevel,level);
-            } else {
-                polygonQuickDecomp(upperPoly,result,reflexVertices,steinerPoints,delta,maxlevel,level);
-                polygonQuickDecomp(lowerPoly,result,reflexVertices,steinerPoints,delta,maxlevel,level);
-            }
-
-            return result;
-        }
-    }
-    result.push(polygon);
-
+  // polygons
+  const lowerPoly = [];
+  const upperPoly = [];
+  const poly = polygon;
+  const v = polygon;
+  if (v.length < 3) {
     return result;
+  }
+  level++;
+  if (level > maxlevel) {
+    console.warn('quickDecomp: max level (' + maxlevel + ') reached.');
+    return result;
+  }
+  for (let i = 0; i < polygon.length; ++i) {
+    if (polygonIsReflex(poly, i)) {
+      reflexVertices.push(poly[i]);
+      upperDist = lowerDist = Number.MAX_VALUE;
+      for (let j = 0; j < polygon.length; ++j) {
+        if (isLeft(polygonAt(poly, i - 1), polygonAt(poly, i), polygonAt(poly, j)) && isRightOn(polygonAt(poly, i - 1), polygonAt(poly, i), polygonAt(poly, j - 1))) {
+          // if line intersects with an edge
+          p = getIntersectionPoint(polygonAt(poly, i - 1), polygonAt(poly, i), polygonAt(poly, j), polygonAt(poly, j - 1)); // find the point of intersection
+          if (isRight(polygonAt(poly, i + 1), polygonAt(poly, i), p)) {
+            // make sure it's inside the poly
+            d = sqdist(poly[i], p);
+            if (d < lowerDist) {
+              // keep only the closest intersection
+              lowerDist = d;
+              lowerInt = p;
+              lowerIndex = j;
+            }
+          }
+        }
+        if (isLeft(polygonAt(poly, i + 1), polygonAt(poly, i), polygonAt(poly, j + 1)) && isRightOn(polygonAt(poly, i + 1), polygonAt(poly, i), polygonAt(poly, j))) {
+          p = getIntersectionPoint(polygonAt(poly, i + 1), polygonAt(poly, i), polygonAt(poly, j), polygonAt(poly, j + 1));
+          if (isLeft(polygonAt(poly, i - 1), polygonAt(poly, i), p)) {
+            d = sqdist(poly[i], p);
+            if (d < upperDist) {
+              upperDist = d;
+              upperInt = p;
+              upperIndex = j;
+            }
+          }
+        }
+      }
+
+      // if there are no vertices to connect to, choose a point in the middle
+      if (lowerIndex === (upperIndex + 1) % polygon.length) {
+        p[0] = (lowerInt[0] + upperInt[0]) / 2;
+        p[1] = (lowerInt[1] + upperInt[1]) / 2;
+        steinerPoints.push(p);
+        if (i < upperIndex) {
+          polygonAppend(lowerPoly, poly, i, upperIndex + 1);
+          lowerPoly.push(p);
+          upperPoly.push(p);
+          if (lowerIndex !== 0) {
+            polygonAppend(upperPoly, poly, lowerIndex, poly.length);
+          }
+          polygonAppend(upperPoly, poly, 0, i + 1);
+        } else {
+          if (i !== 0) {
+            polygonAppend(lowerPoly, poly, i, poly.length);
+          }
+          polygonAppend(lowerPoly, poly, 0, upperIndex + 1);
+          lowerPoly.push(p);
+          upperPoly.push(p);
+          polygonAppend(upperPoly, poly, lowerIndex, i + 1);
+        }
+      } else {
+        // connect to the closest point within the triangle
+        if (lowerIndex > upperIndex) {
+          upperIndex += polygon.length;
+        }
+        closestDist = Number.MAX_VALUE;
+        if (upperIndex < lowerIndex) {
+          return result;
+        }
+        for (let j = lowerIndex; j <= upperIndex; ++j) {
+          if (isLeftOn(polygonAt(poly, i - 1), polygonAt(poly, i), polygonAt(poly, j)) && isRightOn(polygonAt(poly, i + 1), polygonAt(poly, i), polygonAt(poly, j))) {
+            d = sqdist(polygonAt(poly, i), polygonAt(poly, j));
+            if (d < closestDist && polygonCanSee2(poly, i, j)) {
+              closestDist = d;
+              closestIndex = j % polygon.length;
+            }
+          }
+        }
+        if (i < closestIndex) {
+          polygonAppend(lowerPoly, poly, i, closestIndex + 1);
+          if (closestIndex !== 0) {
+            polygonAppend(upperPoly, poly, closestIndex, v.length);
+          }
+          polygonAppend(upperPoly, poly, 0, i + 1);
+        } else {
+          if (i !== 0) {
+            polygonAppend(lowerPoly, poly, i, v.length);
+          }
+          polygonAppend(lowerPoly, poly, 0, closestIndex + 1);
+          polygonAppend(upperPoly, poly, closestIndex, i + 1);
+        }
+      }
+
+      // solve smallest poly first
+      if (lowerPoly.length < upperPoly.length) {
+        quickDecomp(lowerPoly, result, reflexVertices, steinerPoints, delta, maxlevel, level);
+        quickDecomp(upperPoly, result, reflexVertices, steinerPoints, delta, maxlevel, level);
+      } else {
+        quickDecomp(upperPoly, result, reflexVertices, steinerPoints, delta, maxlevel, level);
+        quickDecomp(lowerPoly, result, reflexVertices, steinerPoints, delta, maxlevel, level);
+      }
+      return result;
+    }
+  }
+  result.push(polygon);
+  return result;
 }
 
 /**
  * Remove collinear points in the polygon.
- * @method removeCollinearPoints
- * @param  {Number} [precision] The threshold angle to use when determining whether two edges are collinear. Use zero for finest precision.
- * @return {Number}           The number of points removed
+ * @param thresholdAngle The threshold angle to use when determining whether two edges are collinear. Use zero for finest precision.
+ * @return The number of points removed
  */
-function polygonRemoveCollinearPoints(polygon, precision){
-    var num = 0;
-    for(var i=polygon.length-1; polygon.length>3 && i>=0; --i){
-        if(collinear(polygonAt(polygon, i-1),polygonAt(polygon, i),polygonAt(polygon, i+1),precision)){
-            // Remove the middle point
-            polygon.splice(i%polygon.length,1);
-            num++;
-        }
+function removeCollinearPoints(polygon, thresholdAngle) {
+  if (thresholdAngle === void 0) {
+    thresholdAngle = 0;
+  }
+  let num = 0;
+  for (let i = polygon.length - 1; polygon.length > 3 && i >= 0; --i) {
+    if (collinear(polygonAt(polygon, i - 1), polygonAt(polygon, i), polygonAt(polygon, i + 1), thresholdAngle)) {
+      // Remove the middle point
+      polygon.splice(i % polygon.length, 1);
+      num++;
     }
-    return num;
-}
-
-/**
- * Remove duplicate points in the polygon.
- * @method removeDuplicatePoints
- * @param  {Number} [precision] The threshold to use when determining whether two points are the same. Use zero for best precision.
- */
-function polygonRemoveDuplicatePoints(polygon, precision){
-    for(var i=polygon.length-1; i>=1; --i){
-        var pi = polygon[i];
-        for(var j=i-1; j>=0; --j){
-            if(points_eq(pi, polygon[j], precision)){
-                polygon.splice(i,1);
-                continue;
-            }
-        }
-    }
+  }
+  return num;
 }
 
 /**
  * Check if two scalars are equal
- * @static
- * @method eq
- * @param  {Number} a
- * @param  {Number} b
- * @param  {Number} [precision]
- * @return {Boolean}
+ * @param a scalar a
+ * @param b scalar b
+ * @param precision the precision for the equality check
+ * @return whether the two scalars are equal with the given precision
  */
-function scalar_eq(a,b,precision){
-    precision = precision || 0;
-    return Math.abs(a-b) <= precision;
+function scalarsEqual(a, b, precision) {
+  if (precision === void 0) {
+    precision = 0;
+  }
+  precision = precision || 0;
+  return Math.abs(a - b) <= precision;
 }
 
 /**
  * Check if two points are equal
- * @static
- * @method points_eq
- * @param  {Array} a
- * @param  {Array} b
- * @param  {Number} [precision]
- * @return {Boolean}
+ * @param a point a
+ * @param b point b
+ * @param precision the precision for the equality check
+ * @return if the two points are equal
  */
-function points_eq(a,b,precision){
-    return scalar_eq(a[0],b[0],precision) && scalar_eq(a[1],b[1],precision);
+function pointsEqual(a, b, precision) {
+  if (precision === void 0) {
+    precision = 0;
+  }
+  return scalarsEqual(a[0], b[0], precision) && scalarsEqual(a[1], b[1], precision);
 }
+
+/**
+ * Remove duplicate points in the polygon.
+ * @param precision The threshold to use when determining whether two points are the same. Use zero for best precision.
+ */
+function removeDuplicatePoints(polygon, precision) {
+  if (precision === void 0) {
+    precision = 0;
+  }
+  for (let i = polygon.length - 1; i >= 1; --i) {
+    const pi = polygon[i];
+    for (let j = i - 1; j >= 0; --j) {
+      if (pointsEqual(pi, polygon[j], precision)) {
+        polygon.splice(i, 1);
+        continue;
+      }
+    }
+  }
+}
+
+
 
 
 /***/ }),
@@ -4611,6 +4602,35 @@ module.exports = Tank;
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
+/******/ 	
+/************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/make namespace object */
+/******/ 	(() => {
+/******/ 		// define __esModule on exports
+/******/ 		__webpack_require__.r = (exports) => {
+/******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 			}
+/******/ 			Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 		};
+/******/ 	})();
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};

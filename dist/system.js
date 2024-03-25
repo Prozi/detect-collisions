@@ -3,10 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.System = void 0;
 const base_system_1 = require("./base-system");
 const line_1 = require("./bodies/line");
-const model_1 = require("./model");
-const utils_1 = require("./utils");
 const intersect_1 = require("./intersect");
+const model_1 = require("./model");
 const optimized_1 = require("./optimized");
+const utils_1 = require("./utils");
 /**
  * collision system
  */
@@ -92,8 +92,8 @@ class System extends base_system_1.BaseSystem {
         let overlapX = 0;
         let overlapY = 0;
         let collided = false;
-        (0, optimized_1.forEach)(convexBodiesA, (convexBodyA) => {
-            (0, optimized_1.forEach)(convexBodiesB, (convexBodyB) => {
+        (0, optimized_1.forEach)(convexBodiesA, convexBodyA => {
+            (0, optimized_1.forEach)(convexBodiesB, convexBodyB => {
                 // always first clear response
                 response.clear();
                 if (sat(convexBodyA, convexBodyB, response)) {

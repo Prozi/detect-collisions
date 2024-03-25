@@ -34,4 +34,4 @@ jobs:
 
       - run: |
           npm install
-          npm run benchmark
+          npm run build

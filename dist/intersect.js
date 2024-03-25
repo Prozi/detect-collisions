@@ -15,15 +15,15 @@ function ensureConvex(body) {
 }
 exports.ensureConvex = ensureConvex;
 function polygonInCircle(polygon, circle) {
-    return (0, optimized_1.every)(polygon.calcPoints, (p) => (0, sat_1.pointInCircle)({ x: p.x + polygon.pos.x, y: p.y + polygon.pos.y }, circle));
+    return (0, optimized_1.every)(polygon.calcPoints, p => (0, sat_1.pointInCircle)({ x: p.x + polygon.pos.x, y: p.y + polygon.pos.y }, circle));
 }
 exports.polygonInCircle = polygonInCircle;
 function pointInPolygon(point, polygon) {
-    return (0, optimized_1.some)(ensureConvex(polygon), (convex) => (0, sat_1.pointInPolygon)(point, convex));
+    return (0, optimized_1.some)(ensureConvex(polygon), convex => (0, sat_1.pointInPolygon)(point, convex));
 }
 exports.pointInPolygon = pointInPolygon;
 function polygonInPolygon(polygonA, polygonB) {
-    return (0, optimized_1.every)(polygonA.calcPoints, (point) => pointInPolygon({ x: point.x + polygonA.pos.x, y: point.y + polygonA.pos.y }, polygonB));
+    return (0, optimized_1.every)(polygonA.calcPoints, point => pointInPolygon({ x: point.x + polygonA.pos.x, y: point.y + polygonA.pos.y }, polygonB));
 }
 exports.polygonInPolygon = polygonInPolygon;
 /**
@@ -66,12 +66,12 @@ function circleInPolygon(circle, polygon) {
     // Necessary add polygon pos to points
     const points = (0, optimized_1.map)(polygon.calcPoints, ({ x, y }) => ({
         x: x + polygon.pos.x,
-        y: y + polygon.pos.y,
+        y: y + polygon.pos.y
     }));
     // If the center of the circle is within the polygon,
     // the circle is not outside of the polygon completely.
     // so return false.
-    if ((0, optimized_1.some)(points, (point) => (0, sat_1.pointInCircle)(point, circle))) {
+    if ((0, optimized_1.some)(points, point => (0, sat_1.pointInCircle)(point, circle))) {
         return false;
     }
     // If any line-segment of the polygon intersects the circle,
@@ -105,12 +105,12 @@ function circleOutsidePolygon(circle, polygon) {
     // Necessary add polygon pos to points
     const points = (0, optimized_1.map)(polygon.calcPoints, ({ x, y }) => ({
         x: x + polygon.pos.x,
-        y: y + polygon.pos.y,
+        y: y + polygon.pos.y
     }));
     // If the center of the circle is within the polygon,
     // the circle is not outside of the polygon completely.
     // so return false.
-    if ((0, optimized_1.some)(points, (point) => (0, sat_1.pointInCircle)(point, circle) || pointOnCircle(point, circle))) {
+    if ((0, optimized_1.some)(points, point => (0, sat_1.pointInCircle)(point, circle) || pointOnCircle(point, circle))) {
         return false;
     }
     // If any line-segment of the polygon intersects the circle,
@@ -205,7 +205,7 @@ function intersectLinePolygon(line, polygon) {
             : polygon.calcPoints[polygon.calcPoints.length - 1];
         const side = {
             start: { x: from.x + polygon.pos.x, y: from.y + polygon.pos.y },
-            end: { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y },
+            end: { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y }
         };
         const hit = intersectLineLine(line, side);
         if (hit) {

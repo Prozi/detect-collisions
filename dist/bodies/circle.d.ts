@@ -1,7 +1,7 @@
 import { BBox } from "rbush";
 import { Circle as SATCircle } from "sat";
-import { BodyOptions, BodyProps, PotentialVector, SATVector, BodyType, Vector } from "../model";
 import { BaseSystem } from "../base-system";
+import { BodyOptions, BodyProps, BodyType, PotentialVector, SATVector, Vector } from "../model";
 /**
  * collider - circle
  */

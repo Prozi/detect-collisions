@@ -22,24 +22,24 @@ const insertionBenchmark = () => {
         nonoverlappingTriangles.push(new polygon_1.Polygon(new model_1.SATVector(ndx * 2, 0), [
             new model_1.SATVector(0, 0),
             new model_1.SATVector(0, 1),
-            new model_1.SATVector(1, 0),
+            new model_1.SATVector(1, 0)
         ]));
         overlappingTriangles.push(new polygon_1.Polygon(new model_1.SATVector(0, 0), [
             new model_1.SATVector(0, 0),
             new model_1.SATVector(0, 1),
-            new model_1.SATVector(1, 0),
+            new model_1.SATVector(1, 0)
         ]));
         nonoverlappingRectangles.push(new polygon_1.Polygon(new model_1.SATVector(0, 0), [
             new model_1.SATVector(0, 0),
             new model_1.SATVector(0, 1),
             new model_1.SATVector(1, 1),
-            new model_1.SATVector(1, 0),
+            new model_1.SATVector(1, 0)
         ]));
         overlappingRectangles.push(new polygon_1.Polygon(new model_1.SATVector(0, 0), [
             new model_1.SATVector(0, 0),
             new model_1.SATVector(0, 1),
             new model_1.SATVector(1, 1),
-            new model_1.SATVector(1, 0),
+            new model_1.SATVector(1, 0)
         ]));
     }
     benchmark
@@ -90,11 +90,11 @@ const insertionBenchmark = () => {
                 "Standard Deviation (s)": parseFloat(((_b = result === null || result === void 0 ? void 0 : result.sd) !== null && _b !== void 0 ? _b : 0).toFixed(3)),
                 hz: parseFloat(((_c = result === null || result === void 0 ? void 0 : result.hz) !== null && _c !== void 0 ? _c : 0).toFixed(3)),
                 "p99 (s)": parseFloat(((_d = result === null || result === void 0 ? void 0 : result.p99) !== null && _d !== void 0 ? _d : 0).toFixed(3)),
-                "p995 (s)": parseFloat(((_e = result === null || result === void 0 ? void 0 : result.p995) !== null && _e !== void 0 ? _e : 0).toFixed(3)),
+                "p995 (s)": parseFloat(((_e = result === null || result === void 0 ? void 0 : result.p995) !== null && _e !== void 0 ? _e : 0).toFixed(3))
             });
         }));
     })
-        .catch((err) => {
+        .catch(err => {
         console.warn(err.message || err);
     });
 };

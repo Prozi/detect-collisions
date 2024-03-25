@@ -46,7 +46,7 @@ const stressBenchmark = () => __awaiter(void 0, void 0, void 0, function* () {
         },
         teardown: () => {
             stressTest.physics.clear();
-        },
+        }
     });
     const recursiveAddTest = (items) => {
         benchmark.add(`stress test, items=${items}`, () => {

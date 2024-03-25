@@ -1,5 +1,5 @@
+import { Point as DecompPoint } from "poly-decomp-es";
 import { BBox } from "rbush";
-import { Point as DecompPoint } from "poly-decomp";
 import {
   Response,
   testCircleCircle,
@@ -19,12 +19,12 @@ import {
 import {
   Body,
   BodyOptions,
+  BodyType,
+  InTest,
   PotentialVector,
   SATPolygon,
-  BodyType,
-  Vector,
   SATTest,
-  InTest,
+  Vector,
 } from "./model";
 import { forEach, map } from "./optimized";
 

@@ -1,17 +1,17 @@
 import { BBox } from "rbush";
 import { Circle as SATCircle } from "sat";
 
+import { BaseSystem } from "../base-system";
 import {
   BodyOptions,
   BodyProps,
+  BodyType,
   PotentialVector,
   SATVector,
-  BodyType,
   Vector,
 } from "../model";
 import { System } from "../system";
 import { dashLineTo, drawBVH, ensureVectorPoint, extendBody } from "../utils";
-import { BaseSystem } from "../base-system";
 
 /**
  * collider - circle

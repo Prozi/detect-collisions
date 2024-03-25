@@ -1,8 +1,8 @@
+import { Point as DecompPoint } from "poly-decomp-es";
 import { BBox } from "rbush";
-import { Point as DecompPoint } from "poly-decomp";
 import { Response, Vector as SATVector } from "sat";
 import { Polygon } from "./bodies/polygon";
-import { Body, BodyOptions, PotentialVector, SATPolygon, Vector, SATTest } from "./model";
+import { Body, BodyOptions, PotentialVector, SATPolygon, SATTest, Vector } from "./model";
 export declare const DEG2RAD: number;
 export declare const RAD2DEG: number;
 /**
@@ -84,7 +84,7 @@ export declare function dashLineTo(context: CanvasRenderingContext2D, fromX: num
 /**
  * draw polygon
  */
-export declare function drawPolygon(context: CanvasRenderingContext2D, { pos, calcPoints, }: Pick<Polygon | SATPolygon, "calcPoints"> & {
+export declare function drawPolygon(context: CanvasRenderingContext2D, { pos, calcPoints }: Pick<Polygon | SATPolygon, "calcPoints"> & {
     pos: Vector;
 }, isTrigger?: boolean): void;
 /**

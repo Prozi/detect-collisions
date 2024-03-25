@@ -1,4 +1,4 @@
-import { BodyOptions, PotentialVector, BodyType } from "../model";
+import { BodyOptions, BodyType, PotentialVector } from "../model";
 import { Box } from "./box";
 /**
  * collider - point (very tiny box)

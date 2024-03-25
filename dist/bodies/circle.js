@@ -136,7 +136,7 @@ class Circle extends sat_1.Circle {
             minX: x - this.r,
             maxX: x + this.r,
             minY: y - this.r,
-            maxY: y + this.r,
+            maxY: y + this.r
         };
     }
     /**

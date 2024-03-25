@@ -1,27 +1,27 @@
 import { BaseSystem } from "./base-system";
 import { Line } from "./bodies/line";
 import {
+  ensureConvex,
+  intersectLineCircle,
+  intersectLinePolygon,
+} from "./intersect";
+import {
+  Body,
+  BodyType,
+  CollisionCallback,
   RaycastHit,
   Response,
   SATVector,
   Vector,
-  Body,
-  BodyType,
-  CollisionCallback,
 } from "./model";
+import { forEach, some } from "./optimized";
 import {
-  distance,
   checkAInB,
+  distance,
   getSATTest,
   notIntersectAABB,
   returnTrue,
 } from "./utils";
-import {
-  intersectLineCircle,
-  intersectLinePolygon,
-  ensureConvex,
-} from "./intersect";
-import { forEach, some } from "./optimized";
 
 /**
  * collision system
