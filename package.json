@@ -1,12 +1,13 @@
 {
   "name": "detect-collisions",
-  "version": "9.5.1",
+  "version": "9.5.2",
   "description": "detecting collisions between bodies: Points, Lines, Boxes, Polygons (Concave too), Ellipses and Circles. Also RayCasting. All bodies can have offset, rotation, scale, bounding box padding, can be static (non moving) or be trigger bodies (non colliding).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "amend": "npm run precommit;git commit -a --am --no-edit",
     "start": "chef-express dist/demo --debug",
+    "update": "ncu -u && yarn add typescript@^4 -D",
+    "amend": "npm run precommit;git commit -a --am --no-edit",
     "prebuild": "rimraf dist",
     "build": "tsc",
     "postbuild": "npm run test && npm run build:docs && npm run build:demo && npm run format && npm run benchmark",
@@ -15,9 +16,9 @@
     "postbuild:demo": "cp src/demo/stress.js dist/demo && cp -r dist/demo docs",
     "prebuild:docs": "rimraf docs",
     "build:docs": "typedoc --customCss typedoc.css",
-    "postbuild:docs": "npm run docs-from-master",
+    "postbuild:docs": "npm run docs-from-master || echo ok",
     "docs": "npm run build:docs && chef-express docs --debug",
-    "docs-from-master": "for f in `find docs -name *.html`; do sed -i '' -r 's_/blob/[^/]+/_/blob/master/_g' $f; done",
+    "docs-from-master": "find docs -type f -name '*.html' -exec sed -i '' -r 's_/blob/[^/]+/_/blob/master/_g' {} +",
     "benchmark": "npm run benchmark-insertion && npm run benchmark-stress",
     "benchmark-stress": "node -r pixi-shim -e 'require(`./dist/benchmarks`).stressBenchmark()'",
     "benchmark-insertion": "node -e 'require(`./dist/benchmarks`).insertionBenchmark()'",
@@ -67,12 +68,12 @@
     "sat": "^0.9.0"
   },
   "devDependencies": {
-    "@types/node": "^20.11.24",
+    "@types/node": "^20.11.30",
     "chef-express": "^2.1.3",
     "html-webpack-plugin": "^5.6.0",
     "husky": "^9.0.11",
     "jest": "^29.7.0",
-    "pixi-shim": "^2.4.1",
+    "pixi-shim": "^2.5.0",
     "prettier": "^3.2.5",
     "random-seed": "^0.3.0",
     "rimraf": "^5.0.5",
@@ -80,11 +81,11 @@
     "ts-jest": "^29.1.2",
     "ts-loader": "^9.5.1",
     "tslint": "^6.1.3",
-    "typedoc": "^0.25.9",
+    "typedoc": "^0.25.12",
     "typescript": "^4",
-    "webpack": "^5.90.3",
+    "webpack": "^5.91.0",
     "webpack-cli": "^5.1.4",
-    "webpack-dev-server": "^5.0.2"
+    "webpack-dev-server": "^5.0.4"
   },
   "resolutions": {
     "minimist": "^1.2.6",

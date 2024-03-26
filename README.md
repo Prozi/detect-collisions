@@ -6,7 +6,7 @@
 
 ## Introduction
 
-Detect-Collisions is a robust TypeScript library for detecting collisions among varied entities. It uses Bounding Volume Hierarchy (BVH) and the Separating Axis Theorem (SAT) for efficient collision detection. Uniquely, it manages rotation, scale of bodies, and supports decomposing concave polygons into convex ones. It also optimizes detection with body padding. Ideal for gaming, simulations, or projects needing advanced collision detection, Detect-Collisions offers customization and fast performance.
+Detect-Collisions is a robust TypeScript library for detecting collisions among various entities. It employs Bounding Volume Hierarchy (BVH) and the Separating Axis Theorem (SAT) for efficient collision detection. Unique features include managing rotation, scale of bodies, and supporting the decomposition of concave polygons into convex ones. It optimizes detection with body padding, making it ideal for gaming, simulations, or projects requiring advanced collision detection with customization and fast performance.
 
 ## Demos
 
@@ -24,13 +24,13 @@ $ npm install detect-collisions
 
 For detailed documentation on the library's API, refer to the following link:
 
-https://prozi.github.io/detect-collisions/
+[Detect-Collisions API Documentation](https://prozi.github.io/detect-collisions/)
 
 ## Usage
 
 ### Step 1: Initialize Collision System
 
-Detect-Collisions extends functionalities from RBush. To begin, establish a unique collision system.
+Initialize a unique collision system using Detect-Collisions:
 
 ```ts
 const { System } = require("detect-collisions");
@@ -39,42 +39,19 @@ const system = new System();
 
 ### Step 2: Understand Body Attributes
 
-Bodies have various properties:
+Bodies possess various properties:
 
-- **Position Attributes**: `pos: Vector`, `x: number`, `y: number`. Setting `body.pos.x` or `body.pos.y` doesn't update the bounding box while setting `body.x` or `body.y` directly does. To set both at the same time, use `setPosition(x, y)`.
-
-- **Scale, Offset**: Bodies have `scale: number` shorthand property and `setScale(x, y)` method for scaling. The `offset: Vector` property and `setOffset({ x, y }: Vector)` method are for offset from body center for rotation purposes.
-
-- **AABB Bounding Box**: You can get the bounding box even on non-inserted bodies with `getAABBAsBBox(): BBox` method.
-
-Bodies contain additional properties (`BodyOptions`) that can be set in runtime or during creation:
-
-- `angle: number`: Use `setAngle(angle: number)` to change it during runtime.
-- `isStatic: boolean`: If set to true, the body won't move during `system.separare()`. For walls.
-- `isTrigger: boolean`: If set to true, the body won't move during `system.separate()`. For projectiles.
-- `isCentered: boolean`: If set to true, offset is set to center for rotation purposes.
-- `padding: number`: Bounding box padding, optimizes costly updates.
-
-Use `isConvex: boolean` and `convexPolygons: Vector[][]` to check if the `Polygon` is convex.
-
-Each body type has specific properties, for example, a `Box` has `width` & `height` properties.
+- **Position**: `pos: Vector`, `x: number`, `y: number`.
+- **Scale**: Use `setScale(x: number, y: number)` for setting and `scale: Vector` for getting scale
+- **Rotation**: Use `setAngle(radians: number)` for setting and `angle: number` for getting and `deg2rad(degrees: number)` to convert to radians.
+- **Offset**: Use `setOffset(offset: Vector)` for setting and `offset: Vector` for getting offset from the body center.
+- **AABB Bounding Box**: Use `aabb: BBox` for inserted or `getAABBAsBBox(): BBox` for non inserted bodies to get the bounding box.
+- **Padding**: Use `padding: number` and set to nonzero value to reduce costly reinserts on attributes' change.
+- **Body Options**: Use `isStatic: boolean` to mark body as non movable and `isTrigger: boolean` to set body as ghost.
 
 ### Step 3: Create and Manage Bodies
 
-Use `BodyOptions` as the last optional parameter during body creation.
-
-```ts
-const { deg2rad } = require("detect-collisions");
-const options = {
-  angle: deg2rad(90),
-  isStatic: false,
-  isTrigger: false,
-  isCentered: false,
-  padding: 0,
-};
-```
-
-Create body of various types using:
+Create bodies of various types and manage them:
 
 ```ts
 const {
@@ -86,154 +63,46 @@ const {
   Polygon,
 } = require("detect-collisions");
 
-// create with options, without insert
-const box = new Box(position, width, height, options);
-const circle = new Circle(position, radius, options);
-const ellipse = new Ellipse(position, radiusX, radiusY, step, options);
-const line = new Line(start, end, options);
-const point = new Point(position, options);
-const polygon = new Polygon(position, points, options);
-```
-
-Insert a body into the system:
-
-```ts
-// insert any of the above
-system.insert(body);
-```
-
-Create and insert body in one step:
-
-```ts
-// create with options, and insert
-const box = system.createBox(position, width, height, options);
-const circle = system.createCircle(position, radius, options);
-const ellipse = system.createEllipse(position, radiusX, radiusY, step, options);
-const line = system.createLine(start, end, options);
-const point = system.createPoint(position, options);
-const polygon = system.createPolygon(position, points, options);
+// Example: Create and insert box1 body
+const box1 = system.createBox(position, width, height, options);
+// Example: Create box2 body
+const box2 = new Box(position, width, height, options);
+// Example: Insert box2 body
+system.insert(box2);
 ```
 
 ### Step 4: Manipulate Bodies
 
-Notice the last parameter of each of the below 4 functions defaults to `true` if omitted.
+Manipulate body attributes and update the collision system:
 
-- `setPosition(x: number, y: number, update = true)`:
-
-  - Sets the position of the body to the specified `(x, y)` coordinates in the 2D space.
-
-- `setScale(x: number, y = x, update = true)`:
-
-  - Sets the scale of the body along the x-axis and y-axis (optional).
-  - Allows resizing the body.
-
-- `setAngle(angle: number, update = true)`:
-
-  - Sets the rotation angle of the body to the specified value.
-  - Used for rotating the body around its center.
-  - Angle in radians, use `deg2rad(degrees: number)` for conversion.
-
-- `setOffset(offset: { x: number, y: number }, update = true)`:
-
-  - Sets the offset of the body from its center.
-  - Used to position the body's collision shape more accurately.
-
-- `updateBody()`:
-  - Updates body AABB in collision tree, please call this after all manipulations are done
-
-Depending on your use case:
-
-- If you use only position updates stick to `setPosition(x, y)` and don't use `system.update()` or `body.updateBody()`. Since the last parameter of each manipulation function (`update`) defaults to `true`, this way will make that body bounding box update after that `setPosition` call,
-
-- If you use 2 or more manipulation methods, like position plus any other aspect like scale/angle/offset, you should call manipulation functions with last parameter set to `false` (for example: `setPosition(x, y, false)`)
-  - After all of those manipulations are done, call once `body.updateBody()` to update the bounding box once. This method is most efficient.
-  - Alternatively, after all updates of bodies in this frame are finished, call once `system.update()` which will iterate over all bodies and update their bounding box. This method is slightly less efficient.
+```ts
+box.setPosition(x, y);
+box.setScale(scaleX, scaleY);
+box.setAngle(angle);
+box.setOffset({ x, y });
+system.update(); // Update the system after manipulation
+```
 
 ### Step 5: Collision Detection and Resolution
 
-Check collisions for all bodies or a single body:
+Detect collisions and respond accordingly:
 
 ```ts
-// check if any body collides, end after first collision and return true
-const collided = system.checkAll();
-
-// check if 1 body collides, end after first collision and return true
-const collided = system.checkOne(body);
+if (system.checkAll()) {
+  // Handle collision
+  system.separate(); // Separate bodies after collision
+}
 ```
 
-For a direct collision check without broad-phase search, use `system.checkCollision(body1, body2)`. However, this isn't recommended due to efficiency loss.
+### Step 6: Cleaning Up
 
-Access detailed collision information in the system.response object, which includes properties like `a, b, overlap, overlapN, overlapV, aInB, and bInA`.
-
-### Step 6: Collision Response
-
-After detecting a collision, you may want to respond or "react" to it in some way. This could be as simple as stopping a character from moving through a wall, or as complex as calculating the resulting velocities of a multi-object collision in a physics simulation.
-
-Here's a simple example:
-
-```ts
-system.checkAll(({ a: body, b: collider }: Response) => {
-  if (body.isPlayer && collider.isWall) {
-    // Player can't move through walls
-    system.separateBody(body);
-  } else if (body.isBullet && collider.isEnemy) {
-    // Bullet hits enemy
-    system.remove(body); // Remove bullet
-    collider.takeDamage(); // Damage enemy
-  }
-});
-```
-
-### Step 7: Body Separation
-
-There is an easy way to handle overlap and separation of bodies during collisions. Use system.separate() after updating the system. This function takes into account `isTrigger` and `isStatic` flags on bodies.
-
-```ts
-system.separate();
-```
-
-This function provides a simple way to handle collisions of whole system, without needing to manually calculate and negate overlap.
-
-```ts
-system.separateBody(body);
-```
-
-This function provides a simple way to handle collisions of one body, without needing to manually calculate and negate overlap.
-
-### Step 8: Cleaning Up
-
-When you're done with a body, you should remove it from the system to free up memory and keep the collision checks efficient. You can do this with the remove method:
+Remove bodies when they're no longer needed:
 
 ```ts
 system.remove(body);
 ```
 
-This will remove the body from the system's internal data structures, preventing it from being included in future collision checks. If you keep a reference to the body, you can insert it again later with `system.insert(body)`.
-
-Remember to always keep your collision system as clean as possible. This means removing bodies when they're not needed, and avoiding unnecessary updates. Following these guidelines will help ensure your project runs smoothly and efficiently.
-
-And that's it! You're now ready to use the Detect-Collisions library in your project. Whether you're making a game, a simulation, or any other kind of interactive experience, Detect-Collisions provides a robust, efficient, and easy-to-use solution for collision detection. Happy coding!
-
-## Detecting collision after insertion
-
-```ts
-// create self-destructing collider
-const testCollision = ({ x, y }, radius = 10) => {
-  // create and add to tree
-  const circle = system.createCircle({ x, y }, radius);
-  // init as false
-  const collided = system.checkOne(circle);
-
-  // remove from tree
-  system.remove(circle);
-
-  return collided ? system.response : null;
-};
-```
-
-## Handling Concave Polygons
-
-As of version 6.8.0, Detect-Collisions fully supports non-convex or hollow polygons\*, provided they are valid. Learn more about this feature from [GitHub Issue #45](https://github.com/Prozi/detect-collisions/issues/45) or experiment with it on [Stackblitz](https://stackblitz.com/edit/detect-collisions).
+And that's it! You're now ready to utilize the Detect-Collisions library in your project.
 
 ## Visual Debugging with Rendering
 
@@ -307,18 +176,13 @@ While physics engines like [Matter-js](https://github.com/liabru/matter-js) or [
 
 ## Benchmark
 
+This will provide you with the results of both the insertion test benchmark and a headless [Stress Demo](https://prozi.github.io/detect-collisions/demo/?stress) benchmark, featuring moving bodies, with increasing amounts in each step.
+
 ```bash
 $ git clone https://github.com/Prozi/detect-collisions.git
 $ cd detect-collisions
-$ npm i && npm run build
+$ npm i && npm run build # will build & run tests & run benchmarks
 ```
-
-- will show you the results of insertion test, and
-- [Stress Demo](https://prozi.github.io/detect-collisions/demo/?stress) live (moving bodies)
-
-with different _N_ amounts of bodies
-
-typical output:
 
 ```bash
 ┌─────────┬─────────────────────────────┬──────────────────┬────────────────────────┬───────────┬─────────┬──────────┐
@@ -331,7 +195,9 @@ typical output:
 │    4    │   'non-overlapping quad'    │      0.065       │         0.033          │ 15404.47  │  0.274  │  0.285   │
 │    5    │     'overlapping quad'      │      0.064       │         0.032          │ 15572.344 │  0.276  │  0.311   │
 └─────────┴─────────────────────────────┴──────────────────┴────────────────────────┴───────────┴─────────┴──────────┘
+```
 
+```bash
 ┌─────────┬────────────────────────────┬─────────┬────────────────────┬──────────┬─────────┐
 │ (index) │         Task Name          │ ops/sec │ Average Time (ns)  │  Margin  │ Samples │
 ├─────────┼────────────────────────────┼─────────┼────────────────────┼──────────┼─────────┤
