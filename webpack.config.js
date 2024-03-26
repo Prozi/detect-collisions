@@ -5,6 +5,18 @@ module.exports = {
   entry: {
     demo: "./src/demo/index.js",
   },
+  resolve: {
+    extensions: [".js", ".ts"],
+  },
+  module: {
+    rules: [
+      {
+        test: /\.tsx?$/,
+        use: "ts-loader",
+        exclude: /node_modules/,
+      },
+    ],
+  },
   mode: "development",
   target: "web",
   devtool: false,

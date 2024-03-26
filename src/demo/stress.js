@@ -1,4 +1,5 @@
-const { System, getBounceDirection } = require("../..");
+const { System } = require("../system");
+const { getBounceDirection } = require("../utils");
 const { width, height, loop } = require("./canvas");
 const seededRandom = require("random-seed").create("@Prozi").random;
 

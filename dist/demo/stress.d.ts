@@ -1,7 +1,7 @@
 export = Stress;
 declare class Stress {
     constructor(count?: number);
-    physics: any;
+    physics: System<import("..").Body>;
     bodies: any[];
     polygons: number;
     boxes: number;
@@ -10,7 +10,7 @@ declare class Stress {
     lines: number;
     lastVariant: number;
     count: number;
-    bounds: any[];
+    bounds: import("..").Box[];
     legend: string;
     lastTime: number;
     updateBody(body: any): void;
@@ -20,3 +20,4 @@ declare class Stress {
     bounceBody(body: any): void;
     createShape(large: any, size: any): void;
 }
+import { System } from "../system";

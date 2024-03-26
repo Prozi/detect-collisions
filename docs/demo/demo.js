@@ -1,2186 +1,6 @@
 /******/ (() => {
   // webpackBootstrap
   /******/ var __webpack_modules__ = {
-    /***/ "./dist/base-system.js":
-      /*!*****************************!*\
-  !*** ./dist/base-system.js ***!
-  \*****************************/
-      /***/ (__unused_webpack_module, exports, __webpack_require__) => {
-        "use strict";
-
-        Object.defineProperty(exports, "__esModule", { value: true });
-        exports.BaseSystem = void 0;
-        const box_1 = __webpack_require__(
-          /*! ./bodies/box */ "./dist/bodies/box.js",
-        );
-        const circle_1 = __webpack_require__(
-          /*! ./bodies/circle */ "./dist/bodies/circle.js",
-        );
-        const ellipse_1 = __webpack_require__(
-          /*! ./bodies/ellipse */ "./dist/bodies/ellipse.js",
-        );
-        const line_1 = __webpack_require__(
-          /*! ./bodies/line */ "./dist/bodies/line.js",
-        );
-        const point_1 = __webpack_require__(
-          /*! ./bodies/point */ "./dist/bodies/point.js",
-        );
-        const polygon_1 = __webpack_require__(
-          /*! ./bodies/polygon */ "./dist/bodies/polygon.js",
-        );
-        const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
-        const optimized_1 = __webpack_require__(
-          /*! ./optimized */ "./dist/optimized.js",
-        );
-        const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils.js");
-        /**
-         * very base collision system (create, insert, update, draw, remove)
-         */
-        class BaseSystem extends model_1.RBush {
-          /**
-           * create point at position with options and add to system
-           */
-          createPoint(position, options) {
-            const point = new point_1.Point(position, options);
-            this.insert(point);
-            return point;
-          }
-          /**
-           * create line at position with options and add to system
-           */
-          createLine(start, end, options) {
-            const line = new line_1.Line(start, end, options);
-            this.insert(line);
-            return line;
-          }
-          /**
-           * create circle at position with options and add to system
-           */
-          createCircle(position, radius, options) {
-            const circle = new circle_1.Circle(position, radius, options);
-            this.insert(circle);
-            return circle;
-          }
-          /**
-           * create box at position with options and add to system
-           */
-          createBox(position, width, height, options) {
-            const box = new box_1.Box(position, width, height, options);
-            this.insert(box);
-            return box;
-          }
-          /**
-           * create ellipse at position with options and add to system
-           */
-          createEllipse(position, radiusX, radiusY = radiusX, step, options) {
-            const ellipse = new ellipse_1.Ellipse(
-              position,
-              radiusX,
-              radiusY,
-              step,
-              options,
-            );
-            this.insert(ellipse);
-            return ellipse;
-          }
-          /**
-           * create polygon at position with options and add to system
-           */
-          createPolygon(position, points, options) {
-            const polygon = new polygon_1.Polygon(position, points, options);
-            this.insert(polygon);
-            return polygon;
-          }
-          /**
-           * re-insert body into collision tree and update its aabb
-           * every body can be part of only one system
-           */
-          insert(body) {
-            body.bbox = body.getAABBAsBBox();
-            if (body.system) {
-              // allow end if body inserted and not moved
-              if (!(0, utils_1.bodyMoved)(body)) {
-                return this;
-              }
-              // old bounding box *needs* to be removed
-              body.system.remove(body);
-            }
-            // only then we update min, max
-            body.minX = body.bbox.minX - body.padding;
-            body.minY = body.bbox.minY - body.padding;
-            body.maxX = body.bbox.maxX + body.padding;
-            body.maxY = body.bbox.maxY + body.padding;
-            // set system for later body.system.updateBody(body)
-            body.system = this;
-            // reinsert bounding box to collision tree
-            return super.insert(body);
-          }
-          /**
-           * updates body in collision tree
-           */
-          updateBody(body) {
-            body.updateBody();
-          }
-          /**
-           * update all bodies aabb
-           */
-          update() {
-            (0, optimized_1.forEach)(this.all(), (body) => {
-              this.updateBody(body);
-            });
-          }
-          /**
-           * draw exact bodies colliders outline
-           */
-          draw(context) {
-            (0, optimized_1.forEach)(this.all(), (body) => {
-              body.draw(context);
-            });
-          }
-          /**
-           * draw bounding boxes hierarchy outline
-           */
-          drawBVH(context) {
-            const drawChildren = (body) => {
-              (0, utils_1.drawBVH)(context, body);
-              if (body.children) {
-                (0, optimized_1.forEach)(body.children, drawChildren);
-              }
-            };
-            (0, optimized_1.forEach)(this.data.children, drawChildren);
-          }
-          /**
-           * remove body aabb from collision tree
-           */
-          remove(body, equals) {
-            body.system = undefined;
-            return super.remove(body, equals);
-          }
-          /**
-           * get object potential colliders
-           * @deprecated because it's slower to use than checkOne() or checkAll()
-           */
-          getPotentials(body) {
-            // filter here is required as collides with self
-            return (0, optimized_1.filter)(
-              this.search(body),
-              (candidate) => candidate !== body,
-            );
-          }
-          /**
-           * used to find body deep inside data with finder function returning boolean found or not
-           */
-          traverse(traverseFunction, { children } = this.data) {
-            return children === null || children === void 0
-              ? void 0
-              : children.find((body, index) => {
-                  if (!body) {
-                    return false;
-                  }
-                  if (body.type && traverseFunction(body, children, index)) {
-                    return true;
-                  }
-                  // if callback returns true, ends forEach
-                  if (body.children) {
-                    this.traverse(traverseFunction, body);
-                  }
-                });
-          }
-        }
-        exports.BaseSystem = BaseSystem;
-
-        /***/
-      },
-
-    /***/ "./dist/bodies/box.js":
-      /*!****************************!*\
-  !*** ./dist/bodies/box.js ***!
-  \****************************/
-      /***/ (__unused_webpack_module, exports, __webpack_require__) => {
-        "use strict";
-
-        Object.defineProperty(exports, "__esModule", { value: true });
-        exports.Box = void 0;
-        const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
-        const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils.js");
-        const polygon_1 = __webpack_require__(
-          /*! ./polygon */ "./dist/bodies/polygon.js",
-        );
-        /**
-         * collider - box
-         */
-        class Box extends polygon_1.Polygon {
-          /**
-           * collider - box
-           */
-          constructor(position, width, height, options) {
-            super(position, (0, utils_1.createBox)(width, height), options);
-            /**
-             * type of body
-             */
-            this.type = model_1.BodyType.Box;
-            /**
-             * boxes are convex
-             */
-            this.isConvex = true;
-            this._width = width;
-            this._height = height;
-          }
-          /**
-           * get box width
-           */
-          get width() {
-            return this._width;
-          }
-          /**
-           * set box width, update points
-           */
-          set width(width) {
-            this._width = width;
-            this.afterUpdateSize();
-          }
-          /**
-           * get box height
-           */
-          get height() {
-            return this._height;
-          }
-          /**
-           * set box height, update points
-           */
-          set height(height) {
-            this._height = height;
-            this.afterUpdateSize();
-          }
-          /**
-           * after setting width/height update translate
-           * see https://github.com/Prozi/detect-collisions/issues/70
-           */
-          afterUpdateSize() {
-            if (this.isCentered) {
-              this.retranslate(false);
-            }
-            this.setPoints((0, utils_1.createBox)(this._width, this._height));
-            if (this.isCentered) {
-              this.retranslate();
-            }
-          }
-          /**
-           * do not attempt to use Polygon.updateIsConvex()
-           */
-          updateIsConvex() {
-            return;
-          }
-        }
-        exports.Box = Box;
-
-        /***/
-      },
-
-    /***/ "./dist/bodies/circle.js":
-      /*!*******************************!*\
-  !*** ./dist/bodies/circle.js ***!
-  \*******************************/
-      /***/ (__unused_webpack_module, exports, __webpack_require__) => {
-        "use strict";
-
-        Object.defineProperty(exports, "__esModule", { value: true });
-        exports.Circle = void 0;
-        const sat_1 = __webpack_require__(
-          /*! sat */ "./node_modules/sat/SAT.js",
-        );
-        const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
-        const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils.js");
-        /**
-         * collider - circle
-         */
-        class Circle extends sat_1.Circle {
-          /**
-           * collider - circle
-           */
-          constructor(position, radius, options) {
-            super((0, utils_1.ensureVectorPoint)(position), radius);
-            /**
-             * offset copy without angle applied
-             */
-            this.offsetCopy = { x: 0, y: 0 };
-            /**
-             * was the polygon modified and needs update in the next checkCollision
-             */
-            this.dirty = false;
-            /*
-             * circles are convex
-             */
-            this.isConvex = true;
-            /**
-             * circle type
-             */
-            this.type = model_1.BodyType.Circle;
-            /**
-             * always centered
-             */
-            this.isCentered = true;
-            (0, utils_1.extendBody)(this, options);
-            this.unscaledRadius = radius;
-          }
-          /**
-           * get this.pos.x
-           */
-          get x() {
-            return this.pos.x;
-          }
-          /**
-           * updating this.pos.x by this.x = x updates AABB
-           */
-          set x(x) {
-            this.pos.x = x;
-            this.markAsDirty();
-          }
-          /**
-           * get this.pos.y
-           */
-          get y() {
-            return this.pos.y;
-          }
-          /**
-           * updating this.pos.y by this.y = y updates AABB
-           */
-          set y(y) {
-            this.pos.y = y;
-            this.markAsDirty();
-          }
-          /**
-           * allow get scale
-           */
-          get scale() {
-            return this.r / this.unscaledRadius;
-          }
-          /**
-           * shorthand for setScale()
-           */
-          set scale(scale) {
-            this.setScale(scale);
-          }
-          /**
-           * scaleX = scale in case of Circles
-           */
-          get scaleX() {
-            return this.scale;
-          }
-          /**
-           * scaleY = scale in case of Circles
-           */
-          get scaleY() {
-            return this.scale;
-          }
-          /**
-           * update position
-           */
-          setPosition(x, y, update = true) {
-            this.pos.x = x;
-            this.pos.y = y;
-            this.markAsDirty(update);
-            return this;
-          }
-          /**
-           * update scale
-           */
-          setScale(scaleX, _scaleY = scaleX, update = true) {
-            this.r = this.unscaledRadius * Math.abs(scaleX);
-            this.markAsDirty(update);
-            return this;
-          }
-          /**
-           * set rotation
-           */
-          setAngle(angle, update = true) {
-            this.angle = angle;
-            const { x, y } = this.getOffsetWithAngle();
-            this.offset.x = x;
-            this.offset.y = y;
-            this.markAsDirty(update);
-            return this;
-          }
-          /**
-           * set offset from center
-           */
-          setOffset(offset, update = true) {
-            this.offsetCopy.x = offset.x;
-            this.offsetCopy.y = offset.y;
-            const { x, y } = this.getOffsetWithAngle();
-            this.offset.x = x;
-            this.offset.y = y;
-            this.markAsDirty(update);
-            return this;
-          }
-          /**
-           * get body bounding box, without padding
-           */
-          getAABBAsBBox() {
-            const x = this.pos.x + this.offset.x;
-            const y = this.pos.y + this.offset.y;
-            return {
-              minX: x - this.r,
-              maxX: x + this.r,
-              minY: y - this.r,
-              maxY: y + this.r,
-            };
-          }
-          /**
-           * Draws collider on a CanvasRenderingContext2D's current path
-           */
-          draw(context) {
-            const x = this.pos.x + this.offset.x;
-            const y = this.pos.y + this.offset.y;
-            const r = Math.abs(this.r);
-            if (this.isTrigger) {
-              const max = Math.max(8, this.r);
-              for (let i = 0; i < max; i++) {
-                const arc = (i / max) * 2 * Math.PI;
-                const arcPrev = ((i - 1) / max) * 2 * Math.PI;
-                const fromX = x + Math.cos(arcPrev) * this.r;
-                const fromY = y + Math.sin(arcPrev) * this.r;
-                const toX = x + Math.cos(arc) * this.r;
-                const toY = y + Math.sin(arc) * this.r;
-                (0, utils_1.dashLineTo)(context, fromX, fromY, toX, toY);
-              }
-            } else {
-              context.moveTo(x + r, y);
-              context.arc(x, y, r, 0, Math.PI * 2);
-            }
-          }
-          /**
-           * Draws Bounding Box on canvas context
-           */
-          drawBVH(context) {
-            (0, utils_1.drawBVH)(context, this);
-          }
-          /**
-           * inner function for after position change update aabb in system
-           */
-          updateBody(update = this.dirty) {
-            var _a;
-            if (update) {
-              (_a = this.system) === null || _a === void 0
-                ? void 0
-                : _a.insert(this);
-              this.dirty = false;
-            }
-          }
-          /**
-           * update instantly or mark as dirty
-           */
-          markAsDirty(update = false) {
-            if (update) {
-              this.updateBody(true);
-            } else {
-              this.dirty = true;
-            }
-          }
-          /**
-           * internal for getting offset with applied angle
-           */
-          getOffsetWithAngle() {
-            if ((!this.offsetCopy.x && !this.offsetCopy.y) || !this.angle) {
-              return this.offsetCopy;
-            }
-            const sin = Math.sin(this.angle);
-            const cos = Math.cos(this.angle);
-            const x = this.offsetCopy.x * cos - this.offsetCopy.y * sin;
-            const y = this.offsetCopy.x * sin + this.offsetCopy.y * cos;
-            return { x, y };
-          }
-        }
-        exports.Circle = Circle;
-
-        /***/
-      },
-
-    /***/ "./dist/bodies/ellipse.js":
-      /*!********************************!*\
-  !*** ./dist/bodies/ellipse.js ***!
-  \********************************/
-      /***/ (__unused_webpack_module, exports, __webpack_require__) => {
-        "use strict";
-
-        Object.defineProperty(exports, "__esModule", { value: true });
-        exports.Ellipse = void 0;
-        const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
-        const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils.js");
-        const polygon_1 = __webpack_require__(
-          /*! ./polygon */ "./dist/bodies/polygon.js",
-        );
-        /**
-         * collider - ellipse
-         */
-        class Ellipse extends polygon_1.Polygon {
-          /**
-           * collider - ellipse
-           */
-          constructor(
-            position,
-            radiusX,
-            radiusY = radiusX,
-            step = (radiusX + radiusY) / Math.PI,
-            options,
-          ) {
-            super(
-              position,
-              (0, utils_1.createEllipse)(radiusX, radiusY, step),
-              options,
-            );
-            /**
-             * ellipse type
-             */
-            this.type = model_1.BodyType.Ellipse;
-            /**
-             * ellipses are convex
-             */
-            this.isConvex = true;
-            this._radiusX = radiusX;
-            this._radiusY = radiusY;
-            this._step = step;
-          }
-          /**
-           * flag to set is body centered
-           */
-          set isCentered(_isCentered) {}
-          /**
-           * is body centered?
-           */
-          get isCentered() {
-            return true;
-          }
-          /**
-           * get ellipse step number
-           */
-          get step() {
-            return this._step;
-          }
-          /**
-           * set ellipse step number
-           */
-          set step(step) {
-            this._step = step;
-            this.setPoints(
-              (0, utils_1.createEllipse)(
-                this._radiusX,
-                this._radiusY,
-                this._step,
-              ),
-            );
-          }
-          /**
-           * get ellipse radiusX
-           */
-          get radiusX() {
-            return this._radiusX;
-          }
-          /**
-           * set ellipse radiusX, update points
-           */
-          set radiusX(radiusX) {
-            this._radiusX = radiusX;
-            this.setPoints(
-              (0, utils_1.createEllipse)(
-                this._radiusX,
-                this._radiusY,
-                this._step,
-              ),
-            );
-          }
-          /**
-           * get ellipse radiusY
-           */
-          get radiusY() {
-            return this._radiusY;
-          }
-          /**
-           * set ellipse radiusY, update points
-           */
-          set radiusY(radiusY) {
-            this._radiusY = radiusY;
-            this.setPoints(
-              (0, utils_1.createEllipse)(
-                this._radiusX,
-                this._radiusY,
-                this._step,
-              ),
-            );
-          }
-          /**
-           * do not attempt to use Polygon.center()
-           */
-          center() {
-            return;
-          }
-          /**
-           * do not attempt to use Polygon.updateIsConvex()
-           */
-          updateIsConvex() {
-            return;
-          }
-        }
-        exports.Ellipse = Ellipse;
-
-        /***/
-      },
-
-    /***/ "./dist/bodies/line.js":
-      /*!*****************************!*\
-  !*** ./dist/bodies/line.js ***!
-  \*****************************/
-      /***/ (__unused_webpack_module, exports, __webpack_require__) => {
-        "use strict";
-
-        Object.defineProperty(exports, "__esModule", { value: true });
-        exports.Line = void 0;
-        const sat_1 = __webpack_require__(
-          /*! sat */ "./node_modules/sat/SAT.js",
-        );
-        const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
-        const polygon_1 = __webpack_require__(
-          /*! ./polygon */ "./dist/bodies/polygon.js",
-        );
-        /**
-         * collider - line
-         */
-        class Line extends polygon_1.Polygon {
-          /**
-           * collider - line from start to end
-           */
-          constructor(start, end, options) {
-            super(
-              start,
-              [
-                { x: 0, y: 0 },
-                { x: end.x - start.x, y: end.y - start.y },
-              ],
-              options,
-            );
-            /**
-             * line type
-             */
-            this.type = model_1.BodyType.Line;
-            /**
-             * line is convex
-             */
-            this.isConvex = true;
-            if (this.calcPoints.length === 1 || !end) {
-              console.error({ start, end });
-              throw new Error("No end point for line provided");
-            }
-          }
-          get start() {
-            return {
-              x: this.x + this.calcPoints[0].x,
-              y: this.y + this.calcPoints[0].y,
-            };
-          }
-          set start({ x, y }) {
-            this.x = x;
-            this.y = y;
-          }
-          get end() {
-            return {
-              x: this.x + this.calcPoints[1].x,
-              y: this.y + this.calcPoints[1].y,
-            };
-          }
-          set end({ x, y }) {
-            this.points[1].x = x - this.start.x;
-            this.points[1].y = y - this.start.y;
-            this.setPoints(this.points);
-          }
-          getCentroid() {
-            return new sat_1.Vector(
-              (this.end.x - this.start.x) / 2,
-              (this.end.y - this.start.y) / 2,
-            );
-          }
-          /**
-           * do not attempt to use Polygon.updateIsConvex()
-           */
-          updateIsConvex() {
-            return;
-          }
-        }
-        exports.Line = Line;
-
-        /***/
-      },
-
-    /***/ "./dist/bodies/point.js":
-      /*!******************************!*\
-  !*** ./dist/bodies/point.js ***!
-  \******************************/
-      /***/ (__unused_webpack_module, exports, __webpack_require__) => {
-        "use strict";
-
-        Object.defineProperty(exports, "__esModule", { value: true });
-        exports.Point = void 0;
-        const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
-        const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils.js");
-        const box_1 = __webpack_require__(/*! ./box */ "./dist/bodies/box.js");
-        /**
-         * collider - point (very tiny box)
-         */
-        class Point extends box_1.Box {
-          /**
-           * collider - point (very tiny box)
-           */
-          constructor(position, options) {
-            super(
-              (0, utils_1.ensureVectorPoint)(position),
-              0.001,
-              0.001,
-              options,
-            );
-            /**
-             * point type
-             */
-            this.type = model_1.BodyType.Point;
-          }
-        }
-        exports.Point = Point;
-
-        /***/
-      },
-
-    /***/ "./dist/bodies/polygon.js":
-      /*!********************************!*\
-  !*** ./dist/bodies/polygon.js ***!
-  \********************************/
-      /***/ (__unused_webpack_module, exports, __webpack_require__) => {
-        "use strict";
-
-        Object.defineProperty(exports, "__esModule", { value: true });
-        exports.Polygon = exports.isSimple = void 0;
-        const poly_decomp_es_1 = __webpack_require__(
-          /*! poly-decomp-es */ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js",
-        );
-        Object.defineProperty(exports, "isSimple", {
-          enumerable: true,
-          get: function () {
-            return poly_decomp_es_1.isSimple;
-          },
-        });
-        const sat_1 = __webpack_require__(
-          /*! sat */ "./node_modules/sat/SAT.js",
-        );
-        const model_1 = __webpack_require__(/*! ../model */ "./dist/model.js");
-        const optimized_1 = __webpack_require__(
-          /*! ../optimized */ "./dist/optimized.js",
-        );
-        const utils_1 = __webpack_require__(/*! ../utils */ "./dist/utils.js");
-        /**
-         * collider - polygon
-         */
-        class Polygon extends sat_1.Polygon {
-          /**
-           * collider - polygon
-           */
-          constructor(position, points, options) {
-            super(
-              (0, utils_1.ensureVectorPoint)(position),
-              (0, utils_1.ensurePolygonPoints)(points),
-            );
-            /**
-             * was the polygon modified and needs update in the next checkCollision
-             */
-            this.dirty = false;
-            /**
-             * type of body
-             */
-            this.type = model_1.BodyType.Polygon;
-            /**
-             * is body centered
-             */
-            this.centered = false;
-            /**
-             * scale Vector of body
-             */
-            this.scaleVector = { x: 1, y: 1 };
-            if (!points.length) {
-              throw new Error("No points in polygon");
-            }
-            (0, utils_1.extendBody)(this, options);
-          }
-          /**
-           * flag to set is polygon centered
-           */
-          set isCentered(isCentered) {
-            if (this.centered === isCentered) {
-              return;
-            }
-            const centroid = this.getCentroidWithoutRotation();
-            if (centroid.x || centroid.y) {
-              const x = centroid.x * (isCentered ? 1 : -1);
-              const y = centroid.y * (isCentered ? 1 : -1);
-              this.translate(-x, -y);
-            }
-            this.centered = isCentered;
-          }
-          /**
-           * is polygon centered?
-           */
-          get isCentered() {
-            return this.centered;
-          }
-          get x() {
-            return this.pos.x;
-          }
-          /**
-           * updating this.pos.x by this.x = x updates AABB
-           */
-          set x(x) {
-            this.pos.x = x;
-            this.markAsDirty();
-          }
-          get y() {
-            return this.pos.y;
-          }
-          /**
-           * updating this.pos.y by this.y = y updates AABB
-           */
-          set y(y) {
-            this.pos.y = y;
-            this.markAsDirty();
-          }
-          /**
-           * allow exact getting of scale x - use setScale(x, y) to set
-           */
-          get scaleX() {
-            return this.scaleVector.x;
-          }
-          /**
-           * allow exact getting of scale y - use setScale(x, y) to set
-           */
-          get scaleY() {
-            return this.scaleVector.y;
-          }
-          /**
-           * allow approx getting of scale
-           */
-          get scale() {
-            return (this.scaleVector.x + this.scaleVector.y) / 2;
-          }
-          /**
-           * allow easier setting of scale
-           */
-          set scale(scale) {
-            this.setScale(scale);
-          }
-          /**
-           * update position
-           */
-          setPosition(x, y, update = true) {
-            this.pos.x = x;
-            this.pos.y = y;
-            this.markAsDirty(update);
-            return this;
-          }
-          /**
-           * update scale
-           */
-          setScale(x, y = x, update = true) {
-            this.scaleVector.x = Math.abs(x);
-            this.scaleVector.y = Math.abs(y);
-            super.setPoints(
-              (0, optimized_1.map)(this.points, (point, index) => {
-                point.x = this.pointsBackup[index].x * this.scaleVector.x;
-                point.y = this.pointsBackup[index].y * this.scaleVector.y;
-                return point;
-              }),
-            );
-            this.markAsDirty(update);
-            return this;
-          }
-          setAngle(angle, update = true) {
-            super.setAngle(angle);
-            this.markAsDirty(update);
-            return this;
-          }
-          setOffset(offset, update = true) {
-            super.setOffset(offset);
-            this.markAsDirty(update);
-            return this;
-          }
-          /**
-           * get body bounding box, without padding
-           */
-          getAABBAsBBox() {
-            const { pos, w, h } = this.getAABBAsBox();
-            return {
-              minX: pos.x,
-              minY: pos.y,
-              maxX: pos.x + w,
-              maxY: pos.y + h,
-            };
-          }
-          /**
-           * Draws exact collider on canvas context
-           */
-          draw(context) {
-            (0, utils_1.drawPolygon)(context, this, this.isTrigger);
-          }
-          /**
-           * Draws Bounding Box on canvas context
-           */
-          drawBVH(context) {
-            (0, utils_1.drawBVH)(context, this);
-          }
-          /**
-           * get body centroid without applied angle
-           */
-          getCentroidWithoutRotation() {
-            // keep angle copy
-            const angle = this.angle;
-            if (angle) {
-              // reset angle for get centroid
-              this.setAngle(0);
-              // get centroid
-              const centroid = this.getCentroid();
-              // revert angle change
-              this.setAngle(angle);
-              return centroid;
-            }
-            return this.getCentroid();
-          }
-          /**
-           * sets polygon points to new array of vectors
-           */
-          setPoints(points) {
-            super.setPoints(points);
-            this.updateIsConvex();
-            this.pointsBackup = (0, utils_1.clonePointsArray)(points);
-            return this;
-          }
-          /**
-           * translates polygon points in x, y direction
-           */
-          translate(x, y) {
-            super.translate(x, y);
-            this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
-            return this;
-          }
-          /**
-           * rotates polygon points by angle, in radians
-           */
-          rotate(angle) {
-            super.rotate(angle);
-            this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
-            return this;
-          }
-          /**
-           * if true, polygon is not an invalid, self-crossing polygon
-           */
-          isSimple() {
-            return (0, poly_decomp_es_1.isSimple)(
-              this.calcPoints.map(utils_1.mapVectorToArray),
-            );
-          }
-          /**
-           * inner function for after position change update aabb in system and convex inner polygons
-           */
-          updateBody(update = this.dirty) {
-            var _a;
-            if (update) {
-              this.updateConvexPolygonPositions();
-              (_a = this.system) === null || _a === void 0
-                ? void 0
-                : _a.insert(this);
-              this.dirty = false;
-            }
-          }
-          retranslate(isCentered = this.isCentered) {
-            const centroid = this.getCentroidWithoutRotation();
-            if (centroid.x || centroid.y) {
-              const x = centroid.x * (isCentered ? 1 : -1);
-              const y = centroid.y * (isCentered ? 1 : -1);
-              this.translate(-x, -y);
-            }
-          }
-          /**
-           * update instantly or mark as dirty
-           */
-          markAsDirty(update = false) {
-            if (update) {
-              this.updateBody(true);
-            } else {
-              this.dirty = true;
-            }
-          }
-          /**
-           * update the position of the decomposed convex polygons (if any), called
-           * after the position of the body has changed
-           */
-          updateConvexPolygonPositions() {
-            if (this.isConvex || !this.convexPolygons) {
-              return;
-            }
-            (0, optimized_1.forEach)(this.convexPolygons, (polygon) => {
-              polygon.pos.x = this.pos.x;
-              polygon.pos.y = this.pos.y;
-            });
-          }
-          /**
-           * returns body split into convex polygons, or empty array for convex bodies
-           */
-          getConvex() {
-            if (
-              (this.type && this.type !== model_1.BodyType.Polygon) ||
-              this.points.length < 4
-            ) {
-              return [];
-            }
-            const points = (0, optimized_1.map)(
-              this.calcPoints,
-              utils_1.mapVectorToArray,
-            );
-            return (0, poly_decomp_es_1.quickDecomp)(points);
-          }
-          /**
-           * updates convex polygons cache in body
-           */
-          updateConvexPolygons(convex = this.getConvex()) {
-            if (this.isConvex) {
-              return;
-            }
-            if (!this.convexPolygons) {
-              this.convexPolygons = [];
-            }
-            (0, optimized_1.forEach)(convex, (points, index) => {
-              // lazy create
-              if (!this.convexPolygons[index]) {
-                this.convexPolygons[index] = new sat_1.Polygon();
-              }
-              this.convexPolygons[index].pos.x = this.pos.x;
-              this.convexPolygons[index].pos.y = this.pos.y;
-              this.convexPolygons[index].setPoints(
-                (0, utils_1.ensurePolygonPoints)(
-                  (0, optimized_1.map)(points, utils_1.mapArrayToVector),
-                ),
-              );
-            });
-            // trim array length
-            this.convexPolygons.length = convex.length;
-          }
-          /**
-           * after points update set is convex
-           */
-          updateIsConvex() {
-            // all other types other than polygon are always convex
-            const convex = this.getConvex();
-            // everything with empty array or one element array
-            this.isConvex = convex.length <= 1;
-            this.updateConvexPolygons(convex);
-          }
-        }
-        exports.Polygon = Polygon;
-
-        /***/
-      },
-
-    /***/ "./dist/index.js":
-      /*!***********************!*\
-  !*** ./dist/index.js ***!
-  \***********************/
-      /***/ function (__unused_webpack_module, exports, __webpack_require__) {
-        "use strict";
-
-        var __createBinding =
-          (this && this.__createBinding) ||
-          (Object.create
-            ? function (o, m, k, k2) {
-                if (k2 === undefined) k2 = k;
-                var desc = Object.getOwnPropertyDescriptor(m, k);
-                if (
-                  !desc ||
-                  ("get" in desc
-                    ? !m.__esModule
-                    : desc.writable || desc.configurable)
-                ) {
-                  desc = {
-                    enumerable: true,
-                    get: function () {
-                      return m[k];
-                    },
-                  };
-                }
-                Object.defineProperty(o, k2, desc);
-              }
-            : function (o, m, k, k2) {
-                if (k2 === undefined) k2 = k;
-                o[k2] = m[k];
-              });
-        var __exportStar =
-          (this && this.__exportStar) ||
-          function (m, exports) {
-            for (var p in m)
-              if (
-                p !== "default" &&
-                !Object.prototype.hasOwnProperty.call(exports, p)
-              )
-                __createBinding(exports, m, p);
-          };
-        Object.defineProperty(exports, "__esModule", { value: true });
-        __exportStar(
-          __webpack_require__(/*! ./model */ "./dist/model.js"),
-          exports,
-        );
-        __exportStar(
-          __webpack_require__(/*! ./bodies/circle */ "./dist/bodies/circle.js"),
-          exports,
-        );
-        __exportStar(
-          __webpack_require__(
-            /*! ./bodies/ellipse */ "./dist/bodies/ellipse.js",
-          ),
-          exports,
-        );
-        __exportStar(
-          __webpack_require__(
-            /*! ./bodies/polygon */ "./dist/bodies/polygon.js",
-          ),
-          exports,
-        );
-        __exportStar(
-          __webpack_require__(/*! ./bodies/box */ "./dist/bodies/box.js"),
-          exports,
-        );
-        __exportStar(
-          __webpack_require__(/*! ./bodies/point */ "./dist/bodies/point.js"),
-          exports,
-        );
-        __exportStar(
-          __webpack_require__(/*! ./bodies/line */ "./dist/bodies/line.js"),
-          exports,
-        );
-        __exportStar(
-          __webpack_require__(/*! ./system */ "./dist/system.js"),
-          exports,
-        );
-        __exportStar(
-          __webpack_require__(/*! ./utils */ "./dist/utils.js"),
-          exports,
-        );
-        __exportStar(
-          __webpack_require__(/*! ./intersect */ "./dist/intersect.js"),
-          exports,
-        );
-
-        /***/
-      },
-
-    /***/ "./dist/intersect.js":
-      /*!***************************!*\
-  !*** ./dist/intersect.js ***!
-  \***************************/
-      /***/ (__unused_webpack_module, exports, __webpack_require__) => {
-        "use strict";
-
-        Object.defineProperty(exports, "__esModule", { value: true });
-        exports.intersectLinePolygon =
-          exports.intersectLineLine =
-          exports.intersectLineLineFast =
-          exports.intersectLineCircle =
-          exports.circleOutsidePolygon =
-          exports.circleInPolygon =
-          exports.circleInCircle =
-          exports.pointOnCircle =
-          exports.polygonInPolygon =
-          exports.pointInPolygon =
-          exports.polygonInCircle =
-          exports.ensureConvex =
-            void 0;
-        const sat_1 = __webpack_require__(
-          /*! sat */ "./node_modules/sat/SAT.js",
-        );
-        const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
-        const optimized_1 = __webpack_require__(
-          /*! ./optimized */ "./dist/optimized.js",
-        );
-        /**
-         * replace body with array of related convex polygons
-         */
-        function ensureConvex(body) {
-          if (body.isConvex || body.type !== model_1.BodyType.Polygon) {
-            return [body];
-          }
-          return body.convexPolygons;
-        }
-        exports.ensureConvex = ensureConvex;
-        function polygonInCircle(polygon, circle) {
-          return (0, optimized_1.every)(polygon.calcPoints, (p) =>
-            (0, sat_1.pointInCircle)(
-              { x: p.x + polygon.pos.x, y: p.y + polygon.pos.y },
-              circle,
-            ),
-          );
-        }
-        exports.polygonInCircle = polygonInCircle;
-        function pointInPolygon(point, polygon) {
-          return (0, optimized_1.some)(ensureConvex(polygon), (convex) =>
-            (0, sat_1.pointInPolygon)(point, convex),
-          );
-        }
-        exports.pointInPolygon = pointInPolygon;
-        function polygonInPolygon(polygonA, polygonB) {
-          return (0, optimized_1.every)(polygonA.calcPoints, (point) =>
-            pointInPolygon(
-              { x: point.x + polygonA.pos.x, y: point.y + polygonA.pos.y },
-              polygonB,
-            ),
-          );
-        }
-        exports.polygonInPolygon = polygonInPolygon;
-        /**
-         * https://stackoverflow.com/a/68197894/1749528
-         */
-        function pointOnCircle(point, circle) {
-          return (
-            (point.x - circle.pos.x) * (point.x - circle.pos.x) +
-              (point.y - circle.pos.y) * (point.y - circle.pos.y) ===
-            circle.r * circle.r
-          );
-        }
-        exports.pointOnCircle = pointOnCircle;
-        /**
-         * https://stackoverflow.com/a/68197894/1749528
-         */
-        function circleInCircle(bodyA, bodyB) {
-          const x1 = bodyA.pos.x;
-          const y1 = bodyA.pos.y;
-          const x2 = bodyB.pos.x;
-          const y2 = bodyB.pos.y;
-          const r1 = bodyA.r;
-          const r2 = bodyB.r;
-          const distSq = Math.sqrt(
-            (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2),
-          );
-          return distSq + r2 === r1 || distSq + r2 < r1;
-        }
-        exports.circleInCircle = circleInCircle;
-        /**
-         * https://stackoverflow.com/a/68197894/1749528
-         */
-        function circleInPolygon(circle, polygon) {
-          // Circle with radius 0 isn't a circle
-          if (circle.r === 0) {
-            return false;
-          }
-          // If the center of the circle is not within the polygon,
-          // then the circle may overlap, but it'll never be "contained"
-          // so return false
-          if (!pointInPolygon(circle.pos, polygon)) {
-            return false;
-          }
-          // Necessary add polygon pos to points
-          const points = (0, optimized_1.map)(
-            polygon.calcPoints,
-            ({ x, y }) => ({
-              x: x + polygon.pos.x,
-              y: y + polygon.pos.y,
-            }),
-          );
-          // If the center of the circle is within the polygon,
-          // the circle is not outside of the polygon completely.
-          // so return false.
-          if (
-            (0, optimized_1.some)(points, (point) =>
-              (0, sat_1.pointInCircle)(point, circle),
-            )
-          ) {
-            return false;
-          }
-          // If any line-segment of the polygon intersects the circle,
-          // the circle is not "contained"
-          // so return false
-          if (
-            (0, optimized_1.some)(points, (end, index) => {
-              const start = index
-                ? points[index - 1]
-                : points[points.length - 1];
-              return intersectLineCircle({ start, end }, circle).length > 0;
-            })
-          ) {
-            return false;
-          }
-          return true;
-        }
-        exports.circleInPolygon = circleInPolygon;
-        /**
-         * https://stackoverflow.com/a/68197894/1749528
-         */
-        function circleOutsidePolygon(circle, polygon) {
-          // Circle with radius 0 isn't a circle
-          if (circle.r === 0) {
-            return false;
-          }
-          // If the center of the circle is within the polygon,
-          // the circle is not outside of the polygon completely.
-          // so return false.
-          if (pointInPolygon(circle.pos, polygon)) {
-            return false;
-          }
-          // Necessary add polygon pos to points
-          const points = (0, optimized_1.map)(
-            polygon.calcPoints,
-            ({ x, y }) => ({
-              x: x + polygon.pos.x,
-              y: y + polygon.pos.y,
-            }),
-          );
-          // If the center of the circle is within the polygon,
-          // the circle is not outside of the polygon completely.
-          // so return false.
-          if (
-            (0, optimized_1.some)(
-              points,
-              (point) =>
-                (0, sat_1.pointInCircle)(point, circle) ||
-                pointOnCircle(point, circle),
-            )
-          ) {
-            return false;
-          }
-          // If any line-segment of the polygon intersects the circle,
-          // the circle is not "contained"
-          // so return false
-          if (
-            (0, optimized_1.some)(points, (end, index) => {
-              const start = index
-                ? points[index - 1]
-                : points[points.length - 1];
-              return intersectLineCircle({ start, end }, circle).length > 0;
-            })
-          ) {
-            return false;
-          }
-          return true;
-        }
-        exports.circleOutsidePolygon = circleOutsidePolygon;
-        /**
-         * https://stackoverflow.com/a/37225895/1749528
-         */
-        function intersectLineCircle(line, { pos, r }) {
-          const v1 = {
-            x: line.end.x - line.start.x,
-            y: line.end.y - line.start.y,
-          };
-          const v2 = { x: line.start.x - pos.x, y: line.start.y - pos.y };
-          const b = (v1.x * v2.x + v1.y * v2.y) * -2;
-          const c = (v1.x * v1.x + v1.y * v1.y) * 2;
-          const d = Math.sqrt(
-            b * b - (v2.x * v2.x + v2.y * v2.y - r * r) * c * 2,
-          );
-          if (isNaN(d)) {
-            // no intercept
-            return [];
-          }
-          const u1 = (b - d) / c; // these represent the unit distance of point one and two on the line
-          const u2 = (b + d) / c;
-          const results = []; // return array
-          if (u1 <= 1 && u1 >= 0) {
-            // add point if on the line segment
-            results.push({
-              x: line.start.x + v1.x * u1,
-              y: line.start.y + v1.y * u1,
-            });
-          }
-          if (u2 <= 1 && u2 >= 0) {
-            // second add point if on the line segment
-            results.push({
-              x: line.start.x + v1.x * u2,
-              y: line.start.y + v1.y * u2,
-            });
-          }
-          return results;
-        }
-        exports.intersectLineCircle = intersectLineCircle;
-        /**
-         * helper for intersectLineLineFast
-         */
-        function isTurn(point1, point2, point3) {
-          const A = (point3.x - point1.x) * (point2.y - point1.y);
-          const B = (point2.x - point1.x) * (point3.y - point1.y);
-          return A > B + Number.EPSILON ? 1 : A + Number.EPSILON < B ? -1 : 0;
-        }
-        /**
-         * faster implementation of intersectLineLine
-         * https://stackoverflow.com/a/16725715/1749528
-         */
-        function intersectLineLineFast(line1, line2) {
-          return (
-            isTurn(line1.start, line2.start, line2.end) !==
-              isTurn(line1.end, line2.start, line2.end) &&
-            isTurn(line1.start, line1.end, line2.start) !==
-              isTurn(line1.start, line1.end, line2.end)
-          );
-        }
-        exports.intersectLineLineFast = intersectLineLineFast;
-        /**
-         * returns the point of intersection
-         * https://stackoverflow.com/a/24392281/1749528
-         */
-        function intersectLineLine(line1, line2) {
-          const dX = line1.end.x - line1.start.x;
-          const dY = line1.end.y - line1.start.y;
-          const determinant =
-            dX * (line2.end.y - line2.start.y) -
-            (line2.end.x - line2.start.x) * dY;
-          if (determinant === 0) {
-            return null;
-          }
-          const lambda =
-            ((line2.end.y - line2.start.y) * (line2.end.x - line1.start.x) +
-              (line2.start.x - line2.end.x) * (line2.end.y - line1.start.y)) /
-            determinant;
-          const gamma =
-            ((line1.start.y - line1.end.y) * (line2.end.x - line1.start.x) +
-              dX * (line2.end.y - line1.start.y)) /
-            determinant;
-          // check if there is an intersection
-          if (!(lambda >= 0 && lambda <= 1) || !(gamma >= 0 && gamma <= 1)) {
-            return null;
-          }
-          return {
-            x: line1.start.x + lambda * dX,
-            y: line1.start.y + lambda * dY,
-          };
-        }
-        exports.intersectLineLine = intersectLineLine;
-        function intersectLinePolygon(line, polygon) {
-          const results = [];
-          (0, optimized_1.forEach)(polygon.calcPoints, (to, index) => {
-            const from = index
-              ? polygon.calcPoints[index - 1]
-              : polygon.calcPoints[polygon.calcPoints.length - 1];
-            const side = {
-              start: { x: from.x + polygon.pos.x, y: from.y + polygon.pos.y },
-              end: { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y },
-            };
-            const hit = intersectLineLine(line, side);
-            if (hit) {
-              results.push(hit);
-            }
-          });
-          return results;
-        }
-        exports.intersectLinePolygon = intersectLinePolygon;
-
-        /***/
-      },
-
-    /***/ "./dist/model.js":
-      /*!***********************!*\
-  !*** ./dist/model.js ***!
-  \***********************/
-      /***/ function (__unused_webpack_module, exports, __webpack_require__) {
-        "use strict";
-
-        var __importDefault =
-          (this && this.__importDefault) ||
-          function (mod) {
-            return mod && mod.__esModule ? mod : { default: mod };
-          };
-        Object.defineProperty(exports, "__esModule", { value: true });
-        exports.BodyType =
-          exports.SATCircle =
-          exports.SATPolygon =
-          exports.SATVector =
-          exports.Response =
-          exports.RBush =
-          exports.isSimple =
-            void 0;
-        const rbush_1 = __importDefault(
-          __webpack_require__(/*! rbush */ "./node_modules/rbush/rbush.min.js"),
-        );
-        Object.defineProperty(exports, "RBush", {
-          enumerable: true,
-          get: function () {
-            return rbush_1.default;
-          },
-        });
-        const sat_1 = __webpack_require__(
-          /*! sat */ "./node_modules/sat/SAT.js",
-        );
-        Object.defineProperty(exports, "SATCircle", {
-          enumerable: true,
-          get: function () {
-            return sat_1.Circle;
-          },
-        });
-        Object.defineProperty(exports, "SATPolygon", {
-          enumerable: true,
-          get: function () {
-            return sat_1.Polygon;
-          },
-        });
-        Object.defineProperty(exports, "Response", {
-          enumerable: true,
-          get: function () {
-            return sat_1.Response;
-          },
-        });
-        Object.defineProperty(exports, "SATVector", {
-          enumerable: true,
-          get: function () {
-            return sat_1.Vector;
-          },
-        });
-        var poly_decomp_es_1 = __webpack_require__(
-          /*! poly-decomp-es */ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js",
-        );
-        Object.defineProperty(exports, "isSimple", {
-          enumerable: true,
-          get: function () {
-            return poly_decomp_es_1.isSimple;
-          },
-        });
-        /**
-         * types
-         */
-        var BodyType;
-        (function (BodyType) {
-          BodyType["Ellipse"] = "Ellipse";
-          BodyType["Line"] = "Line";
-          BodyType["Circle"] = "Circle";
-          BodyType["Box"] = "Box";
-          BodyType["Point"] = "Point";
-          BodyType["Polygon"] = "Polygon";
-        })((BodyType = exports.BodyType || (exports.BodyType = {})));
-
-        /***/
-      },
-
-    /***/ "./dist/optimized.js":
-      /*!***************************!*\
-  !*** ./dist/optimized.js ***!
-  \***************************/
-      /***/ (__unused_webpack_module, exports) => {
-        "use strict";
-
-        Object.defineProperty(exports, "__esModule", { value: true });
-        exports.map =
-          exports.filter =
-          exports.every =
-          exports.some =
-          exports.forEach =
-            void 0;
-        /**
-         * 40-90% faster than built-in Array.forEach function.
-         *
-         * basic benchmark: https://jsbench.me/urle772xdn
-         */
-        const forEach = (array, callback) => {
-          for (let i = 0, l = array.length; i < l; i++) {
-            callback(array[i], i);
-          }
-        };
-        exports.forEach = forEach;
-        /**
-         * 20-90% faster than built-in Array.some function.
-         *
-         * basic benchmark: https://jsbench.me/l0le7bnnsq
-         */
-        const some = (array, callback) => {
-          for (let i = 0, l = array.length; i < l; i++) {
-            if (callback(array[i], i)) {
-              return true;
-            }
-          }
-          return false;
-        };
-        exports.some = some;
-        /**
-         * 20-40% faster than built-in Array.every function.
-         *
-         * basic benchmark: https://jsbench.me/unle7da29v
-         */
-        const every = (array, callback) => {
-          for (let i = 0, l = array.length; i < l; i++) {
-            if (!callback(array[i], i)) {
-              return false;
-            }
-          }
-          return true;
-        };
-        exports.every = every;
-        /**
-         * 20-60% faster than built-in Array.filter function.
-         *
-         * basic benchmark: https://jsbench.me/o1le77ev4l
-         */
-        const filter = (array, callback) => {
-          const output = [];
-          for (let i = 0, l = array.length; i < l; i++) {
-            const item = array[i];
-            if (callback(item, i)) {
-              output.push(item);
-            }
-          }
-          return output;
-        };
-        exports.filter = filter;
-        /**
-         * 20-70% faster than built-in Array.map
-         *
-         * basic benchmark: https://jsbench.me/oyle77vbpc
-         */
-        const map = (array, callback) => {
-          const l = array.length;
-          const output = new Array(l);
-          for (let i = 0; i < l; i++) {
-            output[i] = callback(array[i], i);
-          }
-          return output;
-        };
-        exports.map = map;
-
-        /***/
-      },
-
-    /***/ "./dist/system.js":
-      /*!************************!*\
-  !*** ./dist/system.js ***!
-  \************************/
-      /***/ (__unused_webpack_module, exports, __webpack_require__) => {
-        "use strict";
-
-        Object.defineProperty(exports, "__esModule", { value: true });
-        exports.System = void 0;
-        const base_system_1 = __webpack_require__(
-          /*! ./base-system */ "./dist/base-system.js",
-        );
-        const line_1 = __webpack_require__(
-          /*! ./bodies/line */ "./dist/bodies/line.js",
-        );
-        const intersect_1 = __webpack_require__(
-          /*! ./intersect */ "./dist/intersect.js",
-        );
-        const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
-        const optimized_1 = __webpack_require__(
-          /*! ./optimized */ "./dist/optimized.js",
-        );
-        const utils_1 = __webpack_require__(/*! ./utils */ "./dist/utils.js");
-        /**
-         * collision system
-         */
-        class System extends base_system_1.BaseSystem {
-          constructor() {
-            super(...arguments);
-            /**
-             * the last collision result
-             */
-            this.response = new model_1.Response();
-          }
-          /**
-           * separate (move away) bodies
-           */
-          separate() {
-            (0, optimized_1.forEach)(this.all(), (body) => {
-              this.separateBody(body);
-            });
-          }
-          /**
-           * separate (move away) 1 body
-           */
-          separateBody(body) {
-            if (body.isStatic || body.isTrigger) {
-              return;
-            }
-            const offsets = { x: 0, y: 0 };
-            const addOffsets = ({ overlapV: { x, y } }) => {
-              offsets.x += x;
-              offsets.y += y;
-            };
-            this.checkOne(body, addOffsets);
-            if (offsets.x || offsets.y) {
-              body.setPosition(body.x - offsets.x, body.y - offsets.y);
-            }
-          }
-          /**
-           * check one body collisions with callback
-           */
-          checkOne(
-            body,
-            callback = utils_1.returnTrue,
-            response = this.response,
-          ) {
-            // no need to check static body collision
-            if (body.isStatic) {
-              return false;
-            }
-            const bodies = this.search(body);
-            const checkCollision = (candidate) => {
-              if (
-                candidate !== body &&
-                this.checkCollision(body, candidate, response)
-              ) {
-                return callback(response);
-              }
-            };
-            return (0, optimized_1.some)(bodies, checkCollision);
-          }
-          /**
-           * check all bodies collisions with callback
-           */
-          checkAll(callback = utils_1.returnTrue, response = this.response) {
-            const checkOne = (body) => {
-              return this.checkOne(body, callback, response);
-            };
-            return (0, optimized_1.some)(this.all(), checkOne);
-          }
-          /**
-           * check do 2 objects collide
-           */
-          checkCollision(bodyA, bodyB, response = this.response) {
-            // assess the bodies real aabb without padding
-            if (
-              !bodyA.bbox ||
-              !bodyB.bbox ||
-              (0, utils_1.notIntersectAABB)(bodyA.bbox, bodyB.bbox)
-            ) {
-              return false;
-            }
-            const sat = (0, utils_1.getSATTest)(bodyA, bodyB);
-            // 99% of cases
-            if (bodyA.isConvex && bodyB.isConvex) {
-              // always first clear response
-              response.clear();
-              return sat(bodyA, bodyB, response);
-            }
-            // more complex (non convex) cases
-            const convexBodiesA = (0, intersect_1.ensureConvex)(bodyA);
-            const convexBodiesB = (0, intersect_1.ensureConvex)(bodyB);
-            let overlapX = 0;
-            let overlapY = 0;
-            let collided = false;
-            (0, optimized_1.forEach)(convexBodiesA, (convexBodyA) => {
-              (0, optimized_1.forEach)(convexBodiesB, (convexBodyB) => {
-                // always first clear response
-                response.clear();
-                if (sat(convexBodyA, convexBodyB, response)) {
-                  collided = true;
-                  overlapX += response.overlapV.x;
-                  overlapY += response.overlapV.y;
-                }
-              });
-            });
-            if (collided) {
-              const vector = new model_1.SATVector(overlapX, overlapY);
-              response.a = bodyA;
-              response.b = bodyB;
-              response.overlapV.x = overlapX;
-              response.overlapV.y = overlapY;
-              response.overlapN = vector.normalize();
-              response.overlap = vector.len();
-              response.aInB = (0, utils_1.checkAInB)(bodyA, bodyB);
-              response.bInA = (0, utils_1.checkAInB)(bodyB, bodyA);
-            }
-            return collided;
-          }
-          /**
-           * raycast to get collider of ray from start to end
-           */
-          raycast(start, end, allow = utils_1.returnTrue) {
-            let minDistance = Infinity;
-            let result = null;
-            if (!this.ray) {
-              this.ray = new line_1.Line(start, end, { isTrigger: true });
-            } else {
-              this.ray.start = start;
-              this.ray.end = end;
-            }
-            this.insert(this.ray);
-            this.checkOne(this.ray, ({ b: body }) => {
-              if (!allow(body)) {
-                return false;
-              }
-              const points =
-                body.type === model_1.BodyType.Circle
-                  ? (0, intersect_1.intersectLineCircle)(this.ray, body)
-                  : (0, intersect_1.intersectLinePolygon)(this.ray, body);
-              (0, optimized_1.forEach)(points, (point) => {
-                const pointDistance = (0, utils_1.distance)(start, point);
-                if (pointDistance < minDistance) {
-                  minDistance = pointDistance;
-                  result = { point, body };
-                }
-              });
-            });
-            this.remove(this.ray);
-            return result;
-          }
-        }
-        exports.System = System;
-
-        /***/
-      },
-
-    /***/ "./dist/utils.js":
-      /*!***********************!*\
-  !*** ./dist/utils.js ***!
-  \***********************/
-      /***/ (__unused_webpack_module, exports, __webpack_require__) => {
-        "use strict";
-
-        Object.defineProperty(exports, "__esModule", { value: true });
-        exports.returnTrue =
-          exports.cloneResponse =
-          exports.drawBVH =
-          exports.drawPolygon =
-          exports.dashLineTo =
-          exports.getSATTest =
-          exports.getBounceDirection =
-          exports.mapArrayToVector =
-          exports.mapVectorToArray =
-          exports.clonePointsArray =
-          exports.checkAInB =
-          exports.intersectAABB =
-          exports.notIntersectAABB =
-          exports.bodyMoved =
-          exports.extendBody =
-          exports.clockwise =
-          exports.distance =
-          exports.ensurePolygonPoints =
-          exports.ensureVectorPoint =
-          exports.createBox =
-          exports.createEllipse =
-          exports.rad2deg =
-          exports.deg2rad =
-          exports.RAD2DEG =
-          exports.DEG2RAD =
-            void 0;
-        const sat_1 = __webpack_require__(
-          /*! sat */ "./node_modules/sat/SAT.js",
-        );
-        const intersect_1 = __webpack_require__(
-          /*! ./intersect */ "./dist/intersect.js",
-        );
-        const model_1 = __webpack_require__(/*! ./model */ "./dist/model.js");
-        const optimized_1 = __webpack_require__(
-          /*! ./optimized */ "./dist/optimized.js",
-        );
-        /* helpers for faster getSATTest() and checkAInB() */
-        const testMap = {
-          satCircleCircle: sat_1.testCircleCircle,
-          satCirclePolygon: sat_1.testCirclePolygon,
-          satPolygonCircle: sat_1.testPolygonCircle,
-          satPolygonPolygon: sat_1.testPolygonPolygon,
-          inCircleCircle: intersect_1.circleInCircle,
-          inCirclePolygon: intersect_1.circleInPolygon,
-          inPolygonCircle: intersect_1.polygonInCircle,
-          inPolygonPolygon: intersect_1.polygonInPolygon,
-        };
-        function createMap(bodyType, testType) {
-          return Object.values(model_1.BodyType).reduce(
-            (result, type) =>
-              Object.assign(Object.assign({}, result), {
-                [type]:
-                  type === model_1.BodyType.Circle
-                    ? testMap[`${testType}${bodyType}Circle`]
-                    : testMap[`${testType}${bodyType}Polygon`],
-              }),
-            {},
-          );
-        }
-        const circleSATFunctions = createMap(model_1.BodyType.Circle, "sat");
-        const circleInFunctions = createMap(model_1.BodyType.Circle, "in");
-        const polygonSATFunctions = createMap(model_1.BodyType.Polygon, "sat");
-        const polygonInFunctions = createMap(model_1.BodyType.Polygon, "in");
-        exports.DEG2RAD = Math.PI / 180;
-        exports.RAD2DEG = 180 / Math.PI;
-        /**
-         * convert from degrees to radians
-         */
-        function deg2rad(degrees) {
-          return degrees * exports.DEG2RAD;
-        }
-        exports.deg2rad = deg2rad;
-        /**
-         * convert from radians to degrees
-         */
-        function rad2deg(radians) {
-          return radians * exports.RAD2DEG;
-        }
-        exports.rad2deg = rad2deg;
-        /**
-         * creates ellipse-shaped polygon based on params
-         */
-        function createEllipse(radiusX, radiusY = radiusX, step = 1) {
-          const steps = Math.PI * Math.hypot(radiusX, radiusY) * 2;
-          const length = Math.max(8, Math.ceil(steps / Math.max(1, step)));
-          const ellipse = [];
-          for (let index = 0; index < length; index++) {
-            const value = (index / length) * 2 * Math.PI;
-            const x = Math.cos(value) * radiusX;
-            const y = Math.sin(value) * radiusY;
-            ellipse.push(new sat_1.Vector(x, y));
-          }
-          return ellipse;
-        }
-        exports.createEllipse = createEllipse;
-        /**
-         * creates box shaped polygon points
-         */
-        function createBox(width, height) {
-          return [
-            new sat_1.Vector(0, 0),
-            new sat_1.Vector(width, 0),
-            new sat_1.Vector(width, height),
-            new sat_1.Vector(0, height),
-          ];
-        }
-        exports.createBox = createBox;
-        /**
-         * ensure SATVector type point result
-         */
-        function ensureVectorPoint(point = {}) {
-          return point instanceof sat_1.Vector
-            ? point
-            : new sat_1.Vector(point.x || 0, point.y || 0);
-        }
-        exports.ensureVectorPoint = ensureVectorPoint;
-        /**
-         * ensure Vector points (for polygon) in counter-clockwise order
-         */
-        function ensurePolygonPoints(points = []) {
-          const polygonPoints = (0, optimized_1.map)(points, ensureVectorPoint);
-          return clockwise(polygonPoints)
-            ? polygonPoints.reverse()
-            : polygonPoints;
-        }
-        exports.ensurePolygonPoints = ensurePolygonPoints;
-        /**
-         * get distance between two Vector points
-         */
-        function distance(bodyA, bodyB) {
-          const xDiff = bodyA.x - bodyB.x;
-          const yDiff = bodyA.y - bodyB.y;
-          return Math.hypot(xDiff, yDiff);
-        }
-        exports.distance = distance;
-        /**
-         * check [is clockwise] direction of polygon
-         */
-        function clockwise(points) {
-          const length = points.length;
-          let sum = 0;
-          (0, optimized_1.forEach)(points, (v1, index) => {
-            const v2 = points[(index + 1) % length];
-            sum += (v2.x - v1.x) * (v2.y + v1.y);
-          });
-          return sum > 0;
-        }
-        exports.clockwise = clockwise;
-        /**
-         * used for all types of bodies in constructor
-         */
-        function extendBody(body, options) {
-          body.isStatic = !!(options === null || options === void 0
-            ? void 0
-            : options.isStatic);
-          body.isTrigger = !!(options === null || options === void 0
-            ? void 0
-            : options.isTrigger);
-          body.padding =
-            (options === null || options === void 0
-              ? void 0
-              : options.padding) || 0;
-          if (body.type !== model_1.BodyType.Circle) {
-            body.isCentered =
-              (options === null || options === void 0
-                ? void 0
-                : options.isCentered) || false;
-          }
-          body.setAngle(
-            (options === null || options === void 0 ? void 0 : options.angle) ||
-              0,
-          );
-        }
-        exports.extendBody = extendBody;
-        /**
-         * check if body moved outside of its padding
-         */
-        function bodyMoved(body) {
-          const { bbox, minX, minY, maxX, maxY } = body;
-          return (
-            bbox.minX < minX ||
-            bbox.minY < minY ||
-            bbox.maxX > maxX ||
-            bbox.maxY > maxY
-          );
-        }
-        exports.bodyMoved = bodyMoved;
-        /**
-         * returns true if two boxes not intersect
-         */
-        function notIntersectAABB(bodyA, bodyB) {
-          return (
-            bodyB.minX > bodyA.maxX ||
-            bodyB.minY > bodyA.maxY ||
-            bodyB.maxX < bodyA.minX ||
-            bodyB.maxY < bodyA.minY
-          );
-        }
-        exports.notIntersectAABB = notIntersectAABB;
-        /**
-         * checks if two boxes intersect
-         */
-        function intersectAABB(bodyA, bodyB) {
-          return !notIntersectAABB(bodyA, bodyB);
-        }
-        exports.intersectAABB = intersectAABB;
-        /**
-         * checks if body a is in body b
-         */
-        function checkAInB(bodyA, bodyB) {
-          const check =
-            bodyA.type === model_1.BodyType.Circle
-              ? circleInFunctions
-              : polygonInFunctions;
-          return check[bodyB.type](bodyA, bodyB);
-        }
-        exports.checkAInB = checkAInB;
-        /**
-         * clone sat vector points array into vector points array
-         */
-        function clonePointsArray(points) {
-          return (0, optimized_1.map)(points, ({ x, y }) => ({ x, y }));
-        }
-        exports.clonePointsArray = clonePointsArray;
-        /**
-         * change format from SAT.js to poly-decomp
-         */
-        function mapVectorToArray({ x, y } = { x: 0, y: 0 }) {
-          return [x, y];
-        }
-        exports.mapVectorToArray = mapVectorToArray;
-        /**
-         * change format from poly-decomp to SAT.js
-         */
-        function mapArrayToVector([x, y] = [0, 0]) {
-          return { x, y };
-        }
-        exports.mapArrayToVector = mapArrayToVector;
-        /**
-         * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
-         */
-        function getBounceDirection(body, collider) {
-          const v2 = new sat_1.Vector(collider.x - body.x, collider.y - body.y);
-          const v1 = new sat_1.Vector(body.x - collider.x, body.y - collider.y);
-          const len = v1.dot(v2.normalize()) * 2;
-          return new sat_1.Vector(
-            v2.x * len - v1.x,
-            v2.y * len - v1.y,
-          ).normalize();
-        }
-        exports.getBounceDirection = getBounceDirection;
-        /**
-         * returns correct sat.js testing function based on body types
-         */
-        function getSATTest(bodyA, bodyB) {
-          const check =
-            bodyA.type === model_1.BodyType.Circle
-              ? circleSATFunctions
-              : polygonSATFunctions;
-          return check[bodyB.type];
-        }
-        exports.getSATTest = getSATTest;
-        /**
-         * draws dashed line on canvas context
-         */
-        function dashLineTo(
-          context,
-          fromX,
-          fromY,
-          toX,
-          toY,
-          dash = 2,
-          gap = 4,
-        ) {
-          const xDiff = toX - fromX;
-          const yDiff = toY - fromY;
-          const arc = Math.atan2(yDiff, xDiff);
-          const offsetX = Math.cos(arc);
-          const offsetY = Math.sin(arc);
-          let posX = fromX;
-          let posY = fromY;
-          let dist = Math.hypot(xDiff, yDiff);
-          while (dist > 0) {
-            const step = Math.min(dist, dash);
-            context.moveTo(posX, posY);
-            context.lineTo(posX + offsetX * step, posY + offsetY * step);
-            posX += offsetX * (dash + gap);
-            posY += offsetY * (dash + gap);
-            dist -= dash + gap;
-          }
-        }
-        exports.dashLineTo = dashLineTo;
-        /**
-         * draw polygon
-         */
-        function drawPolygon(context, { pos, calcPoints }, isTrigger = false) {
-          const lastPoint = calcPoints[calcPoints.length - 1];
-          const fromX = pos.x + lastPoint.x;
-          const fromY = pos.y + lastPoint.y;
-          if (calcPoints.length === 1) {
-            context.arc(fromX, fromY, 1, 0, Math.PI * 2);
-          } else {
-            context.moveTo(fromX, fromY);
-          }
-          (0, optimized_1.forEach)(calcPoints, (point, index) => {
-            const toX = pos.x + point.x;
-            const toY = pos.y + point.y;
-            if (isTrigger) {
-              const prev = calcPoints[index - 1] || lastPoint;
-              dashLineTo(context, pos.x + prev.x, pos.y + prev.y, toX, toY);
-            } else {
-              context.lineTo(toX, toY);
-            }
-          });
-        }
-        exports.drawPolygon = drawPolygon;
-        /**
-         * draw body bounding body box
-         */
-        function drawBVH(context, body) {
-          drawPolygon(context, {
-            pos: { x: body.minX, y: body.minY },
-            calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY),
-          });
-        }
-        exports.drawBVH = drawBVH;
-        /**
-         * clone response object returning new response with previous ones values
-         */
-        function cloneResponse(response) {
-          const clone = new sat_1.Response();
-          const { a, b, overlap, overlapN, overlapV, aInB, bInA } = response;
-          clone.a = a;
-          clone.b = b;
-          clone.overlap = overlap;
-          clone.overlapN = overlapN.clone();
-          clone.overlapV = overlapV.clone();
-          clone.aInB = aInB;
-          clone.bInA = bInA;
-          return clone;
-        }
-        exports.cloneResponse = cloneResponse;
-        /**
-         * dummy fn used as default, for optimization
-         */
-        function returnTrue() {
-          return true;
-        }
-        exports.returnTrue = returnTrue;
-
-        /***/
-      },
-
     /***/ "./node_modules/json-stringify-safe/stringify.js":
       /*!*******************************************************!*\
   !*** ./node_modules/json-stringify-safe/stringify.js ***!
@@ -4902,6 +2722,2095 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         /***/
       },
 
+    /***/ "./src/base-system.ts":
+      /*!****************************!*\
+  !*** ./src/base-system.ts ***!
+  \****************************/
+      /***/ (__unused_webpack_module, exports, __webpack_require__) => {
+        "use strict";
+
+        Object.defineProperty(exports, "__esModule", { value: true });
+        exports.BaseSystem = void 0;
+        const box_1 = __webpack_require__(
+          /*! ./bodies/box */ "./src/bodies/box.ts",
+        );
+        const circle_1 = __webpack_require__(
+          /*! ./bodies/circle */ "./src/bodies/circle.ts",
+        );
+        const ellipse_1 = __webpack_require__(
+          /*! ./bodies/ellipse */ "./src/bodies/ellipse.ts",
+        );
+        const line_1 = __webpack_require__(
+          /*! ./bodies/line */ "./src/bodies/line.ts",
+        );
+        const point_1 = __webpack_require__(
+          /*! ./bodies/point */ "./src/bodies/point.ts",
+        );
+        const polygon_1 = __webpack_require__(
+          /*! ./bodies/polygon */ "./src/bodies/polygon.ts",
+        );
+        const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
+        const optimized_1 = __webpack_require__(
+          /*! ./optimized */ "./src/optimized.ts",
+        );
+        const utils_1 = __webpack_require__(/*! ./utils */ "./src/utils.ts");
+        /**
+         * very base collision system (create, insert, update, draw, remove)
+         */
+        class BaseSystem extends model_1.RBush {
+          /**
+           * create point at position with options and add to system
+           */
+          createPoint(position, options) {
+            const point = new point_1.Point(position, options);
+            this.insert(point);
+            return point;
+          }
+          /**
+           * create line at position with options and add to system
+           */
+          createLine(start, end, options) {
+            const line = new line_1.Line(start, end, options);
+            this.insert(line);
+            return line;
+          }
+          /**
+           * create circle at position with options and add to system
+           */
+          createCircle(position, radius, options) {
+            const circle = new circle_1.Circle(position, radius, options);
+            this.insert(circle);
+            return circle;
+          }
+          /**
+           * create box at position with options and add to system
+           */
+          createBox(position, width, height, options) {
+            const box = new box_1.Box(position, width, height, options);
+            this.insert(box);
+            return box;
+          }
+          /**
+           * create ellipse at position with options and add to system
+           */
+          createEllipse(position, radiusX, radiusY = radiusX, step, options) {
+            const ellipse = new ellipse_1.Ellipse(
+              position,
+              radiusX,
+              radiusY,
+              step,
+              options,
+            );
+            this.insert(ellipse);
+            return ellipse;
+          }
+          /**
+           * create polygon at position with options and add to system
+           */
+          createPolygon(position, points, options) {
+            const polygon = new polygon_1.Polygon(position, points, options);
+            this.insert(polygon);
+            return polygon;
+          }
+          /**
+           * re-insert body into collision tree and update its aabb
+           * every body can be part of only one system
+           */
+          insert(body) {
+            body.bbox = body.getAABBAsBBox();
+            if (body.system) {
+              // allow end if body inserted and not moved
+              if (!(0, utils_1.bodyMoved)(body)) {
+                return this;
+              }
+              // old bounding box *needs* to be removed
+              body.system.remove(body);
+            }
+            // only then we update min, max
+            body.minX = body.bbox.minX - body.padding;
+            body.minY = body.bbox.minY - body.padding;
+            body.maxX = body.bbox.maxX + body.padding;
+            body.maxY = body.bbox.maxY + body.padding;
+            // set system for later body.system.updateBody(body)
+            body.system = this;
+            // reinsert bounding box to collision tree
+            return super.insert(body);
+          }
+          /**
+           * updates body in collision tree
+           */
+          updateBody(body) {
+            body.updateBody();
+          }
+          /**
+           * update all bodies aabb
+           */
+          update() {
+            (0, optimized_1.forEach)(this.all(), (body) => {
+              this.updateBody(body);
+            });
+          }
+          /**
+           * draw exact bodies colliders outline
+           */
+          draw(context) {
+            (0, optimized_1.forEach)(this.all(), (body) => {
+              body.draw(context);
+            });
+          }
+          /**
+           * draw bounding boxes hierarchy outline
+           */
+          drawBVH(context) {
+            const drawChildren = (body) => {
+              (0, utils_1.drawBVH)(context, body);
+              if (body.children) {
+                (0, optimized_1.forEach)(body.children, drawChildren);
+              }
+            };
+            (0, optimized_1.forEach)(this.data.children, drawChildren);
+          }
+          /**
+           * remove body aabb from collision tree
+           */
+          remove(body, equals) {
+            body.system = undefined;
+            return super.remove(body, equals);
+          }
+          /**
+           * get object potential colliders
+           * @deprecated because it's slower to use than checkOne() or checkAll()
+           */
+          getPotentials(body) {
+            // filter here is required as collides with self
+            return (0, optimized_1.filter)(
+              this.search(body),
+              (candidate) => candidate !== body,
+            );
+          }
+          /**
+           * used to find body deep inside data with finder function returning boolean found or not
+           */
+          traverse(traverseFunction, { children } = this.data) {
+            return children === null || children === void 0
+              ? void 0
+              : children.find((body, index) => {
+                  if (!body) {
+                    return false;
+                  }
+                  if (body.type && traverseFunction(body, children, index)) {
+                    return true;
+                  }
+                  // if callback returns true, ends forEach
+                  if (body.children) {
+                    this.traverse(traverseFunction, body);
+                  }
+                });
+          }
+        }
+        exports.BaseSystem = BaseSystem;
+
+        /***/
+      },
+
+    /***/ "./src/bodies/box.ts":
+      /*!***************************!*\
+  !*** ./src/bodies/box.ts ***!
+  \***************************/
+      /***/ (__unused_webpack_module, exports, __webpack_require__) => {
+        "use strict";
+
+        Object.defineProperty(exports, "__esModule", { value: true });
+        exports.Box = void 0;
+        const model_1 = __webpack_require__(/*! ../model */ "./src/model.ts");
+        const utils_1 = __webpack_require__(/*! ../utils */ "./src/utils.ts");
+        const polygon_1 = __webpack_require__(
+          /*! ./polygon */ "./src/bodies/polygon.ts",
+        );
+        /**
+         * collider - box
+         */
+        class Box extends polygon_1.Polygon {
+          /**
+           * collider - box
+           */
+          constructor(position, width, height, options) {
+            super(position, (0, utils_1.createBox)(width, height), options);
+            /**
+             * type of body
+             */
+            this.type = model_1.BodyType.Box;
+            /**
+             * boxes are convex
+             */
+            this.isConvex = true;
+            this._width = width;
+            this._height = height;
+          }
+          /**
+           * get box width
+           */
+          get width() {
+            return this._width;
+          }
+          /**
+           * set box width, update points
+           */
+          set width(width) {
+            this._width = width;
+            this.afterUpdateSize();
+          }
+          /**
+           * get box height
+           */
+          get height() {
+            return this._height;
+          }
+          /**
+           * set box height, update points
+           */
+          set height(height) {
+            this._height = height;
+            this.afterUpdateSize();
+          }
+          /**
+           * after setting width/height update translate
+           * see https://github.com/Prozi/detect-collisions/issues/70
+           */
+          afterUpdateSize() {
+            if (this.isCentered) {
+              this.retranslate(false);
+            }
+            this.setPoints((0, utils_1.createBox)(this._width, this._height));
+            if (this.isCentered) {
+              this.retranslate();
+            }
+          }
+          /**
+           * do not attempt to use Polygon.updateIsConvex()
+           */
+          updateIsConvex() {
+            return;
+          }
+        }
+        exports.Box = Box;
+
+        /***/
+      },
+
+    /***/ "./src/bodies/circle.ts":
+      /*!******************************!*\
+  !*** ./src/bodies/circle.ts ***!
+  \******************************/
+      /***/ (__unused_webpack_module, exports, __webpack_require__) => {
+        "use strict";
+
+        Object.defineProperty(exports, "__esModule", { value: true });
+        exports.Circle = void 0;
+        const sat_1 = __webpack_require__(
+          /*! sat */ "./node_modules/sat/SAT.js",
+        );
+        const model_1 = __webpack_require__(/*! ../model */ "./src/model.ts");
+        const utils_1 = __webpack_require__(/*! ../utils */ "./src/utils.ts");
+        /**
+         * collider - circle
+         */
+        class Circle extends sat_1.Circle {
+          /**
+           * collider - circle
+           */
+          constructor(position, radius, options) {
+            super((0, utils_1.ensureVectorPoint)(position), radius);
+            /**
+             * offset copy without angle applied
+             */
+            this.offsetCopy = { x: 0, y: 0 };
+            /**
+             * was the polygon modified and needs update in the next checkCollision
+             */
+            this.dirty = false;
+            /*
+             * circles are convex
+             */
+            this.isConvex = true;
+            /**
+             * circle type
+             */
+            this.type = model_1.BodyType.Circle;
+            /**
+             * always centered
+             */
+            this.isCentered = true;
+            (0, utils_1.extendBody)(this, options);
+            this.unscaledRadius = radius;
+          }
+          /**
+           * get this.pos.x
+           */
+          get x() {
+            return this.pos.x;
+          }
+          /**
+           * updating this.pos.x by this.x = x updates AABB
+           */
+          set x(x) {
+            this.pos.x = x;
+            this.markAsDirty();
+          }
+          /**
+           * get this.pos.y
+           */
+          get y() {
+            return this.pos.y;
+          }
+          /**
+           * updating this.pos.y by this.y = y updates AABB
+           */
+          set y(y) {
+            this.pos.y = y;
+            this.markAsDirty();
+          }
+          /**
+           * allow get scale
+           */
+          get scale() {
+            return this.r / this.unscaledRadius;
+          }
+          /**
+           * shorthand for setScale()
+           */
+          set scale(scale) {
+            this.setScale(scale);
+          }
+          /**
+           * scaleX = scale in case of Circles
+           */
+          get scaleX() {
+            return this.scale;
+          }
+          /**
+           * scaleY = scale in case of Circles
+           */
+          get scaleY() {
+            return this.scale;
+          }
+          /**
+           * update position
+           */
+          setPosition(x, y, update = true) {
+            this.pos.x = x;
+            this.pos.y = y;
+            this.markAsDirty(update);
+            return this;
+          }
+          /**
+           * update scale
+           */
+          setScale(scaleX, _scaleY = scaleX, update = true) {
+            this.r = this.unscaledRadius * Math.abs(scaleX);
+            this.markAsDirty(update);
+            return this;
+          }
+          /**
+           * set rotation
+           */
+          setAngle(angle, update = true) {
+            this.angle = angle;
+            const { x, y } = this.getOffsetWithAngle();
+            this.offset.x = x;
+            this.offset.y = y;
+            this.markAsDirty(update);
+            return this;
+          }
+          /**
+           * set offset from center
+           */
+          setOffset(offset, update = true) {
+            this.offsetCopy.x = offset.x;
+            this.offsetCopy.y = offset.y;
+            const { x, y } = this.getOffsetWithAngle();
+            this.offset.x = x;
+            this.offset.y = y;
+            this.markAsDirty(update);
+            return this;
+          }
+          /**
+           * get body bounding box, without padding
+           */
+          getAABBAsBBox() {
+            const x = this.pos.x + this.offset.x;
+            const y = this.pos.y + this.offset.y;
+            return {
+              minX: x - this.r,
+              maxX: x + this.r,
+              minY: y - this.r,
+              maxY: y + this.r,
+            };
+          }
+          /**
+           * Draws collider on a CanvasRenderingContext2D's current path
+           */
+          draw(context) {
+            const x = this.pos.x + this.offset.x;
+            const y = this.pos.y + this.offset.y;
+            const r = Math.abs(this.r);
+            if (this.isTrigger) {
+              const max = Math.max(8, this.r);
+              for (let i = 0; i < max; i++) {
+                const arc = (i / max) * 2 * Math.PI;
+                const arcPrev = ((i - 1) / max) * 2 * Math.PI;
+                const fromX = x + Math.cos(arcPrev) * this.r;
+                const fromY = y + Math.sin(arcPrev) * this.r;
+                const toX = x + Math.cos(arc) * this.r;
+                const toY = y + Math.sin(arc) * this.r;
+                (0, utils_1.dashLineTo)(context, fromX, fromY, toX, toY);
+              }
+            } else {
+              context.moveTo(x + r, y);
+              context.arc(x, y, r, 0, Math.PI * 2);
+            }
+          }
+          /**
+           * Draws Bounding Box on canvas context
+           */
+          drawBVH(context) {
+            (0, utils_1.drawBVH)(context, this);
+          }
+          /**
+           * inner function for after position change update aabb in system
+           */
+          updateBody(update = this.dirty) {
+            var _a;
+            if (update) {
+              (_a = this.system) === null || _a === void 0
+                ? void 0
+                : _a.insert(this);
+              this.dirty = false;
+            }
+          }
+          /**
+           * update instantly or mark as dirty
+           */
+          markAsDirty(update = false) {
+            if (update) {
+              this.updateBody(true);
+            } else {
+              this.dirty = true;
+            }
+          }
+          /**
+           * internal for getting offset with applied angle
+           */
+          getOffsetWithAngle() {
+            if ((!this.offsetCopy.x && !this.offsetCopy.y) || !this.angle) {
+              return this.offsetCopy;
+            }
+            const sin = Math.sin(this.angle);
+            const cos = Math.cos(this.angle);
+            const x = this.offsetCopy.x * cos - this.offsetCopy.y * sin;
+            const y = this.offsetCopy.x * sin + this.offsetCopy.y * cos;
+            return { x, y };
+          }
+        }
+        exports.Circle = Circle;
+
+        /***/
+      },
+
+    /***/ "./src/bodies/ellipse.ts":
+      /*!*******************************!*\
+  !*** ./src/bodies/ellipse.ts ***!
+  \*******************************/
+      /***/ (__unused_webpack_module, exports, __webpack_require__) => {
+        "use strict";
+
+        Object.defineProperty(exports, "__esModule", { value: true });
+        exports.Ellipse = void 0;
+        const model_1 = __webpack_require__(/*! ../model */ "./src/model.ts");
+        const utils_1 = __webpack_require__(/*! ../utils */ "./src/utils.ts");
+        const polygon_1 = __webpack_require__(
+          /*! ./polygon */ "./src/bodies/polygon.ts",
+        );
+        /**
+         * collider - ellipse
+         */
+        class Ellipse extends polygon_1.Polygon {
+          /**
+           * collider - ellipse
+           */
+          constructor(
+            position,
+            radiusX,
+            radiusY = radiusX,
+            step = (radiusX + radiusY) / Math.PI,
+            options,
+          ) {
+            super(
+              position,
+              (0, utils_1.createEllipse)(radiusX, radiusY, step),
+              options,
+            );
+            /**
+             * ellipse type
+             */
+            this.type = model_1.BodyType.Ellipse;
+            /**
+             * ellipses are convex
+             */
+            this.isConvex = true;
+            this._radiusX = radiusX;
+            this._radiusY = radiusY;
+            this._step = step;
+          }
+          /**
+           * flag to set is body centered
+           */
+          set isCentered(_isCentered) {}
+          /**
+           * is body centered?
+           */
+          get isCentered() {
+            return true;
+          }
+          /**
+           * get ellipse step number
+           */
+          get step() {
+            return this._step;
+          }
+          /**
+           * set ellipse step number
+           */
+          set step(step) {
+            this._step = step;
+            this.setPoints(
+              (0, utils_1.createEllipse)(
+                this._radiusX,
+                this._radiusY,
+                this._step,
+              ),
+            );
+          }
+          /**
+           * get ellipse radiusX
+           */
+          get radiusX() {
+            return this._radiusX;
+          }
+          /**
+           * set ellipse radiusX, update points
+           */
+          set radiusX(radiusX) {
+            this._radiusX = radiusX;
+            this.setPoints(
+              (0, utils_1.createEllipse)(
+                this._radiusX,
+                this._radiusY,
+                this._step,
+              ),
+            );
+          }
+          /**
+           * get ellipse radiusY
+           */
+          get radiusY() {
+            return this._radiusY;
+          }
+          /**
+           * set ellipse radiusY, update points
+           */
+          set radiusY(radiusY) {
+            this._radiusY = radiusY;
+            this.setPoints(
+              (0, utils_1.createEllipse)(
+                this._radiusX,
+                this._radiusY,
+                this._step,
+              ),
+            );
+          }
+          /**
+           * do not attempt to use Polygon.center()
+           */
+          center() {
+            return;
+          }
+          /**
+           * do not attempt to use Polygon.updateIsConvex()
+           */
+          updateIsConvex() {
+            return;
+          }
+        }
+        exports.Ellipse = Ellipse;
+
+        /***/
+      },
+
+    /***/ "./src/bodies/line.ts":
+      /*!****************************!*\
+  !*** ./src/bodies/line.ts ***!
+  \****************************/
+      /***/ (__unused_webpack_module, exports, __webpack_require__) => {
+        "use strict";
+
+        Object.defineProperty(exports, "__esModule", { value: true });
+        exports.Line = void 0;
+        const sat_1 = __webpack_require__(
+          /*! sat */ "./node_modules/sat/SAT.js",
+        );
+        const model_1 = __webpack_require__(/*! ../model */ "./src/model.ts");
+        const polygon_1 = __webpack_require__(
+          /*! ./polygon */ "./src/bodies/polygon.ts",
+        );
+        /**
+         * collider - line
+         */
+        class Line extends polygon_1.Polygon {
+          /**
+           * collider - line from start to end
+           */
+          constructor(start, end, options) {
+            super(
+              start,
+              [
+                { x: 0, y: 0 },
+                { x: end.x - start.x, y: end.y - start.y },
+              ],
+              options,
+            );
+            /**
+             * line type
+             */
+            this.type = model_1.BodyType.Line;
+            /**
+             * line is convex
+             */
+            this.isConvex = true;
+            if (this.calcPoints.length === 1 || !end) {
+              console.error({ start, end });
+              throw new Error("No end point for line provided");
+            }
+          }
+          get start() {
+            return {
+              x: this.x + this.calcPoints[0].x,
+              y: this.y + this.calcPoints[0].y,
+            };
+          }
+          set start({ x, y }) {
+            this.x = x;
+            this.y = y;
+          }
+          get end() {
+            return {
+              x: this.x + this.calcPoints[1].x,
+              y: this.y + this.calcPoints[1].y,
+            };
+          }
+          set end({ x, y }) {
+            this.points[1].x = x - this.start.x;
+            this.points[1].y = y - this.start.y;
+            this.setPoints(this.points);
+          }
+          getCentroid() {
+            return new sat_1.Vector(
+              (this.end.x - this.start.x) / 2,
+              (this.end.y - this.start.y) / 2,
+            );
+          }
+          /**
+           * do not attempt to use Polygon.updateIsConvex()
+           */
+          updateIsConvex() {
+            return;
+          }
+        }
+        exports.Line = Line;
+
+        /***/
+      },
+
+    /***/ "./src/bodies/point.ts":
+      /*!*****************************!*\
+  !*** ./src/bodies/point.ts ***!
+  \*****************************/
+      /***/ (__unused_webpack_module, exports, __webpack_require__) => {
+        "use strict";
+
+        Object.defineProperty(exports, "__esModule", { value: true });
+        exports.Point = void 0;
+        const model_1 = __webpack_require__(/*! ../model */ "./src/model.ts");
+        const utils_1 = __webpack_require__(/*! ../utils */ "./src/utils.ts");
+        const box_1 = __webpack_require__(/*! ./box */ "./src/bodies/box.ts");
+        /**
+         * collider - point (very tiny box)
+         */
+        class Point extends box_1.Box {
+          /**
+           * collider - point (very tiny box)
+           */
+          constructor(position, options) {
+            super(
+              (0, utils_1.ensureVectorPoint)(position),
+              0.001,
+              0.001,
+              options,
+            );
+            /**
+             * point type
+             */
+            this.type = model_1.BodyType.Point;
+          }
+        }
+        exports.Point = Point;
+
+        /***/
+      },
+
+    /***/ "./src/bodies/polygon.ts":
+      /*!*******************************!*\
+  !*** ./src/bodies/polygon.ts ***!
+  \*******************************/
+      /***/ (__unused_webpack_module, exports, __webpack_require__) => {
+        "use strict";
+
+        Object.defineProperty(exports, "__esModule", { value: true });
+        exports.Polygon = exports.isSimple = void 0;
+        const poly_decomp_es_1 = __webpack_require__(
+          /*! poly-decomp-es */ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js",
+        );
+        Object.defineProperty(exports, "isSimple", {
+          enumerable: true,
+          get: function () {
+            return poly_decomp_es_1.isSimple;
+          },
+        });
+        const sat_1 = __webpack_require__(
+          /*! sat */ "./node_modules/sat/SAT.js",
+        );
+        const model_1 = __webpack_require__(/*! ../model */ "./src/model.ts");
+        const optimized_1 = __webpack_require__(
+          /*! ../optimized */ "./src/optimized.ts",
+        );
+        const utils_1 = __webpack_require__(/*! ../utils */ "./src/utils.ts");
+        /**
+         * collider - polygon
+         */
+        class Polygon extends sat_1.Polygon {
+          /**
+           * collider - polygon
+           */
+          constructor(position, points, options) {
+            super(
+              (0, utils_1.ensureVectorPoint)(position),
+              (0, utils_1.ensurePolygonPoints)(points),
+            );
+            /**
+             * was the polygon modified and needs update in the next checkCollision
+             */
+            this.dirty = false;
+            /**
+             * type of body
+             */
+            this.type = model_1.BodyType.Polygon;
+            /**
+             * is body centered
+             */
+            this.centered = false;
+            /**
+             * scale Vector of body
+             */
+            this.scaleVector = { x: 1, y: 1 };
+            if (!points.length) {
+              throw new Error("No points in polygon");
+            }
+            (0, utils_1.extendBody)(this, options);
+          }
+          /**
+           * flag to set is polygon centered
+           */
+          set isCentered(isCentered) {
+            if (this.centered === isCentered) {
+              return;
+            }
+            const centroid = this.getCentroidWithoutRotation();
+            if (centroid.x || centroid.y) {
+              const x = centroid.x * (isCentered ? 1 : -1);
+              const y = centroid.y * (isCentered ? 1 : -1);
+              this.translate(-x, -y);
+            }
+            this.centered = isCentered;
+          }
+          /**
+           * is polygon centered?
+           */
+          get isCentered() {
+            return this.centered;
+          }
+          get x() {
+            return this.pos.x;
+          }
+          /**
+           * updating this.pos.x by this.x = x updates AABB
+           */
+          set x(x) {
+            this.pos.x = x;
+            this.markAsDirty();
+          }
+          get y() {
+            return this.pos.y;
+          }
+          /**
+           * updating this.pos.y by this.y = y updates AABB
+           */
+          set y(y) {
+            this.pos.y = y;
+            this.markAsDirty();
+          }
+          /**
+           * allow exact getting of scale x - use setScale(x, y) to set
+           */
+          get scaleX() {
+            return this.scaleVector.x;
+          }
+          /**
+           * allow exact getting of scale y - use setScale(x, y) to set
+           */
+          get scaleY() {
+            return this.scaleVector.y;
+          }
+          /**
+           * allow approx getting of scale
+           */
+          get scale() {
+            return (this.scaleVector.x + this.scaleVector.y) / 2;
+          }
+          /**
+           * allow easier setting of scale
+           */
+          set scale(scale) {
+            this.setScale(scale);
+          }
+          /**
+           * update position
+           */
+          setPosition(x, y, update = true) {
+            this.pos.x = x;
+            this.pos.y = y;
+            this.markAsDirty(update);
+            return this;
+          }
+          /**
+           * update scale
+           */
+          setScale(x, y = x, update = true) {
+            this.scaleVector.x = Math.abs(x);
+            this.scaleVector.y = Math.abs(y);
+            super.setPoints(
+              (0, optimized_1.map)(this.points, (point, index) => {
+                point.x = this.pointsBackup[index].x * this.scaleVector.x;
+                point.y = this.pointsBackup[index].y * this.scaleVector.y;
+                return point;
+              }),
+            );
+            this.markAsDirty(update);
+            return this;
+          }
+          setAngle(angle, update = true) {
+            super.setAngle(angle);
+            this.markAsDirty(update);
+            return this;
+          }
+          setOffset(offset, update = true) {
+            super.setOffset(offset);
+            this.markAsDirty(update);
+            return this;
+          }
+          /**
+           * get body bounding box, without padding
+           */
+          getAABBAsBBox() {
+            const { pos, w, h } = this.getAABBAsBox();
+            return {
+              minX: pos.x,
+              minY: pos.y,
+              maxX: pos.x + w,
+              maxY: pos.y + h,
+            };
+          }
+          /**
+           * Draws exact collider on canvas context
+           */
+          draw(context) {
+            (0, utils_1.drawPolygon)(context, this, this.isTrigger);
+          }
+          /**
+           * Draws Bounding Box on canvas context
+           */
+          drawBVH(context) {
+            (0, utils_1.drawBVH)(context, this);
+          }
+          /**
+           * get body centroid without applied angle
+           */
+          getCentroidWithoutRotation() {
+            // keep angle copy
+            const angle = this.angle;
+            if (angle) {
+              // reset angle for get centroid
+              this.setAngle(0);
+              // get centroid
+              const centroid = this.getCentroid();
+              // revert angle change
+              this.setAngle(angle);
+              return centroid;
+            }
+            return this.getCentroid();
+          }
+          /**
+           * sets polygon points to new array of vectors
+           */
+          setPoints(points) {
+            super.setPoints(points);
+            this.updateIsConvex();
+            this.pointsBackup = (0, utils_1.clonePointsArray)(points);
+            return this;
+          }
+          /**
+           * translates polygon points in x, y direction
+           */
+          translate(x, y) {
+            super.translate(x, y);
+            this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
+            return this;
+          }
+          /**
+           * rotates polygon points by angle, in radians
+           */
+          rotate(angle) {
+            super.rotate(angle);
+            this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
+            return this;
+          }
+          /**
+           * if true, polygon is not an invalid, self-crossing polygon
+           */
+          isSimple() {
+            return (0, poly_decomp_es_1.isSimple)(
+              this.calcPoints.map(utils_1.mapVectorToArray),
+            );
+          }
+          /**
+           * inner function for after position change update aabb in system and convex inner polygons
+           */
+          updateBody(update = this.dirty) {
+            var _a;
+            if (update) {
+              this.updateConvexPolygonPositions();
+              (_a = this.system) === null || _a === void 0
+                ? void 0
+                : _a.insert(this);
+              this.dirty = false;
+            }
+          }
+          retranslate(isCentered = this.isCentered) {
+            const centroid = this.getCentroidWithoutRotation();
+            if (centroid.x || centroid.y) {
+              const x = centroid.x * (isCentered ? 1 : -1);
+              const y = centroid.y * (isCentered ? 1 : -1);
+              this.translate(-x, -y);
+            }
+          }
+          /**
+           * update instantly or mark as dirty
+           */
+          markAsDirty(update = false) {
+            if (update) {
+              this.updateBody(true);
+            } else {
+              this.dirty = true;
+            }
+          }
+          /**
+           * update the position of the decomposed convex polygons (if any), called
+           * after the position of the body has changed
+           */
+          updateConvexPolygonPositions() {
+            if (this.isConvex || !this.convexPolygons) {
+              return;
+            }
+            (0, optimized_1.forEach)(this.convexPolygons, (polygon) => {
+              polygon.pos.x = this.pos.x;
+              polygon.pos.y = this.pos.y;
+            });
+          }
+          /**
+           * returns body split into convex polygons, or empty array for convex bodies
+           */
+          getConvex() {
+            if (
+              (this.type && this.type !== model_1.BodyType.Polygon) ||
+              this.points.length < 4
+            ) {
+              return [];
+            }
+            const points = (0, optimized_1.map)(
+              this.calcPoints,
+              utils_1.mapVectorToArray,
+            );
+            return (0, poly_decomp_es_1.quickDecomp)(points);
+          }
+          /**
+           * updates convex polygons cache in body
+           */
+          updateConvexPolygons(convex = this.getConvex()) {
+            if (this.isConvex) {
+              return;
+            }
+            if (!this.convexPolygons) {
+              this.convexPolygons = [];
+            }
+            (0, optimized_1.forEach)(convex, (points, index) => {
+              // lazy create
+              if (!this.convexPolygons[index]) {
+                this.convexPolygons[index] = new sat_1.Polygon();
+              }
+              this.convexPolygons[index].pos.x = this.pos.x;
+              this.convexPolygons[index].pos.y = this.pos.y;
+              this.convexPolygons[index].setPoints(
+                (0, utils_1.ensurePolygonPoints)(
+                  (0, optimized_1.map)(points, utils_1.mapArrayToVector),
+                ),
+              );
+            });
+            // trim array length
+            this.convexPolygons.length = convex.length;
+          }
+          /**
+           * after points update set is convex
+           */
+          updateIsConvex() {
+            // all other types other than polygon are always convex
+            const convex = this.getConvex();
+            // everything with empty array or one element array
+            this.isConvex = convex.length <= 1;
+            this.updateConvexPolygons(convex);
+          }
+        }
+        exports.Polygon = Polygon;
+
+        /***/
+      },
+
+    /***/ "./src/intersect.ts":
+      /*!**************************!*\
+  !*** ./src/intersect.ts ***!
+  \**************************/
+      /***/ (__unused_webpack_module, exports, __webpack_require__) => {
+        "use strict";
+
+        Object.defineProperty(exports, "__esModule", { value: true });
+        exports.intersectLinePolygon =
+          exports.intersectLineLine =
+          exports.intersectLineLineFast =
+          exports.intersectLineCircle =
+          exports.circleOutsidePolygon =
+          exports.circleInPolygon =
+          exports.circleInCircle =
+          exports.pointOnCircle =
+          exports.polygonInPolygon =
+          exports.pointInPolygon =
+          exports.polygonInCircle =
+          exports.ensureConvex =
+            void 0;
+        const sat_1 = __webpack_require__(
+          /*! sat */ "./node_modules/sat/SAT.js",
+        );
+        const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
+        const optimized_1 = __webpack_require__(
+          /*! ./optimized */ "./src/optimized.ts",
+        );
+        /**
+         * replace body with array of related convex polygons
+         */
+        function ensureConvex(body) {
+          if (body.isConvex || body.type !== model_1.BodyType.Polygon) {
+            return [body];
+          }
+          return body.convexPolygons;
+        }
+        exports.ensureConvex = ensureConvex;
+        function polygonInCircle(polygon, circle) {
+          return (0, optimized_1.every)(polygon.calcPoints, (p) =>
+            (0, sat_1.pointInCircle)(
+              { x: p.x + polygon.pos.x, y: p.y + polygon.pos.y },
+              circle,
+            ),
+          );
+        }
+        exports.polygonInCircle = polygonInCircle;
+        function pointInPolygon(point, polygon) {
+          return (0, optimized_1.some)(ensureConvex(polygon), (convex) =>
+            (0, sat_1.pointInPolygon)(point, convex),
+          );
+        }
+        exports.pointInPolygon = pointInPolygon;
+        function polygonInPolygon(polygonA, polygonB) {
+          return (0, optimized_1.every)(polygonA.calcPoints, (point) =>
+            pointInPolygon(
+              { x: point.x + polygonA.pos.x, y: point.y + polygonA.pos.y },
+              polygonB,
+            ),
+          );
+        }
+        exports.polygonInPolygon = polygonInPolygon;
+        /**
+         * https://stackoverflow.com/a/68197894/1749528
+         */
+        function pointOnCircle(point, circle) {
+          return (
+            (point.x - circle.pos.x) * (point.x - circle.pos.x) +
+              (point.y - circle.pos.y) * (point.y - circle.pos.y) ===
+            circle.r * circle.r
+          );
+        }
+        exports.pointOnCircle = pointOnCircle;
+        /**
+         * https://stackoverflow.com/a/68197894/1749528
+         */
+        function circleInCircle(bodyA, bodyB) {
+          const x1 = bodyA.pos.x;
+          const y1 = bodyA.pos.y;
+          const x2 = bodyB.pos.x;
+          const y2 = bodyB.pos.y;
+          const r1 = bodyA.r;
+          const r2 = bodyB.r;
+          const distSq = Math.sqrt(
+            (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2),
+          );
+          return distSq + r2 === r1 || distSq + r2 < r1;
+        }
+        exports.circleInCircle = circleInCircle;
+        /**
+         * https://stackoverflow.com/a/68197894/1749528
+         */
+        function circleInPolygon(circle, polygon) {
+          // Circle with radius 0 isn't a circle
+          if (circle.r === 0) {
+            return false;
+          }
+          // If the center of the circle is not within the polygon,
+          // then the circle may overlap, but it'll never be "contained"
+          // so return false
+          if (!pointInPolygon(circle.pos, polygon)) {
+            return false;
+          }
+          // Necessary add polygon pos to points
+          const points = (0, optimized_1.map)(
+            polygon.calcPoints,
+            ({ x, y }) => ({
+              x: x + polygon.pos.x,
+              y: y + polygon.pos.y,
+            }),
+          );
+          // If the center of the circle is within the polygon,
+          // the circle is not outside of the polygon completely.
+          // so return false.
+          if (
+            (0, optimized_1.some)(points, (point) =>
+              (0, sat_1.pointInCircle)(point, circle),
+            )
+          ) {
+            return false;
+          }
+          // If any line-segment of the polygon intersects the circle,
+          // the circle is not "contained"
+          // so return false
+          if (
+            (0, optimized_1.some)(points, (end, index) => {
+              const start = index
+                ? points[index - 1]
+                : points[points.length - 1];
+              return intersectLineCircle({ start, end }, circle).length > 0;
+            })
+          ) {
+            return false;
+          }
+          return true;
+        }
+        exports.circleInPolygon = circleInPolygon;
+        /**
+         * https://stackoverflow.com/a/68197894/1749528
+         */
+        function circleOutsidePolygon(circle, polygon) {
+          // Circle with radius 0 isn't a circle
+          if (circle.r === 0) {
+            return false;
+          }
+          // If the center of the circle is within the polygon,
+          // the circle is not outside of the polygon completely.
+          // so return false.
+          if (pointInPolygon(circle.pos, polygon)) {
+            return false;
+          }
+          // Necessary add polygon pos to points
+          const points = (0, optimized_1.map)(
+            polygon.calcPoints,
+            ({ x, y }) => ({
+              x: x + polygon.pos.x,
+              y: y + polygon.pos.y,
+            }),
+          );
+          // If the center of the circle is within the polygon,
+          // the circle is not outside of the polygon completely.
+          // so return false.
+          if (
+            (0, optimized_1.some)(
+              points,
+              (point) =>
+                (0, sat_1.pointInCircle)(point, circle) ||
+                pointOnCircle(point, circle),
+            )
+          ) {
+            return false;
+          }
+          // If any line-segment of the polygon intersects the circle,
+          // the circle is not "contained"
+          // so return false
+          if (
+            (0, optimized_1.some)(points, (end, index) => {
+              const start = index
+                ? points[index - 1]
+                : points[points.length - 1];
+              return intersectLineCircle({ start, end }, circle).length > 0;
+            })
+          ) {
+            return false;
+          }
+          return true;
+        }
+        exports.circleOutsidePolygon = circleOutsidePolygon;
+        /**
+         * https://stackoverflow.com/a/37225895/1749528
+         */
+        function intersectLineCircle(line, { pos, r }) {
+          const v1 = {
+            x: line.end.x - line.start.x,
+            y: line.end.y - line.start.y,
+          };
+          const v2 = { x: line.start.x - pos.x, y: line.start.y - pos.y };
+          const b = (v1.x * v2.x + v1.y * v2.y) * -2;
+          const c = (v1.x * v1.x + v1.y * v1.y) * 2;
+          const d = Math.sqrt(
+            b * b - (v2.x * v2.x + v2.y * v2.y - r * r) * c * 2,
+          );
+          if (isNaN(d)) {
+            // no intercept
+            return [];
+          }
+          const u1 = (b - d) / c; // these represent the unit distance of point one and two on the line
+          const u2 = (b + d) / c;
+          const results = []; // return array
+          if (u1 <= 1 && u1 >= 0) {
+            // add point if on the line segment
+            results.push({
+              x: line.start.x + v1.x * u1,
+              y: line.start.y + v1.y * u1,
+            });
+          }
+          if (u2 <= 1 && u2 >= 0) {
+            // second add point if on the line segment
+            results.push({
+              x: line.start.x + v1.x * u2,
+              y: line.start.y + v1.y * u2,
+            });
+          }
+          return results;
+        }
+        exports.intersectLineCircle = intersectLineCircle;
+        /**
+         * helper for intersectLineLineFast
+         */
+        function isTurn(point1, point2, point3) {
+          const A = (point3.x - point1.x) * (point2.y - point1.y);
+          const B = (point2.x - point1.x) * (point3.y - point1.y);
+          return A > B + Number.EPSILON ? 1 : A + Number.EPSILON < B ? -1 : 0;
+        }
+        /**
+         * faster implementation of intersectLineLine
+         * https://stackoverflow.com/a/16725715/1749528
+         */
+        function intersectLineLineFast(line1, line2) {
+          return (
+            isTurn(line1.start, line2.start, line2.end) !==
+              isTurn(line1.end, line2.start, line2.end) &&
+            isTurn(line1.start, line1.end, line2.start) !==
+              isTurn(line1.start, line1.end, line2.end)
+          );
+        }
+        exports.intersectLineLineFast = intersectLineLineFast;
+        /**
+         * returns the point of intersection
+         * https://stackoverflow.com/a/24392281/1749528
+         */
+        function intersectLineLine(line1, line2) {
+          const dX = line1.end.x - line1.start.x;
+          const dY = line1.end.y - line1.start.y;
+          const determinant =
+            dX * (line2.end.y - line2.start.y) -
+            (line2.end.x - line2.start.x) * dY;
+          if (determinant === 0) {
+            return null;
+          }
+          const lambda =
+            ((line2.end.y - line2.start.y) * (line2.end.x - line1.start.x) +
+              (line2.start.x - line2.end.x) * (line2.end.y - line1.start.y)) /
+            determinant;
+          const gamma =
+            ((line1.start.y - line1.end.y) * (line2.end.x - line1.start.x) +
+              dX * (line2.end.y - line1.start.y)) /
+            determinant;
+          // check if there is an intersection
+          if (!(lambda >= 0 && lambda <= 1) || !(gamma >= 0 && gamma <= 1)) {
+            return null;
+          }
+          return {
+            x: line1.start.x + lambda * dX,
+            y: line1.start.y + lambda * dY,
+          };
+        }
+        exports.intersectLineLine = intersectLineLine;
+        function intersectLinePolygon(line, polygon) {
+          const results = [];
+          (0, optimized_1.forEach)(polygon.calcPoints, (to, index) => {
+            const from = index
+              ? polygon.calcPoints[index - 1]
+              : polygon.calcPoints[polygon.calcPoints.length - 1];
+            const side = {
+              start: { x: from.x + polygon.pos.x, y: from.y + polygon.pos.y },
+              end: { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y },
+            };
+            const hit = intersectLineLine(line, side);
+            if (hit) {
+              results.push(hit);
+            }
+          });
+          return results;
+        }
+        exports.intersectLinePolygon = intersectLinePolygon;
+
+        /***/
+      },
+
+    /***/ "./src/model.ts":
+      /*!**********************!*\
+  !*** ./src/model.ts ***!
+  \**********************/
+      /***/ function (__unused_webpack_module, exports, __webpack_require__) {
+        "use strict";
+
+        var __importDefault =
+          (this && this.__importDefault) ||
+          function (mod) {
+            return mod && mod.__esModule ? mod : { default: mod };
+          };
+        Object.defineProperty(exports, "__esModule", { value: true });
+        exports.BodyType =
+          exports.SATCircle =
+          exports.SATPolygon =
+          exports.SATVector =
+          exports.Response =
+          exports.RBush =
+          exports.isSimple =
+            void 0;
+        const rbush_1 = __importDefault(
+          __webpack_require__(/*! rbush */ "./node_modules/rbush/rbush.min.js"),
+        );
+        Object.defineProperty(exports, "RBush", {
+          enumerable: true,
+          get: function () {
+            return rbush_1.default;
+          },
+        });
+        const sat_1 = __webpack_require__(
+          /*! sat */ "./node_modules/sat/SAT.js",
+        );
+        Object.defineProperty(exports, "SATCircle", {
+          enumerable: true,
+          get: function () {
+            return sat_1.Circle;
+          },
+        });
+        Object.defineProperty(exports, "SATPolygon", {
+          enumerable: true,
+          get: function () {
+            return sat_1.Polygon;
+          },
+        });
+        Object.defineProperty(exports, "Response", {
+          enumerable: true,
+          get: function () {
+            return sat_1.Response;
+          },
+        });
+        Object.defineProperty(exports, "SATVector", {
+          enumerable: true,
+          get: function () {
+            return sat_1.Vector;
+          },
+        });
+        var poly_decomp_es_1 = __webpack_require__(
+          /*! poly-decomp-es */ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js",
+        );
+        Object.defineProperty(exports, "isSimple", {
+          enumerable: true,
+          get: function () {
+            return poly_decomp_es_1.isSimple;
+          },
+        });
+        /**
+         * types
+         */
+        var BodyType;
+        (function (BodyType) {
+          BodyType["Ellipse"] = "Ellipse";
+          BodyType["Line"] = "Line";
+          BodyType["Circle"] = "Circle";
+          BodyType["Box"] = "Box";
+          BodyType["Point"] = "Point";
+          BodyType["Polygon"] = "Polygon";
+        })((BodyType = exports.BodyType || (exports.BodyType = {})));
+
+        /***/
+      },
+
+    /***/ "./src/optimized.ts":
+      /*!**************************!*\
+  !*** ./src/optimized.ts ***!
+  \**************************/
+      /***/ (__unused_webpack_module, exports) => {
+        "use strict";
+
+        Object.defineProperty(exports, "__esModule", { value: true });
+        exports.map =
+          exports.filter =
+          exports.every =
+          exports.some =
+          exports.forEach =
+            void 0;
+        /**
+         * 40-90% faster than built-in Array.forEach function.
+         *
+         * basic benchmark: https://jsbench.me/urle772xdn
+         */
+        const forEach = (array, callback) => {
+          for (let i = 0, l = array.length; i < l; i++) {
+            callback(array[i], i);
+          }
+        };
+        exports.forEach = forEach;
+        /**
+         * 20-90% faster than built-in Array.some function.
+         *
+         * basic benchmark: https://jsbench.me/l0le7bnnsq
+         */
+        const some = (array, callback) => {
+          for (let i = 0, l = array.length; i < l; i++) {
+            if (callback(array[i], i)) {
+              return true;
+            }
+          }
+          return false;
+        };
+        exports.some = some;
+        /**
+         * 20-40% faster than built-in Array.every function.
+         *
+         * basic benchmark: https://jsbench.me/unle7da29v
+         */
+        const every = (array, callback) => {
+          for (let i = 0, l = array.length; i < l; i++) {
+            if (!callback(array[i], i)) {
+              return false;
+            }
+          }
+          return true;
+        };
+        exports.every = every;
+        /**
+         * 20-60% faster than built-in Array.filter function.
+         *
+         * basic benchmark: https://jsbench.me/o1le77ev4l
+         */
+        const filter = (array, callback) => {
+          const output = [];
+          for (let i = 0, l = array.length; i < l; i++) {
+            const item = array[i];
+            if (callback(item, i)) {
+              output.push(item);
+            }
+          }
+          return output;
+        };
+        exports.filter = filter;
+        /**
+         * 20-70% faster than built-in Array.map
+         *
+         * basic benchmark: https://jsbench.me/oyle77vbpc
+         */
+        const map = (array, callback) => {
+          const l = array.length;
+          const output = new Array(l);
+          for (let i = 0; i < l; i++) {
+            output[i] = callback(array[i], i);
+          }
+          return output;
+        };
+        exports.map = map;
+
+        /***/
+      },
+
+    /***/ "./src/system.ts":
+      /*!***********************!*\
+  !*** ./src/system.ts ***!
+  \***********************/
+      /***/ (__unused_webpack_module, exports, __webpack_require__) => {
+        "use strict";
+
+        Object.defineProperty(exports, "__esModule", { value: true });
+        exports.System = void 0;
+        const base_system_1 = __webpack_require__(
+          /*! ./base-system */ "./src/base-system.ts",
+        );
+        const line_1 = __webpack_require__(
+          /*! ./bodies/line */ "./src/bodies/line.ts",
+        );
+        const intersect_1 = __webpack_require__(
+          /*! ./intersect */ "./src/intersect.ts",
+        );
+        const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
+        const optimized_1 = __webpack_require__(
+          /*! ./optimized */ "./src/optimized.ts",
+        );
+        const utils_1 = __webpack_require__(/*! ./utils */ "./src/utils.ts");
+        /**
+         * collision system
+         */
+        class System extends base_system_1.BaseSystem {
+          constructor() {
+            super(...arguments);
+            /**
+             * the last collision result
+             */
+            this.response = new model_1.Response();
+          }
+          /**
+           * separate (move away) bodies
+           */
+          separate() {
+            (0, optimized_1.forEach)(this.all(), (body) => {
+              this.separateBody(body);
+            });
+          }
+          /**
+           * separate (move away) 1 body
+           */
+          separateBody(body) {
+            if (body.isStatic || body.isTrigger) {
+              return;
+            }
+            const offsets = { x: 0, y: 0 };
+            const addOffsets = ({ overlapV: { x, y } }) => {
+              offsets.x += x;
+              offsets.y += y;
+            };
+            this.checkOne(body, addOffsets);
+            if (offsets.x || offsets.y) {
+              body.setPosition(body.x - offsets.x, body.y - offsets.y);
+            }
+          }
+          /**
+           * check one body collisions with callback
+           */
+          checkOne(
+            body,
+            callback = utils_1.returnTrue,
+            response = this.response,
+          ) {
+            // no need to check static body collision
+            if (body.isStatic) {
+              return false;
+            }
+            const bodies = this.search(body);
+            const checkCollision = (candidate) => {
+              if (
+                candidate !== body &&
+                this.checkCollision(body, candidate, response)
+              ) {
+                return callback(response);
+              }
+            };
+            return (0, optimized_1.some)(bodies, checkCollision);
+          }
+          /**
+           * check all bodies collisions with callback
+           */
+          checkAll(callback = utils_1.returnTrue, response = this.response) {
+            const checkOne = (body) => {
+              return this.checkOne(body, callback, response);
+            };
+            return (0, optimized_1.some)(this.all(), checkOne);
+          }
+          /**
+           * check do 2 objects collide
+           */
+          checkCollision(bodyA, bodyB, response = this.response) {
+            // assess the bodies real aabb without padding
+            if (
+              !bodyA.bbox ||
+              !bodyB.bbox ||
+              (0, utils_1.notIntersectAABB)(bodyA.bbox, bodyB.bbox)
+            ) {
+              return false;
+            }
+            const sat = (0, utils_1.getSATTest)(bodyA, bodyB);
+            // 99% of cases
+            if (bodyA.isConvex && bodyB.isConvex) {
+              // always first clear response
+              response.clear();
+              return sat(bodyA, bodyB, response);
+            }
+            // more complex (non convex) cases
+            const convexBodiesA = (0, intersect_1.ensureConvex)(bodyA);
+            const convexBodiesB = (0, intersect_1.ensureConvex)(bodyB);
+            let overlapX = 0;
+            let overlapY = 0;
+            let collided = false;
+            (0, optimized_1.forEach)(convexBodiesA, (convexBodyA) => {
+              (0, optimized_1.forEach)(convexBodiesB, (convexBodyB) => {
+                // always first clear response
+                response.clear();
+                if (sat(convexBodyA, convexBodyB, response)) {
+                  collided = true;
+                  overlapX += response.overlapV.x;
+                  overlapY += response.overlapV.y;
+                }
+              });
+            });
+            if (collided) {
+              const vector = new model_1.SATVector(overlapX, overlapY);
+              response.a = bodyA;
+              response.b = bodyB;
+              response.overlapV.x = overlapX;
+              response.overlapV.y = overlapY;
+              response.overlapN = vector.normalize();
+              response.overlap = vector.len();
+              response.aInB = (0, utils_1.checkAInB)(bodyA, bodyB);
+              response.bInA = (0, utils_1.checkAInB)(bodyB, bodyA);
+            }
+            return collided;
+          }
+          /**
+           * raycast to get collider of ray from start to end
+           */
+          raycast(start, end, allow = utils_1.returnTrue) {
+            let minDistance = Infinity;
+            let result = null;
+            if (!this.ray) {
+              this.ray = new line_1.Line(start, end, { isTrigger: true });
+            } else {
+              this.ray.start = start;
+              this.ray.end = end;
+            }
+            this.insert(this.ray);
+            this.checkOne(this.ray, ({ b: body }) => {
+              if (!allow(body)) {
+                return false;
+              }
+              const points =
+                body.type === model_1.BodyType.Circle
+                  ? (0, intersect_1.intersectLineCircle)(this.ray, body)
+                  : (0, intersect_1.intersectLinePolygon)(this.ray, body);
+              (0, optimized_1.forEach)(points, (point) => {
+                const pointDistance = (0, utils_1.distance)(start, point);
+                if (pointDistance < minDistance) {
+                  minDistance = pointDistance;
+                  result = { point, body };
+                }
+              });
+            });
+            this.remove(this.ray);
+            return result;
+          }
+        }
+        exports.System = System;
+
+        /***/
+      },
+
+    /***/ "./src/utils.ts":
+      /*!**********************!*\
+  !*** ./src/utils.ts ***!
+  \**********************/
+      /***/ (__unused_webpack_module, exports, __webpack_require__) => {
+        "use strict";
+
+        Object.defineProperty(exports, "__esModule", { value: true });
+        exports.returnTrue =
+          exports.cloneResponse =
+          exports.drawBVH =
+          exports.drawPolygon =
+          exports.dashLineTo =
+          exports.getSATTest =
+          exports.getBounceDirection =
+          exports.mapArrayToVector =
+          exports.mapVectorToArray =
+          exports.clonePointsArray =
+          exports.checkAInB =
+          exports.intersectAABB =
+          exports.notIntersectAABB =
+          exports.bodyMoved =
+          exports.extendBody =
+          exports.clockwise =
+          exports.distance =
+          exports.ensurePolygonPoints =
+          exports.ensureVectorPoint =
+          exports.createBox =
+          exports.createEllipse =
+          exports.rad2deg =
+          exports.deg2rad =
+          exports.RAD2DEG =
+          exports.DEG2RAD =
+            void 0;
+        const sat_1 = __webpack_require__(
+          /*! sat */ "./node_modules/sat/SAT.js",
+        );
+        const intersect_1 = __webpack_require__(
+          /*! ./intersect */ "./src/intersect.ts",
+        );
+        const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
+        const optimized_1 = __webpack_require__(
+          /*! ./optimized */ "./src/optimized.ts",
+        );
+        /* helpers for faster getSATTest() and checkAInB() */
+        const testMap = {
+          satCircleCircle: sat_1.testCircleCircle,
+          satCirclePolygon: sat_1.testCirclePolygon,
+          satPolygonCircle: sat_1.testPolygonCircle,
+          satPolygonPolygon: sat_1.testPolygonPolygon,
+          inCircleCircle: intersect_1.circleInCircle,
+          inCirclePolygon: intersect_1.circleInPolygon,
+          inPolygonCircle: intersect_1.polygonInCircle,
+          inPolygonPolygon: intersect_1.polygonInPolygon,
+        };
+        function createMap(bodyType, testType) {
+          return Object.values(model_1.BodyType).reduce(
+            (result, type) =>
+              Object.assign(Object.assign({}, result), {
+                [type]:
+                  type === model_1.BodyType.Circle
+                    ? testMap[`${testType}${bodyType}Circle`]
+                    : testMap[`${testType}${bodyType}Polygon`],
+              }),
+            {},
+          );
+        }
+        const circleSATFunctions = createMap(model_1.BodyType.Circle, "sat");
+        const circleInFunctions = createMap(model_1.BodyType.Circle, "in");
+        const polygonSATFunctions = createMap(model_1.BodyType.Polygon, "sat");
+        const polygonInFunctions = createMap(model_1.BodyType.Polygon, "in");
+        exports.DEG2RAD = Math.PI / 180;
+        exports.RAD2DEG = 180 / Math.PI;
+        /**
+         * convert from degrees to radians
+         */
+        function deg2rad(degrees) {
+          return degrees * exports.DEG2RAD;
+        }
+        exports.deg2rad = deg2rad;
+        /**
+         * convert from radians to degrees
+         */
+        function rad2deg(radians) {
+          return radians * exports.RAD2DEG;
+        }
+        exports.rad2deg = rad2deg;
+        /**
+         * creates ellipse-shaped polygon based on params
+         */
+        function createEllipse(radiusX, radiusY = radiusX, step = 1) {
+          const steps = Math.PI * Math.hypot(radiusX, radiusY) * 2;
+          const length = Math.max(8, Math.ceil(steps / Math.max(1, step)));
+          const ellipse = [];
+          for (let index = 0; index < length; index++) {
+            const value = (index / length) * 2 * Math.PI;
+            const x = Math.cos(value) * radiusX;
+            const y = Math.sin(value) * radiusY;
+            ellipse.push(new sat_1.Vector(x, y));
+          }
+          return ellipse;
+        }
+        exports.createEllipse = createEllipse;
+        /**
+         * creates box shaped polygon points
+         */
+        function createBox(width, height) {
+          return [
+            new sat_1.Vector(0, 0),
+            new sat_1.Vector(width, 0),
+            new sat_1.Vector(width, height),
+            new sat_1.Vector(0, height),
+          ];
+        }
+        exports.createBox = createBox;
+        /**
+         * ensure SATVector type point result
+         */
+        function ensureVectorPoint(point = {}) {
+          return point instanceof sat_1.Vector
+            ? point
+            : new sat_1.Vector(point.x || 0, point.y || 0);
+        }
+        exports.ensureVectorPoint = ensureVectorPoint;
+        /**
+         * ensure Vector points (for polygon) in counter-clockwise order
+         */
+        function ensurePolygonPoints(points = []) {
+          const polygonPoints = (0, optimized_1.map)(points, ensureVectorPoint);
+          return clockwise(polygonPoints)
+            ? polygonPoints.reverse()
+            : polygonPoints;
+        }
+        exports.ensurePolygonPoints = ensurePolygonPoints;
+        /**
+         * get distance between two Vector points
+         */
+        function distance(bodyA, bodyB) {
+          const xDiff = bodyA.x - bodyB.x;
+          const yDiff = bodyA.y - bodyB.y;
+          return Math.hypot(xDiff, yDiff);
+        }
+        exports.distance = distance;
+        /**
+         * check [is clockwise] direction of polygon
+         */
+        function clockwise(points) {
+          const length = points.length;
+          let sum = 0;
+          (0, optimized_1.forEach)(points, (v1, index) => {
+            const v2 = points[(index + 1) % length];
+            sum += (v2.x - v1.x) * (v2.y + v1.y);
+          });
+          return sum > 0;
+        }
+        exports.clockwise = clockwise;
+        /**
+         * used for all types of bodies in constructor
+         */
+        function extendBody(body, options) {
+          body.isStatic = !!(options === null || options === void 0
+            ? void 0
+            : options.isStatic);
+          body.isTrigger = !!(options === null || options === void 0
+            ? void 0
+            : options.isTrigger);
+          body.padding =
+            (options === null || options === void 0
+              ? void 0
+              : options.padding) || 0;
+          if (body.type !== model_1.BodyType.Circle) {
+            body.isCentered =
+              (options === null || options === void 0
+                ? void 0
+                : options.isCentered) || false;
+          }
+          body.setAngle(
+            (options === null || options === void 0 ? void 0 : options.angle) ||
+              0,
+          );
+        }
+        exports.extendBody = extendBody;
+        /**
+         * check if body moved outside of its padding
+         */
+        function bodyMoved(body) {
+          const { bbox, minX, minY, maxX, maxY } = body;
+          return (
+            bbox.minX < minX ||
+            bbox.minY < minY ||
+            bbox.maxX > maxX ||
+            bbox.maxY > maxY
+          );
+        }
+        exports.bodyMoved = bodyMoved;
+        /**
+         * returns true if two boxes not intersect
+         */
+        function notIntersectAABB(bodyA, bodyB) {
+          return (
+            bodyB.minX > bodyA.maxX ||
+            bodyB.minY > bodyA.maxY ||
+            bodyB.maxX < bodyA.minX ||
+            bodyB.maxY < bodyA.minY
+          );
+        }
+        exports.notIntersectAABB = notIntersectAABB;
+        /**
+         * checks if two boxes intersect
+         */
+        function intersectAABB(bodyA, bodyB) {
+          return !notIntersectAABB(bodyA, bodyB);
+        }
+        exports.intersectAABB = intersectAABB;
+        /**
+         * checks if body a is in body b
+         */
+        function checkAInB(bodyA, bodyB) {
+          const check =
+            bodyA.type === model_1.BodyType.Circle
+              ? circleInFunctions
+              : polygonInFunctions;
+          return check[bodyB.type](bodyA, bodyB);
+        }
+        exports.checkAInB = checkAInB;
+        /**
+         * clone sat vector points array into vector points array
+         */
+        function clonePointsArray(points) {
+          return (0, optimized_1.map)(points, ({ x, y }) => ({ x, y }));
+        }
+        exports.clonePointsArray = clonePointsArray;
+        /**
+         * change format from SAT.js to poly-decomp
+         */
+        function mapVectorToArray({ x, y } = { x: 0, y: 0 }) {
+          return [x, y];
+        }
+        exports.mapVectorToArray = mapVectorToArray;
+        /**
+         * change format from poly-decomp to SAT.js
+         */
+        function mapArrayToVector([x, y] = [0, 0]) {
+          return { x, y };
+        }
+        exports.mapArrayToVector = mapArrayToVector;
+        /**
+         * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
+         */
+        function getBounceDirection(body, collider) {
+          const v2 = new sat_1.Vector(collider.x - body.x, collider.y - body.y);
+          const v1 = new sat_1.Vector(body.x - collider.x, body.y - collider.y);
+          const len = v1.dot(v2.normalize()) * 2;
+          return new sat_1.Vector(
+            v2.x * len - v1.x,
+            v2.y * len - v1.y,
+          ).normalize();
+        }
+        exports.getBounceDirection = getBounceDirection;
+        /**
+         * returns correct sat.js testing function based on body types
+         */
+        function getSATTest(bodyA, bodyB) {
+          const check =
+            bodyA.type === model_1.BodyType.Circle
+              ? circleSATFunctions
+              : polygonSATFunctions;
+          return check[bodyB.type];
+        }
+        exports.getSATTest = getSATTest;
+        /**
+         * draws dashed line on canvas context
+         */
+        function dashLineTo(
+          context,
+          fromX,
+          fromY,
+          toX,
+          toY,
+          dash = 2,
+          gap = 4,
+        ) {
+          const xDiff = toX - fromX;
+          const yDiff = toY - fromY;
+          const arc = Math.atan2(yDiff, xDiff);
+          const offsetX = Math.cos(arc);
+          const offsetY = Math.sin(arc);
+          let posX = fromX;
+          let posY = fromY;
+          let dist = Math.hypot(xDiff, yDiff);
+          while (dist > 0) {
+            const step = Math.min(dist, dash);
+            context.moveTo(posX, posY);
+            context.lineTo(posX + offsetX * step, posY + offsetY * step);
+            posX += offsetX * (dash + gap);
+            posY += offsetY * (dash + gap);
+            dist -= dash + gap;
+          }
+        }
+        exports.dashLineTo = dashLineTo;
+        /**
+         * draw polygon
+         */
+        function drawPolygon(context, { pos, calcPoints }, isTrigger = false) {
+          const lastPoint = calcPoints[calcPoints.length - 1];
+          const fromX = pos.x + lastPoint.x;
+          const fromY = pos.y + lastPoint.y;
+          if (calcPoints.length === 1) {
+            context.arc(fromX, fromY, 1, 0, Math.PI * 2);
+          } else {
+            context.moveTo(fromX, fromY);
+          }
+          (0, optimized_1.forEach)(calcPoints, (point, index) => {
+            const toX = pos.x + point.x;
+            const toY = pos.y + point.y;
+            if (isTrigger) {
+              const prev = calcPoints[index - 1] || lastPoint;
+              dashLineTo(context, pos.x + prev.x, pos.y + prev.y, toX, toY);
+            } else {
+              context.lineTo(toX, toY);
+            }
+          });
+        }
+        exports.drawPolygon = drawPolygon;
+        /**
+         * draw body bounding body box
+         */
+        function drawBVH(context, body) {
+          drawPolygon(context, {
+            pos: { x: body.minX, y: body.minY },
+            calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY),
+          });
+        }
+        exports.drawBVH = drawBVH;
+        /**
+         * clone response object returning new response with previous ones values
+         */
+        function cloneResponse(response) {
+          const clone = new sat_1.Response();
+          const { a, b, overlap, overlapN, overlapV, aInB, bInA } = response;
+          clone.a = a;
+          clone.b = b;
+          clone.overlap = overlap;
+          clone.overlapN = overlapN.clone();
+          clone.overlapV = overlapV.clone();
+          clone.aInB = aInB;
+          clone.bInA = bInA;
+          return clone;
+        }
+        exports.cloneResponse = cloneResponse;
+        /**
+         * dummy fn used as default, for optimization
+         */
+        function returnTrue() {
+          return true;
+        }
+        exports.returnTrue = returnTrue;
+
+        /***/
+      },
+
     /***/ "./src/demo/canvas.js":
       /*!****************************!*\
   !*** ./src/demo/canvas.js ***!
@@ -5009,8 +4918,11 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
   !*** ./src/demo/stress.js ***!
   \****************************/
       /***/ (module, __unused_webpack_exports, __webpack_require__) => {
-        const { System, getBounceDirection } = __webpack_require__(
-          /*! ../.. */ "./dist/index.js",
+        const { System } = __webpack_require__(
+          /*! ../system */ "./src/system.ts",
+        );
+        const { getBounceDirection } = __webpack_require__(
+          /*! ../utils */ "./src/utils.ts",
         );
         const { width, height, loop } = __webpack_require__(
           /*! ./canvas */ "./src/demo/canvas.js",
@@ -5264,8 +5176,11 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
   !*** ./src/demo/tank.js ***!
   \**************************/
       /***/ (module, __unused_webpack_exports, __webpack_require__) => {
-        const { System, mapVectorToArray } = __webpack_require__(
-          /*! ../.. */ "./dist/index.js",
+        const { System } = __webpack_require__(
+          /*! ../system */ "./src/system.ts",
+        );
+        const { mapVectorToArray } = __webpack_require__(
+          /*! ../utils */ "./src/utils.ts",
         );
         const { width, height, loop } = __webpack_require__(
           /*! ./canvas */ "./src/demo/canvas.js",

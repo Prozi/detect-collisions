@@ -1,4 +1,5 @@
-const { System, mapVectorToArray } = require("../..");
+const { System } = require("../system");
+const { mapVectorToArray } = require("../utils");
 const { width, height, loop } = require("./canvas");
 
 class Tank {
