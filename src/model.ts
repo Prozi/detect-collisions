@@ -86,7 +86,7 @@ export interface BodyOptions {
   padding?: number;
 
   /**
-   * collider group for collision filtering
+   * group for collision filtering
    */
   group?: number;
 }
