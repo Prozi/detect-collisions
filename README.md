@@ -47,7 +47,7 @@ Bodies possess various properties:
 - **Offset**: Use `setOffset(offset: Vector)` for setting and `offset: Vector` for getting offset from the body center.
 - **AABB Bounding Box**: Use `aabb: BBox` for inserted or `getAABBAsBBox(): BBox` for non inserted bodies to get the bounding box.
 - **Padding**: Use `padding: number` and set to nonzero value to reduce costly reinserts on attributes' change.
-- **Collision Filtering**: Use `group: number` for collision filtering, with a maximum value of 0x7fffffff.
+- **Collision Filtering**: Use `group: number` for collision filtering, with a range within 0x0 ~ 0x7fffffff.
 - **Body Options**: Use `isStatic: boolean` to mark body as non movable and `isTrigger: boolean` to set body as ghost.
 
 ### Step 3: Create and Manage Bodies
