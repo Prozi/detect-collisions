@@ -263,7 +263,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   }
 
   setGroup(group: number): SATPolygon {
-    this.group = Math.min(group, 0x7fffffff);
+    this.group = Math.max(0, Math.min(group, 0x7fffffff));
 
     return this;
   }

@@ -168,7 +168,10 @@ export function extendBody(body: Body, options: BodyOptions = {}): void {
   body.isStatic = !!options.isStatic;
   body.isTrigger = !!options.isTrigger;
   body.padding = options.padding || 0;
-  body.group = typeof options.group === "number" ? Math.min(options.group, 0x7fffffff) : 0x7fffffff;
+  body.group =
+    typeof options.group === "number"
+      ? Math.max(0, Math.min(options.group, 0x7fffffff))
+      : 0x7fffffff;
 
   if (body.type !== BodyType.Circle) {
     body.isCentered = options.isCentered || false;

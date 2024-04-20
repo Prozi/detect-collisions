@@ -234,7 +234,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
    * set group
    */
   setGroup(group: number): Circle {
-    this.group = Math.min(group, 0x7fffffff);
+    this.group = Math.max(0, Math.min(group, 0x7fffffff));
 
     return this;
   }
