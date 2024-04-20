@@ -82,11 +82,6 @@ export class Circle extends SATCircle implements BBox, BodyProps {
    */
   dirty = false;
 
-  /**
-   * collider group for collision filtering
-   */
-  group!: number;
-
   /*
    * circles are convex
    */
@@ -101,6 +96,11 @@ export class Circle extends SATCircle implements BBox, BodyProps {
    * always centered
    */
   readonly isCentered = true;
+
+  /**
+   * group for collision filtering
+   */
+  protected _group!: number;
 
   /**
    * saved initial radius - internal
@@ -181,6 +181,17 @@ export class Circle extends SATCircle implements BBox, BodyProps {
   }
 
   /**
+   * group for collision filtering
+   */
+  get group(): number {
+    return this._group;
+  }
+
+  set group(group: number) {
+    this._group = Math.max(0, Math.min(group, 0x7fffffff));
+  }
+
+  /**
    * update position
    */
   setPosition(x: number, y: number, update = true): Circle {
@@ -226,15 +237,6 @@ export class Circle extends SATCircle implements BBox, BodyProps {
     this.offset.x = x;
     this.offset.y = y;
     this.markAsDirty(update);
-
-    return this;
-  }
-
-  /**
-   * set group
-   */
-  setGroup(group: number): Circle {
-    this.group = Math.max(0, Math.min(group, 0x7fffffff));
 
     return this;
   }

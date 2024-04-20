@@ -193,11 +193,6 @@ export interface BodyProps<TBody extends Body = Body>
   setOffset(offset: Vector, update?: boolean): Circle | SATPolygon;
 
   /**
-   * for setting group
-   */
-  setGroup(group: number): Circle | SATPolygon;
-
-  /**
    * draw the bounding box
    */
   drawBVH(context: CanvasRenderingContext2D): void;

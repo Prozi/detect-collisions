@@ -82,7 +82,7 @@ box.setScale(scaleX, scaleY);
 box.setAngle(angle);
 box.setOffset({ x, y });
 system.update(); // Update the system after manipulation
-box.setGroup(group); // Immediate effect, no system.update needed
+box.group = group; // Immediate effect, no system.update needed
 ```
 
 ### Step 5: Collision Detection and Resolution
