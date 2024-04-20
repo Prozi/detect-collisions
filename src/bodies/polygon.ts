@@ -92,6 +92,11 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   dirty = false;
 
   /**
+   * collider group for collision filtering
+   */
+  group!: number;
+
+  /**
    * type of body
    */
   readonly type:
@@ -253,6 +258,12 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   setOffset(offset: SATVector, update = true): SATPolygon {
     super.setOffset(offset);
     this.markAsDirty(update);
+
+    return this;
+  }
+
+  setGroup(group: number): SATPolygon {
+    this.group = Math.min(group, 0x7fffffff);
 
     return this;
   }

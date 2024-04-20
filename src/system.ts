@@ -117,6 +117,9 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   ): boolean {
     // assess the bodies real aabb without padding
     if (
+      // check collision group
+      !((bodyA.group >> 16) & (bodyB.group & 0xffff)) ||
+      !((bodyB.group >> 16) & (bodyA.group & 0xffff)) ||
       !bodyA.bbox ||
       !bodyB.bbox ||
       notIntersectAABB(bodyA.bbox, bodyB.bbox)

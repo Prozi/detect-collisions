@@ -84,6 +84,11 @@ export interface BodyOptions {
    * BHV padding for bounding box, preventing costly updates
    */
   padding?: number;
+
+  /**
+   * collider group for collision filtering
+   */
+  group?: number;
 }
 
 /**
@@ -186,6 +191,11 @@ export interface BodyProps<TBody extends Body = Body>
    * for setting offset from center
    */
   setOffset(offset: Vector, update?: boolean): Circle | SATPolygon;
+
+  /**
+   * for setting group
+   */
+  setGroup(group: number): Circle | SATPolygon;
 
   /**
    * draw the bounding box

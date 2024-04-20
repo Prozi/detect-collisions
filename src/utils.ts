@@ -164,16 +164,17 @@ export function clockwise(points: Vector[]): boolean {
 /**
  * used for all types of bodies in constructor
  */
-export function extendBody(body: Body, options?: BodyOptions): void {
-  body.isStatic = !!options?.isStatic;
-  body.isTrigger = !!options?.isTrigger;
-  body.padding = options?.padding || 0;
+export function extendBody(body: Body, options: BodyOptions = {}): void {
+  body.isStatic = !!options.isStatic;
+  body.isTrigger = !!options.isTrigger;
+  body.padding = options.padding || 0;
+  body.group = typeof options.group === "number" ? Math.min(options.group, 0x7fffffff) : 0x7fffffff;
 
   if (body.type !== BodyType.Circle) {
-    body.isCentered = options?.isCentered || false;
+    body.isCentered = options.isCentered || false;
   }
 
-  body.setAngle(options?.angle || 0);
+  body.setAngle(options.angle || 0);
 }
 
 /**
