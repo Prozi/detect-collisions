@@ -7,20 +7,24 @@ function random(min, max) {
   return Math.floor(seededRandom() * max) + min;
 }
 
+function dec(binary) {
+  return Number(`0b${binary}`.replace(/\s/g, ""));
+}
+
 const ColliderGroup = {
-  Box: Number("0b 0000 0000 0000 0001".replace(/\s/g, "")),
-  Circle: Number("0b 0000 0000 0000 0010".replace(/\s/g, "")),
-  Ellipse: Number("0b 0000 0000 0000 0100".replace(/\s/g, "")),
-  Line: Number("0b 0000 0000 0000 1000".replace(/\s/g, "")),
-  Polygon: Number("0b 0000 0000 0001 0000".replace(/\s/g, "")),
+  Box: dec("0000 0000 0000 0001"),
+  Circle: dec("0000 0000 0000 0010"),
+  Ellipse: dec("0000 0000 0000 0100"),
+  Line: dec("0000 0000 0000 1000"),
+  Polygon: dec("0000 0000 0001 0000"),
 };
 
 const InteractGroup = {
-  Box: Number("0b 0000 0000 0000 0001".replace(/\s/g, "")),
-  Circle: Number("0b 0000 0000 0000 0010".replace(/\s/g, "")),
-  Ellipse: Number("0b 0000 0000 0000 0100".replace(/\s/g, "")),
-  Line: Number("0b 0000 0000 0000 1000".replace(/\s/g, "")),
-  Polygon: Number("0b 0000 0000 0001 0000".replace(/\s/g, "")),
+  Box: dec("0000 0000 0000 0001"),
+  Circle: dec("0000 0000 0000 0010"),
+  Ellipse: dec("0000 0000 0000 0100"),
+  Line: dec("0000 0000 0000 1000"),
+  Polygon: dec("0000 0000 0001 0000"),
 };
 
 class Stress {
