@@ -208,6 +208,16 @@ export function intersectAABB(bodyA: BBox, bodyB: BBox): boolean {
 }
 
 /**
+ * checks if two bodies can interact (for collision filtering)
+ */
+export function checkInteract(bodyA: Body, bodyB: Body): boolean {
+  return (
+    ((bodyA.group >> 16) & (bodyB.group & 0xffff) &&
+      (bodyB.group >> 16) & (bodyA.group & 0xffff)) !== 0
+  );
+}
+
+/**
  * checks if body a is in body b
  */
 export function checkAInB(bodyA: Body, bodyB: Body): boolean {

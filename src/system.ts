@@ -17,6 +17,7 @@ import {
 import { forEach, some } from "./optimized";
 import {
   checkAInB,
+  checkInteract,
   distance,
   getSATTest,
   notIntersectAABB,
@@ -118,8 +119,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     // assess the bodies real aabb without padding
     if (
       // check collision group
-      !((bodyA.group >> 16) & (bodyB.group & 0xffff)) ||
-      !((bodyB.group >> 16) & (bodyA.group & 0xffff)) ||
+      !checkInteract(bodyA, bodyB) ||
       !bodyA.bbox ||
       !bodyB.bbox ||
       notIntersectAABB(bodyA.bbox, bodyB.bbox)
@@ -180,7 +180,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   raycast(
     start: Vector,
     end: Vector,
-    allow: (body: TBody) => boolean = returnTrue,
+    allow: (body: TBody, ray: TBody) => boolean = returnTrue,
   ): RaycastHit<TBody> | null {
     let minDistance = Infinity;
     let result: RaycastHit<TBody> | null = null;
@@ -195,7 +195,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     this.insert(this.ray as TBody);
 
     this.checkOne(this.ray as TBody, ({ b: body }) => {
-      if (!allow(body)) {
+      if (!allow(body, this.ray as TBody)) {
         return false;
       }
 
