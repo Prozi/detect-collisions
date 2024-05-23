@@ -583,6 +583,11 @@
     semver "^7.3.5"
     tar "^6.1.11"
 
+"@pietal.dev/cache@^2.0.2":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@pietal.dev/cache/-/cache-2.0.2.tgz#87db1595e307544f10d3251ab5bc9c15316eb83e"
+  integrity sha512-UlC9dfsCs2JuHyEwkG7yeT6w2vaKAVMhUI8F4Ul2Zq1T8iVo6EfCuaSXl4uQfwBQpQobNV5xhjLgirUn++F9fw==
+
 "@pkgjs/parseargs@^0.11.0":
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/@pkgjs/parseargs/-/parseargs-0.11.0.tgz#a77ea742fab25775145434eb1d2328cf5013ac33"
@@ -1423,21 +1428,21 @@ char-regex@^1.0.2:
   resolved "https://registry.yarnpkg.com/char-regex/-/char-regex-1.0.2.tgz#d744358226217f981ed58f479b1d6bcc29545dcf"
   integrity sha512-kWWXztvZ5SBQV+eRgKFeh8q5sLuZY2+8WUIzlxWVTg+oGwY14qylx1KbKzHd8P6ZYkAg0xyIDU9JMHhyJMZ1jw==
 
-chef-core@^3.0.4:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/chef-core/-/chef-core-3.0.5.tgz#3802c0cda1cac30da56e6e49c872fdccdd8932fd"
-  integrity sha512-8VKylUrpWtucKd1HR1Bk8TSZSjbYpoJov3Q6NSY3x2mc+uMToZTt2KwI6uHOkB8ZGDidvsRR34LmIQXQNO+GbA==
+chef-core@^3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/chef-core/-/chef-core-3.0.6.tgz#f0b0b5fb745b88d1fc914800b98623cc38c72395"
+  integrity sha512-ux4HnkYETopFuKwJOt09H44qTwlGGYdz7ezHPObXJrze+VaKBVtDNSZNRHGBiPfdbaAfWMsyAWMdVuHC+FRBig==
   dependencies:
-    latermom "^2.0.1"
+    "@pietal.dev/cache" "^2.0.2"
     mime-types "^2.1.35"
 
-chef-express@^2.1.3:
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/chef-express/-/chef-express-2.1.3.tgz#86d3475836cb8fdcad92812652a84fb716b4fbfa"
-  integrity sha512-YvQNYN+vwnVYjTRx6seW9KzszhjWfsXOlUuRFqEFhhMZUvXMpQIPMb24TWpcwKsonNUhn5GxIKS9u/8A7i8VqA==
+chef-express@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/chef-express/-/chef-express-2.1.4.tgz#d1b77e781b7107445a3c97513ad1690cca260bd6"
+  integrity sha512-aU5xddlIEvuIul+thkpK4DQaaKzhuV8yxxzie6mho6gpJp96Rbt+n2Sd86y+ZMygX+y6fWJLf8hKrf4jH5byWA==
   dependencies:
-    chef-core "^3.0.4"
-    express "^4.18.2"
+    chef-core "^3.0.6"
+    express "^4.19.2"
 
 chokidar@^3.6.0:
   version "3.6.0"
@@ -2051,7 +2056,7 @@ expect@^29.7.0:
     jest-message-util "^29.7.0"
     jest-util "^29.7.0"
 
-express@^4.17.3, express@^4.18.2, express@^4.19.2:
+express@^4.17.3, express@^4.19.2:
   version "4.19.2"
   resolved "https://registry.yarnpkg.com/express/-/express-4.19.2.tgz#e25437827a3aa7f2a827bc8171bbbb664a356465"
   integrity sha512-5T6nhjsT+EOMzuck8JjBHARTHfMht0POzlA60WV2pMD3gyXw2LZnZ+ueGdNxG+0calOJcWKbpFcuzLZ91YWq9Q==
@@ -3182,11 +3187,6 @@ kleur@^3.0.3:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
-
-latermom@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/latermom/-/latermom-2.0.1.tgz#fc33395d06347ca834083ee0b4cfbd6305879ab4"
-  integrity sha512-uYGSEroP46sE+nAf6q+NPLcGN6AS/xrwypXQ2FOq3l/ayudUhQvgWzFgGX2/NdmTaGtGu2jRsw6AyHB/W5xYfQ==
 
 launch-editor@^2.6.1:
   version "2.6.1"
