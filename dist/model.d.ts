@@ -1,16 +1,12 @@
 import { BBox, default as RBush } from "rbush";
 import { Circle as SATCircle, Polygon as SATPolygon, Response, Vector as SATVector } from "sat";
-import { BaseSystem } from "./base-system";
+import { System } from "./system";
 import { Box } from "./bodies/box";
 import { Circle } from "./bodies/circle";
 import { Ellipse } from "./bodies/ellipse";
 import { Line } from "./bodies/line";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
-/**
- * binary string to decimal number
- */
-export declare function bin2dec(binary: string): number;
 export { Polygon as DecompPolygon, Point as DecompPoint, isSimple } from "poly-decomp-es";
 export { RBush, BBox, Response, SATVector, SATPolygon, SATCircle };
 export type CollisionCallback = (response: Response) => boolean | void;
@@ -149,7 +145,7 @@ export interface BodyProps extends Required<BodyOptions> {
     /**
      * collisions system reference
      */
-    system?: BaseSystem;
+    system?: System;
     /**
      * was the body modified and needs update in the next checkCollision
      */

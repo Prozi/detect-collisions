@@ -35,7 +35,7 @@ export declare class BaseSystem<TBody extends Body = Body> extends RBush<TBody> 
      */
     createPolygon(position: PotentialVector, points: PotentialVector[], options?: BodyOptions): Polygon;
     /**
-     * re-insert body into collision tree and update its aabb
+     * re-insert body into collision tree and update its bbox
      * every body can be part of only one system
      */
     insert(body: TBody): RBush<TBody>;

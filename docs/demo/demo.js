@@ -2813,7 +2813,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             return polygon;
           }
           /**
-           * re-insert body into collision tree and update its aabb
+           * re-insert body into collision tree and update its bbox
            * every body can be part of only one system
            */
           insert(body) {
@@ -2831,8 +2831,6 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             body.minY = body.bbox.minY - body.padding;
             body.maxX = body.bbox.maxX + body.padding;
             body.maxY = body.bbox.maxY + body.padding;
-            // set system for later body.system.updateBody(body)
-            body.system = this;
             // reinsert bounding box to collision tree
             return super.insert(body);
           }
@@ -4171,7 +4169,6 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           exports.Response =
           exports.RBush =
           exports.isSimple =
-          exports.bin2dec =
             void 0;
         const rbush_1 = __importDefault(
           __webpack_require__(/*! rbush */ "./node_modules/rbush/rbush.min.js"),
@@ -4209,13 +4206,6 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             return sat_1.Vector;
           },
         });
-        /**
-         * binary string to decimal number
-         */
-        function bin2dec(binary) {
-          return Number(`0b${binary}`.replace(/\s/g, ""));
-        }
-        exports.bin2dec = bin2dec;
         var poly_decomp_es_1 = __webpack_require__(
           /*! poly-decomp-es */ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js",
         );
@@ -4383,6 +4373,16 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             this.response = new model_1.Response();
           }
           /**
+           * re-insert body into collision tree and update its bbox
+           * every body can be part of only one system
+           */
+          insert(body) {
+            const insertResult = super.insert(body);
+            // set system for later body.system.updateBody(body)
+            body.system = this;
+            return insertResult;
+          }
+          /**
            * separate (move away) bodies
            */
           separate() {
@@ -4429,6 +4429,20 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
               }
             };
             return (0, optimized_1.some)(bodies, checkCollision);
+          }
+          /**
+           * callback all bodies in area
+           */
+          checkArea(
+            area,
+            callback = utils_1.returnTrue,
+            response = this.response,
+          ) {
+            const bodies = this.search(area);
+            const checkOne = (body) => {
+              return this.checkOne(body, callback, response);
+            };
+            return (0, optimized_1.some)(bodies, checkOne);
           }
           /**
            * check all bodies collisions with callback
@@ -4537,7 +4551,8 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         "use strict";
 
         Object.defineProperty(exports, "__esModule", { value: true });
-        exports.returnTrue =
+        exports.bin2dec =
+          exports.returnTrue =
           exports.cloneResponse =
           exports.drawBVH =
           exports.drawPolygon =
@@ -4886,6 +4901,13 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           return true;
         }
         exports.returnTrue = returnTrue;
+        /**
+         * binary string to decimal number
+         */
+        function bin2dec(binary) {
+          return Number(`0b${binary}`.replace(/\s/g, ""));
+        }
+        exports.bin2dec = bin2dec;
 
         /***/
       },

@@ -375,3 +375,10 @@ export function cloneResponse(response: Response) {
 export function returnTrue() {
   return true;
 }
+
+/**
+ * binary string to decimal number
+ */
+export function bin2dec(binary: string): number {
+  return Number(`0b${binary}`.replace(/\s/g, ""));
+}

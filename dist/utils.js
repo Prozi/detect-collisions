@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.returnTrue = exports.cloneResponse = exports.drawBVH = exports.drawPolygon = exports.dashLineTo = exports.getSATTest = exports.getBounceDirection = exports.mapArrayToVector = exports.mapVectorToArray = exports.clonePointsArray = exports.checkAInB = exports.areSameGroup = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
+exports.bin2dec = exports.returnTrue = exports.cloneResponse = exports.drawBVH = exports.drawPolygon = exports.dashLineTo = exports.getSATTest = exports.getBounceDirection = exports.mapArrayToVector = exports.mapVectorToArray = exports.clonePointsArray = exports.checkAInB = exports.areSameGroup = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
 const sat_1 = require("sat");
 const intersect_1 = require("./intersect");
 const model_1 = require("./model");
@@ -287,3 +287,10 @@ function returnTrue() {
     return true;
 }
 exports.returnTrue = returnTrue;
+/**
+ * binary string to decimal number
+ */
+function bin2dec(binary) {
+    return Number(`0b${binary}`.replace(/\s/g, ""));
+}
+exports.bin2dec = bin2dec;

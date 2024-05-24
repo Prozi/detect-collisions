@@ -6,20 +6,13 @@ import {
   Vector as SATVector,
 } from "sat";
 
-import { BaseSystem } from "./base-system";
+import { System } from "./system";
 import { Box } from "./bodies/box";
 import { Circle } from "./bodies/circle";
 import { Ellipse } from "./bodies/ellipse";
 import { Line } from "./bodies/line";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
-
-/**
- * binary string to decimal number
- */
-export function bin2dec(binary: string): number {
-  return Number(`0b${binary}`.replace(/\s/g, ""));
-}
 
 export {
   Polygon as DecompPolygon,
@@ -188,7 +181,7 @@ export interface BodyProps extends Required<BodyOptions> {
   /**
    * collisions system reference
    */
-  system?: BaseSystem;
+  system?: System;
 
   /**
    * was the body modified and needs update in the next checkCollision

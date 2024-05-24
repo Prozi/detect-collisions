@@ -63,7 +63,7 @@ class BaseSystem extends model_1.RBush {
         return polygon;
     }
     /**
-     * re-insert body into collision tree and update its aabb
+     * re-insert body into collision tree and update its bbox
      * every body can be part of only one system
      */
     insert(body) {
@@ -81,8 +81,6 @@ class BaseSystem extends model_1.RBush {
         body.minY = body.bbox.minY - body.padding;
         body.maxX = body.bbox.maxX + body.padding;
         body.maxY = body.bbox.maxY + body.padding;
-        // set system for later body.system.updateBody(body)
-        body.system = this;
         // reinsert bounding box to collision tree
         return super.insert(body);
     }

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BodyGroup = exports.getGroup = exports.BodyType = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = exports.isSimple = exports.bin2dec = void 0;
+exports.BodyGroup = exports.getGroup = exports.BodyType = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = exports.isSimple = void 0;
 const rbush_1 = __importDefault(require("rbush"));
 Object.defineProperty(exports, "RBush", { enumerable: true, get: function () { return rbush_1.default; } });
 const sat_1 = require("sat");
@@ -11,13 +11,6 @@ Object.defineProperty(exports, "SATCircle", { enumerable: true, get: function ()
 Object.defineProperty(exports, "SATPolygon", { enumerable: true, get: function () { return sat_1.Polygon; } });
 Object.defineProperty(exports, "Response", { enumerable: true, get: function () { return sat_1.Response; } });
 Object.defineProperty(exports, "SATVector", { enumerable: true, get: function () { return sat_1.Vector; } });
-/**
- * binary string to decimal number
- */
-function bin2dec(binary) {
-    return Number(`0b${binary}`.replace(/\s/g, ""));
-}
-exports.bin2dec = bin2dec;
 var poly_decomp_es_1 = require("poly-decomp-es");
 Object.defineProperty(exports, "isSimple", { enumerable: true, get: function () { return poly_decomp_es_1.isSimple; } });
 /**

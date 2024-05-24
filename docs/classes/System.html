@@ -113,8 +113,8 @@
             <li>
               Defined in
               <a
-                href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L31"
-                >src/system.ts:31</a
+                href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L33"
+                >src/system.ts:33</a
               >
             </li>
           </ul>
@@ -186,6 +186,11 @@
                       ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
                         <use href="../assets/icons.svg#icon-2048"></use></svg
                       ><span>check<wbr />All</span></a
+                    >
+                    <a href="System.html#checkArea" class="tsd-index-link"
+                      ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
+                        <use href="../assets/icons.svg#icon-2048"></use></svg
+                      ><span>check<wbr />Area</span></a
                     >
                     <a href="System.html#checkCollision" class="tsd-index-link"
                       ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
@@ -295,9 +300,7 @@
                         <use href="../assets/icons.svg#icon-2048"></use></svg
                       ><span>get<wbr />Potentials</span></a
                     >
-                    <a
-                      href="System.html#insert"
-                      class="tsd-index-link tsd-is-inherited"
+                    <a href="System.html#insert" class="tsd-index-link"
                       ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
                         <use href="../assets/icons.svg#icon-2048"></use></svg
                       ><span>insert</span></a
@@ -570,8 +573,8 @@
                 <li>
                   Defined in
                   <a
-                    href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L40"
-                    >src/system.ts:40</a
+                    href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L42"
+                    >src/system.ts:42</a
                   >
                 </li>
               </ul>
@@ -605,8 +608,8 @@
                 <li>
                   Defined in
                   <a
-                    href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L35"
-                    >src/system.ts:35</a
+                    href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L37"
+                    >src/system.ts:37</a
                   >
                 </li>
               </ul>
@@ -740,8 +743,100 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L101"
-                        >src/system.ts:101</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L131"
+                        >src/system.ts:131</a
+                      >
+                    </li>
+                  </ul>
+                </aside>
+              </li>
+            </ul>
+          </section>
+          <section class="tsd-panel tsd-member">
+            <a id="checkArea" class="tsd-anchor"></a>
+            <h3 class="tsd-anchor-link">
+              <span>check<wbr />Area</span
+              ><a
+                href="#checkArea"
+                aria-label="Permalink"
+                class="tsd-anchor-icon"
+                ><svg viewBox="0 0 24 24">
+                  <use href="../assets/icons.svg#icon-anchor"></use></svg
+              ></a>
+            </h3>
+            <ul class="tsd-signatures">
+              <li class="tsd-signature tsd-anchor-link">
+                <a id="checkArea.checkArea-1" class="tsd-anchor"></a
+                ><span class="tsd-kind-call-signature">check<wbr />Area</span
+                ><span class="tsd-signature-symbol">(</span
+                ><span class="tsd-kind-parameter">area</span>,
+                <span class="tsd-kind-parameter">callback</span
+                ><span class="tsd-signature-symbol">?</span>,
+                <span class="tsd-kind-parameter">response</span
+                ><span class="tsd-signature-symbol">?</span
+                ><span class="tsd-signature-symbol">)</span
+                ><span class="tsd-signature-symbol">: </span
+                ><span class="tsd-signature-type">boolean</span
+                ><a
+                  href="#checkArea.checkArea-1"
+                  aria-label="Permalink"
+                  class="tsd-anchor-icon"
+                  ><svg viewBox="0 0 24 24">
+                    <use href="../assets/icons.svg#icon-anchor"></use></svg
+                ></a>
+              </li>
+              <li class="tsd-description">
+                <div class="tsd-comment tsd-typography">
+                  <p>callback all bodies in area</p>
+                </div>
+                <div class="tsd-parameters">
+                  <h4 class="tsd-parameters-title">Parameters</h4>
+                  <ul class="tsd-parameter-list">
+                    <li>
+                      <span
+                        ><span class="tsd-kind-parameter">area</span>:
+                        <a
+                          href="../interfaces/BBox.html"
+                          class="tsd-signature-type tsd-kind-interface"
+                          >BBox</a
+                        ></span
+                      >
+                    </li>
+                    <li>
+                      <span
+                        ><span class="tsd-kind-parameter">callback</span>:
+                        <a
+                          href="../types/CollisionCallback.html"
+                          class="tsd-signature-type tsd-kind-type-alias"
+                          >CollisionCallback</a
+                        ><span class="tsd-signature-symbol">
+                          = returnTrue</span
+                        ></span
+                      >
+                    </li>
+                    <li>
+                      <span
+                        ><span class="tsd-kind-parameter">response</span>:
+                        <a
+                          href="Response.html"
+                          class="tsd-signature-type tsd-kind-class"
+                          >Response</a
+                        ><span class="tsd-signature-symbol"> = ...</span></span
+                      >
+                    </li>
+                  </ul>
+                </div>
+                <h4 class="tsd-returns-title">
+                  Returns <span class="tsd-signature-type">boolean</span>
+                </h4>
+                <div class="tsd-comment tsd-typography"></div>
+                <aside class="tsd-sources">
+                  <ul>
+                    <li>
+                      Defined in
+                      <a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L115"
+                        >src/system.ts:115</a
                       >
                     </li>
                   </ul>
@@ -830,8 +925,8 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L115"
-                        >src/system.ts:115</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L145"
+                        >src/system.ts:145</a
                       >
                     </li>
                   </ul>
@@ -922,8 +1017,8 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L75"
-                        >src/system.ts:75</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L89"
+                        >src/system.ts:89</a
                       >
                     </li>
                   </ul>
@@ -1904,8 +1999,8 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L164"
-                        >src/base-system.ts:164</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L161"
+                        >src/base-system.ts:161</a
                       >
                     </li>
                   </ul>
@@ -1966,8 +2061,8 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L173"
-                        >src/base-system.ts:173</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L170"
+                        >src/base-system.ts:170</a
                       >
                     </li>
                   </ul>
@@ -2141,8 +2236,8 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L198"
-                        >src/base-system.ts:198</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L195"
+                        >src/base-system.ts:195</a
                       >
                     </li>
                   </ul>
@@ -2150,7 +2245,7 @@
               </li>
             </ul>
           </section>
-          <section class="tsd-panel tsd-member tsd-is-inherited">
+          <section class="tsd-panel tsd-member">
             <a id="insert" class="tsd-anchor"></a>
             <h3 class="tsd-anchor-link">
               <span>insert</span
@@ -2159,7 +2254,7 @@
                   <use href="../assets/icons.svg#icon-anchor"></use></svg
               ></a>
             </h3>
-            <ul class="tsd-signatures tsd-is-inherited">
+            <ul class="tsd-signatures">
               <li class="tsd-signature tsd-anchor-link">
                 <a id="insert.insert-1" class="tsd-anchor"></a
                 ><span class="tsd-kind-call-signature">insert</span
@@ -2186,7 +2281,7 @@
               <li class="tsd-description">
                 <div class="tsd-comment tsd-typography">
                   <p>
-                    re-insert body into collision tree and update its aabb every
+                    re-insert body into collision tree and update its bbox every
                     body can be part of only one system
                   </p>
                 </div>
@@ -2218,13 +2313,13 @@
                 </h4>
                 <div class="tsd-comment tsd-typography"></div>
                 <aside class="tsd-sources">
-                  <p>Inherited from BaseSystem.insert</p>
+                  <p>Overrides BaseSystem.insert</p>
                   <ul>
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L119"
-                        >src/base-system.ts:119</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L48"
+                        >src/system.ts:48</a
                       >
                     </li>
                   </ul>
@@ -2480,8 +2575,8 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L182"
-                        >src/system.ts:182</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L212"
+                        >src/system.ts:212</a
                       >
                     </li>
                   </ul>
@@ -2577,8 +2672,8 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L188"
-                        >src/base-system.ts:188</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L185"
+                        >src/base-system.ts:185</a
                       >
                     </li>
                   </ul>
@@ -2708,8 +2803,8 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L45"
-                        >src/system.ts:45</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L59"
+                        >src/system.ts:59</a
                       >
                     </li>
                   </ul>
@@ -2774,8 +2869,8 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L54"
-                        >src/system.ts:54</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/system.ts#L68"
+                        >src/system.ts:68</a
                       >
                     </li>
                   </ul>
@@ -3050,8 +3145,8 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L206"
-                        >src/base-system.ts:206</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L203"
+                        >src/base-system.ts:203</a
                       >
                     </li>
                   </ul>
@@ -3098,8 +3193,8 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L155"
-                        >src/base-system.ts:155</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L152"
+                        >src/base-system.ts:152</a
                       >
                     </li>
                   </ul>
@@ -3165,8 +3260,8 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L148"
-                        >src/base-system.ts:148</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/base-system.ts#L145"
+                        >src/base-system.ts:145</a
                       >
                     </li>
                   </ul>
@@ -3368,6 +3463,10 @@
                 ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
                   <use href="../assets/icons.svg#icon-2048"></use></svg
                 ><span>check<wbr />All</span></a
+              ><a href="#checkArea" class=""
+                ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
+                  <use href="../assets/icons.svg#icon-2048"></use></svg
+                ><span>check<wbr />Area</span></a
               ><a href="#checkCollision" class=""
                 ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
                   <use href="../assets/icons.svg#icon-2048"></use></svg
@@ -3432,7 +3531,7 @@
                 ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
                   <use href="../assets/icons.svg#icon-2048"></use></svg
                 ><span>get<wbr />Potentials</span></a
-              ><a href="#insert" class="tsd-is-inherited"
+              ><a href="#insert" class=""
                 ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
                   <use href="../assets/icons.svg#icon-2048"></use></svg
                 ><span>insert</span></a

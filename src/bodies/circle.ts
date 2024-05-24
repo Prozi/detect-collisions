@@ -1,7 +1,7 @@
 import { BBox } from "rbush";
 import { Circle as SATCircle } from "sat";
 
-import { BaseSystem } from "../base-system";
+import { System } from "../system";
 import {
   BodyGroup,
   BodyOptions,
@@ -76,7 +76,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
   /**
    * reference to collision system
    */
-  system?: BaseSystem;
+  system?: System;
 
   /**
    * was the polygon modified and needs update in the next checkCollision

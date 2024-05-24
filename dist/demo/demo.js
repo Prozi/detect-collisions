@@ -2124,7 +2124,7 @@ class BaseSystem extends model_1.RBush {
         return polygon;
     }
     /**
-     * re-insert body into collision tree and update its aabb
+     * re-insert body into collision tree and update its bbox
      * every body can be part of only one system
      */
     insert(body) {
@@ -2142,8 +2142,6 @@ class BaseSystem extends model_1.RBush {
         body.minY = body.bbox.minY - body.padding;
         body.maxX = body.bbox.maxX + body.padding;
         body.maxY = body.bbox.maxY + body.padding;
-        // set system for later body.system.updateBody(body)
-        body.system = this;
         // reinsert bounding box to collision tree
         return super.insert(body);
     }
@@ -3319,7 +3317,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.BodyGroup = exports.getGroup = exports.BodyType = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = exports.isSimple = exports.bin2dec = void 0;
+exports.BodyGroup = exports.getGroup = exports.BodyType = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = exports.isSimple = void 0;
 const rbush_1 = __importDefault(__webpack_require__(/*! rbush */ "./node_modules/rbush/rbush.min.js"));
 Object.defineProperty(exports, "RBush", ({ enumerable: true, get: function () { return rbush_1.default; } }));
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
@@ -3327,13 +3325,6 @@ Object.defineProperty(exports, "SATCircle", ({ enumerable: true, get: function (
 Object.defineProperty(exports, "SATPolygon", ({ enumerable: true, get: function () { return sat_1.Polygon; } }));
 Object.defineProperty(exports, "Response", ({ enumerable: true, get: function () { return sat_1.Response; } }));
 Object.defineProperty(exports, "SATVector", ({ enumerable: true, get: function () { return sat_1.Vector; } }));
-/**
- * binary string to decimal number
- */
-function bin2dec(binary) {
-    return Number(`0b${binary}`.replace(/\s/g, ""));
-}
-exports.bin2dec = bin2dec;
 var poly_decomp_es_1 = __webpack_require__(/*! poly-decomp-es */ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js");
 Object.defineProperty(exports, "isSimple", ({ enumerable: true, get: function () { return poly_decomp_es_1.isSimple; } }));
 /**
@@ -3483,6 +3474,16 @@ class System extends base_system_1.BaseSystem {
         this.response = new model_1.Response();
     }
     /**
+     * re-insert body into collision tree and update its bbox
+     * every body can be part of only one system
+     */
+    insert(body) {
+        const insertResult = super.insert(body);
+        // set system for later body.system.updateBody(body)
+        body.system = this;
+        return insertResult;
+    }
+    /**
      * separate (move away) bodies
      */
     separate() {
@@ -3523,6 +3524,16 @@ class System extends base_system_1.BaseSystem {
             }
         };
         return (0, optimized_1.some)(bodies, checkCollision);
+    }
+    /**
+     * callback all bodies in area
+     */
+    checkArea(area, callback = utils_1.returnTrue, response = this.response) {
+        const bodies = this.search(area);
+        const checkOne = (body) => {
+            return this.checkOne(body, callback, response);
+        };
+        return (0, optimized_1.some)(bodies, checkOne);
     }
     /**
      * check all bodies collisions with callback
@@ -3630,7 +3641,7 @@ exports.System = System;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.returnTrue = exports.cloneResponse = exports.drawBVH = exports.drawPolygon = exports.dashLineTo = exports.getSATTest = exports.getBounceDirection = exports.mapArrayToVector = exports.mapVectorToArray = exports.clonePointsArray = exports.checkAInB = exports.areSameGroup = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
+exports.bin2dec = exports.returnTrue = exports.cloneResponse = exports.drawBVH = exports.drawPolygon = exports.dashLineTo = exports.getSATTest = exports.getBounceDirection = exports.mapArrayToVector = exports.mapVectorToArray = exports.clonePointsArray = exports.checkAInB = exports.areSameGroup = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const intersect_1 = __webpack_require__(/*! ./intersect */ "./src/intersect.ts");
 const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
@@ -3917,6 +3928,13 @@ function returnTrue() {
     return true;
 }
 exports.returnTrue = returnTrue;
+/**
+ * binary string to decimal number
+ */
+function bin2dec(binary) {
+    return Number(`0b${binary}`.replace(/\s/g, ""));
+}
+exports.bin2dec = bin2dec;
 
 
 /***/ }),
@@ -4030,34 +4048,34 @@ module.exports.height = height;
   \****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const { BodyGroup } = __webpack_require__(/*! ../model */ "./src/model.ts")
-const { System } = __webpack_require__(/*! ../system */ "./src/system.ts")
-const { getBounceDirection } = __webpack_require__(/*! ../utils */ "./src/utils.ts")
-const { width, height, loop } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js")
-const seededRandom = (__webpack_require__(/*! random-seed */ "./node_modules/random-seed/index.js").create)("@Prozi").random
+const { BodyGroup } = __webpack_require__(/*! ../model */ "./src/model.ts");
+const { System } = __webpack_require__(/*! ../system */ "./src/system.ts");
+const { getBounceDirection } = __webpack_require__(/*! ../utils */ "./src/utils.ts");
+const { width, height, loop } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js");
+const seededRandom = (__webpack_require__(/*! random-seed */ "./node_modules/random-seed/index.js").create)("@Prozi").random;
 
 function random(min, max) {
-  return Math.floor(seededRandom() * max) + min
+  return Math.floor(seededRandom() * max) + min;
 }
 
 class Stress {
   constructor(count = 2000) {
-    this.size = Math.sqrt((width * height) / (count * 50))
+    this.size = Math.sqrt((width * height) / (count * 50));
 
-    this.physics = new System(5)
-    this.bodies = []
-    this.polygons = 0
-    this.boxes = 0
-    this.circles = 0
-    this.ellipses = 0
-    this.lines = 0
-    this.lastVariant = 0
-    this.count = count
-    this.bounds = this.getBounds()
-    this.enableFiltering = false
+    this.physics = new System(5);
+    this.bodies = [];
+    this.polygons = 0;
+    this.boxes = 0;
+    this.circles = 0;
+    this.ellipses = 0;
+    this.lines = 0;
+    this.lastVariant = 0;
+    this.count = count;
+    this.bounds = this.getBounds();
+    this.enableFiltering = false;
 
     for (let i = 0; i < count; ++i) {
-      this.createShape(!random(0, 20))
+      this.createShape(!random(0, 20));
     }
 
     this.legend = `<div><b>Total:</b> ${count}</div>
@@ -4071,10 +4089,10 @@ class Stress {
         <input id="filtering" type="checkbox"/> Enable Collision Filtering
       </label>
     </div>
-    `
+    `;
 
-    this.lastTime = Date.now()
-    this.updateBody = this.updateBody.bind(this)
+    this.lastTime = Date.now();
+    this.updateBody = this.updateBody.bind(this);
 
     // observer #debug & add filtering checkbox event
     const observer = new window.MutationObserver((mutations) => {
@@ -4083,20 +4101,20 @@ class Stress {
           if (node.id == "debug") {
             document
               .querySelector("#filtering")
-              .addEventListener("change", () => this.toggleFiltering())
-            observer.disconnect()
+              .addEventListener("change", () => this.toggleFiltering());
+            observer.disconnect();
           }
-        })
-      })
-    })
+        });
+      });
+    });
     observer.observe(document.querySelector("body"), {
       subtree: false,
       childList: true,
-    })
+    });
 
     this.start = () => {
-      loop(this.update.bind(this))
-    }
+      loop(this.update.bind(this));
+    };
   }
 
   getBounds() {
@@ -4113,152 +4131,152 @@ class Stress {
       this.physics.createBox({ x: 0, y: 0 }, 10, height, {
         isStatic: true,
       }),
-    ]
+    ];
   }
 
   toggleFiltering() {
-    this.enableFiltering = !this.enableFiltering
-    this.physics.clear()
-    this.bodies.length = 0
-    this.polygons = 0
-    this.boxes = 0
-    this.circles = 0
-    this.ellipses = 0
-    this.lines = 0
-    this.lastVariant = 0
-    this.bounds = this.getBounds()
+    this.enableFiltering = !this.enableFiltering;
+    this.physics.clear();
+    this.bodies.length = 0;
+    this.polygons = 0;
+    this.boxes = 0;
+    this.circles = 0;
+    this.ellipses = 0;
+    this.lines = 0;
+    this.lastVariant = 0;
+    this.bounds = this.getBounds();
     for (let i = 0; i < this.count; ++i) {
-      this.createShape(!random(0, 20))
+      this.createShape(!random(0, 20));
     }
   }
 
   update() {
-    const now = Date.now()
-    this.timeScale = Math.min(1000, now - this.lastTime) / 60
-    this.lastTime = now
-    this.bodies.forEach(this.updateBody)
+    const now = Date.now();
+    this.timeScale = Math.min(1000, now - this.lastTime) / 60;
+    this.lastTime = now;
+    this.bodies.forEach(this.updateBody);
   }
 
   updateBody(body) {
-    body.setAngle(body.angle + body.rotationSpeed * this.timeScale, false)
+    body.setAngle(body.angle + body.rotationSpeed * this.timeScale, false);
 
     if (seededRandom() < 0.05 * this.timeScale) {
-      body.targetScale.x = 0.5 + seededRandom()
+      body.targetScale.x = 0.5 + seededRandom();
     }
 
     if (seededRandom() < 0.05 * this.timeScale) {
-      body.targetScale.y = 0.5 + seededRandom()
+      body.targetScale.y = 0.5 + seededRandom();
     }
 
     if (Math.abs(body.targetScale.x - body.scaleX) > 0.01) {
       const scaleX =
         body.scaleX +
-        Math.sign(body.targetScale.x - body.scaleX) * 0.02 * this.timeScale
+        Math.sign(body.targetScale.x - body.scaleX) * 0.02 * this.timeScale;
       const scaleY =
         body.scaleY +
-        Math.sign(body.targetScale.y - body.scaleY) * 0.02 * this.timeScale
+        Math.sign(body.targetScale.y - body.scaleY) * 0.02 * this.timeScale;
 
-      body.setScale(scaleX, scaleY, false)
+      body.setScale(scaleX, scaleY, false);
     }
 
     // as last step update position, and bounding box
     body.setPosition(
       body.x + body.directionX * this.timeScale,
-      body.y + body.directionY * this.timeScale
-    )
+      body.y + body.directionY * this.timeScale,
+    );
 
     // separate + bounce
-    this.bounceBody(body)
+    this.bounceBody(body);
   }
 
   bounceBody(body) {
-    const bounces = { x: 0, y: 0 }
+    const bounces = { x: 0, y: 0 };
     const addBounces = ({ overlapV: { x, y } }) => {
-      bounces.x += x
-      bounces.y += y
-    }
+      bounces.x += x;
+      bounces.y += y;
+    };
 
-    this.physics.checkOne(body, addBounces)
+    this.physics.checkOne(body, addBounces);
 
     if (bounces.x || bounces.y) {
-      const size = 0.5 * (body.scaleX + body.scaleY)
+      const size = 0.5 * (body.scaleX + body.scaleY);
       const bounce = getBounceDirection(body, {
         x: body.x + bounces.x,
         y: body.y + bounces.y,
-      })
+      });
 
       bounce.scale(body.size).add({
         x: body.directionX * size,
         y: body.directionY * size,
-      })
+      });
 
-      const { x, y } = bounce.normalize()
+      const { x, y } = bounce.normalize();
 
-      body.directionX = x
-      body.directionY = y
-      body.rotationSpeed = (seededRandom() - seededRandom()) * 0.1
+      body.directionX = x;
+      body.directionY = y;
+      body.rotationSpeed = (seededRandom() - seededRandom()) * 0.1;
 
-      body.setPosition(body.x - bounces.x, body.y - bounces.y)
+      body.setPosition(body.x - bounces.x, body.y - bounces.y);
     }
   }
 
   createShape(large) {
-    const minSize = this.size * 1.0 * (large ? seededRandom() + 1 : 1)
-    const maxSize = this.size * 1.25 * (large ? seededRandom() * 2 + 1 : 1)
-    const x = random(0, width)
-    const y = random(0, height)
-    const direction = (random(0, 360) * Math.PI) / 180
+    const minSize = this.size * 1.0 * (large ? seededRandom() + 1 : 1);
+    const maxSize = this.size * 1.25 * (large ? seededRandom() * 2 + 1 : 1);
+    const x = random(0, width);
+    const y = random(0, height);
+    const direction = (random(0, 360) * Math.PI) / 180;
     const options = {
       isCentered: true,
       padding: (minSize + maxSize) * 0.2,
-    }
+    };
 
-    let body
-    let variant = this.lastVariant++ % 5
+    let body;
+    let variant = this.lastVariant++ % 5;
 
     switch (variant) {
       case 0:
         if (this.enableFiltering) {
-          options.group = BodyGroup.Circle
+          options.group = BodyGroup.Circle;
         }
         body = this.physics.createCircle(
           { x, y },
           random(minSize, maxSize) / 2,
-          options
-        )
+          options,
+        );
 
-        ++this.circles
-        break
+        ++this.circles;
+        break;
 
       case 1:
-        const width = random(minSize, maxSize)
-        const height = random(minSize, maxSize)
+        const width = random(minSize, maxSize);
+        const height = random(minSize, maxSize);
         if (this.enableFiltering) {
-          options.group = BodyGroup.Ellipse
-          console.log()
+          options.group = BodyGroup.Ellipse;
+          console.log();
         }
-        body = this.physics.createEllipse({ x, y }, width, height, 2, options)
+        body = this.physics.createEllipse({ x, y }, width, height, 2, options);
 
-        ++this.ellipses
-        break
+        ++this.ellipses;
+        break;
 
       case 2:
         if (this.enableFiltering) {
-          options.group = BodyGroup.Box
+          options.group = BodyGroup.Box;
         }
         body = this.physics.createBox(
           { x, y },
           random(minSize, maxSize),
           random(minSize, maxSize),
-          options
-        )
+          options,
+        );
 
-        ++this.boxes
-        break
+        ++this.boxes;
+        break;
 
       case 3:
         if (this.enableFiltering) {
-          options.group = BodyGroup.Line
+          options.group = BodyGroup.Line;
         }
         body = this.physics.createLine(
           { x, y },
@@ -4266,15 +4284,15 @@ class Stress {
             x: x + random(minSize, maxSize),
             y: y + random(minSize, maxSize),
           },
-          options
-        )
+          options,
+        );
 
-        ++this.lines
-        break
+        ++this.lines;
+        break;
 
       default:
         if (this.enableFiltering) {
-          options.group = BodyGroup.Polygon
+          options.group = BodyGroup.Polygon;
         }
         body = this.physics.createPolygon(
           { x, y },
@@ -4284,28 +4302,28 @@ class Stress {
             { x: random(minSize, maxSize), y: -random(minSize, maxSize) },
             { x: -random(minSize, maxSize), y: -random(minSize, maxSize) },
           ],
-          options
-        )
+          options,
+        );
 
-        ++this.polygons
-        break
+        ++this.polygons;
+        break;
     }
 
     // set initial rotation angle direction
-    body.rotationSpeed = (seededRandom() - seededRandom()) * 0.1
-    body.setAngle((random(0, 360) * Math.PI) / 180)
+    body.rotationSpeed = (seededRandom() - seededRandom()) * 0.1;
+    body.setAngle((random(0, 360) * Math.PI) / 180);
 
-    body.targetScale = { x: 1, y: 1 }
-    body.size = (minSize + maxSize) / 2
+    body.targetScale = { x: 1, y: 1 };
+    body.size = (minSize + maxSize) / 2;
 
-    body.directionX = Math.cos(direction)
-    body.directionY = Math.sin(direction)
+    body.directionX = Math.cos(direction);
+    body.directionY = Math.sin(direction);
 
-    this.bodies.push(body)
+    this.bodies.push(body);
   }
 }
 
-module.exports = Stress
+module.exports = Stress;
 
 
 /***/ }),

@@ -19,6 +19,16 @@ class System extends base_system_1.BaseSystem {
         this.response = new model_1.Response();
     }
     /**
+     * re-insert body into collision tree and update its bbox
+     * every body can be part of only one system
+     */
+    insert(body) {
+        const insertResult = super.insert(body);
+        // set system for later body.system.updateBody(body)
+        body.system = this;
+        return insertResult;
+    }
+    /**
      * separate (move away) bodies
      */
     separate() {
@@ -59,6 +69,16 @@ class System extends base_system_1.BaseSystem {
             }
         };
         return (0, optimized_1.some)(bodies, checkCollision);
+    }
+    /**
+     * callback all bodies in area
+     */
+    checkArea(area, callback = utils_1.returnTrue, response = this.response) {
+        const bodies = this.search(area);
+        const checkOne = (body) => {
+            return this.checkOne(body, callback, response);
+        };
+        return (0, optimized_1.some)(bodies, checkOne);
     }
     /**
      * check all bodies collisions with callback

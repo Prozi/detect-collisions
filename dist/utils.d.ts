@@ -103,3 +103,7 @@ export declare function cloneResponse(response: Response): Response;
  * dummy fn used as default, for optimization
  */
 export declare function returnTrue(): boolean;
+/**
+ * binary string to decimal number
+ */
+export declare function bin2dec(binary: string): number;

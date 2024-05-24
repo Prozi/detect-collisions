@@ -1,7 +1,7 @@
 {
   "name": "detect-collisions",
-  "version": "9.6.0",
-  "description": "detecting collisions between bodies: Points, Lines, Boxes, Polygons (Concave too), Ellipses and Circles. Also RayCasting. All bodies can have offset, rotation, scale, bounding box padding, can be static (non moving) or be trigger bodies (non colliding).",
+  "version": "9.7.0",
+  "description": "detecting collisions between bodies: Points, Lines, Boxes, Polygons, Ellipses, Circles. RayCasting. Bodies have offset, rotation, scale, bbox padding, be static (non moving), be trigger bodies (non colliding).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {

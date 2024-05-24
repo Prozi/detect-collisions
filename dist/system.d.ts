@@ -1,7 +1,7 @@
 /// <reference types="sat" />
 import { BaseSystem } from "./base-system";
 import { Line } from "./bodies/line";
-import { Body, CollisionCallback, RaycastHit, Response, Vector } from "./model";
+import { BBox, Body, CollisionCallback, RBush, RaycastHit, Response, Vector } from "./model";
 /**
  * collision system
  */
@@ -15,6 +15,11 @@ export declare class System<TBody extends Body = Body> extends BaseSystem<TBody>
      */
     protected ray: Line;
     /**
+     * re-insert body into collision tree and update its bbox
+     * every body can be part of only one system
+     */
+    insert(body: TBody): RBush<TBody>;
+    /**
      * separate (move away) bodies
      */
     separate(): void;
@@ -26,6 +31,10 @@ export declare class System<TBody extends Body = Body> extends BaseSystem<TBody>
      * check one body collisions with callback
      */
     checkOne(body: TBody, callback?: CollisionCallback, response?: Response): boolean;
+    /**
+     * callback all bodies in area
+     */
+    checkArea(area: BBox, callback?: CollisionCallback, response?: Response): boolean;
     /**
      * check all bodies collisions with callback
      */

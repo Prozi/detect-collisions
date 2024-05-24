@@ -11,6 +11,7 @@ import {
   BodyGroup,
   BodyType,
   CollisionCallback,
+  RBush,
   RaycastHit,
   Response,
   SATVector,
@@ -39,6 +40,18 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
    * for raycasting
    */
   protected ray!: Line;
+
+  /**
+   * re-insert body into collision tree and update its bbox
+   * every body can be part of only one system
+   */
+  insert(body: TBody): RBush<TBody> {
+    const insertResult = super.insert(body);
+    // set system for later body.system.updateBody(body)
+    body.system = this;
+
+    return insertResult;
+  }
 
   /**
    * separate (move away) bodies
@@ -97,7 +110,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   }
 
   /**
-   * check all bodies in area collisions with callback
+   * callback all bodies in area
    */
   checkArea(
     area: BBox,
