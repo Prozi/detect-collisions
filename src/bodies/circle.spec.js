@@ -82,4 +82,38 @@ describe("GIVEN Circle", () => {
       expect(body.scaleY).toBe(Math.PI);
     });
   });
+
+  describe("AND you set group", () => {
+    it("THEN only collides with matching group", () => {
+      const { System } = require("../../src");
+
+      const dec = (binary) => Number(`0b${binary}`.replace(/\s/g, ""));
+
+      const physics = new System();
+
+      const a = physics.createCircle({ x: 0, y: 0 }, 10, {
+        group: (dec("0000 0000 0000 0001") << 16) | dec("0000 0000 0000 0001"),
+      });
+      const b = physics.createCircle({ x: 0, y: 0 }, 10, {
+        group: (dec("0000 0000 0000 0010") << 16) | dec("0000 0000 0000 0010"),
+      });
+
+      let collisions = 0;
+
+      physics.checkAll(() => {
+        collisions++;
+      });
+
+      expect(collisions).toBe(0);
+
+      a.group = (dec("0000 0000 0000 0001") << 16) | dec("0000 0000 0000 0011");
+      b.group = (dec("0000 0000 0000 0010") << 16) | dec("0000 0000 0000 0011");
+
+      physics.checkAll(() => {
+        collisions++;
+      });
+
+      expect(collisions).toBe(2);
+    });
+  });
 });

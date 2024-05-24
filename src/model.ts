@@ -84,6 +84,11 @@ export interface BodyOptions {
    * BHV padding for bounding box, preventing costly updates
    */
   padding?: number;
+
+  /**
+   * group for collision filtering
+   */
+  group?: number;
 }
 
 /**

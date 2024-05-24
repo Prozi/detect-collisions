@@ -98,6 +98,11 @@ export class Circle extends SATCircle implements BBox, BodyProps {
   readonly isCentered = true;
 
   /**
+   * group for collision filtering
+   */
+  protected _group!: number;
+
+  /**
    * saved initial radius - internal
    */
   protected readonly unscaledRadius: number;
@@ -173,6 +178,17 @@ export class Circle extends SATCircle implements BBox, BodyProps {
    */
   get scaleY(): number {
     return this.scale;
+  }
+
+  /**
+   * group for collision filtering
+   */
+  get group(): number {
+    return this._group;
+  }
+
+  set group(group: number) {
+    this._group = Math.max(0, Math.min(group, 0x7fffffff));
   }
 
   /**

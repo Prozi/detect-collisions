@@ -112,6 +112,11 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   protected centered = false;
 
   /**
+   * group for collision filtering
+   */
+  protected _group!: number;
+
+  /**
    * scale Vector of body
    */
   protected readonly scaleVector: Vector = { x: 1, y: 1 };
@@ -209,6 +214,17 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    */
   set scale(scale: number) {
     this.setScale(scale);
+  }
+
+  /**
+   * group for collision filtering
+   */
+  get group(): number {
+    return this._group;
+  }
+
+  set group(group: number) {
+    this._group = Math.max(0, Math.min(group, 0x7fffffff));
   }
 
   /**

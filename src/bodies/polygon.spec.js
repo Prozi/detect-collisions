@@ -408,4 +408,58 @@ describe("GIVEN Polygon", () => {
       expect(selfIntersecting.isSimple()).toBe(false);
     });
   });
+
+  describe("AND you set group", () => {
+    it("THEN only collides with matching group", () => {
+      const { System } = require("../../src");
+
+      const dec = (binary) => Number(`0b${binary}`.replace(/\s/g, ""));
+
+      const physics = new System();
+
+      const a = physics.createPolygon(
+        { x: 0, y: 0 },
+        [
+          { x: 0, y: 0 },
+          { x: 10, y: 0 },
+          { x: 10, y: 10 },
+          { x: 0, y: 10 },
+        ],
+        {
+          group:
+            (dec("0000 0000 0000 0001") << 16) | dec("0000 0000 0000 0001"),
+        },
+      );
+      const b = physics.createPolygon(
+        { x: 0, y: 0 },
+        [
+          { x: 0, y: 0 },
+          { x: 10, y: 0 },
+          { x: 10, y: 10 },
+          { x: 0, y: 10 },
+        ],
+        {
+          group:
+            (dec("0000 0000 0000 0010") << 16) | dec("0000 0000 0000 0010"),
+        },
+      );
+
+      let collisions = 0;
+
+      physics.checkAll(() => {
+        collisions++;
+      });
+
+      expect(collisions).toBe(0);
+
+      a.group = (dec("0000 0000 0000 0001") << 16) | dec("0000 0000 0000 0011");
+      b.group = (dec("0000 0000 0000 0010") << 16) | dec("0000 0000 0000 0011");
+
+      physics.checkAll(() => {
+        collisions++;
+      });
+
+      expect(collisions).toBe(2);
+    });
+  });
 });

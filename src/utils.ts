@@ -164,16 +164,17 @@ export function clockwise(points: Vector[]): boolean {
 /**
  * used for all types of bodies in constructor
  */
-export function extendBody(body: Body, options?: BodyOptions): void {
-  body.isStatic = !!options?.isStatic;
-  body.isTrigger = !!options?.isTrigger;
-  body.padding = options?.padding || 0;
+export function extendBody(body: Body, options: BodyOptions = {}): void {
+  body.isStatic = !!options.isStatic;
+  body.isTrigger = !!options.isTrigger;
+  body.padding = options.padding || 0;
+  body.group = typeof options.group === "number" ? options.group : 0x7fffffff;
 
   if (body.type !== BodyType.Circle) {
-    body.isCentered = options?.isCentered || false;
+    body.isCentered = options.isCentered || false;
   }
 
-  body.setAngle(options?.angle || 0);
+  body.setAngle(options.angle || 0);
 }
 
 /**
@@ -204,6 +205,16 @@ export function notIntersectAABB(bodyA: BBox, bodyB: BBox): boolean {
  */
 export function intersectAABB(bodyA: BBox, bodyB: BBox): boolean {
   return !notIntersectAABB(bodyA, bodyB);
+}
+
+/**
+ * checks if two bodies can interact (for collision filtering)
+ */
+export function checkInteract(bodyA: Body, bodyB: Body): boolean {
+  return (
+    ((bodyA.group >> 16) & (bodyB.group & 0xffff) &&
+      (bodyB.group >> 16) & (bodyA.group & 0xffff)) !== 0
+  );
 }
 
 /**
