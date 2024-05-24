@@ -1,6 +1,6 @@
 {
   "name": "detect-collisions",
-  "version": "9.7.0",
+  "version": "9.7.1",
   "description": "detecting collisions between bodies: Points, Lines, Boxes, Polygons, Ellipses, Circles. RayCasting. Bodies have offset, rotation, scale, bbox padding, be static (non moving), be trigger bodies (non colliding).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

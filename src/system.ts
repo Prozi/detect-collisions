@@ -110,19 +110,18 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   }
 
   /**
-   * callback all bodies in area
+   * check all bodies collisions in area with callback
    */
   checkArea(
     area: BBox,
     callback: CollisionCallback = returnTrue,
     response = this.response,
   ): boolean {
-    const bodies = this.search(area);
     const checkOne = (body: TBody) => {
       return this.checkOne(body, callback, response);
     };
 
-    return some(bodies, checkOne);
+    return some(this.search(area), checkOne);
   }
 
   /**

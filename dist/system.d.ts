@@ -32,7 +32,7 @@ export declare class System<TBody extends Body = Body> extends BaseSystem<TBody>
      */
     checkOne(body: TBody, callback?: CollisionCallback, response?: Response): boolean;
     /**
-     * callback all bodies in area
+     * check all bodies collisions in area with callback
      */
     checkArea(area: BBox, callback?: CollisionCallback, response?: Response): boolean;
     /**

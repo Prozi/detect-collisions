@@ -4431,18 +4431,17 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             return (0, optimized_1.some)(bodies, checkCollision);
           }
           /**
-           * callback all bodies in area
+           * check all bodies collisions in area with callback
            */
           checkArea(
             area,
             callback = utils_1.returnTrue,
             response = this.response,
           ) {
-            const bodies = this.search(area);
             const checkOne = (body) => {
               return this.checkOne(body, callback, response);
             };
-            return (0, optimized_1.some)(bodies, checkOne);
+            return (0, optimized_1.some)(this.search(area), checkOne);
           }
           /**
            * check all bodies collisions with callback
