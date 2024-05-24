@@ -1,6 +1,6 @@
 {
   "name": "detect-collisions",
-  "version": "9.7.1",
+  "version": "9.7.2",
   "description": "detecting collisions between bodies: Points, Lines, Boxes, Polygons, Ellipses, Circles. RayCasting. Bodies have offset, rotation, scale, bbox padding, be static (non moving), be trigger bodies (non colliding).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -27,7 +27,7 @@
     "benchmark": "npm run benchmark-insertion && npm run benchmark-stress",
     "benchmark-stress": "node -r pixi-shim -e 'require(`./dist/benchmarks`).stressBenchmark()'",
     "benchmark-insertion": "node -e 'require(`./dist/benchmarks`).insertionBenchmark()'",
-    "postinstall": "[ \"$DOWNGRADE_TS\" != 'true' ] && DOWNGRADE_TS=true yarn add typescript@^4 -D || echo typescript downgraded to ^4"
+    "downgrade": "yarn add typescript@^4 -D"
   },
   "repository": "git://github.com/Prozi/detect-collisions.git",
   "files": [
