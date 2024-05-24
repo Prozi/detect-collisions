@@ -6,6 +6,7 @@ import {
   intersectLinePolygon,
 } from "./intersect";
 import {
+  BBox,
   Body,
   BodyGroup,
   BodyType,
@@ -93,6 +94,22 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     };
 
     return some(bodies, checkCollision);
+  }
+
+  /**
+   * check all bodies in area collisions with callback
+   */
+  checkArea(
+    area: BBox,
+    callback: CollisionCallback = returnTrue,
+    response = this.response,
+  ): boolean {
+    const bodies = this.search(area);
+    const checkOne = (body: TBody) => {
+      return this.checkOne(body, callback, response);
+    };
+
+    return some(bodies, checkOne);
   }
 
   /**

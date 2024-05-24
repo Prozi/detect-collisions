@@ -71,6 +71,31 @@ describe("GIVEN System", () => {
     expect(poly.dirty).toBe(false);
   });
 
+  it("THEN checkArea() works", () => {
+    const { System } = require("../src");
+
+    const physics = new System();
+
+    const a = physics.createBox({ x: 10, y: 10 }, 100, 100);
+    const b = physics.createBox({ x: 300, y: 300 }, 100, 100);
+
+    let collisions = 0;
+
+    physics.checkArea({ minX: 0, minY: 0, maxX: 100, maxY: 100 }, () => {
+      collisions++;
+    });
+
+    expect(collisions).toBe(0);
+
+    b.setPosition(50, 50);
+
+    physics.checkArea({ minX: 0, minY: 0, maxX: 100, maxY: 100 }, () => {
+      collisions++;
+    });
+
+    expect(collisions).toBe(2);
+  });
+
   describe("WHEN raycast is called", () => {
     it("THEN works correctly on Ellipse", () => {
       const { System } = require(".");
