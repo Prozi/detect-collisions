@@ -18,6 +18,10 @@ class Ellipse extends polygon_1.Polygon {
          */
         this.type = model_1.BodyType.Ellipse;
         /**
+         * faster than type
+         */
+        this.typeGroup = model_1.BodyGroup.Ellipse;
+        /**
          * ellipses are convex
          */
         this.isConvex = true;

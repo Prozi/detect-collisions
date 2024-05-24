@@ -1,7 +1,7 @@
 import { BBox } from "rbush";
 import { Circle as SATCircle } from "sat";
 import { BaseSystem } from "../base-system";
-import { BodyOptions, BodyProps, BodyType, PotentialVector, SATVector, Vector } from "../model";
+import { BodyGroup, BodyOptions, BodyProps, BodyType, PotentialVector, SATVector, Vector } from "../model";
 /**
  * collider - circle
  */
@@ -64,9 +64,17 @@ export declare class Circle extends SATCircle implements BBox, BodyProps {
      */
     readonly type: BodyType.Circle;
     /**
+     * faster than type
+     */
+    readonly typeGroup: BodyGroup.Circle;
+    /**
      * always centered
      */
     readonly isCentered = true;
+    /**
+     * group for collision filtering
+     */
+    protected _group: number;
     /**
      * saved initial radius - internal
      */
@@ -107,6 +115,11 @@ export declare class Circle extends SATCircle implements BBox, BodyProps {
      * scaleY = scale in case of Circles
      */
     get scaleY(): number;
+    /**
+     * group for collision filtering
+     */
+    get group(): number;
+    set group(group: number);
     /**
      * update position
      */

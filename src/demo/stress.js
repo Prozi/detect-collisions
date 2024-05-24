@@ -1,3 +1,4 @@
+const { BodyGroup } = require("../model");
 const { System } = require("../system");
 const { getBounceDirection } = require("../utils");
 const { width, height, loop } = require("./canvas");
@@ -6,26 +7,6 @@ const seededRandom = require("random-seed").create("@Prozi").random;
 function random(min, max) {
   return Math.floor(seededRandom() * max) + min;
 }
-
-function dec(binary) {
-  return Number(`0b${binary}`.replace(/\s/g, ""));
-}
-
-const ColliderGroup = {
-  Box: dec("0000 0000 0000 0001"),
-  Circle: dec("0000 0000 0000 0010"),
-  Ellipse: dec("0000 0000 0000 0100"),
-  Line: dec("0000 0000 0000 1000"),
-  Polygon: dec("0000 0000 0001 0000"),
-};
-
-const InteractGroup = {
-  Box: dec("0000 0000 0000 0001"),
-  Circle: dec("0000 0000 0000 0010"),
-  Ellipse: dec("0000 0000 0000 0100"),
-  Line: dec("0000 0000 0000 1000"),
-  Polygon: dec("0000 0000 0001 0000"),
-};
 
 class Stress {
   constructor(count = 2000) {
@@ -40,23 +21,7 @@ class Stress {
     this.lines = 0;
     this.lastVariant = 0;
     this.count = count;
-
-    // World bounds
-    this.bounds = [
-      this.physics.createBox({ x: 0, y: 0 }, width, 10, {
-        isStatic: true,
-      }),
-      this.physics.createBox({ x: width - 10, y: 0 }, 10, height, {
-        isStatic: true,
-      }),
-      this.physics.createBox({ x: 0, y: height - 10 }, width, 10, {
-        isStatic: true,
-      }),
-      this.physics.createBox({ x: 0, y: 0 }, 10, height, {
-        isStatic: true,
-      }),
-    ];
-
+    this.bounds = this.getBounds();
     this.enableFiltering = false;
 
     for (let i = 0; i < count; ++i) {
@@ -86,7 +51,7 @@ class Stress {
           if (node.id == "debug") {
             document
               .querySelector("#filtering")
-              .addEventListener("change", this.toggleFiltering.bind(this));
+              .addEventListener("change", () => this.toggleFiltering());
             observer.disconnect();
           }
         });
@@ -102,6 +67,23 @@ class Stress {
     };
   }
 
+  getBounds() {
+    return [
+      this.physics.createBox({ x: 0, y: 0 }, width, 10, {
+        isStatic: true,
+      }),
+      this.physics.createBox({ x: width - 10, y: 0 }, 10, height, {
+        isStatic: true,
+      }),
+      this.physics.createBox({ x: 0, y: height - 10 }, width, 10, {
+        isStatic: true,
+      }),
+      this.physics.createBox({ x: 0, y: 0 }, 10, height, {
+        isStatic: true,
+      }),
+    ];
+  }
+
   toggleFiltering() {
     this.enableFiltering = !this.enableFiltering;
     this.physics.clear();
@@ -112,6 +94,7 @@ class Stress {
     this.ellipses = 0;
     this.lines = 0;
     this.lastVariant = 0;
+    this.bounds = this.getBounds();
     for (let i = 0; i < this.count; ++i) {
       this.createShape(!random(0, 20));
     }
@@ -204,7 +187,7 @@ class Stress {
     switch (variant) {
       case 0:
         if (this.enableFiltering) {
-          options.group = (ColliderGroup.Circle << 16) | InteractGroup.Circle;
+          options.group = BodyGroup.Circle;
         }
         body = this.physics.createCircle(
           { x, y },
@@ -219,7 +202,8 @@ class Stress {
         const width = random(minSize, maxSize);
         const height = random(minSize, maxSize);
         if (this.enableFiltering) {
-          options.group = (ColliderGroup.Ellipse << 16) | InteractGroup.Ellipse;
+          options.group = BodyGroup.Ellipse;
+          console.log();
         }
         body = this.physics.createEllipse({ x, y }, width, height, 2, options);
 
@@ -228,7 +212,7 @@ class Stress {
 
       case 2:
         if (this.enableFiltering) {
-          options.group = (ColliderGroup.Box << 16) | InteractGroup.Box;
+          options.group = BodyGroup.Box;
         }
         body = this.physics.createBox(
           { x, y },
@@ -242,7 +226,7 @@ class Stress {
 
       case 3:
         if (this.enableFiltering) {
-          options.group = (ColliderGroup.Line << 16) | InteractGroup.Line;
+          options.group = BodyGroup.Line;
         }
         body = this.physics.createLine(
           { x, y },
@@ -258,7 +242,7 @@ class Stress {
 
       default:
         if (this.enableFiltering) {
-          options.group = (ColliderGroup.Polygon << 16) | InteractGroup.Polygon;
+          options.group = BodyGroup.Polygon;
         }
         body = this.physics.createPolygon(
           { x, y },

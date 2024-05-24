@@ -1,5 +1,5 @@
 import { Vector as SATVector } from "sat";
-import { BodyOptions, BodyType, Vector } from "../model";
+import { BodyGroup, BodyOptions, BodyType, Vector } from "../model";
 import { Polygon } from "./polygon";
 /**
  * collider - line
@@ -9,6 +9,10 @@ export declare class Line extends Polygon {
      * line type
      */
     readonly type: BodyType.Line;
+    /**
+     * faster than type
+     */
+    readonly typeGroup: BodyGroup.Line;
     /**
      * line is convex
      */

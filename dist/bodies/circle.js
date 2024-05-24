@@ -30,6 +30,10 @@ class Circle extends sat_1.Circle {
          */
         this.type = model_1.BodyType.Circle;
         /**
+         * faster than type
+         */
+        this.typeGroup = model_1.BodyGroup.Circle;
+        /**
          * always centered
          */
         this.isCentered = true;
@@ -85,6 +89,15 @@ class Circle extends sat_1.Circle {
      */
     get scaleY() {
         return this.scale;
+    }
+    /**
+     * group for collision filtering
+     */
+    get group() {
+        return this._group;
+    }
+    set group(group) {
+        this._group = (0, model_1.getGroup)(group);
     }
     /**
      * update position

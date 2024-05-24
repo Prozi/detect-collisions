@@ -73,10 +73,13 @@ class System extends base_system_1.BaseSystem {
      * check do 2 objects collide
      */
     checkCollision(bodyA, bodyB, response = this.response) {
+        const { bbox: bboxA } = bodyA;
+        const { bbox: bboxB } = bodyA;
         // assess the bodies real aabb without padding
-        if (!bodyA.bbox ||
-            !bodyB.bbox ||
-            (0, utils_1.notIntersectAABB)(bodyA.bbox, bodyB.bbox)) {
+        if (!(0, utils_1.areSameGroup)(bodyA, bodyB) ||
+            !bboxA ||
+            !bboxB ||
+            (0, utils_1.notIntersectAABB)(bboxA, bboxB)) {
             return false;
         }
         const sat = (0, utils_1.getSATTest)(bodyA, bodyB);
@@ -131,10 +134,10 @@ class System extends base_system_1.BaseSystem {
         }
         this.insert(this.ray);
         this.checkOne(this.ray, ({ b: body }) => {
-            if (!allow(body)) {
+            if (!allow(body, this.ray)) {
                 return false;
             }
-            const points = body.type === model_1.BodyType.Circle
+            const points = body.typeGroup === model_1.BodyGroup.Circle
                 ? (0, intersect_1.intersectLineCircle)(this.ray, body)
                 : (0, intersect_1.intersectLinePolygon)(this.ray, body);
             (0, optimized_1.forEach)(points, (point) => {

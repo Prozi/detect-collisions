@@ -3,14 +3,15 @@ import { Circle as SATCircle } from "sat";
 
 import { BaseSystem } from "../base-system";
 import {
+  BodyGroup,
   BodyOptions,
   BodyProps,
   BodyType,
+  getGroup,
   PotentialVector,
   SATVector,
   Vector,
 } from "../model";
-import { System } from "../system";
 import { dashLineTo, drawBVH, ensureVectorPoint, extendBody } from "../utils";
 
 /**
@@ -91,6 +92,11 @@ export class Circle extends SATCircle implements BBox, BodyProps {
    * circle type
    */
   readonly type: BodyType.Circle = BodyType.Circle;
+
+  /**
+   * faster than type
+   */
+  readonly typeGroup: BodyGroup.Circle = BodyGroup.Circle;
 
   /**
    * always centered
@@ -188,7 +194,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
   }
 
   set group(group: number) {
-    this._group = Math.max(0, Math.min(group, 0x7fffffff));
+    this._group = getGroup(group);
   }
 
   /**

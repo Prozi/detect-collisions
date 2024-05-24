@@ -62,7 +62,7 @@
             <li><a href="../modules.html">Detect-Collisions</a></li>
             <li><a href="BodyProps.html">BodyProps</a></li>
           </ul>
-          <h1>Interface BodyProps&lt;TBody&gt;</h1>
+          <h1>Interface BodyProps</h1>
         </div>
         <section class="tsd-panel tsd-comment">
           <div class="tsd-comment tsd-typography">
@@ -72,13 +72,7 @@
         </section>
         <div class="tsd-signature">
           <span class="tsd-signature-keyword">interface </span
-          ><span class="tsd-kind-interface">BodyProps</span
-          ><span class="tsd-signature-symbol">&lt;</span
-          ><a
-            class="tsd-signature-type tsd-kind-type-parameter"
-            href="BodyProps.html#TBody"
-            >TBody</a
-          ><span class="tsd-signature-symbol">&gt;</span>
+          ><span class="tsd-kind-interface">BodyProps</span>
           <span class="tsd-signature-symbol">{ </span><br /><span>    </span
           ><a class="tsd-kind-property" href="BodyProps.html#angle">angle</a
           ><span class="tsd-signature-symbol">: </span
@@ -92,6 +86,10 @@
           ><a class="tsd-kind-property" href="BodyProps.html#dirty">dirty</a
           ><span class="tsd-signature-symbol">: </span
           ><span class="tsd-signature-type">boolean</span
+          ><span class="tsd-signature-symbol">; </span><br /><span>    </span
+          ><a class="tsd-kind-property" href="BodyProps.html#group">group</a
+          ><span class="tsd-signature-symbol">: </span
+          ><span class="tsd-signature-type">number</span
           ><span class="tsd-signature-symbol">; </span><br /><span>    </span
           ><a class="tsd-kind-property" href="BodyProps.html#isCentered"
             >isCentered</a
@@ -140,6 +138,14 @@
             href="../enums/BodyType.html"
             class="tsd-signature-type tsd-kind-enum"
             >BodyType</a
+          ><span class="tsd-signature-symbol">; </span><br /><span>    </span
+          ><a class="tsd-kind-property" href="BodyProps.html#typeGroup"
+            >typeGroup</a
+          ><span class="tsd-signature-symbol">: </span
+          ><a
+            href="../enums/BodyGroup.html"
+            class="tsd-signature-type tsd-kind-enum"
+            >BodyGroup</a
           ><span class="tsd-signature-symbol">; </span><br /><span>    </span
           ><span class="tsd-signature-keyword">get </span
           ><a
@@ -271,29 +277,6 @@
             >}</span
           >
         </div>
-        <section class="tsd-panel">
-          <h4>Type Parameters</h4>
-          <ul class="tsd-type-parameter-list">
-            <li>
-              <span
-                ><a id="TBody" class="tsd-anchor"></a
-                ><span class="tsd-kind-type-parameter">TBody</span
-                ><span class="tsd-signature-keyword"> extends </span
-                ><a
-                  href="../types/Body.html"
-                  class="tsd-signature-type tsd-kind-type-alias"
-                  >Body</a
-                >
-                =
-                <a
-                  href="../types/Body.html"
-                  class="tsd-signature-type tsd-kind-type-alias"
-                  >Body</a
-                ></span
-              >
-            </li>
-          </ul>
-        </section>
         <section class="tsd-panel tsd-hierarchy">
           <h4>Hierarchy</h4>
           <ul class="tsd-hierarchy">
@@ -335,8 +318,8 @@
             <li>
               Defined in
               <a
-                href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L128"
-                >src/model.ts:128</a
+                href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L162"
+                >src/model.ts:162</a
               >
             </li>
           </ul>
@@ -377,6 +360,13 @@
                       ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
                         <use href="../assets/icons.svg#icon-1024"></use></svg
                       ><span>dirty</span></a
+                    >
+                    <a
+                      href="BodyProps.html#group"
+                      class="tsd-index-link tsd-is-inherited"
+                      ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
+                        <use href="../assets/icons.svg#icon-1024"></use></svg
+                      ><span>group</span></a
                     >
                     <a
                       href="BodyProps.html#isCentered"
@@ -425,6 +415,11 @@
                       ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
                         <use href="../assets/icons.svg#icon-1024"></use></svg
                       ><span>type</span></a
+                    >
+                    <a href="BodyProps.html#typeGroup" class="tsd-index-link"
+                      ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
+                        <use href="../assets/icons.svg#icon-1024"></use></svg
+                      ><span>type<wbr />Group</span></a
                     >
                   </div>
                 </section>
@@ -515,8 +510,8 @@
                 <li>
                   Defined in
                   <a
-                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L81"
-                    >src/model.ts:81</a
+                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L110"
+                    >src/model.ts:110</a
                   >
                 </li>
               </ul>
@@ -547,8 +542,8 @@
                 <li>
                   Defined in
                   <a
-                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L143"
-                    >src/model.ts:143</a
+                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L181"
+                    >src/model.ts:181</a
                   >
                 </li>
               </ul>
@@ -580,8 +575,39 @@
                 <li>
                   Defined in
                   <a
-                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L158"
-                    >src/model.ts:158</a
+                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L196"
+                    >src/model.ts:196</a
+                  >
+                </li>
+              </ul>
+            </aside>
+          </section>
+          <section class="tsd-panel tsd-member tsd-is-inherited">
+            <a id="group" class="tsd-anchor"></a>
+            <h3 class="tsd-anchor-link">
+              <span>group</span
+              ><a href="#group" aria-label="Permalink" class="tsd-anchor-icon"
+                ><svg viewBox="0 0 24 24">
+                  <use href="../assets/icons.svg#icon-anchor"></use></svg
+              ></a>
+            </h3>
+            <div class="tsd-signature">
+              <span class="tsd-kind-property">group</span
+              ><span class="tsd-signature-symbol">:</span>
+              <span class="tsd-signature-type">number</span>
+            </div>
+            <div class="tsd-comment tsd-typography">
+              <p>group for collision filtering</p>
+            </div>
+            <div class="tsd-comment tsd-typography"></div>
+            <aside class="tsd-sources">
+              <p>Inherited from Required.group</p>
+              <ul>
+                <li>
+                  Defined in
+                  <a
+                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L120"
+                    >src/model.ts:120</a
                   >
                 </li>
               </ul>
@@ -614,8 +640,8 @@
                 <li>
                   Defined in
                   <a
-                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L76"
-                    >src/model.ts:76</a
+                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L105"
+                    >src/model.ts:105</a
                   >
                 </li>
               </ul>
@@ -647,8 +673,8 @@
                 <li>
                   Defined in
                   <a
-                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L138"
-                    >src/model.ts:138</a
+                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L176"
+                    >src/model.ts:176</a
                   >
                 </li>
               </ul>
@@ -681,8 +707,8 @@
                 <li>
                   Defined in
                   <a
-                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L66"
-                    >src/model.ts:66</a
+                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L95"
+                    >src/model.ts:95</a
                   >
                 </li>
               </ul>
@@ -717,8 +743,8 @@
                 <li>
                   Defined in
                   <a
-                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L71"
-                    >src/model.ts:71</a
+                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L100"
+                    >src/model.ts:100</a
                   >
                 </li>
               </ul>
@@ -751,8 +777,8 @@
                 <li>
                   Defined in
                   <a
-                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L148"
-                    >src/model.ts:148</a
+                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L186"
+                    >src/model.ts:186</a
                   >
                 </li>
               </ul>
@@ -782,8 +808,8 @@
                 <li>
                   Defined in
                   <a
-                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L86"
-                    >src/model.ts:86</a
+                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L115"
+                    >src/model.ts:115</a
                   >
                 </li>
               </ul>
@@ -819,8 +845,8 @@
                 <li>
                   Defined in
                   <a
-                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L153"
-                    >src/model.ts:153</a
+                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L191"
+                    >src/model.ts:191</a
                   >
                 </li>
               </ul>
@@ -852,8 +878,46 @@
                 <li>
                   Defined in
                   <a
-                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L133"
-                    >src/model.ts:133</a
+                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L166"
+                    >src/model.ts:166</a
+                  >
+                </li>
+              </ul>
+            </aside>
+          </section>
+          <section class="tsd-panel tsd-member">
+            <a id="typeGroup" class="tsd-anchor"></a>
+            <h3 class="tsd-anchor-link">
+              <code class="tsd-tag ts-flagReadonly">Readonly</code>
+              <span>type<wbr />Group</span
+              ><a
+                href="#typeGroup"
+                aria-label="Permalink"
+                class="tsd-anchor-icon"
+                ><svg viewBox="0 0 24 24">
+                  <use href="../assets/icons.svg#icon-anchor"></use></svg
+              ></a>
+            </h3>
+            <div class="tsd-signature">
+              <span class="tsd-kind-property">type<wbr />Group</span
+              ><span class="tsd-signature-symbol">:</span>
+              <a
+                href="../enums/BodyGroup.html"
+                class="tsd-signature-type tsd-kind-enum"
+                >BodyGroup</a
+              >
+            </div>
+            <div class="tsd-comment tsd-typography">
+              <p>faster for comparision, inner, type of body as number</p>
+            </div>
+            <div class="tsd-comment tsd-typography"></div>
+            <aside class="tsd-sources">
+              <ul>
+                <li>
+                  Defined in
+                  <a
+                    href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L171"
+                    >src/model.ts:171</a
                   >
                 </li>
               </ul>
@@ -893,8 +957,8 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L163"
-                        >src/model.ts:163</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L201"
+                        >src/model.ts:201</a
                       >
                     </li>
                   </ul>
@@ -933,8 +997,8 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L168"
-                        >src/model.ts:168</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L206"
+                        >src/model.ts:206</a
                       >
                     </li>
                   </ul>
@@ -997,8 +1061,8 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L198"
-                        >src/model.ts:198</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L236"
+                        >src/model.ts:236</a
                       >
                     </li>
                   </ul>
@@ -1058,8 +1122,8 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L193"
-                        >src/model.ts:193</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L231"
+                        >src/model.ts:231</a
                       >
                     </li>
                   </ul>
@@ -1116,8 +1180,8 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L203"
-                        >src/model.ts:203</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L241"
+                        >src/model.ts:241</a
                       >
                     </li>
                   </ul>
@@ -1205,8 +1269,8 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L183"
-                        >src/model.ts:183</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L221"
+                        >src/model.ts:221</a
                       >
                     </li>
                   </ul>
@@ -1298,8 +1362,8 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L188"
-                        >src/model.ts:188</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L226"
+                        >src/model.ts:226</a
                       >
                     </li>
                   </ul>
@@ -1394,8 +1458,8 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L173"
-                        >src/model.ts:173</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L211"
+                        >src/model.ts:211</a
                       >
                     </li>
                   </ul>
@@ -1490,8 +1554,8 @@
                     <li>
                       Defined in
                       <a
-                        href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L178"
-                        >src/model.ts:178</a
+                        href="https://github.com/Prozi/detect-collisions/blob/master/src/model.ts#L216"
+                        >src/model.ts:216</a
                       >
                     </li>
                   </ul>
@@ -1681,6 +1745,10 @@
                 ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
                   <use href="../assets/icons.svg#icon-1024"></use></svg
                 ><span>dirty</span></a
+              ><a href="#group" class="tsd-is-inherited"
+                ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
+                  <use href="../assets/icons.svg#icon-1024"></use></svg
+                ><span>group</span></a
               ><a href="#isCentered" class="tsd-is-inherited"
                 ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
                   <use href="../assets/icons.svg#icon-1024"></use></svg
@@ -1713,6 +1781,10 @@
                 ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
                   <use href="../assets/icons.svg#icon-1024"></use></svg
                 ><span>type</span></a
+              ><a href="#typeGroup" class=""
+                ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
+                  <use href="../assets/icons.svg#icon-1024"></use></svg
+                ><span>type<wbr />Group</span></a
               ><a href="#scaleX" class=""
                 ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
                   <use href="../assets/icons.svg#icon-262144"></use></svg
@@ -1771,12 +1843,12 @@
         </div>
       </div>
     </div>
-    <div class="tsd-generator">
-      <p>
+    <footer>
+      <p class="tsd-generator">
         Generated using
         <a href="https://typedoc.org/" target="_blank">TypeDoc</a>
       </p>
-    </div>
+    </footer>
     <div class="overlay"></div>
   </body>
 </html>

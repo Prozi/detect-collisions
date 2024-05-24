@@ -8,7 +8,7 @@ const optimized_1 = require("./optimized");
  * replace body with array of related convex polygons
  */
 function ensureConvex(body) {
-    if (body.isConvex || body.type !== model_1.BodyType.Polygon) {
+    if (body.isConvex || body.typeGroup !== model_1.BodyGroup.Polygon) {
         return [body];
     }
     return body.convexPolygons;

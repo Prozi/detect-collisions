@@ -2204,7 +2204,7 @@ class BaseSystem extends model_1.RBush {
             if (!body) {
                 return false;
             }
-            if (body.type && traverseFunction(body, children, index)) {
+            if (body.typeGroup && traverseFunction(body, children, index)) {
                 return true;
             }
             // if callback returns true, ends forEach
@@ -2245,6 +2245,10 @@ class Box extends polygon_1.Polygon {
          * type of body
          */
         this.type = model_1.BodyType.Box;
+        /**
+         * faster than type
+         */
+        this.typeGroup = model_1.BodyGroup.Box;
         /**
          * boxes are convex
          */
@@ -2342,6 +2346,10 @@ class Circle extends sat_1.Circle {
          */
         this.type = model_1.BodyType.Circle;
         /**
+         * faster than type
+         */
+        this.typeGroup = model_1.BodyGroup.Circle;
+        /**
          * always centered
          */
         this.isCentered = true;
@@ -2397,6 +2405,15 @@ class Circle extends sat_1.Circle {
      */
     get scaleY() {
         return this.scale;
+    }
+    /**
+     * group for collision filtering
+     */
+    get group() {
+        return this._group;
+    }
+    set group(group) {
+        this._group = (0, model_1.getGroup)(group);
     }
     /**
      * update position
@@ -2548,6 +2565,10 @@ class Ellipse extends polygon_1.Polygon {
          */
         this.type = model_1.BodyType.Ellipse;
         /**
+         * faster than type
+         */
+        this.typeGroup = model_1.BodyGroup.Ellipse;
+        /**
          * ellipses are convex
          */
         this.isConvex = true;
@@ -2652,6 +2673,10 @@ class Line extends polygon_1.Polygon {
          */
         this.type = model_1.BodyType.Line;
         /**
+         * faster than type
+         */
+        this.typeGroup = model_1.BodyGroup.Line;
+        /**
          * line is convex
          */
         this.isConvex = true;
@@ -2722,6 +2747,10 @@ class Point extends box_1.Box {
          * point type
          */
         this.type = model_1.BodyType.Point;
+        /**
+         * faster than type
+         */
+        this.typeGroup = model_1.BodyGroup.Point;
     }
 }
 exports.Point = Point;
@@ -2762,6 +2791,10 @@ class Polygon extends sat_1.Polygon {
          * type of body
          */
         this.type = model_1.BodyType.Polygon;
+        /**
+         * faster than type
+         */
+        this.typeGroup = model_1.BodyGroup.Polygon;
         /**
          * is body centered
          */
@@ -2839,6 +2872,15 @@ class Polygon extends sat_1.Polygon {
      */
     set scale(scale) {
         this.setScale(scale);
+    }
+    /**
+     * group for collision filtering
+     */
+    get group() {
+        return this._group;
+    }
+    set group(group) {
+        this._group = (0, model_1.getGroup)(group);
     }
     /**
      * update position
@@ -2992,7 +3034,7 @@ class Polygon extends sat_1.Polygon {
      * returns body split into convex polygons, or empty array for convex bodies
      */
     getConvex() {
-        if ((this.type && this.type !== model_1.BodyType.Polygon) ||
+        if ((this.typeGroup && this.typeGroup !== model_1.BodyGroup.Polygon) ||
             this.points.length < 4) {
             return [];
         }
@@ -3054,7 +3096,7 @@ const optimized_1 = __webpack_require__(/*! ./optimized */ "./src/optimized.ts")
  * replace body with array of related convex polygons
  */
 function ensureConvex(body) {
-    if (body.isConvex || body.type !== model_1.BodyType.Polygon) {
+    if (body.isConvex || body.typeGroup !== model_1.BodyGroup.Polygon) {
         return [body];
     }
     return body.convexPolygons;
@@ -3277,7 +3319,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.BodyType = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = exports.isSimple = void 0;
+exports.BodyGroup = exports.getGroup = exports.BodyType = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = exports.isSimple = exports.bin2dec = void 0;
 const rbush_1 = __importDefault(__webpack_require__(/*! rbush */ "./node_modules/rbush/rbush.min.js"));
 Object.defineProperty(exports, "RBush", ({ enumerable: true, get: function () { return rbush_1.default; } }));
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
@@ -3285,6 +3327,13 @@ Object.defineProperty(exports, "SATCircle", ({ enumerable: true, get: function (
 Object.defineProperty(exports, "SATPolygon", ({ enumerable: true, get: function () { return sat_1.Polygon; } }));
 Object.defineProperty(exports, "Response", ({ enumerable: true, get: function () { return sat_1.Response; } }));
 Object.defineProperty(exports, "SATVector", ({ enumerable: true, get: function () { return sat_1.Vector; } }));
+/**
+ * binary string to decimal number
+ */
+function bin2dec(binary) {
+    return Number(`0b${binary}`.replace(/\s/g, ""));
+}
+exports.bin2dec = bin2dec;
 var poly_decomp_es_1 = __webpack_require__(/*! poly-decomp-es */ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js");
 Object.defineProperty(exports, "isSimple", ({ enumerable: true, get: function () { return poly_decomp_es_1.isSimple; } }));
 /**
@@ -3293,12 +3342,32 @@ Object.defineProperty(exports, "isSimple", ({ enumerable: true, get: function ()
 var BodyType;
 (function (BodyType) {
     BodyType["Ellipse"] = "Ellipse";
-    BodyType["Line"] = "Line";
     BodyType["Circle"] = "Circle";
-    BodyType["Box"] = "Box";
-    BodyType["Point"] = "Point";
     BodyType["Polygon"] = "Polygon";
+    BodyType["Box"] = "Box";
+    BodyType["Line"] = "Line";
+    BodyType["Point"] = "Point";
 })(BodyType = exports.BodyType || (exports.BodyType = {}));
+/**
+ * for groups
+ */
+function getGroup(group) {
+    const limited = Math.max(0, Math.min(group, 0x7FFFFFFF));
+    return (limited << 16) | limited;
+}
+exports.getGroup = getGroup;
+/**
+ * for groups
+ */
+var BodyGroup;
+(function (BodyGroup) {
+    BodyGroup[BodyGroup["Ellipse"] = 32] = "Ellipse";
+    BodyGroup[BodyGroup["Circle"] = 16] = "Circle";
+    BodyGroup[BodyGroup["Polygon"] = 8] = "Polygon";
+    BodyGroup[BodyGroup["Box"] = 4] = "Box";
+    BodyGroup[BodyGroup["Line"] = 2] = "Line";
+    BodyGroup[BodyGroup["Point"] = 1] = "Point";
+})(BodyGroup = exports.BodyGroup || (exports.BodyGroup = {}));
 
 
 /***/ }),
@@ -3468,10 +3537,13 @@ class System extends base_system_1.BaseSystem {
      * check do 2 objects collide
      */
     checkCollision(bodyA, bodyB, response = this.response) {
+        const { bbox: bboxA } = bodyA;
+        const { bbox: bboxB } = bodyA;
         // assess the bodies real aabb without padding
-        if (!bodyA.bbox ||
-            !bodyB.bbox ||
-            (0, utils_1.notIntersectAABB)(bodyA.bbox, bodyB.bbox)) {
+        if (!(0, utils_1.areSameGroup)(bodyA, bodyB) ||
+            !bboxA ||
+            !bboxB ||
+            (0, utils_1.notIntersectAABB)(bboxA, bboxB)) {
             return false;
         }
         const sat = (0, utils_1.getSATTest)(bodyA, bodyB);
@@ -3526,10 +3598,10 @@ class System extends base_system_1.BaseSystem {
         }
         this.insert(this.ray);
         this.checkOne(this.ray, ({ b: body }) => {
-            if (!allow(body)) {
+            if (!allow(body, this.ray)) {
                 return false;
             }
-            const points = body.type === model_1.BodyType.Circle
+            const points = body.typeGroup === model_1.BodyGroup.Circle
                 ? (0, intersect_1.intersectLineCircle)(this.ray, body)
                 : (0, intersect_1.intersectLinePolygon)(this.ray, body);
             (0, optimized_1.forEach)(points, (point) => {
@@ -3558,7 +3630,7 @@ exports.System = System;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.returnTrue = exports.cloneResponse = exports.drawBVH = exports.drawPolygon = exports.dashLineTo = exports.getSATTest = exports.getBounceDirection = exports.mapArrayToVector = exports.mapVectorToArray = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
+exports.returnTrue = exports.cloneResponse = exports.drawBVH = exports.drawPolygon = exports.dashLineTo = exports.getSATTest = exports.getBounceDirection = exports.mapArrayToVector = exports.mapVectorToArray = exports.clonePointsArray = exports.checkAInB = exports.areSameGroup = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const intersect_1 = __webpack_require__(/*! ./intersect */ "./src/intersect.ts");
 const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
@@ -3669,14 +3741,15 @@ exports.clockwise = clockwise;
 /**
  * used for all types of bodies in constructor
  */
-function extendBody(body, options) {
-    body.isStatic = !!(options === null || options === void 0 ? void 0 : options.isStatic);
-    body.isTrigger = !!(options === null || options === void 0 ? void 0 : options.isTrigger);
-    body.padding = (options === null || options === void 0 ? void 0 : options.padding) || 0;
-    if (body.type !== model_1.BodyType.Circle) {
-        body.isCentered = (options === null || options === void 0 ? void 0 : options.isCentered) || false;
+function extendBody(body, options = {}) {
+    body.isStatic = !!options.isStatic;
+    body.isTrigger = !!options.isTrigger;
+    body.padding = options.padding || 0;
+    body.group = typeof options.group === "number" ? options.group : 0x7FFFFFFF;
+    if (body.typeGroup !== model_1.BodyGroup.Circle) {
+        body.isCentered = options.isCentered || false;
     }
-    body.setAngle((options === null || options === void 0 ? void 0 : options.angle) || 0);
+    body.setAngle(options.angle || 0);
 }
 exports.extendBody = extendBody;
 /**
@@ -3705,10 +3778,20 @@ function intersectAABB(bodyA, bodyB) {
 }
 exports.intersectAABB = intersectAABB;
 /**
+ * checks if two bodies can interact (for collision filtering)
+ */
+function areSameGroup(bodyA, bodyB) {
+    return (((bodyA.group >> 16) & (bodyB.group & 0xFFFF) &&
+        (bodyB.group >> 16) & (bodyA.group & 0xFFFF)) !== 0);
+}
+exports.areSameGroup = areSameGroup;
+/**
  * checks if body a is in body b
  */
 function checkAInB(bodyA, bodyB) {
-    const check = bodyA.type === model_1.BodyType.Circle ? circleInFunctions : polygonInFunctions;
+    const check = bodyA.typeGroup === model_1.BodyGroup.Circle
+        ? circleInFunctions
+        : polygonInFunctions;
     return check[bodyB.type](bodyA, bodyB);
 }
 exports.checkAInB = checkAInB;
@@ -3747,7 +3830,9 @@ exports.getBounceDirection = getBounceDirection;
  * returns correct sat.js testing function based on body types
  */
 function getSATTest(bodyA, bodyB) {
-    const check = bodyA.type === model_1.BodyType.Circle ? circleSATFunctions : polygonSATFunctions;
+    const check = bodyA.typeGroup === model_1.BodyGroup.Circle
+        ? circleSATFunctions
+        : polygonSATFunctions;
     return check[bodyB.type];
 }
 exports.getSATTest = getSATTest;
@@ -3945,31 +4030,77 @@ module.exports.height = height;
   \****************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-const { System } = __webpack_require__(/*! ../system */ "./src/system.ts");
-const { getBounceDirection } = __webpack_require__(/*! ../utils */ "./src/utils.ts");
-const { width, height, loop } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js");
-const seededRandom = (__webpack_require__(/*! random-seed */ "./node_modules/random-seed/index.js").create)("@Prozi").random;
+const { BodyGroup } = __webpack_require__(/*! ../model */ "./src/model.ts")
+const { System } = __webpack_require__(/*! ../system */ "./src/system.ts")
+const { getBounceDirection } = __webpack_require__(/*! ../utils */ "./src/utils.ts")
+const { width, height, loop } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js")
+const seededRandom = (__webpack_require__(/*! random-seed */ "./node_modules/random-seed/index.js").create)("@Prozi").random
 
 function random(min, max) {
-  return Math.floor(seededRandom() * max) + min;
+  return Math.floor(seededRandom() * max) + min
 }
 
 class Stress {
   constructor(count = 2000) {
-    const size = Math.sqrt((width * height) / (count * 50));
+    this.size = Math.sqrt((width * height) / (count * 50))
 
-    this.physics = new System(5);
-    this.bodies = [];
-    this.polygons = 0;
-    this.boxes = 0;
-    this.circles = 0;
-    this.ellipses = 0;
-    this.lines = 0;
-    this.lastVariant = 0;
-    this.count = count;
+    this.physics = new System(5)
+    this.bodies = []
+    this.polygons = 0
+    this.boxes = 0
+    this.circles = 0
+    this.ellipses = 0
+    this.lines = 0
+    this.lastVariant = 0
+    this.count = count
+    this.bounds = this.getBounds()
+    this.enableFiltering = false
 
-    // World bounds
-    this.bounds = [
+    for (let i = 0; i < count; ++i) {
+      this.createShape(!random(0, 20))
+    }
+
+    this.legend = `<div><b>Total:</b> ${count}</div>
+    <div><b>Polygons:</b> ${this.polygons}</div>
+    <div><b>Boxes:</b> ${this.boxes}</div>
+    <div><b>Circles:</b> ${this.circles}</div>
+    <div><b>Ellipses:</b> ${this.ellipses}</div>
+    <div><b>Lines:</b> ${this.lines}</div>
+    <div>
+      <label>
+        <input id="filtering" type="checkbox"/> Enable Collision Filtering
+      </label>
+    </div>
+    `
+
+    this.lastTime = Date.now()
+    this.updateBody = this.updateBody.bind(this)
+
+    // observer #debug & add filtering checkbox event
+    const observer = new window.MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.id == "debug") {
+            document
+              .querySelector("#filtering")
+              .addEventListener("change", () => this.toggleFiltering())
+            observer.disconnect()
+          }
+        })
+      })
+    })
+    observer.observe(document.querySelector("body"), {
+      subtree: false,
+      childList: true,
+    })
+
+    this.start = () => {
+      loop(this.update.bind(this))
+    }
+  }
+
+  getBounds() {
+    return [
       this.physics.createBox({ x: 0, y: 0 }, width, 10, {
         isStatic: true,
       }),
@@ -3982,155 +4113,169 @@ class Stress {
       this.physics.createBox({ x: 0, y: 0 }, 10, height, {
         isStatic: true,
       }),
-    ];
+    ]
+  }
 
-    for (let i = 0; i < count; ++i) {
-      this.createShape(!random(0, 20), size);
+  toggleFiltering() {
+    this.enableFiltering = !this.enableFiltering
+    this.physics.clear()
+    this.bodies.length = 0
+    this.polygons = 0
+    this.boxes = 0
+    this.circles = 0
+    this.ellipses = 0
+    this.lines = 0
+    this.lastVariant = 0
+    this.bounds = this.getBounds()
+    for (let i = 0; i < this.count; ++i) {
+      this.createShape(!random(0, 20))
     }
-
-    this.legend = `<div><b>Total:</b> ${count}</div>
-    <div><b>Polygons:</b> ${this.polygons}</div>
-    <div><b>Boxes:</b> ${this.boxes}</div>
-    <div><b>Circles:</b> ${this.circles}</div>
-    <div><b>Ellipses:</b> ${this.ellipses}</div>
-    <div><b>Lines:</b> ${this.lines}</div>`;
-
-    this.lastTime = Date.now();
-    this.updateBody = this.updateBody.bind(this);
-
-    this.start = () => {
-      loop(this.update.bind(this));
-    };
   }
 
   update() {
-    const now = Date.now();
-    this.timeScale = Math.min(1000, now - this.lastTime) / 60;
-    this.lastTime = now;
-    this.bodies.forEach(this.updateBody);
+    const now = Date.now()
+    this.timeScale = Math.min(1000, now - this.lastTime) / 60
+    this.lastTime = now
+    this.bodies.forEach(this.updateBody)
   }
 
   updateBody(body) {
-    body.setAngle(body.angle + body.rotationSpeed * this.timeScale, false);
+    body.setAngle(body.angle + body.rotationSpeed * this.timeScale, false)
 
     if (seededRandom() < 0.05 * this.timeScale) {
-      body.targetScale.x = 0.5 + seededRandom();
+      body.targetScale.x = 0.5 + seededRandom()
     }
 
     if (seededRandom() < 0.05 * this.timeScale) {
-      body.targetScale.y = 0.5 + seededRandom();
+      body.targetScale.y = 0.5 + seededRandom()
     }
 
     if (Math.abs(body.targetScale.x - body.scaleX) > 0.01) {
       const scaleX =
         body.scaleX +
-        Math.sign(body.targetScale.x - body.scaleX) * 0.02 * this.timeScale;
+        Math.sign(body.targetScale.x - body.scaleX) * 0.02 * this.timeScale
       const scaleY =
         body.scaleY +
-        Math.sign(body.targetScale.y - body.scaleY) * 0.02 * this.timeScale;
+        Math.sign(body.targetScale.y - body.scaleY) * 0.02 * this.timeScale
 
-      body.setScale(scaleX, scaleY, false);
+      body.setScale(scaleX, scaleY, false)
     }
 
     // as last step update position, and bounding box
     body.setPosition(
       body.x + body.directionX * this.timeScale,
-      body.y + body.directionY * this.timeScale,
-    );
+      body.y + body.directionY * this.timeScale
+    )
 
     // separate + bounce
-    this.bounceBody(body);
+    this.bounceBody(body)
   }
 
   bounceBody(body) {
-    const bounces = { x: 0, y: 0 };
+    const bounces = { x: 0, y: 0 }
     const addBounces = ({ overlapV: { x, y } }) => {
-      bounces.x += x;
-      bounces.y += y;
-    };
+      bounces.x += x
+      bounces.y += y
+    }
 
-    this.physics.checkOne(body, addBounces);
+    this.physics.checkOne(body, addBounces)
 
     if (bounces.x || bounces.y) {
-      const size = 0.5 * (body.scaleX + body.scaleY);
+      const size = 0.5 * (body.scaleX + body.scaleY)
       const bounce = getBounceDirection(body, {
         x: body.x + bounces.x,
         y: body.y + bounces.y,
-      });
+      })
 
       bounce.scale(body.size).add({
         x: body.directionX * size,
         y: body.directionY * size,
-      });
+      })
 
-      const { x, y } = bounce.normalize();
+      const { x, y } = bounce.normalize()
 
-      body.directionX = x;
-      body.directionY = y;
-      body.rotationSpeed = (seededRandom() - seededRandom()) * 0.1;
+      body.directionX = x
+      body.directionY = y
+      body.rotationSpeed = (seededRandom() - seededRandom()) * 0.1
 
-      body.setPosition(body.x - bounces.x, body.y - bounces.y);
+      body.setPosition(body.x - bounces.x, body.y - bounces.y)
     }
   }
 
-  createShape(large, size) {
-    const minSize = size * 1.0 * (large ? seededRandom() + 1 : 1);
-    const maxSize = size * 1.25 * (large ? seededRandom() * 2 + 1 : 1);
-    const x = random(0, width);
-    const y = random(0, height);
-    const direction = (random(0, 360) * Math.PI) / 180;
+  createShape(large) {
+    const minSize = this.size * 1.0 * (large ? seededRandom() + 1 : 1)
+    const maxSize = this.size * 1.25 * (large ? seededRandom() * 2 + 1 : 1)
+    const x = random(0, width)
+    const y = random(0, height)
+    const direction = (random(0, 360) * Math.PI) / 180
     const options = {
       isCentered: true,
       padding: (minSize + maxSize) * 0.2,
-    };
+    }
 
-    let body;
-    let variant = this.lastVariant++ % 5;
+    let body
+    let variant = this.lastVariant++ % 5
 
     switch (variant) {
       case 0:
+        if (this.enableFiltering) {
+          options.group = BodyGroup.Circle
+        }
         body = this.physics.createCircle(
           { x, y },
           random(minSize, maxSize) / 2,
-          options,
-        );
+          options
+        )
 
-        ++this.circles;
-        break;
+        ++this.circles
+        break
 
       case 1:
-        const width = random(minSize, maxSize);
-        const height = random(minSize, maxSize);
-        body = this.physics.createEllipse({ x, y }, width, height, 2, options);
+        const width = random(minSize, maxSize)
+        const height = random(minSize, maxSize)
+        if (this.enableFiltering) {
+          options.group = BodyGroup.Ellipse
+          console.log()
+        }
+        body = this.physics.createEllipse({ x, y }, width, height, 2, options)
 
-        ++this.ellipses;
-        break;
+        ++this.ellipses
+        break
 
       case 2:
+        if (this.enableFiltering) {
+          options.group = BodyGroup.Box
+        }
         body = this.physics.createBox(
           { x, y },
           random(minSize, maxSize),
           random(minSize, maxSize),
-          options,
-        );
+          options
+        )
 
-        ++this.boxes;
-        break;
+        ++this.boxes
+        break
 
       case 3:
+        if (this.enableFiltering) {
+          options.group = BodyGroup.Line
+        }
         body = this.physics.createLine(
           { x, y },
           {
             x: x + random(minSize, maxSize),
             y: y + random(minSize, maxSize),
           },
-          options,
-        );
+          options
+        )
 
-        ++this.lines;
-        break;
+        ++this.lines
+        break
 
       default:
+        if (this.enableFiltering) {
+          options.group = BodyGroup.Polygon
+        }
         body = this.physics.createPolygon(
           { x, y },
           [
@@ -4139,28 +4284,28 @@ class Stress {
             { x: random(minSize, maxSize), y: -random(minSize, maxSize) },
             { x: -random(minSize, maxSize), y: -random(minSize, maxSize) },
           ],
-          options,
-        );
+          options
+        )
 
-        ++this.polygons;
-        break;
+        ++this.polygons
+        break
     }
 
     // set initial rotation angle direction
-    body.rotationSpeed = (seededRandom() - seededRandom()) * 0.1;
-    body.setAngle((random(0, 360) * Math.PI) / 180);
+    body.rotationSpeed = (seededRandom() - seededRandom()) * 0.1
+    body.setAngle((random(0, 360) * Math.PI) / 180)
 
-    body.targetScale = { x: 1, y: 1 };
-    body.size = (minSize + maxSize) / 2;
+    body.targetScale = { x: 1, y: 1 }
+    body.size = (minSize + maxSize) / 2
 
-    body.directionX = Math.cos(direction);
-    body.directionY = Math.sin(direction);
+    body.directionX = Math.cos(direction)
+    body.directionY = Math.sin(direction)
 
-    this.bodies.push(body);
+    this.bodies.push(body)
   }
 }
 
-module.exports = Stress;
+module.exports = Stress
 
 
 /***/ }),
@@ -4171,6 +4316,7 @@ module.exports = Stress;
   \**************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+const { BodyGroup } = __webpack_require__(/*! ../model */ "./src/model.ts");
 const { System } = __webpack_require__(/*! ../system */ "./src/system.ts");
 const { mapVectorToArray } = __webpack_require__(/*! ../utils */ "./src/utils.ts");
 const { width, height, loop } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js");
@@ -4305,11 +4451,11 @@ class Tank {
         return;
       }
 
-      if (a.type === "Circle" || a === this.player) {
+      if (a.typeGroup === BodyGroup.Polygon || a === this.player) {
         a.setPosition(a.pos.x - overlapV.x, a.pos.y - overlapV.y);
       }
 
-      if (b.type === "Circle" || b === this.player) {
+      if (b.typeGroup === BodyGroup.Circle || b === this.player) {
         b.setPosition(b.pos.x + overlapV.x, b.pos.y + overlapV.y);
       }
 

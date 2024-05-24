@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.returnTrue = exports.cloneResponse = exports.drawBVH = exports.drawPolygon = exports.dashLineTo = exports.getSATTest = exports.getBounceDirection = exports.mapArrayToVector = exports.mapVectorToArray = exports.clonePointsArray = exports.checkAInB = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
+exports.returnTrue = exports.cloneResponse = exports.drawBVH = exports.drawPolygon = exports.dashLineTo = exports.getSATTest = exports.getBounceDirection = exports.mapArrayToVector = exports.mapVectorToArray = exports.clonePointsArray = exports.checkAInB = exports.areSameGroup = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
 const sat_1 = require("sat");
 const intersect_1 = require("./intersect");
 const model_1 = require("./model");
@@ -111,14 +111,15 @@ exports.clockwise = clockwise;
 /**
  * used for all types of bodies in constructor
  */
-function extendBody(body, options) {
-    body.isStatic = !!(options === null || options === void 0 ? void 0 : options.isStatic);
-    body.isTrigger = !!(options === null || options === void 0 ? void 0 : options.isTrigger);
-    body.padding = (options === null || options === void 0 ? void 0 : options.padding) || 0;
-    if (body.type !== model_1.BodyType.Circle) {
-        body.isCentered = (options === null || options === void 0 ? void 0 : options.isCentered) || false;
+function extendBody(body, options = {}) {
+    body.isStatic = !!options.isStatic;
+    body.isTrigger = !!options.isTrigger;
+    body.padding = options.padding || 0;
+    body.group = typeof options.group === "number" ? options.group : 0x7FFFFFFF;
+    if (body.typeGroup !== model_1.BodyGroup.Circle) {
+        body.isCentered = options.isCentered || false;
     }
-    body.setAngle((options === null || options === void 0 ? void 0 : options.angle) || 0);
+    body.setAngle(options.angle || 0);
 }
 exports.extendBody = extendBody;
 /**
@@ -147,10 +148,20 @@ function intersectAABB(bodyA, bodyB) {
 }
 exports.intersectAABB = intersectAABB;
 /**
+ * checks if two bodies can interact (for collision filtering)
+ */
+function areSameGroup(bodyA, bodyB) {
+    return (((bodyA.group >> 16) & (bodyB.group & 0xFFFF) &&
+        (bodyB.group >> 16) & (bodyA.group & 0xFFFF)) !== 0);
+}
+exports.areSameGroup = areSameGroup;
+/**
  * checks if body a is in body b
  */
 function checkAInB(bodyA, bodyB) {
-    const check = bodyA.type === model_1.BodyType.Circle ? circleInFunctions : polygonInFunctions;
+    const check = bodyA.typeGroup === model_1.BodyGroup.Circle
+        ? circleInFunctions
+        : polygonInFunctions;
     return check[bodyB.type](bodyA, bodyB);
 }
 exports.checkAInB = checkAInB;
@@ -189,7 +200,9 @@ exports.getBounceDirection = getBounceDirection;
  * returns correct sat.js testing function based on body types
  */
 function getSATTest(bodyA, bodyB) {
-    const check = bodyA.type === model_1.BodyType.Circle ? circleSATFunctions : polygonSATFunctions;
+    const check = bodyA.typeGroup === model_1.BodyGroup.Circle
+        ? circleSATFunctions
+        : polygonSATFunctions;
     return check[bodyB.type];
 }
 exports.getSATTest = getSATTest;

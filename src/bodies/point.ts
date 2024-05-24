@@ -1,4 +1,4 @@
-import { BodyOptions, BodyType, PotentialVector } from "../model";
+import { BodyGroup, BodyOptions, BodyType, PotentialVector } from "../model";
 import { ensureVectorPoint } from "../utils";
 import { Box } from "./box";
 
@@ -10,6 +10,11 @@ export class Point extends Box {
    * point type
    */
   readonly type: BodyType.Point = BodyType.Point;
+
+  /**
+   * faster than type
+   */
+  readonly typeGroup: BodyGroup.Point = BodyGroup.Point;
 
   /**
    * collider - point (very tiny box)

@@ -1,7 +1,7 @@
 import { isSimple } from "poly-decomp-es";
 import { BBox } from "rbush";
 import { Polygon as SATPolygon } from "sat";
-import { BodyOptions, BodyProps, BodyType, DecompPolygon, PotentialVector, SATVector, Vector } from "../model";
+import { BodyGroup, BodyOptions, BodyProps, BodyType, DecompPolygon, PotentialVector, SATVector, Vector } from "../model";
 import { System } from "../system";
 export { isSimple };
 /**
@@ -61,6 +61,10 @@ export declare class Polygon extends SATPolygon implements BBox, BodyProps {
      */
     readonly type: BodyType.Polygon | BodyType.Box | BodyType.Point | BodyType.Ellipse | BodyType.Line;
     /**
+     * faster than type
+     */
+    readonly typeGroup: BodyGroup.Polygon | BodyGroup.Box | BodyGroup.Point | BodyGroup.Ellipse | BodyGroup.Line;
+    /**
      * backup of points used for scaling
      */
     protected pointsBackup: Vector[];
@@ -68,6 +72,10 @@ export declare class Polygon extends SATPolygon implements BBox, BodyProps {
      * is body centered
      */
     protected centered: boolean;
+    /**
+     * group for collision filtering
+     */
+    protected _group: number;
     /**
      * scale Vector of body
      */
@@ -110,6 +118,11 @@ export declare class Polygon extends SATPolygon implements BBox, BodyProps {
      * allow easier setting of scale
      */
     set scale(scale: number);
+    /**
+     * group for collision filtering
+     */
+    get group(): number;
+    set group(group: number);
     /**
      * update position
      */

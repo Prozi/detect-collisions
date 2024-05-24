@@ -2898,7 +2898,10 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
                   if (!body) {
                     return false;
                   }
-                  if (body.type && traverseFunction(body, children, index)) {
+                  if (
+                    body.typeGroup &&
+                    traverseFunction(body, children, index)
+                  ) {
                     return true;
                   }
                   // if callback returns true, ends forEach
@@ -2940,6 +2943,10 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
              * type of body
              */
             this.type = model_1.BodyType.Box;
+            /**
+             * faster than type
+             */
+            this.typeGroup = model_1.BodyGroup.Box;
             /**
              * boxes are convex
              */
@@ -3038,6 +3045,10 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
              */
             this.type = model_1.BodyType.Circle;
             /**
+             * faster than type
+             */
+            this.typeGroup = model_1.BodyGroup.Circle;
+            /**
              * always centered
              */
             this.isCentered = true;
@@ -3093,6 +3104,15 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
            */
           get scaleY() {
             return this.scale;
+          }
+          /**
+           * group for collision filtering
+           */
+          get group() {
+            return this._group;
+          }
+          set group(group) {
+            this._group = (0, model_1.getGroup)(group);
           }
           /**
            * update position
@@ -3255,6 +3275,10 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
              */
             this.type = model_1.BodyType.Ellipse;
             /**
+             * faster than type
+             */
+            this.typeGroup = model_1.BodyGroup.Ellipse;
+            /**
              * ellipses are convex
              */
             this.isConvex = true;
@@ -3384,6 +3408,10 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
              */
             this.type = model_1.BodyType.Line;
             /**
+             * faster than type
+             */
+            this.typeGroup = model_1.BodyGroup.Line;
+            /**
              * line is convex
              */
             this.isConvex = true;
@@ -3461,6 +3489,10 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
              * point type
              */
             this.type = model_1.BodyType.Point;
+            /**
+             * faster than type
+             */
+            this.typeGroup = model_1.BodyGroup.Point;
           }
         }
         exports.Point = Point;
@@ -3514,6 +3546,10 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
              * type of body
              */
             this.type = model_1.BodyType.Polygon;
+            /**
+             * faster than type
+             */
+            this.typeGroup = model_1.BodyGroup.Polygon;
             /**
              * is body centered
              */
@@ -3591,6 +3627,15 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
            */
           set scale(scale) {
             this.setScale(scale);
+          }
+          /**
+           * group for collision filtering
+           */
+          get group() {
+            return this._group;
+          }
+          set group(group) {
+            this._group = (0, model_1.getGroup)(group);
           }
           /**
            * update position
@@ -3750,7 +3795,8 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
            */
           getConvex() {
             if (
-              (this.type && this.type !== model_1.BodyType.Polygon) ||
+              (this.typeGroup &&
+                this.typeGroup !== model_1.BodyGroup.Polygon) ||
               this.points.length < 4
             ) {
               return [];
@@ -3835,7 +3881,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
          * replace body with array of related convex polygons
          */
         function ensureConvex(body) {
-          if (body.isConvex || body.type !== model_1.BodyType.Polygon) {
+          if (body.isConvex || body.typeGroup !== model_1.BodyGroup.Polygon) {
             return [body];
           }
           return body.convexPolygons;
@@ -4116,13 +4162,16 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             return mod && mod.__esModule ? mod : { default: mod };
           };
         Object.defineProperty(exports, "__esModule", { value: true });
-        exports.BodyType =
+        exports.BodyGroup =
+          exports.getGroup =
+          exports.BodyType =
           exports.SATCircle =
           exports.SATPolygon =
           exports.SATVector =
           exports.Response =
           exports.RBush =
           exports.isSimple =
+          exports.bin2dec =
             void 0;
         const rbush_1 = __importDefault(
           __webpack_require__(/*! rbush */ "./node_modules/rbush/rbush.min.js"),
@@ -4160,6 +4209,13 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             return sat_1.Vector;
           },
         });
+        /**
+         * binary string to decimal number
+         */
+        function bin2dec(binary) {
+          return Number(`0b${binary}`.replace(/\s/g, ""));
+        }
+        exports.bin2dec = bin2dec;
         var poly_decomp_es_1 = __webpack_require__(
           /*! poly-decomp-es */ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js",
         );
@@ -4175,12 +4231,32 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         var BodyType;
         (function (BodyType) {
           BodyType["Ellipse"] = "Ellipse";
-          BodyType["Line"] = "Line";
           BodyType["Circle"] = "Circle";
-          BodyType["Box"] = "Box";
-          BodyType["Point"] = "Point";
           BodyType["Polygon"] = "Polygon";
+          BodyType["Box"] = "Box";
+          BodyType["Line"] = "Line";
+          BodyType["Point"] = "Point";
         })((BodyType = exports.BodyType || (exports.BodyType = {})));
+        /**
+         * for groups
+         */
+        function getGroup(group) {
+          const limited = Math.max(0, Math.min(group, 0x7fffffff));
+          return (limited << 16) | limited;
+        }
+        exports.getGroup = getGroup;
+        /**
+         * for groups
+         */
+        var BodyGroup;
+        (function (BodyGroup) {
+          BodyGroup[(BodyGroup["Ellipse"] = 32)] = "Ellipse";
+          BodyGroup[(BodyGroup["Circle"] = 16)] = "Circle";
+          BodyGroup[(BodyGroup["Polygon"] = 8)] = "Polygon";
+          BodyGroup[(BodyGroup["Box"] = 4)] = "Box";
+          BodyGroup[(BodyGroup["Line"] = 2)] = "Line";
+          BodyGroup[(BodyGroup["Point"] = 1)] = "Point";
+        })((BodyGroup = exports.BodyGroup || (exports.BodyGroup = {})));
 
         /***/
       },
@@ -4367,11 +4443,14 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
            * check do 2 objects collide
            */
           checkCollision(bodyA, bodyB, response = this.response) {
+            const { bbox: bboxA } = bodyA;
+            const { bbox: bboxB } = bodyA;
             // assess the bodies real aabb without padding
             if (
-              !bodyA.bbox ||
-              !bodyB.bbox ||
-              (0, utils_1.notIntersectAABB)(bodyA.bbox, bodyB.bbox)
+              !(0, utils_1.areSameGroup)(bodyA, bodyB) ||
+              !bboxA ||
+              !bboxB ||
+              (0, utils_1.notIntersectAABB)(bboxA, bboxB)
             ) {
               return false;
             }
@@ -4426,11 +4505,11 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             }
             this.insert(this.ray);
             this.checkOne(this.ray, ({ b: body }) => {
-              if (!allow(body)) {
+              if (!allow(body, this.ray)) {
                 return false;
               }
               const points =
-                body.type === model_1.BodyType.Circle
+                body.typeGroup === model_1.BodyGroup.Circle
                   ? (0, intersect_1.intersectLineCircle)(this.ray, body)
                   : (0, intersect_1.intersectLinePolygon)(this.ray, body);
               (0, optimized_1.forEach)(points, (point) => {
@@ -4469,6 +4548,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           exports.mapVectorToArray =
           exports.clonePointsArray =
           exports.checkAInB =
+          exports.areSameGroup =
           exports.intersectAABB =
           exports.notIntersectAABB =
           exports.bodyMoved =
@@ -4609,27 +4689,16 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         /**
          * used for all types of bodies in constructor
          */
-        function extendBody(body, options) {
-          body.isStatic = !!(options === null || options === void 0
-            ? void 0
-            : options.isStatic);
-          body.isTrigger = !!(options === null || options === void 0
-            ? void 0
-            : options.isTrigger);
-          body.padding =
-            (options === null || options === void 0
-              ? void 0
-              : options.padding) || 0;
-          if (body.type !== model_1.BodyType.Circle) {
-            body.isCentered =
-              (options === null || options === void 0
-                ? void 0
-                : options.isCentered) || false;
+        function extendBody(body, options = {}) {
+          body.isStatic = !!options.isStatic;
+          body.isTrigger = !!options.isTrigger;
+          body.padding = options.padding || 0;
+          body.group =
+            typeof options.group === "number" ? options.group : 0x7fffffff;
+          if (body.typeGroup !== model_1.BodyGroup.Circle) {
+            body.isCentered = options.isCentered || false;
           }
-          body.setAngle(
-            (options === null || options === void 0 ? void 0 : options.angle) ||
-              0,
-          );
+          body.setAngle(options.angle || 0);
         }
         exports.extendBody = extendBody;
         /**
@@ -4665,11 +4734,21 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         }
         exports.intersectAABB = intersectAABB;
         /**
+         * checks if two bodies can interact (for collision filtering)
+         */
+        function areSameGroup(bodyA, bodyB) {
+          return (
+            ((bodyA.group >> 16) & (bodyB.group & 0xffff) &&
+              (bodyB.group >> 16) & (bodyA.group & 0xffff)) !== 0
+          );
+        }
+        exports.areSameGroup = areSameGroup;
+        /**
          * checks if body a is in body b
          */
         function checkAInB(bodyA, bodyB) {
           const check =
-            bodyA.type === model_1.BodyType.Circle
+            bodyA.typeGroup === model_1.BodyGroup.Circle
               ? circleInFunctions
               : polygonInFunctions;
           return check[bodyB.type](bodyA, bodyB);
@@ -4714,7 +4793,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
          */
         function getSATTest(bodyA, bodyB) {
           const check =
-            bodyA.type === model_1.BodyType.Circle
+            bodyA.typeGroup === model_1.BodyGroup.Circle
               ? circleSATFunctions
               : polygonSATFunctions;
           return check[bodyB.type];
@@ -4918,6 +4997,9 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
   !*** ./src/demo/stress.js ***!
   \****************************/
       /***/ (module, __unused_webpack_exports, __webpack_require__) => {
+        const { BodyGroup } = __webpack_require__(
+          /*! ../model */ "./src/model.ts",
+        );
         const { System } = __webpack_require__(
           /*! ../system */ "./src/system.ts",
         );
@@ -4937,7 +5019,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
 
         class Stress {
           constructor(count = 2000) {
-            const size = Math.sqrt((width * height) / (count * 50));
+            this.size = Math.sqrt((width * height) / (count * 50));
 
             this.physics = new System(5);
             this.bodies = [];
@@ -4948,9 +5030,54 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             this.lines = 0;
             this.lastVariant = 0;
             this.count = count;
+            this.bounds = this.getBounds();
+            this.enableFiltering = false;
 
-            // World bounds
-            this.bounds = [
+            for (let i = 0; i < count; ++i) {
+              this.createShape(!random(0, 20));
+            }
+
+            this.legend = `<div><b>Total:</b> ${count}</div>
+    <div><b>Polygons:</b> ${this.polygons}</div>
+    <div><b>Boxes:</b> ${this.boxes}</div>
+    <div><b>Circles:</b> ${this.circles}</div>
+    <div><b>Ellipses:</b> ${this.ellipses}</div>
+    <div><b>Lines:</b> ${this.lines}</div>
+    <div>
+      <label>
+        <input id="filtering" type="checkbox"/> Enable Collision Filtering
+      </label>
+    </div>
+    `;
+
+            this.lastTime = Date.now();
+            this.updateBody = this.updateBody.bind(this);
+
+            // observer #debug & add filtering checkbox event
+            const observer = new window.MutationObserver((mutations) => {
+              mutations.forEach((mutation) => {
+                mutation.addedNodes.forEach((node) => {
+                  if (node.id == "debug") {
+                    document
+                      .querySelector("#filtering")
+                      .addEventListener("change", () => this.toggleFiltering());
+                    observer.disconnect();
+                  }
+                });
+              });
+            });
+            observer.observe(document.querySelector("body"), {
+              subtree: false,
+              childList: true,
+            });
+
+            this.start = () => {
+              loop(this.update.bind(this));
+            };
+          }
+
+          getBounds() {
+            return [
               this.physics.createBox({ x: 0, y: 0 }, width, 10, {
                 isStatic: true,
               }),
@@ -4964,24 +5091,22 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
                 isStatic: true,
               }),
             ];
+          }
 
-            for (let i = 0; i < count; ++i) {
-              this.createShape(!random(0, 20), size);
+          toggleFiltering() {
+            this.enableFiltering = !this.enableFiltering;
+            this.physics.clear();
+            this.bodies.length = 0;
+            this.polygons = 0;
+            this.boxes = 0;
+            this.circles = 0;
+            this.ellipses = 0;
+            this.lines = 0;
+            this.lastVariant = 0;
+            this.bounds = this.getBounds();
+            for (let i = 0; i < this.count; ++i) {
+              this.createShape(!random(0, 20));
             }
-
-            this.legend = `<div><b>Total:</b> ${count}</div>
-    <div><b>Polygons:</b> ${this.polygons}</div>
-    <div><b>Boxes:</b> ${this.boxes}</div>
-    <div><b>Circles:</b> ${this.circles}</div>
-    <div><b>Ellipses:</b> ${this.ellipses}</div>
-    <div><b>Lines:</b> ${this.lines}</div>`;
-
-            this.lastTime = Date.now();
-            this.updateBody = this.updateBody.bind(this);
-
-            this.start = () => {
-              loop(this.update.bind(this));
-            };
           }
 
           update() {
@@ -5061,9 +5186,10 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             }
           }
 
-          createShape(large, size) {
-            const minSize = size * 1.0 * (large ? seededRandom() + 1 : 1);
-            const maxSize = size * 1.25 * (large ? seededRandom() * 2 + 1 : 1);
+          createShape(large) {
+            const minSize = this.size * 1.0 * (large ? seededRandom() + 1 : 1);
+            const maxSize =
+              this.size * 1.25 * (large ? seededRandom() * 2 + 1 : 1);
             const x = random(0, width);
             const y = random(0, height);
             const direction = (random(0, 360) * Math.PI) / 180;
@@ -5077,6 +5203,9 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
 
             switch (variant) {
               case 0:
+                if (this.enableFiltering) {
+                  options.group = BodyGroup.Circle;
+                }
                 body = this.physics.createCircle(
                   { x, y },
                   random(minSize, maxSize) / 2,
@@ -5089,6 +5218,10 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
               case 1:
                 const width = random(minSize, maxSize);
                 const height = random(minSize, maxSize);
+                if (this.enableFiltering) {
+                  options.group = BodyGroup.Ellipse;
+                  console.log();
+                }
                 body = this.physics.createEllipse(
                   { x, y },
                   width,
@@ -5101,6 +5234,9 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
                 break;
 
               case 2:
+                if (this.enableFiltering) {
+                  options.group = BodyGroup.Box;
+                }
                 body = this.physics.createBox(
                   { x, y },
                   random(minSize, maxSize),
@@ -5112,6 +5248,9 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
                 break;
 
               case 3:
+                if (this.enableFiltering) {
+                  options.group = BodyGroup.Line;
+                }
                 body = this.physics.createLine(
                   { x, y },
                   {
@@ -5125,6 +5264,9 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
                 break;
 
               default:
+                if (this.enableFiltering) {
+                  options.group = BodyGroup.Polygon;
+                }
                 body = this.physics.createPolygon(
                   { x, y },
                   [
@@ -5176,6 +5318,9 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
   !*** ./src/demo/tank.js ***!
   \**************************/
       /***/ (module, __unused_webpack_exports, __webpack_require__) => {
+        const { BodyGroup } = __webpack_require__(
+          /*! ../model */ "./src/model.ts",
+        );
         const { System } = __webpack_require__(
           /*! ../system */ "./src/system.ts",
         );
@@ -5316,11 +5461,11 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
                 return;
               }
 
-              if (a.type === "Circle" || a === this.player) {
+              if (a.typeGroup === BodyGroup.Polygon || a === this.player) {
                 a.setPosition(a.pos.x - overlapV.x, a.pos.y - overlapV.y);
               }
 
-              if (b.type === "Circle" || b === this.player) {
+              if (b.typeGroup === BodyGroup.Circle || b === this.player) {
                 b.setPosition(b.pos.x + overlapV.x, b.pos.y + overlapV.y);
               }
 

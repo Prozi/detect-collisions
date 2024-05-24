@@ -18,6 +18,10 @@ class Box extends polygon_1.Polygon {
          */
         this.type = model_1.BodyType.Box;
         /**
+         * faster than type
+         */
+        this.typeGroup = model_1.BodyGroup.Box;
+        /**
          * boxes are convex
          */
         this.isConvex = true;

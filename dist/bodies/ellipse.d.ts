@@ -1,4 +1,4 @@
-import { BodyOptions, BodyType, PotentialVector } from "../model";
+import { BodyGroup, BodyOptions, BodyType, PotentialVector } from "../model";
 import { Polygon } from "./polygon";
 /**
  * collider - ellipse
@@ -8,6 +8,10 @@ export declare class Ellipse extends Polygon {
      * ellipse type
      */
     readonly type: BodyType.Ellipse;
+    /**
+     * faster than type
+     */
+    readonly typeGroup: BodyGroup.Ellipse;
     /**
      * ellipses are convex
      */

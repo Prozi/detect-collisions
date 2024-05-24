@@ -4,7 +4,7 @@ import { Circle } from "./bodies/circle";
 import { Line } from "./bodies/line";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
-import { Body, BodyType, SATPolygon, SATVector, Vector } from "./model";
+import { Body, BodyGroup, SATPolygon, SATVector, Vector } from "./model";
 import { every, forEach, map, some } from "./optimized";
 
 /**
@@ -13,7 +13,7 @@ import { every, forEach, map, some } from "./optimized";
 export function ensureConvex<TBody extends Body = Circle | Point | Polygon>(
   body: TBody,
 ): (TBody | SATPolygon)[] {
-  if (body.isConvex || body.type !== BodyType.Polygon) {
+  if (body.isConvex || body.typeGroup !== BodyGroup.Polygon) {
     return [body];
   }
 

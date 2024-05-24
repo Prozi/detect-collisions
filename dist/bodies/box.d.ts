@@ -1,4 +1,4 @@
-import { BodyOptions, BodyType, PotentialVector } from "../model";
+import { BodyGroup, BodyOptions, BodyType, PotentialVector } from "../model";
 import { Polygon } from "./polygon";
 /**
  * collider - box
@@ -8,6 +8,10 @@ export declare class Box extends Polygon {
      * type of body
      */
     readonly type: BodyType.Box | BodyType.Point;
+    /**
+     * faster than type
+     */
+    readonly typeGroup: BodyGroup.Box | BodyGroup.Point;
     /**
      * boxes are convex
      */

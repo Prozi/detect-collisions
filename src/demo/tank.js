@@ -1,3 +1,4 @@
+const { BodyGroup } = require("../model");
 const { System } = require("../system");
 const { mapVectorToArray } = require("../utils");
 const { width, height, loop } = require("./canvas");
@@ -132,11 +133,11 @@ class Tank {
         return;
       }
 
-      if (a.type === "Circle" || a === this.player) {
+      if (a.typeGroup === BodyGroup.Polygon || a === this.player) {
         a.setPosition(a.pos.x - overlapV.x, a.pos.y - overlapV.y);
       }
 
-      if (b.type === "Circle" || b === this.player) {
+      if (b.typeGroup === BodyGroup.Circle || b === this.player) {
         b.setPosition(b.pos.x + overlapV.x, b.pos.y + overlapV.y);
       }
 

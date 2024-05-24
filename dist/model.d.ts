@@ -7,6 +7,10 @@ import { Ellipse } from "./bodies/ellipse";
 import { Line } from "./bodies/line";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
+/**
+ * binary string to decimal number
+ */
+export declare function bin2dec(binary: string): number;
 export { Polygon as DecompPolygon, Point as DecompPoint, isSimple } from "poly-decomp-es";
 export { RBush, BBox, Response, SATVector, SATPolygon, SATCircle };
 export type CollisionCallback = (response: Response) => boolean | void;
@@ -15,11 +19,26 @@ export type CollisionCallback = (response: Response) => boolean | void;
  */
 export declare enum BodyType {
     Ellipse = "Ellipse",
-    Line = "Line",
     Circle = "Circle",
+    Polygon = "Polygon",
     Box = "Box",
-    Point = "Point",
-    Polygon = "Polygon"
+    Line = "Line",
+    Point = "Point"
+}
+/**
+ * for groups
+ */
+export declare function getGroup(group: number): number;
+/**
+ * for groups
+ */
+export declare enum BodyGroup {
+    Ellipse = 32,
+    Circle = 16,
+    Polygon = 8,
+    Box = 4,
+    Line = 2,
+    Point = 1
 }
 /**
  * body with children (rbush)
@@ -63,6 +82,10 @@ export interface BodyOptions {
      * BHV padding for bounding box, preventing costly updates
      */
     padding?: number;
+    /**
+     * group for collision filtering
+     */
+    group?: number;
 }
 /**
  * system.raycast(from, to) result
@@ -102,11 +125,15 @@ export type Body = Point | Line | Ellipse | Circle | Box | Polygon;
 /**
  * each body contains those regardless of type
  */
-export interface BodyProps<TBody extends Body = Body> extends Required<BodyOptions> {
+export interface BodyProps extends Required<BodyOptions> {
     /**
      * type of body
      */
     readonly type: BodyType;
+    /**
+     * faster for comparision, inner, type of body as number
+     */
+    readonly typeGroup: BodyGroup;
     /**
      * flag to show is it a convex body or non convex polygon
      */

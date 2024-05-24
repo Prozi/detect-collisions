@@ -18,6 +18,7 @@ import {
 } from "./intersect";
 import {
   Body,
+  BodyGroup,
   BodyOptions,
   BodyType,
   InTest,
@@ -170,7 +171,7 @@ export function extendBody(body: Body, options: BodyOptions = {}): void {
   body.padding = options.padding || 0;
   body.group = typeof options.group === "number" ? options.group : 0x7fffffff;
 
-  if (body.type !== BodyType.Circle) {
+  if (body.typeGroup !== BodyGroup.Circle) {
     body.isCentered = options.isCentered || false;
   }
 
@@ -210,7 +211,7 @@ export function intersectAABB(bodyA: BBox, bodyB: BBox): boolean {
 /**
  * checks if two bodies can interact (for collision filtering)
  */
-export function checkInteract(bodyA: Body, bodyB: Body): boolean {
+export function areSameGroup(bodyA: Body, bodyB: Body): boolean {
   return (
     ((bodyA.group >> 16) & (bodyB.group & 0xffff) &&
       (bodyB.group >> 16) & (bodyA.group & 0xffff)) !== 0
@@ -222,7 +223,9 @@ export function checkInteract(bodyA: Body, bodyB: Body): boolean {
  */
 export function checkAInB(bodyA: Body, bodyB: Body): boolean {
   const check =
-    bodyA.type === BodyType.Circle ? circleInFunctions : polygonInFunctions;
+    bodyA.typeGroup === BodyGroup.Circle
+      ? circleInFunctions
+      : polygonInFunctions;
 
   return check[bodyB.type](bodyA, bodyB);
 }
@@ -266,7 +269,9 @@ export function getBounceDirection(body: Vector, collider: Vector): SATVector {
  */
 export function getSATTest(bodyA: Body, bodyB: Body): SATTest {
   const check =
-    bodyA.type === BodyType.Circle ? circleSATFunctions : polygonSATFunctions;
+    bodyA.typeGroup === BodyGroup.Circle
+      ? circleSATFunctions
+      : polygonSATFunctions;
 
   return check[bodyB.type];
 }

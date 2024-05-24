@@ -3,11 +3,13 @@ import { BBox } from "rbush";
 import { Polygon as SATPolygon } from "sat";
 
 import {
+  BodyGroup,
   BodyOptions,
   BodyProps,
   BodyType,
   DecompPolygon,
   GetAABBAsBox,
+  getGroup,
   PotentialVector,
   SATVector,
   Vector,
@@ -100,6 +102,16 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
     | BodyType.Point
     | BodyType.Ellipse
     | BodyType.Line = BodyType.Polygon;
+
+  /**
+   * faster than type
+   */
+  readonly typeGroup:
+    | BodyGroup.Polygon
+    | BodyGroup.Box
+    | BodyGroup.Point
+    | BodyGroup.Ellipse
+    | BodyGroup.Line = BodyGroup.Polygon;
 
   /**
    * backup of points used for scaling
@@ -224,7 +236,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   }
 
   set group(group: number) {
-    this._group = Math.max(0, Math.min(group, 0x7fffffff));
+    this._group = getGroup(group);
   }
 
   /**
@@ -413,7 +425,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    */
   protected getConvex(): DecompPolygon[] {
     if (
-      (this.type && this.type !== BodyType.Polygon) ||
+      (this.typeGroup && this.typeGroup !== BodyGroup.Polygon) ||
       this.points.length < 4
     ) {
       return [];

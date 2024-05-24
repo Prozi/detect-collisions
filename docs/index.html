@@ -177,6 +177,11 @@
               change.
             </li>
             <li>
+              <strong>Collision Filtering</strong>: Use
+              <code>group: number</code> for collision filtering, with a range
+              within 0x0 ~ 0x7fffffff.
+            </li>
+            <li>
               <strong>Body Options</strong>: Use
               <code>isStatic: boolean</code> to mark body as non movable and
               <code>isTrigger: boolean</code> to set body as ghost.
@@ -196,7 +201,7 @@
             <a href="#md:step-4-manipulate-bodies">Step 4: Manipulate Bodies</a>
           </h3>
           <p>Manipulate body attributes and update the collision system:</p>
-          <pre><code class="language-ts"><span class="hl-6">box</span><span class="hl-1">.</span><span class="hl-0">setPosition</span><span class="hl-1">(</span><span class="hl-6">x</span><span class="hl-1">, </span><span class="hl-6">y</span><span class="hl-1">);</span><br/><span class="hl-6">box</span><span class="hl-1">.</span><span class="hl-0">setScale</span><span class="hl-1">(</span><span class="hl-6">scaleX</span><span class="hl-1">, </span><span class="hl-6">scaleY</span><span class="hl-1">);</span><br/><span class="hl-6">box</span><span class="hl-1">.</span><span class="hl-0">setAngle</span><span class="hl-1">(</span><span class="hl-6">angle</span><span class="hl-1">);</span><br/><span class="hl-6">box</span><span class="hl-1">.</span><span class="hl-0">setOffset</span><span class="hl-1">({ </span><span class="hl-6">x</span><span class="hl-1">, </span><span class="hl-6">y</span><span class="hl-1"> });</span><br/><span class="hl-6">system</span><span class="hl-1">.</span><span class="hl-0">update</span><span class="hl-1">(); </span><span class="hl-5">// Update the system after manipulation</span>
+          <pre><code class="language-ts"><span class="hl-6">box</span><span class="hl-1">.</span><span class="hl-0">setPosition</span><span class="hl-1">(</span><span class="hl-6">x</span><span class="hl-1">, </span><span class="hl-6">y</span><span class="hl-1">);</span><br/><span class="hl-6">box</span><span class="hl-1">.</span><span class="hl-0">setScale</span><span class="hl-1">(</span><span class="hl-6">scaleX</span><span class="hl-1">, </span><span class="hl-6">scaleY</span><span class="hl-1">);</span><br/><span class="hl-6">box</span><span class="hl-1">.</span><span class="hl-0">setAngle</span><span class="hl-1">(</span><span class="hl-6">angle</span><span class="hl-1">);</span><br/><span class="hl-6">box</span><span class="hl-1">.</span><span class="hl-0">setOffset</span><span class="hl-1">({ </span><span class="hl-6">x</span><span class="hl-1">, </span><span class="hl-6">y</span><span class="hl-1"> });</span><br/><span class="hl-6">system</span><span class="hl-1">.</span><span class="hl-0">update</span><span class="hl-1">(); </span><span class="hl-5">// Update the system after manipulation</span><br/><span class="hl-6">box</span><span class="hl-1">.</span><span class="hl-6">group</span><span class="hl-1"> = </span><span class="hl-6">group</span><span class="hl-1">; </span><span class="hl-5">// Immediate effect, no system.update needed</span>
 </code><button>Copy</button></pre>
           <a
             id="md:step-5-collision-detection-and-resolution"
@@ -631,12 +636,12 @@
         </div>
       </div>
     </div>
-    <div class="tsd-generator">
-      <p>
+    <footer>
+      <p class="tsd-generator">
         Generated using
         <a href="https://typedoc.org/" target="_blank">TypeDoc</a>
       </p>
-    </div>
+    </footer>
     <div class="overlay"></div>
   </body>
 </html>

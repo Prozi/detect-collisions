@@ -21,6 +21,10 @@ class Line extends polygon_1.Polygon {
          */
         this.type = model_1.BodyType.Line;
         /**
+         * faster than type
+         */
+        this.typeGroup = model_1.BodyGroup.Line;
+        /**
          * line is convex
          */
         this.isConvex = true;

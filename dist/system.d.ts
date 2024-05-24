@@ -37,5 +37,5 @@ export declare class System<TBody extends Body = Body> extends BaseSystem<TBody>
     /**
      * raycast to get collider of ray from start to end
      */
-    raycast(start: Vector, end: Vector, allow?: (body: TBody) => boolean): RaycastHit<TBody> | null;
+    raycast(start: Vector, end: Vector, allow?: (body: TBody, ray: TBody) => boolean): RaycastHit<TBody> | null;
 }

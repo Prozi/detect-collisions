@@ -25,6 +25,10 @@ class Polygon extends sat_1.Polygon {
          */
         this.type = model_1.BodyType.Polygon;
         /**
+         * faster than type
+         */
+        this.typeGroup = model_1.BodyGroup.Polygon;
+        /**
          * is body centered
          */
         this.centered = false;
@@ -101,6 +105,15 @@ class Polygon extends sat_1.Polygon {
      */
     set scale(scale) {
         this.setScale(scale);
+    }
+    /**
+     * group for collision filtering
+     */
+    get group() {
+        return this._group;
+    }
+    set group(group) {
+        this._group = (0, model_1.getGroup)(group);
     }
     /**
      * update position
@@ -254,7 +267,7 @@ class Polygon extends sat_1.Polygon {
      * returns body split into convex polygons, or empty array for convex bodies
      */
     getConvex() {
-        if ((this.type && this.type !== model_1.BodyType.Polygon) ||
+        if ((this.typeGroup && this.typeGroup !== model_1.BodyGroup.Polygon) ||
             this.points.length < 4) {
             return [];
         }

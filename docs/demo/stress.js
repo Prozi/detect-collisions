@@ -1,4 +1,5 @@
 "use strict";
+const { BodyGroup } = require("../model");
 const { System } = require("../system");
 const { getBounceDirection } = require("../utils");
 const { width, height, loop } = require("./canvas");
@@ -8,7 +9,7 @@ function random(min, max) {
 }
 class Stress {
   constructor(count = 2000) {
-    const size = Math.sqrt((width * height) / (count * 50));
+    this.size = Math.sqrt((width * height) / (count * 50));
     this.physics = new System(5);
     this.bodies = [];
     this.polygons = 0;
@@ -18,8 +19,48 @@ class Stress {
     this.lines = 0;
     this.lastVariant = 0;
     this.count = count;
-    // World bounds
-    this.bounds = [
+    this.bounds = this.getBounds();
+    this.enableFiltering = false;
+    for (let i = 0; i < count; ++i) {
+      this.createShape(!random(0, 20));
+    }
+    this.legend = `<div><b>Total:</b> ${count}</div>
+    <div><b>Polygons:</b> ${this.polygons}</div>
+    <div><b>Boxes:</b> ${this.boxes}</div>
+    <div><b>Circles:</b> ${this.circles}</div>
+    <div><b>Ellipses:</b> ${this.ellipses}</div>
+    <div><b>Lines:</b> ${this.lines}</div>
+    <div>
+      <label>
+        <input id="filtering" type="checkbox"/> Enable Collision Filtering
+      </label>
+    </div>
+    `;
+    this.lastTime = Date.now();
+    this.updateBody = this.updateBody.bind(this);
+    // observer #debug & add filtering checkbox event
+    const observer = new window.MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.id == "debug") {
+            document
+              .querySelector("#filtering")
+              .addEventListener("change", () => this.toggleFiltering());
+            observer.disconnect();
+          }
+        });
+      });
+    });
+    observer.observe(document.querySelector("body"), {
+      subtree: false,
+      childList: true,
+    });
+    this.start = () => {
+      loop(this.update.bind(this));
+    };
+  }
+  getBounds() {
+    return [
       this.physics.createBox({ x: 0, y: 0 }, width, 10, {
         isStatic: true,
       }),
@@ -33,20 +74,21 @@ class Stress {
         isStatic: true,
       }),
     ];
-    for (let i = 0; i < count; ++i) {
-      this.createShape(!random(0, 20), size);
+  }
+  toggleFiltering() {
+    this.enableFiltering = !this.enableFiltering;
+    this.physics.clear();
+    this.bodies.length = 0;
+    this.polygons = 0;
+    this.boxes = 0;
+    this.circles = 0;
+    this.ellipses = 0;
+    this.lines = 0;
+    this.lastVariant = 0;
+    this.bounds = this.getBounds();
+    for (let i = 0; i < this.count; ++i) {
+      this.createShape(!random(0, 20));
     }
-    this.legend = `<div><b>Total:</b> ${count}</div>
-    <div><b>Polygons:</b> ${this.polygons}</div>
-    <div><b>Boxes:</b> ${this.boxes}</div>
-    <div><b>Circles:</b> ${this.circles}</div>
-    <div><b>Ellipses:</b> ${this.ellipses}</div>
-    <div><b>Lines:</b> ${this.lines}</div>`;
-    this.lastTime = Date.now();
-    this.updateBody = this.updateBody.bind(this);
-    this.start = () => {
-      loop(this.update.bind(this));
-    };
   }
   update() {
     const now = Date.now();
@@ -103,9 +145,9 @@ class Stress {
       body.setPosition(body.x - bounces.x, body.y - bounces.y);
     }
   }
-  createShape(large, size) {
-    const minSize = size * 1.0 * (large ? seededRandom() + 1 : 1);
-    const maxSize = size * 1.25 * (large ? seededRandom() * 2 + 1 : 1);
+  createShape(large) {
+    const minSize = this.size * 1.0 * (large ? seededRandom() + 1 : 1);
+    const maxSize = this.size * 1.25 * (large ? seededRandom() * 2 + 1 : 1);
     const x = random(0, width);
     const y = random(0, height);
     const direction = (random(0, 360) * Math.PI) / 180;
@@ -117,6 +159,9 @@ class Stress {
     let variant = this.lastVariant++ % 5;
     switch (variant) {
       case 0:
+        if (this.enableFiltering) {
+          options.group = BodyGroup.Circle;
+        }
         body = this.physics.createCircle(
           { x, y },
           random(minSize, maxSize) / 2,
@@ -127,10 +172,17 @@ class Stress {
       case 1:
         const width = random(minSize, maxSize);
         const height = random(minSize, maxSize);
+        if (this.enableFiltering) {
+          options.group = BodyGroup.Ellipse;
+          console.log();
+        }
         body = this.physics.createEllipse({ x, y }, width, height, 2, options);
         ++this.ellipses;
         break;
       case 2:
+        if (this.enableFiltering) {
+          options.group = BodyGroup.Box;
+        }
         body = this.physics.createBox(
           { x, y },
           random(minSize, maxSize),
@@ -140,6 +192,9 @@ class Stress {
         ++this.boxes;
         break;
       case 3:
+        if (this.enableFiltering) {
+          options.group = BodyGroup.Line;
+        }
         body = this.physics.createLine(
           { x, y },
           {
@@ -151,6 +206,9 @@ class Stress {
         ++this.lines;
         break;
       default:
+        if (this.enableFiltering) {
+          options.group = BodyGroup.Polygon;
+        }
         body = this.physics.createPolygon(
           { x, y },
           [

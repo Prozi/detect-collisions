@@ -7,6 +7,7 @@ import {
 } from "./intersect";
 import {
   Body,
+  BodyGroup,
   BodyType,
   CollisionCallback,
   RaycastHit,
@@ -16,8 +17,8 @@ import {
 } from "./model";
 import { forEach, some } from "./optimized";
 import {
+  areSameGroup,
   checkAInB,
-  checkInteract,
   distance,
   getSATTest,
   notIntersectAABB,
@@ -116,13 +117,14 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     bodyB: TBody,
     response = this.response,
   ): boolean {
+    const { bbox: bboxA } = bodyA;
+    const { bbox: bboxB } = bodyA;
     // assess the bodies real aabb without padding
     if (
-      // check collision group
-      !checkInteract(bodyA, bodyB) ||
-      !bodyA.bbox ||
-      !bodyB.bbox ||
-      notIntersectAABB(bodyA.bbox, bodyB.bbox)
+      !areSameGroup(bodyA, bodyB) ||
+      !bboxA ||
+      !bboxB ||
+      notIntersectAABB(bboxA, bboxB)
     ) {
       return false;
     }
@@ -200,7 +202,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
       }
 
       const points: Vector[] =
-        body.type === BodyType.Circle
+        body.typeGroup === BodyGroup.Circle
           ? intersectLineCircle(this.ray, body)
           : intersectLinePolygon(this.ray, body);
 

@@ -143,7 +143,7 @@ class BaseSystem extends model_1.RBush {
             if (!body) {
                 return false;
             }
-            if (body.type && traverseFunction(body, children, index)) {
+            if (body.typeGroup && traverseFunction(body, children, index)) {
                 return true;
             }
             // if callback returns true, ends forEach

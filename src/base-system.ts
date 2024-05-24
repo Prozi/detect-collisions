@@ -213,7 +213,7 @@ export class BaseSystem<TBody extends Body = Body>
         return false;
       }
 
-      if (body.type && traverseFunction(body, children, index)) {
+      if (body.typeGroup && traverseFunction(body, children, index)) {
         return true;
       }
 

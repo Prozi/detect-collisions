@@ -17,6 +17,10 @@ class Point extends box_1.Box {
          * point type
          */
         this.type = model_1.BodyType.Point;
+        /**
+         * faster than type
+         */
+        this.typeGroup = model_1.BodyGroup.Point;
     }
 }
 exports.Point = Point;
