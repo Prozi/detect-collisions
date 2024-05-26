@@ -211,7 +211,7 @@ export function intersectAABB(bodyA: BBox, bodyB: BBox): boolean {
 /**
  * checks if two bodies can interact (for collision filtering)
  */
-export function areSameGroup(bodyA: Body, bodyB: Body): boolean {
+export function canInteract(bodyA: Body, bodyB: Body): boolean {
   return (
     ((bodyA.group >> 16) & (bodyB.group & 0xffff) &&
       (bodyB.group >> 16) & (bodyA.group & 0xffff)) !== 0
