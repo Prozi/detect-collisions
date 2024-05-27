@@ -382,3 +382,18 @@ export function returnTrue() {
 export function bin2dec(binary: string): number {
   return Number(`0b${binary}`.replace(/\s/g, ""));
 }
+
+/**
+ * create group bits from category and mask
+ *
+ * @param category - category bits
+ * @param mask - mask bits (default: category)
+ */
+export function groupBits(
+  category: string | number,
+  mask: string | number = category,
+) {
+  const c = typeof category === "string" ? bin2dec(category) : category;
+  const m = typeof mask === "string" ? bin2dec(mask) : mask;
+  return (c << 16) | m;
+}
