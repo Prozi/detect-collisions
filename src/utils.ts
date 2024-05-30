@@ -377,10 +377,26 @@ export function returnTrue() {
 }
 
 /**
+ * for groups
+ */
+export function getGroup(group: number): number {
+  return Math.max(0, Math.min(group, 0x7fffffff));
+}
+
+/**
  * binary string to decimal number
  */
 export function bin2dec(binary: string): number {
   return Number(`0b${binary}`.replace(/\s/g, ""));
+}
+
+/**
+ * helper for groupBits()
+ *
+ * @param input - number or binary string
+ */
+export function ensureNumber(input: number | string): number {
+  return typeof input === "number" ? input : bin2dec(input);
 }
 
 /**
@@ -390,10 +406,8 @@ export function bin2dec(binary: string): number {
  * @param mask - mask bits (default: category)
  */
 export function groupBits(
-  category: string | number,
-  mask: string | number = category,
+  category: number | string,
+  mask: number | string = category,
 ) {
-  const c = typeof category === "string" ? bin2dec(category) : category;
-  const m = typeof mask === "string" ? bin2dec(mask) : mask;
-  return (c << 16) | m;
+  return (ensureNumber(category) << 16) | ensureNumber(mask);
 }

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BodyGroup = exports.getGroup = exports.BodyType = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = exports.isSimple = void 0;
+exports.BodyGroup = exports.BodyType = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = exports.isSimple = void 0;
 const rbush_1 = __importDefault(require("rbush"));
 Object.defineProperty(exports, "RBush", { enumerable: true, get: function () { return rbush_1.default; } });
 const sat_1 = require("sat");
@@ -25,14 +25,6 @@ var BodyType;
     BodyType["Line"] = "Line";
     BodyType["Point"] = "Point";
 })(BodyType = exports.BodyType || (exports.BodyType = {}));
-/**
- * for groups
- */
-function getGroup(group) {
-    const limited = Math.max(0, Math.min(group, 0x7FFFFFFF));
-    return (limited << 16) | limited;
-}
-exports.getGroup = getGroup;
 /**
  * for groups
  */

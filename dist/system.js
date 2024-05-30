@@ -95,7 +95,7 @@ class System extends base_system_1.BaseSystem {
         const { bbox: bboxA } = bodyA;
         const { bbox: bboxB } = bodyA;
         // assess the bodies real aabb without padding
-        if (!(0, utils_1.areSameGroup)(bodyA, bodyB) ||
+        if (!(0, utils_1.canInteract)(bodyA, bodyB) ||
             !bboxA ||
             !bboxB ||
             (0, utils_1.notIntersectAABB)(bboxA, bboxB)) {

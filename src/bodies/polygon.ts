@@ -9,7 +9,6 @@ import {
   BodyType,
   DecompPolygon,
   GetAABBAsBox,
-  getGroup,
   PotentialVector,
   SATVector,
   Vector,
@@ -23,6 +22,7 @@ import {
   ensurePolygonPoints,
   ensureVectorPoint,
   extendBody,
+  getGroup,
   mapArrayToVector,
   mapVectorToArray,
 } from "../utils";

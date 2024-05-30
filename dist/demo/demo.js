@@ -2411,7 +2411,7 @@ class Circle extends sat_1.Circle {
         return this._group;
     }
     set group(group) {
-        this._group = (0, model_1.getGroup)(group);
+        this._group = (0, utils_1.getGroup)(group);
     }
     /**
      * update position
@@ -2878,7 +2878,7 @@ class Polygon extends sat_1.Polygon {
         return this._group;
     }
     set group(group) {
-        this._group = (0, model_1.getGroup)(group);
+        this._group = (0, utils_1.getGroup)(group);
     }
     /**
      * update position
@@ -3317,7 +3317,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.BodyGroup = exports.getGroup = exports.BodyType = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = exports.isSimple = void 0;
+exports.BodyGroup = exports.BodyType = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = exports.isSimple = void 0;
 const rbush_1 = __importDefault(__webpack_require__(/*! rbush */ "./node_modules/rbush/rbush.min.js"));
 Object.defineProperty(exports, "RBush", ({ enumerable: true, get: function () { return rbush_1.default; } }));
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
@@ -3339,14 +3339,6 @@ var BodyType;
     BodyType["Line"] = "Line";
     BodyType["Point"] = "Point";
 })(BodyType = exports.BodyType || (exports.BodyType = {}));
-/**
- * for groups
- */
-function getGroup(group) {
-    const limited = Math.max(0, Math.min(group, 0x7FFFFFFF));
-    return (limited << 16) | limited;
-}
-exports.getGroup = getGroup;
 /**
  * for groups
  */
@@ -3550,7 +3542,7 @@ class System extends base_system_1.BaseSystem {
         const { bbox: bboxA } = bodyA;
         const { bbox: bboxB } = bodyA;
         // assess the bodies real aabb without padding
-        if (!(0, utils_1.areSameGroup)(bodyA, bodyB) ||
+        if (!(0, utils_1.canInteract)(bodyA, bodyB) ||
             !bboxA ||
             !bboxB ||
             (0, utils_1.notIntersectAABB)(bboxA, bboxB)) {
@@ -3640,7 +3632,7 @@ exports.System = System;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.bin2dec = exports.returnTrue = exports.cloneResponse = exports.drawBVH = exports.drawPolygon = exports.dashLineTo = exports.getSATTest = exports.getBounceDirection = exports.mapArrayToVector = exports.mapVectorToArray = exports.clonePointsArray = exports.checkAInB = exports.areSameGroup = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
+exports.groupBits = exports.ensureNumber = exports.bin2dec = exports.getGroup = exports.returnTrue = exports.cloneResponse = exports.drawBVH = exports.drawPolygon = exports.dashLineTo = exports.getSATTest = exports.getBounceDirection = exports.mapArrayToVector = exports.mapVectorToArray = exports.clonePointsArray = exports.checkAInB = exports.canInteract = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const intersect_1 = __webpack_require__(/*! ./intersect */ "./src/intersect.ts");
 const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
@@ -3790,11 +3782,11 @@ exports.intersectAABB = intersectAABB;
 /**
  * checks if two bodies can interact (for collision filtering)
  */
-function areSameGroup(bodyA, bodyB) {
+function canInteract(bodyA, bodyB) {
     return (((bodyA.group >> 16) & (bodyB.group & 0xFFFF) &&
         (bodyB.group >> 16) & (bodyA.group & 0xFFFF)) !== 0);
 }
-exports.areSameGroup = areSameGroup;
+exports.canInteract = canInteract;
 /**
  * checks if body a is in body b
  */
@@ -3928,12 +3920,38 @@ function returnTrue() {
 }
 exports.returnTrue = returnTrue;
 /**
+ * for groups
+ */
+function getGroup(group) {
+    return Math.max(0, Math.min(group, 0x7FFFFFFF));
+}
+exports.getGroup = getGroup;
+/**
  * binary string to decimal number
  */
 function bin2dec(binary) {
     return Number(`0b${binary}`.replace(/\s/g, ""));
 }
 exports.bin2dec = bin2dec;
+/**
+ * helper for groupBits()
+ *
+ * @param input - number or binary string
+ */
+function ensureNumber(input) {
+    return typeof input === "number" ? input : bin2dec(input);
+}
+exports.ensureNumber = ensureNumber;
+/**
+ * create group bits from category and mask
+ *
+ * @param category - category bits
+ * @param mask - mask bits (default: category)
+ */
+function groupBits(category, mask = category) {
+    return (ensureNumber(category) << 16) | ensureNumber(mask);
+}
+exports.groupBits = groupBits;
 
 
 /***/ }),
@@ -4049,7 +4067,7 @@ module.exports.height = height;
 
 const { BodyGroup } = __webpack_require__(/*! ../model */ "./src/model.ts");
 const { System } = __webpack_require__(/*! ../system */ "./src/system.ts");
-const { getBounceDirection } = __webpack_require__(/*! ../utils */ "./src/utils.ts");
+const { getBounceDirection, groupBits } = __webpack_require__(/*! ../utils */ "./src/utils.ts");
 const { width, height, loop } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js");
 const seededRandom = (__webpack_require__(/*! random-seed */ "./node_modules/random-seed/index.js").create)("@Prozi").random;
 
@@ -4236,7 +4254,7 @@ class Stress {
     switch (variant) {
       case 0:
         if (this.enableFiltering) {
-          options.group = BodyGroup.Circle;
+          options.group = groupBits(BodyGroup.Circle);
         }
         body = this.physics.createCircle(
           { x, y },
@@ -4251,7 +4269,7 @@ class Stress {
         const width = random(minSize, maxSize);
         const height = random(minSize, maxSize);
         if (this.enableFiltering) {
-          options.group = BodyGroup.Ellipse;
+          options.group = groupBits(BodyGroup.Ellipse);
           console.log();
         }
         body = this.physics.createEllipse({ x, y }, width, height, 2, options);
@@ -4261,7 +4279,7 @@ class Stress {
 
       case 2:
         if (this.enableFiltering) {
-          options.group = BodyGroup.Box;
+          options.group = groupBits(BodyGroup.Box);
         }
         body = this.physics.createBox(
           { x, y },
@@ -4275,7 +4293,7 @@ class Stress {
 
       case 3:
         if (this.enableFiltering) {
-          options.group = BodyGroup.Line;
+          options.group = groupBits(BodyGroup.Line);
         }
         body = this.physics.createLine(
           { x, y },
@@ -4291,7 +4309,7 @@ class Stress {
 
       default:
         if (this.enableFiltering) {
-          options.group = BodyGroup.Polygon;
+          options.group = groupBits(BodyGroup.Polygon);
         }
         body = this.physics.createPolygon(
           { x, y },

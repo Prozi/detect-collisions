@@ -7,12 +7,17 @@ import {
   BodyOptions,
   BodyProps,
   BodyType,
-  getGroup,
   PotentialVector,
   SATVector,
   Vector,
 } from "../model";
-import { dashLineTo, drawBVH, ensureVectorPoint, extendBody } from "../utils";
+import {
+  dashLineTo,
+  drawBVH,
+  ensureVectorPoint,
+  extendBody,
+  getGroup,
+} from "../utils";
 
 /**
  * collider - circle

@@ -3110,7 +3110,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             return this._group;
           }
           set group(group) {
-            this._group = (0, model_1.getGroup)(group);
+            this._group = (0, utils_1.getGroup)(group);
           }
           /**
            * update position
@@ -3633,7 +3633,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             return this._group;
           }
           set group(group) {
-            this._group = (0, model_1.getGroup)(group);
+            this._group = (0, utils_1.getGroup)(group);
           }
           /**
            * update position
@@ -4161,7 +4161,6 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           };
         Object.defineProperty(exports, "__esModule", { value: true });
         exports.BodyGroup =
-          exports.getGroup =
           exports.BodyType =
           exports.SATCircle =
           exports.SATPolygon =
@@ -4227,14 +4226,6 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           BodyType["Line"] = "Line";
           BodyType["Point"] = "Point";
         })((BodyType = exports.BodyType || (exports.BodyType = {})));
-        /**
-         * for groups
-         */
-        function getGroup(group) {
-          const limited = Math.max(0, Math.min(group, 0x7fffffff));
-          return (limited << 16) | limited;
-        }
-        exports.getGroup = getGroup;
         /**
          * for groups
          */
@@ -4460,7 +4451,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             const { bbox: bboxB } = bodyA;
             // assess the bodies real aabb without padding
             if (
-              !(0, utils_1.areSameGroup)(bodyA, bodyB) ||
+              !(0, utils_1.canInteract)(bodyA, bodyB) ||
               !bboxA ||
               !bboxB ||
               (0, utils_1.notIntersectAABB)(bboxA, bboxB)
@@ -4550,7 +4541,10 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         "use strict";
 
         Object.defineProperty(exports, "__esModule", { value: true });
-        exports.bin2dec =
+        exports.groupBits =
+          exports.ensureNumber =
+          exports.bin2dec =
+          exports.getGroup =
           exports.returnTrue =
           exports.cloneResponse =
           exports.drawBVH =
@@ -4562,7 +4556,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           exports.mapVectorToArray =
           exports.clonePointsArray =
           exports.checkAInB =
-          exports.areSameGroup =
+          exports.canInteract =
           exports.intersectAABB =
           exports.notIntersectAABB =
           exports.bodyMoved =
@@ -4750,13 +4744,13 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         /**
          * checks if two bodies can interact (for collision filtering)
          */
-        function areSameGroup(bodyA, bodyB) {
+        function canInteract(bodyA, bodyB) {
           return (
             ((bodyA.group >> 16) & (bodyB.group & 0xffff) &&
               (bodyB.group >> 16) & (bodyA.group & 0xffff)) !== 0
           );
         }
-        exports.areSameGroup = areSameGroup;
+        exports.canInteract = canInteract;
         /**
          * checks if body a is in body b
          */
@@ -4901,12 +4895,38 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         }
         exports.returnTrue = returnTrue;
         /**
+         * for groups
+         */
+        function getGroup(group) {
+          return Math.max(0, Math.min(group, 0x7fffffff));
+        }
+        exports.getGroup = getGroup;
+        /**
          * binary string to decimal number
          */
         function bin2dec(binary) {
           return Number(`0b${binary}`.replace(/\s/g, ""));
         }
         exports.bin2dec = bin2dec;
+        /**
+         * helper for groupBits()
+         *
+         * @param input - number or binary string
+         */
+        function ensureNumber(input) {
+          return typeof input === "number" ? input : bin2dec(input);
+        }
+        exports.ensureNumber = ensureNumber;
+        /**
+         * create group bits from category and mask
+         *
+         * @param category - category bits
+         * @param mask - mask bits (default: category)
+         */
+        function groupBits(category, mask = category) {
+          return (ensureNumber(category) << 16) | ensureNumber(mask);
+        }
+        exports.groupBits = groupBits;
 
         /***/
       },
@@ -5024,7 +5044,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         const { System } = __webpack_require__(
           /*! ../system */ "./src/system.ts",
         );
-        const { getBounceDirection } = __webpack_require__(
+        const { getBounceDirection, groupBits } = __webpack_require__(
           /*! ../utils */ "./src/utils.ts",
         );
         const { width, height, loop } = __webpack_require__(
@@ -5225,7 +5245,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             switch (variant) {
               case 0:
                 if (this.enableFiltering) {
-                  options.group = BodyGroup.Circle;
+                  options.group = groupBits(BodyGroup.Circle);
                 }
                 body = this.physics.createCircle(
                   { x, y },
@@ -5240,7 +5260,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
                 const width = random(minSize, maxSize);
                 const height = random(minSize, maxSize);
                 if (this.enableFiltering) {
-                  options.group = BodyGroup.Ellipse;
+                  options.group = groupBits(BodyGroup.Ellipse);
                   console.log();
                 }
                 body = this.physics.createEllipse(
@@ -5256,7 +5276,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
 
               case 2:
                 if (this.enableFiltering) {
-                  options.group = BodyGroup.Box;
+                  options.group = groupBits(BodyGroup.Box);
                 }
                 body = this.physics.createBox(
                   { x, y },
@@ -5270,7 +5290,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
 
               case 3:
                 if (this.enableFiltering) {
-                  options.group = BodyGroup.Line;
+                  options.group = groupBits(BodyGroup.Line);
                 }
                 body = this.physics.createLine(
                   { x, y },
@@ -5286,7 +5306,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
 
               default:
                 if (this.enableFiltering) {
-                  options.group = BodyGroup.Polygon;
+                  options.group = groupBits(BodyGroup.Polygon);
                 }
                 body = this.physics.createPolygon(
                   { x, y },

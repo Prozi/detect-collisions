@@ -56,7 +56,7 @@ export declare function intersectAABB(bodyA: BBox, bodyB: BBox): boolean;
 /**
  * checks if two bodies can interact (for collision filtering)
  */
-export declare function areSameGroup(bodyA: Body, bodyB: Body): boolean;
+export declare function canInteract(bodyA: Body, bodyB: Body): boolean;
 /**
  * checks if body a is in body b
  */
@@ -104,6 +104,23 @@ export declare function cloneResponse(response: Response): Response;
  */
 export declare function returnTrue(): boolean;
 /**
+ * for groups
+ */
+export declare function getGroup(group: number): number;
+/**
  * binary string to decimal number
  */
 export declare function bin2dec(binary: string): number;
+/**
+ * helper for groupBits()
+ *
+ * @param input - number or binary string
+ */
+export declare function ensureNumber(input: number | string): number;
+/**
+ * create group bits from category and mask
+ *
+ * @param category - category bits
+ * @param mask - mask bits (default: category)
+ */
+export declare function groupBits(category: number | string, mask?: number | string): number;

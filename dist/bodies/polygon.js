@@ -113,7 +113,7 @@ class Polygon extends sat_1.Polygon {
         return this._group;
     }
     set group(group) {
-        this._group = (0, model_1.getGroup)(group);
+        this._group = (0, utils_1.getGroup)(group);
     }
     /**
      * update position

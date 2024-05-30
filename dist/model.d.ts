@@ -24,10 +24,6 @@ export declare enum BodyType {
 /**
  * for groups
  */
-export declare function getGroup(group: number): number;
-/**
- * for groups
- */
 export declare enum BodyGroup {
     Ellipse = 32,
     Circle = 16,

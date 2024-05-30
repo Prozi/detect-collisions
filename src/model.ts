@@ -39,13 +39,6 @@ export enum BodyType {
 /**
  * for groups
  */
-export function getGroup(group: number): number {
-  return Math.max(0, Math.min(group, 0x7fffffff));
-}
-
-/**
- * for groups
- */
 export enum BodyGroup {
   Ellipse = 0b00100000,
   Circle = 0b00010000,
