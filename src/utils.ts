@@ -211,7 +211,7 @@ export function intersectAABB(bodyA: BBox, bodyB: BBox): boolean {
 /**
  * checks if two bodies can interact (for collision filtering)
  */
-export function areSameGroup(bodyA: Body, bodyB: Body): boolean {
+export function canInteract(bodyA: Body, bodyB: Body): boolean {
   return (
     ((bodyA.group >> 16) & (bodyB.group & 0xffff) &&
       (bodyB.group >> 16) & (bodyA.group & 0xffff)) !== 0
@@ -381,4 +381,19 @@ export function returnTrue() {
  */
 export function bin2dec(binary: string): number {
   return Number(`0b${binary}`.replace(/\s/g, ""));
+}
+
+/**
+ * create group bits from category and mask
+ *
+ * @param category - category bits
+ * @param mask - mask bits (default: category)
+ */
+export function groupBits(
+  category: string | number,
+  mask: string | number = category,
+) {
+  const c = typeof category === "string" ? bin2dec(category) : category;
+  const m = typeof mask === "string" ? bin2dec(mask) : mask;
+  return (c << 16) | m;
 }

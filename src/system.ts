@@ -19,7 +19,7 @@ import {
 } from "./model";
 import { forEach, some } from "./optimized";
 import {
-  areSameGroup,
+  canInteract,
   checkAInB,
   distance,
   getSATTest,
@@ -150,7 +150,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     const { bbox: bboxB } = bodyA;
     // assess the bodies real aabb without padding
     if (
-      !areSameGroup(bodyA, bodyB) ||
+      !canInteract(bodyA, bodyB) ||
       !bboxA ||
       !bboxB ||
       notIntersectAABB(bboxA, bboxB)

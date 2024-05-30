@@ -1,6 +1,6 @@
 const { BodyGroup } = require("../model");
 const { System } = require("../system");
-const { getBounceDirection } = require("../utils");
+const { getBounceDirection, groupBits } = require("../utils");
 const { width, height, loop } = require("./canvas");
 const seededRandom = require("random-seed").create("@Prozi").random;
 
@@ -187,7 +187,7 @@ class Stress {
     switch (variant) {
       case 0:
         if (this.enableFiltering) {
-          options.group = BodyGroup.Circle;
+          options.group = groupBits(BodyGroup.Circle);
         }
         body = this.physics.createCircle(
           { x, y },
@@ -202,7 +202,7 @@ class Stress {
         const width = random(minSize, maxSize);
         const height = random(minSize, maxSize);
         if (this.enableFiltering) {
-          options.group = BodyGroup.Ellipse;
+          options.group = groupBits(BodyGroup.Ellipse);
           console.log();
         }
         body = this.physics.createEllipse({ x, y }, width, height, 2, options);
@@ -212,7 +212,7 @@ class Stress {
 
       case 2:
         if (this.enableFiltering) {
-          options.group = BodyGroup.Box;
+          options.group = groupBits(BodyGroup.Box);
         }
         body = this.physics.createBox(
           { x, y },
@@ -226,7 +226,7 @@ class Stress {
 
       case 3:
         if (this.enableFiltering) {
-          options.group = BodyGroup.Line;
+          options.group = groupBits(BodyGroup.Line);
         }
         body = this.physics.createLine(
           { x, y },
@@ -242,7 +242,7 @@ class Stress {
 
       default:
         if (this.enableFiltering) {
-          options.group = BodyGroup.Polygon;
+          options.group = groupBits(BodyGroup.Polygon);
         }
         body = this.physics.createPolygon(
           { x, y },

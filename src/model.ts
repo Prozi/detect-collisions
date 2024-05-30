@@ -40,9 +40,7 @@ export enum BodyType {
  * for groups
  */
 export function getGroup(group: number): number {
-  const limited = Math.max(0, Math.min(group, 0x7fffffff));
-
-  return (limited << 16) | limited;
+  return Math.max(0, Math.min(group, 0x7fffffff));
 }
 
 /**
