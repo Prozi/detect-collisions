@@ -261,6 +261,10 @@ class Polygon extends sat_1.Polygon {
         (0, optimized_1.forEach)(this.convexPolygons, (polygon) => {
             polygon.pos.x = this.pos.x;
             polygon.pos.y = this.pos.y;
+            if (polygon.angle !== this.angle) {
+                // Must use setAngle to recalculate the points of the Polygon
+                polygon.setAngle(this.angle);
+            }
         });
     }
     /**
@@ -291,6 +295,7 @@ class Polygon extends sat_1.Polygon {
             }
             this.convexPolygons[index].pos.x = this.pos.x;
             this.convexPolygons[index].pos.y = this.pos.y;
+            this.convexPolygons[index].angle = this.angle;
             this.convexPolygons[index].setPoints((0, utils_1.ensurePolygonPoints)((0, optimized_1.map)(points, utils_1.mapArrayToVector)));
         });
         // trim array length

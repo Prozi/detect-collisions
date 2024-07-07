@@ -419,7 +419,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
       polygon.pos.y = this.pos.y;
       if (polygon.angle !== this.angle) {
         // Must use setAngle to recalculate the points of the Polygon
-        polygon.setAngle(this.angle)
+        polygon.setAngle(this.angle);
       }
     });
   }
