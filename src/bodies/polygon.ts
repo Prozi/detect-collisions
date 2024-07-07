@@ -417,6 +417,10 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
     forEach(this.convexPolygons, (polygon: SATPolygon) => {
       polygon.pos.x = this.pos.x;
       polygon.pos.y = this.pos.y;
+      if (polygon.angle !== this.angle) {
+        // Must use setAngle to recalculate the points of the Polygon
+        polygon.setAngle(this.angle)
+      }
     });
   }
 
@@ -458,6 +462,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
 
       this.convexPolygons[index].pos.x = this.pos.x;
       this.convexPolygons[index].pos.y = this.pos.y;
+      this.convexPolygons[index].angle = this.angle;
       this.convexPolygons[index].setPoints(
         ensurePolygonPoints(map(points, mapArrayToVector)),
       );
