@@ -77,12 +77,22 @@ system.insert(box2);
 Manipulate body attributes and update the collision system:
 
 ```ts
-box.setPosition(x, y);
-box.setScale(scaleX, scaleY);
-box.setAngle(angle);
-box.setOffset({ x, y });
-system.update(); // Update the system after manipulation
-box.group = group; // Immediate effect, no system.update needed
+// if omitted updateNow is true
+const updateNow = false;
+
+// teleport
+box.setPosition(x, y, updateNow);
+box.setScale(scaleX, scaleY, updateNow);
+box.setAngle(angle, updateNow);
+box.move(1, updateNow);
+box.setOffset({ x, y }, updateNow);
+console.log(box.dirty); // true
+
+box.updateBody(); // Update the body once, when all manipulations are done
+console.log(box.dirty); // false
+
+box.group = group; // Immediate effect, no body/system update needed
+console.log(box.dirty); // false
 ```
 
 ### Step 5: Collision Detection and Resolution
@@ -90,7 +100,11 @@ box.group = group; // Immediate effect, no system.update needed
 Detect collisions and respond accordingly:
 
 ```ts
-if (system.checkAll()) {
+if (system.checkAll(callback)) {
+  // Do something yourself
+}
+
+if (system.checkOne(body, callback)) {
   // Do something yourself
 }
 

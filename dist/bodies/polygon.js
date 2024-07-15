@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Polygon = exports.isSimple = void 0;
+const model_1 = require("../model");
+const utils_1 = require("../utils");
+const optimized_1 = require("../optimized");
 const poly_decomp_es_1 = require("poly-decomp-es");
 Object.defineProperty(exports, "isSimple", { enumerable: true, get: function () { return poly_decomp_es_1.isSimple; } });
 const sat_1 = require("sat");
-const model_1 = require("../model");
-const optimized_1 = require("../optimized");
-const utils_1 = require("../utils");
 /**
  * collider - polygon
  */
@@ -116,18 +116,25 @@ class Polygon extends sat_1.Polygon {
         this._group = (0, utils_1.getGroup)(group);
     }
     /**
-     * update position
+     * update position BY MOVING FORWARD IN ANGLE DIRECTION
      */
-    setPosition(x, y, update = true) {
+    move(speed = 1, updateNow = true) {
+        (0, utils_1.move)(this, speed, updateNow);
+        return this;
+    }
+    /**
+     * update position BY TELEPORTING
+     */
+    setPosition(x, y, updateNow = true) {
         this.pos.x = x;
         this.pos.y = y;
-        this.markAsDirty(update);
+        this.markAsDirty(updateNow);
         return this;
     }
     /**
      * update scale
      */
-    setScale(x, y = x, update = true) {
+    setScale(x, y = x, updateNow = true) {
         this.scaleVector.x = Math.abs(x);
         this.scaleVector.y = Math.abs(y);
         super.setPoints((0, optimized_1.map)(this.points, (point, index) => {
@@ -135,17 +142,17 @@ class Polygon extends sat_1.Polygon {
             point.y = this.pointsBackup[index].y * this.scaleVector.y;
             return point;
         }));
-        this.markAsDirty(update);
+        this.markAsDirty(updateNow);
         return this;
     }
-    setAngle(angle, update = true) {
+    setAngle(angle, updateNow = true) {
         super.setAngle(angle);
-        this.markAsDirty(update);
+        this.markAsDirty(updateNow);
         return this;
     }
-    setOffset(offset, update = true) {
+    setOffset(offset, updateNow = true) {
         super.setOffset(offset);
-        this.markAsDirty(update);
+        this.markAsDirty(updateNow);
         return this;
     }
     /**
@@ -223,9 +230,9 @@ class Polygon extends sat_1.Polygon {
     /**
      * inner function for after position change update aabb in system and convex inner polygons
      */
-    updateBody(update = this.dirty) {
+    updateBody(updateNow = this.dirty) {
         var _a;
-        if (update) {
+        if (updateNow) {
             this.updateConvexPolygonPositions();
             (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
             this.dirty = false;
@@ -242,8 +249,8 @@ class Polygon extends sat_1.Polygon {
     /**
      * update instantly or mark as dirty
      */
-    markAsDirty(update = false) {
-        if (update) {
+    markAsDirty(updateNow = false) {
+        if (updateNow) {
             this.updateBody(true);
         }
         else {

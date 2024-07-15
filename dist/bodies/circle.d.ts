@@ -1,7 +1,6 @@
-import { BBox } from "rbush";
+import { BBox, BodyGroup, BodyOptions, BodyProps, BodyType, PotentialVector, SATVector, Vector } from "../model";
 import { Circle as SATCircle } from "sat";
 import { System } from "../system";
-import { BodyGroup, BodyOptions, BodyProps, BodyType, PotentialVector, SATVector, Vector } from "../model";
 /**
  * collider - circle
  */
@@ -121,21 +120,25 @@ export declare class Circle extends SATCircle implements BBox, BodyProps {
     get group(): number;
     set group(group: number);
     /**
-     * update position
+     * update position BY MOVING FORWARD IN ANGLE DIRECTION
      */
-    setPosition(x: number, y: number, update?: boolean): Circle;
+    move(speed?: number, updateNow?: boolean): Circle;
+    /**
+     * update position BY TELEPORTING
+     */
+    setPosition(x: number, y: number, updateNow?: boolean): Circle;
     /**
      * update scale
      */
-    setScale(scaleX: number, _scaleY?: number, update?: boolean): Circle;
+    setScale(scaleX: number, _scaleY?: number, updateNow?: boolean): Circle;
     /**
      * set rotation
      */
-    setAngle(angle: number, update?: boolean): Circle;
+    setAngle(angle: number, updateNow?: boolean): Circle;
     /**
      * set offset from center
      */
-    setOffset(offset: Vector, update?: boolean): Circle;
+    setOffset(offset: Vector, updateNow?: boolean): Circle;
     /**
      * get body bounding box, without padding
      */
@@ -151,11 +154,11 @@ export declare class Circle extends SATCircle implements BBox, BodyProps {
     /**
      * inner function for after position change update aabb in system
      */
-    updateBody(update?: boolean): void;
+    updateBody(updateNow?: boolean): void;
     /**
      * update instantly or mark as dirty
      */
-    protected markAsDirty(update?: boolean): void;
+    protected markAsDirty(updateNow?: boolean): void;
     /**
      * internal for getting offset with applied angle
      */

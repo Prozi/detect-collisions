@@ -1,5 +1,3 @@
-require("pixi-shim");
-
 const expectToBeNear = (value, check, tolerance = 1) => {
   expect(value).toBeGreaterThan(check - tolerance);
   expect(value).toBeLessThan(check + tolerance);

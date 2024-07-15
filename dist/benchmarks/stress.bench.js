@@ -36,7 +36,7 @@ exports.stressBenchmark = void 0;
 /* tslint:disable:no-implicit-dependencies variable-name no-any */
 const tinybench_1 = require("tinybench");
 const stressBenchmark = () => __awaiter(void 0, void 0, void 0, function* () {
-    const { default: Stress } = yield Promise.resolve().then(() => __importStar(require("../demo/stress")));
+    const { default: Stress } = yield Promise.resolve().then(() => __importStar(require("../demo/stress.js")));
     let stressTest;
     const benchmark = new tinybench_1.Bench({
         time: 1000,

@@ -1,7 +1,6 @@
-/// <reference types="sat" />
+import { BBox, Body, CollisionCallback, RaycastHit, Response, Vector } from "./model";
 import { BaseSystem } from "./base-system";
 import { Line } from "./bodies/line";
-import { BBox, Body, CollisionCallback, RBush, RaycastHit, Response, Vector } from "./model";
 /**
  * collision system
  */
@@ -18,7 +17,7 @@ export declare class System<TBody extends Body = Body> extends BaseSystem<TBody>
      * re-insert body into collision tree and update its bbox
      * every body can be part of only one system
      */
-    insert(body: TBody): RBush<TBody>;
+    insert(body: TBody): this;
     /**
      * separate (move away) bodies
      */

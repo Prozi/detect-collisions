@@ -230,7 +230,7 @@ class Tank {
     return this.physics.createPolygon(
       { x: this.scaleX(x), y: this.scaleY(y) },
       scaledPoints,
-      { angle },
+      { angle, isStatic: true },
     );
   }
 

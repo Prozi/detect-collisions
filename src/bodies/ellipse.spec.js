@@ -1,5 +1,3 @@
-require("pixi-shim");
-
 describe("GIVEN Ellipse", () => {
   describe("AND you adjust radiusX", () => {
     it("THEN it gives correct collision results", () => {

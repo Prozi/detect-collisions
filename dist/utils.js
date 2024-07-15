@@ -1,9 +1,38 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.groupBits = exports.ensureNumber = exports.bin2dec = exports.getGroup = exports.returnTrue = exports.cloneResponse = exports.drawBVH = exports.drawPolygon = exports.dashLineTo = exports.getSATTest = exports.getBounceDirection = exports.mapArrayToVector = exports.mapVectorToArray = exports.clonePointsArray = exports.checkAInB = exports.canInteract = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
+exports.RAD2DEG = exports.DEG2RAD = void 0;
+exports.deg2rad = deg2rad;
+exports.rad2deg = rad2deg;
+exports.createEllipse = createEllipse;
+exports.createBox = createBox;
+exports.ensureVectorPoint = ensureVectorPoint;
+exports.ensurePolygonPoints = ensurePolygonPoints;
+exports.distance = distance;
+exports.clockwise = clockwise;
+exports.extendBody = extendBody;
+exports.bodyMoved = bodyMoved;
+exports.notIntersectAABB = notIntersectAABB;
+exports.intersectAABB = intersectAABB;
+exports.canInteract = canInteract;
+exports.checkAInB = checkAInB;
+exports.clonePointsArray = clonePointsArray;
+exports.mapVectorToArray = mapVectorToArray;
+exports.mapArrayToVector = mapArrayToVector;
+exports.getBounceDirection = getBounceDirection;
+exports.getSATTest = getSATTest;
+exports.dashLineTo = dashLineTo;
+exports.drawPolygon = drawPolygon;
+exports.drawBVH = drawBVH;
+exports.cloneResponse = cloneResponse;
+exports.returnTrue = returnTrue;
+exports.getGroup = getGroup;
+exports.bin2dec = bin2dec;
+exports.ensureNumber = ensureNumber;
+exports.groupBits = groupBits;
+exports.move = move;
+const model_1 = require("./model");
 const sat_1 = require("sat");
 const intersect_1 = require("./intersect");
-const model_1 = require("./model");
 const optimized_1 = require("./optimized");
 /* helpers for faster getSATTest() and checkAInB() */
 const testMap = {
@@ -33,14 +62,12 @@ exports.RAD2DEG = 180 / Math.PI;
 function deg2rad(degrees) {
     return degrees * exports.DEG2RAD;
 }
-exports.deg2rad = deg2rad;
 /**
  * convert from radians to degrees
  */
 function rad2deg(radians) {
     return radians * exports.RAD2DEG;
 }
-exports.rad2deg = rad2deg;
 /**
  * creates ellipse-shaped polygon based on params
  */
@@ -56,7 +83,6 @@ function createEllipse(radiusX, radiusY = radiusX, step = 1) {
     }
     return ellipse;
 }
-exports.createEllipse = createEllipse;
 /**
  * creates box shaped polygon points
  */
@@ -68,7 +94,6 @@ function createBox(width, height) {
         new sat_1.Vector(0, height)
     ];
 }
-exports.createBox = createBox;
 /**
  * ensure SATVector type point result
  */
@@ -77,7 +102,6 @@ function ensureVectorPoint(point = {}) {
         ? point
         : new sat_1.Vector(point.x || 0, point.y || 0);
 }
-exports.ensureVectorPoint = ensureVectorPoint;
 /**
  * ensure Vector points (for polygon) in counter-clockwise order
  */
@@ -85,7 +109,6 @@ function ensurePolygonPoints(points = []) {
     const polygonPoints = (0, optimized_1.map)(points, ensureVectorPoint);
     return clockwise(polygonPoints) ? polygonPoints.reverse() : polygonPoints;
 }
-exports.ensurePolygonPoints = ensurePolygonPoints;
 /**
  * get distance between two Vector points
  */
@@ -94,7 +117,6 @@ function distance(bodyA, bodyB) {
     const yDiff = bodyA.y - bodyB.y;
     return Math.hypot(xDiff, yDiff);
 }
-exports.distance = distance;
 /**
  * check [is clockwise] direction of polygon
  */
@@ -107,7 +129,6 @@ function clockwise(points) {
     });
     return sum > 0;
 }
-exports.clockwise = clockwise;
 /**
  * used for all types of bodies in constructor
  */
@@ -121,7 +142,6 @@ function extendBody(body, options = {}) {
     }
     body.setAngle(options.angle || 0);
 }
-exports.extendBody = extendBody;
 /**
  * check if body moved outside of its padding
  */
@@ -129,7 +149,6 @@ function bodyMoved(body) {
     const { bbox, minX, minY, maxX, maxY } = body;
     return (bbox.minX < minX || bbox.minY < minY || bbox.maxX > maxX || bbox.maxY > maxY);
 }
-exports.bodyMoved = bodyMoved;
 /**
  * returns true if two boxes not intersect
  */
@@ -139,14 +158,12 @@ function notIntersectAABB(bodyA, bodyB) {
         bodyB.maxX < bodyA.minX ||
         bodyB.maxY < bodyA.minY);
 }
-exports.notIntersectAABB = notIntersectAABB;
 /**
  * checks if two boxes intersect
  */
 function intersectAABB(bodyA, bodyB) {
     return !notIntersectAABB(bodyA, bodyB);
 }
-exports.intersectAABB = intersectAABB;
 /**
  * checks if two bodies can interact (for collision filtering)
  */
@@ -154,7 +171,6 @@ function canInteract(bodyA, bodyB) {
     return (((bodyA.group >> 16) & (bodyB.group & 0xFFFF) &&
         (bodyB.group >> 16) & (bodyA.group & 0xFFFF)) !== 0);
 }
-exports.canInteract = canInteract;
 /**
  * checks if body a is in body b
  */
@@ -164,28 +180,24 @@ function checkAInB(bodyA, bodyB) {
         : polygonInFunctions;
     return check[bodyB.type](bodyA, bodyB);
 }
-exports.checkAInB = checkAInB;
 /**
  * clone sat vector points array into vector points array
  */
 function clonePointsArray(points) {
     return (0, optimized_1.map)(points, ({ x, y }) => ({ x, y }));
 }
-exports.clonePointsArray = clonePointsArray;
 /**
  * change format from SAT.js to poly-decomp
  */
 function mapVectorToArray({ x, y } = { x: 0, y: 0 }) {
     return [x, y];
 }
-exports.mapVectorToArray = mapVectorToArray;
 /**
  * change format from poly-decomp to SAT.js
  */
 function mapArrayToVector([x, y] = [0, 0]) {
     return { x, y };
 }
-exports.mapArrayToVector = mapArrayToVector;
 /**
  * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
  */
@@ -195,7 +207,6 @@ function getBounceDirection(body, collider) {
     const len = v1.dot(v2.normalize()) * 2;
     return new sat_1.Vector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
 }
-exports.getBounceDirection = getBounceDirection;
 /**
  * returns correct sat.js testing function based on body types
  */
@@ -205,7 +216,6 @@ function getSATTest(bodyA, bodyB) {
         : polygonSATFunctions;
     return check[bodyB.type];
 }
-exports.getSATTest = getSATTest;
 /**
  * draws dashed line on canvas context
  */
@@ -227,7 +237,6 @@ function dashLineTo(context, fromX, fromY, toX, toY, dash = 2, gap = 4) {
         dist -= dash + gap;
     }
 }
-exports.dashLineTo = dashLineTo;
 /**
  * draw polygon
  */
@@ -253,7 +262,6 @@ function drawPolygon(context, { pos, calcPoints }, isTrigger = false) {
         }
     });
 }
-exports.drawPolygon = drawPolygon;
 /**
  * draw body bounding body box
  */
@@ -263,7 +271,6 @@ function drawBVH(context, body) {
         calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY)
     });
 }
-exports.drawBVH = drawBVH;
 /**
  * clone response object returning new response with previous ones values
  */
@@ -279,28 +286,24 @@ function cloneResponse(response) {
     clone.bInA = bInA;
     return clone;
 }
-exports.cloneResponse = cloneResponse;
 /**
  * dummy fn used as default, for optimization
  */
 function returnTrue() {
     return true;
 }
-exports.returnTrue = returnTrue;
 /**
  * for groups
  */
 function getGroup(group) {
     return Math.max(0, Math.min(group, 0x7FFFFFFF));
 }
-exports.getGroup = getGroup;
 /**
  * binary string to decimal number
  */
 function bin2dec(binary) {
     return Number(`0b${binary}`.replace(/\s/g, ""));
 }
-exports.bin2dec = bin2dec;
 /**
  * helper for groupBits()
  *
@@ -309,7 +312,6 @@ exports.bin2dec = bin2dec;
 function ensureNumber(input) {
     return typeof input === "number" ? input : bin2dec(input);
 }
-exports.ensureNumber = ensureNumber;
 /**
  * create group bits from category and mask
  *
@@ -319,4 +321,11 @@ exports.ensureNumber = ensureNumber;
 function groupBits(category, mask = category) {
     return (ensureNumber(category) << 16) | ensureNumber(mask);
 }
-exports.groupBits = groupBits;
+function move(body, speed = 1, updateNow = true) {
+    if (!speed) {
+        return;
+    }
+    const moveX = Math.cos(body.angle) * speed;
+    const moveY = Math.sin(body.angle) * speed;
+    body.setPosition(body.x + moveX, body.y + moveY, updateNow);
+}

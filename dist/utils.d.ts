@@ -1,8 +1,7 @@
-import { Point as DecompPoint } from "poly-decomp-es";
-import { BBox } from "rbush";
+import { BBox, Body, BodyOptions, PotentialVector, SATPolygon, SATTest, Vector } from "./model";
 import { Response, Vector as SATVector } from "sat";
+import { Point as DecompPoint } from "poly-decomp-es";
 import { Polygon } from "./bodies/polygon";
-import { Body, BodyOptions, PotentialVector, SATPolygon, SATTest, Vector } from "./model";
 export declare const DEG2RAD: number;
 export declare const RAD2DEG: number;
 /**
@@ -124,3 +123,4 @@ export declare function ensureNumber(input: number | string): number;
  * @param mask - mask bits (default: category)
  */
 export declare function groupBits(category: number | string, mask?: number | string): number;
+export declare function move(body: Body, speed?: number, updateNow?: boolean): void;

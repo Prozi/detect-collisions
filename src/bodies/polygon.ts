@@ -1,8 +1,5 @@
-import { isSimple, quickDecomp } from "poly-decomp-es";
-import { BBox } from "rbush";
-import { Polygon as SATPolygon } from "sat";
-
 import {
+  BBox,
   BodyGroup,
   BodyOptions,
   BodyProps,
@@ -11,10 +8,8 @@ import {
   GetAABBAsBox,
   PotentialVector,
   SATVector,
-  Vector,
-} from "../model";
-import { forEach, map } from "../optimized";
-import { System } from "../system";
+  Vector
+} from "../model"
 import {
   clonePointsArray,
   drawBVH,
@@ -25,9 +20,15 @@ import {
   getGroup,
   mapArrayToVector,
   mapVectorToArray,
-} from "../utils";
+  move
+} from "../utils"
+import { forEach, map } from "../optimized"
+import { isSimple, quickDecomp } from "poly-decomp-es"
 
-export { isSimple };
+import { Polygon as SATPolygon } from "sat"
+import { System } from "../system"
+
+export { isSimple }
 
 /**
  * collider - polygon
@@ -36,62 +37,62 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   /**
    * minimum x bound of body
    */
-  minX!: number;
+  minX!: number
 
   /**
    * maximum x bound of body
    */
-  maxX!: number;
+  maxX!: number
 
   /**
    * minimum y bound of body
    */
-  minY!: number;
+  minY!: number
 
   /**
    * maximum y bound of body
    */
-  maxY!: number;
+  maxY!: number
 
   /**
    * bounding box cache, without padding
    */
-  bbox!: BBox;
+  bbox!: BBox
 
   /**
    * is it a convex polgyon as opposed to a hollow inside (concave) polygon
    */
-  isConvex!: boolean;
+  isConvex!: boolean
 
   /**
    * optimization for convex polygons
    */
-  convexPolygons!: SATPolygon[];
+  convexPolygons!: SATPolygon[]
 
   /**
    * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
    */
-  padding!: number;
+  padding!: number
 
   /**
    * static bodies don't move but they collide
    */
-  isStatic!: boolean;
+  isStatic!: boolean
 
   /**
    * trigger bodies move but are like ghosts
    */
-  isTrigger!: boolean;
+  isTrigger!: boolean
 
   /**
    * reference to collision system
    */
-  system?: System;
+  system?: System
 
   /**
    * was the polygon modified and needs update in the next checkCollision
    */
-  dirty = false;
+  dirty = false
 
   /**
    * type of body
@@ -101,7 +102,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
     | BodyType.Box
     | BodyType.Point
     | BodyType.Ellipse
-    | BodyType.Line = BodyType.Polygon;
+    | BodyType.Line = BodyType.Polygon
 
   /**
    * faster than type
@@ -111,27 +112,27 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
     | BodyGroup.Box
     | BodyGroup.Point
     | BodyGroup.Ellipse
-    | BodyGroup.Line = BodyGroup.Polygon;
+    | BodyGroup.Line = BodyGroup.Polygon
 
   /**
    * backup of points used for scaling
    */
-  protected pointsBackup!: Vector[];
+  protected pointsBackup!: Vector[]
 
   /**
    * is body centered
    */
-  protected centered = false;
+  protected centered = false
 
   /**
    * group for collision filtering
    */
-  protected _group!: number;
+  protected _group!: number
 
   /**
    * scale Vector of body
    */
-  protected readonly scaleVector: Vector = { x: 1, y: 1 };
+  protected readonly scaleVector: Vector = { x: 1, y: 1 }
 
   /**
    * collider - polygon
@@ -139,15 +140,15 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   constructor(
     position: PotentialVector,
     points: PotentialVector[],
-    options?: BodyOptions,
+    options?: BodyOptions
   ) {
-    super(ensureVectorPoint(position), ensurePolygonPoints(points));
+    super(ensureVectorPoint(position), ensurePolygonPoints(points))
 
     if (!points.length) {
-      throw new Error("No points in polygon");
+      throw new Error("No points in polygon")
     }
 
-    extendBody(this, options);
+    extendBody(this, options)
   }
 
   /**
@@ -155,162 +156,171 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    */
   set isCentered(isCentered: boolean) {
     if (this.centered === isCentered) {
-      return;
+      return
     }
-    const centroid = this.getCentroidWithoutRotation();
+    const centroid = this.getCentroidWithoutRotation()
 
     if (centroid.x || centroid.y) {
-      const x = centroid.x * (isCentered ? 1 : -1);
-      const y = centroid.y * (isCentered ? 1 : -1);
+      const x = centroid.x * (isCentered ? 1 : -1)
+      const y = centroid.y * (isCentered ? 1 : -1)
 
-      this.translate(-x, -y);
+      this.translate(-x, -y)
     }
 
-    this.centered = isCentered;
+    this.centered = isCentered
   }
 
   /**
    * is polygon centered?
    */
   get isCentered(): boolean {
-    return this.centered;
+    return this.centered
   }
 
   get x(): number {
-    return this.pos.x;
+    return this.pos.x
   }
 
   /**
    * updating this.pos.x by this.x = x updates AABB
    */
   set x(x: number) {
-    this.pos.x = x;
-    this.markAsDirty();
+    this.pos.x = x
+    this.markAsDirty()
   }
 
   get y(): number {
-    return this.pos.y;
+    return this.pos.y
   }
 
   /**
    * updating this.pos.y by this.y = y updates AABB
    */
   set y(y: number) {
-    this.pos.y = y;
-    this.markAsDirty();
+    this.pos.y = y
+    this.markAsDirty()
   }
 
   /**
    * allow exact getting of scale x - use setScale(x, y) to set
    */
   get scaleX(): number {
-    return this.scaleVector.x;
+    return this.scaleVector.x
   }
 
   /**
    * allow exact getting of scale y - use setScale(x, y) to set
    */
   get scaleY(): number {
-    return this.scaleVector.y;
+    return this.scaleVector.y
   }
 
   /**
    * allow approx getting of scale
    */
   get scale(): number {
-    return (this.scaleVector.x + this.scaleVector.y) / 2;
+    return (this.scaleVector.x + this.scaleVector.y) / 2
   }
 
   /**
    * allow easier setting of scale
    */
   set scale(scale: number) {
-    this.setScale(scale);
+    this.setScale(scale)
   }
 
   /**
    * group for collision filtering
    */
   get group(): number {
-    return this._group;
+    return this._group
   }
 
   set group(group: number) {
-    this._group = getGroup(group);
+    this._group = getGroup(group)
   }
 
   /**
-   * update position
+   * update position BY MOVING FORWARD IN ANGLE DIRECTION
    */
-  setPosition(x: number, y: number, update = true): SATPolygon {
-    this.pos.x = x;
-    this.pos.y = y;
-    this.markAsDirty(update);
+  move(speed = 1, updateNow = true): SATPolygon {
+    move(this, speed, updateNow)
 
-    return this;
+    return this
+  }
+
+  /**
+   * update position BY TELEPORTING
+   */
+  setPosition(x: number, y: number, updateNow = true): SATPolygon {
+    this.pos.x = x
+    this.pos.y = y
+    this.markAsDirty(updateNow)
+
+    return this
   }
 
   /**
    * update scale
    */
-  setScale(x: number, y: number = x, update = true): SATPolygon {
-    this.scaleVector.x = Math.abs(x);
-    this.scaleVector.y = Math.abs(y);
+  setScale(x: number, y: number = x, updateNow = true): SATPolygon {
+    this.scaleVector.x = Math.abs(x)
+    this.scaleVector.y = Math.abs(y)
 
     super.setPoints(
       map(this.points, (point: SATVector, index: number) => {
-        point.x = this.pointsBackup[index].x * this.scaleVector.x;
-        point.y = this.pointsBackup[index].y * this.scaleVector.y;
+        point.x = this.pointsBackup[index].x * this.scaleVector.x
+        point.y = this.pointsBackup[index].y * this.scaleVector.y
 
-        return point;
-      }),
-    );
+        return point
+      })
+    )
 
-    this.markAsDirty(update);
+    this.markAsDirty(updateNow)
 
-    return this;
+    return this
   }
 
-  setAngle(angle: number, update = true): SATPolygon {
-    super.setAngle(angle);
-    this.markAsDirty(update);
+  setAngle(angle: number, updateNow = true): SATPolygon {
+    super.setAngle(angle)
+    this.markAsDirty(updateNow)
 
-    return this;
+    return this
   }
 
-  setOffset(offset: SATVector, update = true): SATPolygon {
-    super.setOffset(offset);
-    this.markAsDirty(update);
+  setOffset(offset: SATVector, updateNow = true): SATPolygon {
+    super.setOffset(offset)
+    this.markAsDirty(updateNow)
 
-    return this;
+    return this
   }
 
   /**
    * get body bounding box, without padding
    */
   getAABBAsBBox(): BBox {
-    const { pos, w, h } = (this as unknown as GetAABBAsBox).getAABBAsBox();
+    const { pos, w, h } = (this as unknown as GetAABBAsBox).getAABBAsBox()
 
     return {
       minX: pos.x,
       minY: pos.y,
       maxX: pos.x + w,
-      maxY: pos.y + h,
-    };
+      maxY: pos.y + h
+    }
   }
 
   /**
    * Draws exact collider on canvas context
    */
   draw(context: CanvasRenderingContext2D) {
-    drawPolygon(context, this, this.isTrigger);
+    drawPolygon(context, this, this.isTrigger)
   }
 
   /**
    * Draws Bounding Box on canvas context
    */
   drawBVH(context: CanvasRenderingContext2D) {
-    drawBVH(context, this);
+    drawBVH(context, this)
   }
 
   /**
@@ -318,90 +328,90 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    */
   getCentroidWithoutRotation(): Vector {
     // keep angle copy
-    const angle = this.angle;
+    const angle = this.angle
 
     if (angle) {
       // reset angle for get centroid
-      this.setAngle(0);
+      this.setAngle(0)
       // get centroid
-      const centroid = this.getCentroid();
+      const centroid = this.getCentroid()
       // revert angle change
-      this.setAngle(angle);
+      this.setAngle(angle)
 
-      return centroid;
+      return centroid
     }
 
-    return this.getCentroid();
+    return this.getCentroid()
   }
 
   /**
    * sets polygon points to new array of vectors
    */
   setPoints(points: SATVector[]): Polygon {
-    super.setPoints(points);
-    this.updateIsConvex();
-    this.pointsBackup = clonePointsArray(points);
+    super.setPoints(points)
+    this.updateIsConvex()
+    this.pointsBackup = clonePointsArray(points)
 
-    return this;
+    return this
   }
 
   /**
    * translates polygon points in x, y direction
    */
   translate(x: number, y: number): Polygon {
-    super.translate(x, y);
-    this.pointsBackup = clonePointsArray(this.points);
+    super.translate(x, y)
+    this.pointsBackup = clonePointsArray(this.points)
 
-    return this;
+    return this
   }
 
   /**
    * rotates polygon points by angle, in radians
    */
   rotate(angle: number): Polygon {
-    super.rotate(angle);
-    this.pointsBackup = clonePointsArray(this.points);
+    super.rotate(angle)
+    this.pointsBackup = clonePointsArray(this.points)
 
-    return this;
+    return this
   }
 
   /**
    * if true, polygon is not an invalid, self-crossing polygon
    */
   isSimple(): boolean {
-    return isSimple(this.calcPoints.map(mapVectorToArray));
+    return isSimple(this.calcPoints.map(mapVectorToArray))
   }
 
   /**
    * inner function for after position change update aabb in system and convex inner polygons
    */
-  updateBody(update = this.dirty): void {
-    if (update) {
-      this.updateConvexPolygonPositions();
-      this.system?.insert(this);
-      this.dirty = false;
+  updateBody(updateNow = this.dirty): void {
+    if (updateNow) {
+      this.updateConvexPolygonPositions()
+      this.system?.insert(this)
+      this.dirty = false
     }
   }
 
   protected retranslate(isCentered = this.isCentered): void {
-    const centroid = this.getCentroidWithoutRotation();
+    const centroid = this.getCentroidWithoutRotation()
 
     if (centroid.x || centroid.y) {
-      const x = centroid.x * (isCentered ? 1 : -1);
-      const y = centroid.y * (isCentered ? 1 : -1);
+      const x = centroid.x * (isCentered ? 1 : -1)
+      const y = centroid.y * (isCentered ? 1 : -1)
 
-      this.translate(-x, -y);
+      this.translate(-x, -y)
     }
   }
 
   /**
    * update instantly or mark as dirty
    */
-  protected markAsDirty(update = false): void {
-    if (update) {
-      this.updateBody(true);
+  protected markAsDirty(updateNow = false): void {
+    if (updateNow) {
+      this.updateBody(true)
     } else {
-      this.dirty = true;
+      this.dirty = true
     }
   }
 
@@ -411,17 +421,17 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    */
   protected updateConvexPolygonPositions() {
     if (this.isConvex || !this.convexPolygons) {
-      return;
+      return
     }
 
     forEach(this.convexPolygons, (polygon: SATPolygon) => {
-      polygon.pos.x = this.pos.x;
-      polygon.pos.y = this.pos.y;
+      polygon.pos.x = this.pos.x
+      polygon.pos.y = this.pos.y
       if (polygon.angle !== this.angle) {
         // Must use setAngle to recalculate the points of the Polygon
-        polygon.setAngle(this.angle);
+        polygon.setAngle(this.angle)
       }
-    });
+    })
   }
 
   /**
@@ -432,44 +442,44 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
       (this.typeGroup && this.typeGroup !== BodyGroup.Polygon) ||
       this.points.length < 4
     ) {
-      return [];
+      return []
     }
 
-    const points = map(this.calcPoints, mapVectorToArray);
+    const points = map(this.calcPoints, mapVectorToArray)
 
-    return quickDecomp(points);
+    return quickDecomp(points)
   }
 
   /**
    * updates convex polygons cache in body
    */
   protected updateConvexPolygons(
-    convex: DecompPolygon[] = this.getConvex(),
+    convex: DecompPolygon[] = this.getConvex()
   ): void {
     if (this.isConvex) {
-      return;
+      return
     }
 
     if (!this.convexPolygons) {
-      this.convexPolygons = [];
+      this.convexPolygons = []
     }
 
     forEach(convex, (points: DecompPolygon, index: number) => {
       // lazy create
       if (!this.convexPolygons[index]) {
-        this.convexPolygons[index] = new SATPolygon();
+        this.convexPolygons[index] = new SATPolygon()
       }
 
-      this.convexPolygons[index].pos.x = this.pos.x;
-      this.convexPolygons[index].pos.y = this.pos.y;
-      this.convexPolygons[index].angle = this.angle;
+      this.convexPolygons[index].pos.x = this.pos.x
+      this.convexPolygons[index].pos.y = this.pos.y
+      this.convexPolygons[index].angle = this.angle
       this.convexPolygons[index].setPoints(
-        ensurePolygonPoints(map(points, mapArrayToVector)),
-      );
-    });
+        ensurePolygonPoints(map(points, mapArrayToVector))
+      )
+    })
 
     // trim array length
-    this.convexPolygons.length = convex.length;
+    this.convexPolygons.length = convex.length
   }
 
   /**
@@ -477,9 +487,9 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    */
   protected updateIsConvex(): void {
     // all other types other than polygon are always convex
-    const convex = this.getConvex();
+    const convex = this.getConvex()
     // everything with empty array or one element array
-    this.isConvex = convex.length <= 1;
-    this.updateConvexPolygons(convex);
+    this.isConvex = convex.length <= 1
+    this.updateConvexPolygons(convex)
   }
 }

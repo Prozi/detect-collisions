@@ -1,7 +1,6 @@
+import { BBox, BodyGroup, BodyOptions, BodyProps, BodyType, DecompPolygon, PotentialVector, SATVector, Vector } from "../model";
 import { isSimple } from "poly-decomp-es";
-import { BBox } from "rbush";
 import { Polygon as SATPolygon } from "sat";
-import { BodyGroup, BodyOptions, BodyProps, BodyType, DecompPolygon, PotentialVector, SATVector, Vector } from "../model";
 import { System } from "../system";
 export { isSimple };
 /**
@@ -124,15 +123,19 @@ export declare class Polygon extends SATPolygon implements BBox, BodyProps {
     get group(): number;
     set group(group: number);
     /**
-     * update position
+     * update position BY MOVING FORWARD IN ANGLE DIRECTION
      */
-    setPosition(x: number, y: number, update?: boolean): SATPolygon;
+    move(speed?: number, updateNow?: boolean): SATPolygon;
+    /**
+     * update position BY TELEPORTING
+     */
+    setPosition(x: number, y: number, updateNow?: boolean): SATPolygon;
     /**
      * update scale
      */
-    setScale(x: number, y?: number, update?: boolean): SATPolygon;
-    setAngle(angle: number, update?: boolean): SATPolygon;
-    setOffset(offset: SATVector, update?: boolean): SATPolygon;
+    setScale(x: number, y?: number, updateNow?: boolean): SATPolygon;
+    setAngle(angle: number, updateNow?: boolean): SATPolygon;
+    setOffset(offset: SATVector, updateNow?: boolean): SATPolygon;
     /**
      * get body bounding box, without padding
      */
@@ -168,12 +171,12 @@ export declare class Polygon extends SATPolygon implements BBox, BodyProps {
     /**
      * inner function for after position change update aabb in system and convex inner polygons
      */
-    updateBody(update?: boolean): void;
+    updateBody(updateNow?: boolean): void;
     protected retranslate(isCentered?: boolean): void;
     /**
      * update instantly or mark as dirty
      */
-    protected markAsDirty(update?: boolean): void;
+    protected markAsDirty(updateNow?: boolean): void;
     /**
      * update the position of the decomposed convex polygons (if any), called
      * after the position of the body has changed

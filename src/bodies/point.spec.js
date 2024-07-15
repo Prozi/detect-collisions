@@ -1,5 +1,3 @@
-require("pixi-shim");
-
 describe("GIVEN Point", () => {
   it("THEN without constructor values, initializes with (0, 0)", () => {
     const { Point } = require("../../src");

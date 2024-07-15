@@ -1,5 +1,3 @@
-require("pixi-shim");
-
 describe("GIVEN Polygon", () => {
   it("THEN you need at least one point to create", () => {
     const { Polygon } = require("../../src");

@@ -1,5 +1,3 @@
-require("pixi-shim");
-
 describe("GIVEN Circle", () => {
   describe("AND you adjust radius", () => {
     it("THEN it gives correct collision results", () => {

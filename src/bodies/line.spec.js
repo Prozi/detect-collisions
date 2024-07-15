@@ -1,5 +1,3 @@
-require("pixi-shim");
-
 describe("GIVEN Line", () => {
   it("THEN without constructor values it throws", () => {
     const { Line } = require("../../src");

@@ -1,10 +1,10 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./node_modules/.pnpm/json-stringify-safe@5.0.1/node_modules/json-stringify-safe/stringify.js":
-/*!****************************************************************************************************!*\
-  !*** ./node_modules/.pnpm/json-stringify-safe@5.0.1/node_modules/json-stringify-safe/stringify.js ***!
-  \****************************************************************************************************/
+/***/ "./node_modules/json-stringify-safe/stringify.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/json-stringify-safe/stringify.js ***!
+  \*******************************************************/
 /***/ ((module, exports) => {
 
 exports = module.exports = stringify
@@ -38,10 +38,10 @@ function serializer(replacer, cycleReplacer) {
 
 /***/ }),
 
-/***/ "./node_modules/.pnpm/poly-decomp-es@0.4.2/node_modules/poly-decomp-es/dist/poly-decomp-es.js":
-/*!****************************************************************************************************!*\
-  !*** ./node_modules/.pnpm/poly-decomp-es@0.4.2/node_modules/poly-decomp-es/dist/poly-decomp-es.js ***!
-  \****************************************************************************************************/
+/***/ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js":
+/*!************************************************************!*\
+  !*** ./node_modules/poly-decomp-es/dist/poly-decomp-es.js ***!
+  \************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -694,10 +694,79 @@ function removeDuplicatePoints(polygon, precision) {
 
 /***/ }),
 
-/***/ "./node_modules/.pnpm/random-seed@0.3.0/node_modules/random-seed/index.js":
-/*!********************************************************************************!*\
-  !*** ./node_modules/.pnpm/random-seed@0.3.0/node_modules/random-seed/index.js ***!
-  \********************************************************************************/
+/***/ "./node_modules/quickselect/index.js":
+/*!*******************************************!*\
+  !*** ./node_modules/quickselect/index.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ quickselect)
+/* harmony export */ });
+
+function quickselect(arr, k, left, right, compare) {
+    quickselectStep(arr, k, left || 0, right || (arr.length - 1), compare || defaultCompare);
+}
+
+function quickselectStep(arr, k, left, right, compare) {
+
+    while (right > left) {
+        if (right - left > 600) {
+            var n = right - left + 1;
+            var m = k - left + 1;
+            var z = Math.log(n);
+            var s = 0.5 * Math.exp(2 * z / 3);
+            var sd = 0.5 * Math.sqrt(z * s * (n - s) / n) * (m - n / 2 < 0 ? -1 : 1);
+            var newLeft = Math.max(left, Math.floor(k - m * s / n + sd));
+            var newRight = Math.min(right, Math.floor(k + (n - m) * s / n + sd));
+            quickselectStep(arr, k, newLeft, newRight, compare);
+        }
+
+        var t = arr[k];
+        var i = left;
+        var j = right;
+
+        swap(arr, left, k);
+        if (compare(arr[right], t) > 0) swap(arr, left, right);
+
+        while (i < j) {
+            swap(arr, i, j);
+            i++;
+            j--;
+            while (compare(arr[i], t) < 0) i++;
+            while (compare(arr[j], t) > 0) j--;
+        }
+
+        if (compare(arr[left], t) === 0) swap(arr, left, j);
+        else {
+            j++;
+            swap(arr, j, right);
+        }
+
+        if (j <= k) left = j + 1;
+        if (k <= j) right = j - 1;
+    }
+}
+
+function swap(arr, i, j) {
+    var tmp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = tmp;
+}
+
+function defaultCompare(a, b) {
+    return a < b ? -1 : a > b ? 1 : 0;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/random-seed/index.js":
+/*!*******************************************!*\
+  !*** ./node_modules/random-seed/index.js ***!
+  \*******************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
 "use strict";
@@ -755,7 +824,7 @@ function removeDuplicatePoints(polygon, precision) {
 	1460910 and 1768863. (We use the largest one that's < 2^21)
 	============================================================================ */
 
-var stringify = __webpack_require__(/*! json-stringify-safe */ "./node_modules/.pnpm/json-stringify-safe@5.0.1/node_modules/json-stringify-safe/stringify.js");
+var stringify = __webpack_require__(/*! json-stringify-safe */ "./node_modules/json-stringify-safe/stringify.js");
 
 /*	============================================================================
 This is based upon Johannes Baagoe's carefully designed and efficient hash
@@ -973,21 +1042,10 @@ module.exports = uheprng;
 
 /***/ }),
 
-/***/ "./node_modules/.pnpm/rbush@3.0.1/node_modules/rbush/rbush.min.js":
-/*!************************************************************************!*\
-  !*** ./node_modules/.pnpm/rbush@3.0.1/node_modules/rbush/rbush.min.js ***!
-  \************************************************************************/
-/***/ (function(module) {
-
-!function(t,i){ true?module.exports=i():0}(this,function(){"use strict";function t(t,r,e,a,h){!function t(n,r,e,a,h){for(;a>e;){if(a-e>600){var o=a-e+1,s=r-e+1,l=Math.log(o),f=.5*Math.exp(2*l/3),u=.5*Math.sqrt(l*f*(o-f)/o)*(s-o/2<0?-1:1),m=Math.max(e,Math.floor(r-s*f/o+u)),c=Math.min(a,Math.floor(r+(o-s)*f/o+u));t(n,r,m,c,h)}var p=n[r],d=e,x=a;for(i(n,e,r),h(n[a],p)>0&&i(n,e,a);d<x;){for(i(n,d,x),d++,x--;h(n[d],p)<0;)d++;for(;h(n[x],p)>0;)x--}0===h(n[e],p)?i(n,e,x):i(n,++x,a),x<=r&&(e=x+1),r<=x&&(a=x-1)}}(t,r,e||0,a||t.length-1,h||n)}function i(t,i,n){var r=t[i];t[i]=t[n],t[n]=r}function n(t,i){return t<i?-1:t>i?1:0}var r=function(t){void 0===t&&(t=9),this._maxEntries=Math.max(4,t),this._minEntries=Math.max(2,Math.ceil(.4*this._maxEntries)),this.clear()};function e(t,i,n){if(!n)return i.indexOf(t);for(var r=0;r<i.length;r++)if(n(t,i[r]))return r;return-1}function a(t,i){h(t,0,t.children.length,i,t)}function h(t,i,n,r,e){e||(e=p(null)),e.minX=1/0,e.minY=1/0,e.maxX=-1/0,e.maxY=-1/0;for(var a=i;a<n;a++){var h=t.children[a];o(e,t.leaf?r(h):h)}return e}function o(t,i){return t.minX=Math.min(t.minX,i.minX),t.minY=Math.min(t.minY,i.minY),t.maxX=Math.max(t.maxX,i.maxX),t.maxY=Math.max(t.maxY,i.maxY),t}function s(t,i){return t.minX-i.minX}function l(t,i){return t.minY-i.minY}function f(t){return(t.maxX-t.minX)*(t.maxY-t.minY)}function u(t){return t.maxX-t.minX+(t.maxY-t.minY)}function m(t,i){return t.minX<=i.minX&&t.minY<=i.minY&&i.maxX<=t.maxX&&i.maxY<=t.maxY}function c(t,i){return i.minX<=t.maxX&&i.minY<=t.maxY&&i.maxX>=t.minX&&i.maxY>=t.minY}function p(t){return{children:t,height:1,leaf:!0,minX:1/0,minY:1/0,maxX:-1/0,maxY:-1/0}}function d(i,n,r,e,a){for(var h=[n,r];h.length;)if(!((r=h.pop())-(n=h.pop())<=e)){var o=n+Math.ceil((r-n)/e/2)*e;t(i,o,n,r,a),h.push(n,o,o,r)}}return r.prototype.all=function(){return this._all(this.data,[])},r.prototype.search=function(t){var i=this.data,n=[];if(!c(t,i))return n;for(var r=this.toBBox,e=[];i;){for(var a=0;a<i.children.length;a++){var h=i.children[a],o=i.leaf?r(h):h;c(t,o)&&(i.leaf?n.push(h):m(t,o)?this._all(h,n):e.push(h))}i=e.pop()}return n},r.prototype.collides=function(t){var i=this.data;if(!c(t,i))return!1;for(var n=[];i;){for(var r=0;r<i.children.length;r++){var e=i.children[r],a=i.leaf?this.toBBox(e):e;if(c(t,a)){if(i.leaf||m(t,a))return!0;n.push(e)}}i=n.pop()}return!1},r.prototype.load=function(t){if(!t||!t.length)return this;if(t.length<this._minEntries){for(var i=0;i<t.length;i++)this.insert(t[i]);return this}var n=this._build(t.slice(),0,t.length-1,0);if(this.data.children.length)if(this.data.height===n.height)this._splitRoot(this.data,n);else{if(this.data.height<n.height){var r=this.data;this.data=n,n=r}this._insert(n,this.data.height-n.height-1,!0)}else this.data=n;return this},r.prototype.insert=function(t){return t&&this._insert(t,this.data.height-1),this},r.prototype.clear=function(){return this.data=p([]),this},r.prototype.remove=function(t,i){if(!t)return this;for(var n,r,a,h=this.data,o=this.toBBox(t),s=[],l=[];h||s.length;){if(h||(h=s.pop(),r=s[s.length-1],n=l.pop(),a=!0),h.leaf){var f=e(t,h.children,i);if(-1!==f)return h.children.splice(f,1),s.push(h),this._condense(s),this}a||h.leaf||!m(h,o)?r?(n++,h=r.children[n],a=!1):h=null:(s.push(h),l.push(n),n=0,r=h,h=h.children[0])}return this},r.prototype.toBBox=function(t){return t},r.prototype.compareMinX=function(t,i){return t.minX-i.minX},r.prototype.compareMinY=function(t,i){return t.minY-i.minY},r.prototype.toJSON=function(){return this.data},r.prototype.fromJSON=function(t){return this.data=t,this},r.prototype._all=function(t,i){for(var n=[];t;)t.leaf?i.push.apply(i,t.children):n.push.apply(n,t.children),t=n.pop();return i},r.prototype._build=function(t,i,n,r){var e,h=n-i+1,o=this._maxEntries;if(h<=o)return a(e=p(t.slice(i,n+1)),this.toBBox),e;r||(r=Math.ceil(Math.log(h)/Math.log(o)),o=Math.ceil(h/Math.pow(o,r-1))),(e=p([])).leaf=!1,e.height=r;var s=Math.ceil(h/o),l=s*Math.ceil(Math.sqrt(o));d(t,i,n,l,this.compareMinX);for(var f=i;f<=n;f+=l){var u=Math.min(f+l-1,n);d(t,f,u,s,this.compareMinY);for(var m=f;m<=u;m+=s){var c=Math.min(m+s-1,u);e.children.push(this._build(t,m,c,r-1))}}return a(e,this.toBBox),e},r.prototype._chooseSubtree=function(t,i,n,r){for(;r.push(i),!i.leaf&&r.length-1!==n;){for(var e=1/0,a=1/0,h=void 0,o=0;o<i.children.length;o++){var s=i.children[o],l=f(s),u=(m=t,c=s,(Math.max(c.maxX,m.maxX)-Math.min(c.minX,m.minX))*(Math.max(c.maxY,m.maxY)-Math.min(c.minY,m.minY))-l);u<a?(a=u,e=l<e?l:e,h=s):u===a&&l<e&&(e=l,h=s)}i=h||i.children[0]}var m,c;return i},r.prototype._insert=function(t,i,n){var r=n?t:this.toBBox(t),e=[],a=this._chooseSubtree(r,this.data,i,e);for(a.children.push(t),o(a,r);i>=0&&e[i].children.length>this._maxEntries;)this._split(e,i),i--;this._adjustParentBBoxes(r,e,i)},r.prototype._split=function(t,i){var n=t[i],r=n.children.length,e=this._minEntries;this._chooseSplitAxis(n,e,r);var h=this._chooseSplitIndex(n,e,r),o=p(n.children.splice(h,n.children.length-h));o.height=n.height,o.leaf=n.leaf,a(n,this.toBBox),a(o,this.toBBox),i?t[i-1].children.push(o):this._splitRoot(n,o)},r.prototype._splitRoot=function(t,i){this.data=p([t,i]),this.data.height=t.height+1,this.data.leaf=!1,a(this.data,this.toBBox)},r.prototype._chooseSplitIndex=function(t,i,n){for(var r,e,a,o,s,l,u,m=1/0,c=1/0,p=i;p<=n-i;p++){var d=h(t,0,p,this.toBBox),x=h(t,p,n,this.toBBox),v=(e=d,a=x,o=void 0,s=void 0,l=void 0,u=void 0,o=Math.max(e.minX,a.minX),s=Math.max(e.minY,a.minY),l=Math.min(e.maxX,a.maxX),u=Math.min(e.maxY,a.maxY),Math.max(0,l-o)*Math.max(0,u-s)),M=f(d)+f(x);v<m?(m=v,r=p,c=M<c?M:c):v===m&&M<c&&(c=M,r=p)}return r||n-i},r.prototype._chooseSplitAxis=function(t,i,n){var r=t.leaf?this.compareMinX:s,e=t.leaf?this.compareMinY:l;this._allDistMargin(t,i,n,r)<this._allDistMargin(t,i,n,e)&&t.children.sort(r)},r.prototype._allDistMargin=function(t,i,n,r){t.children.sort(r);for(var e=this.toBBox,a=h(t,0,i,e),s=h(t,n-i,n,e),l=u(a)+u(s),f=i;f<n-i;f++){var m=t.children[f];o(a,t.leaf?e(m):m),l+=u(a)}for(var c=n-i-1;c>=i;c--){var p=t.children[c];o(s,t.leaf?e(p):p),l+=u(s)}return l},r.prototype._adjustParentBBoxes=function(t,i,n){for(var r=n;r>=0;r--)o(i[r],t)},r.prototype._condense=function(t){for(var i=t.length-1,n=void 0;i>=0;i--)0===t[i].children.length?i>0?(n=t[i-1].children).splice(n.indexOf(t[i]),1):this.clear():a(t[i],this.toBBox)},r});
-
-
-/***/ }),
-
-/***/ "./node_modules/.pnpm/sat@0.9.0/node_modules/sat/SAT.js":
-/*!**************************************************************!*\
-  !*** ./node_modules/.pnpm/sat@0.9.0/node_modules/sat/SAT.js ***!
-  \**************************************************************/
+/***/ "./node_modules/sat/SAT.js":
+/*!*********************************!*\
+  !*** ./node_modules/sat/SAT.js ***!
+  \*********************************/
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;// Version 0.9.0 - Copyright 2012 - 2021 -  Jim Riecken <jimr@jimr.ca>
@@ -2062,15 +2120,15 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;// Version 0.9
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BaseSystem = void 0;
+const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
+const utils_1 = __webpack_require__(/*! ./utils */ "./src/utils.ts");
+const optimized_1 = __webpack_require__(/*! ./optimized */ "./src/optimized.ts");
 const box_1 = __webpack_require__(/*! ./bodies/box */ "./src/bodies/box.ts");
 const circle_1 = __webpack_require__(/*! ./bodies/circle */ "./src/bodies/circle.ts");
 const ellipse_1 = __webpack_require__(/*! ./bodies/ellipse */ "./src/bodies/ellipse.ts");
 const line_1 = __webpack_require__(/*! ./bodies/line */ "./src/bodies/line.ts");
 const point_1 = __webpack_require__(/*! ./bodies/point */ "./src/bodies/point.ts");
 const polygon_1 = __webpack_require__(/*! ./bodies/polygon */ "./src/bodies/polygon.ts");
-const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
-const optimized_1 = __webpack_require__(/*! ./optimized */ "./src/optimized.ts");
-const utils_1 = __webpack_require__(/*! ./utils */ "./src/utils.ts");
 /**
  * very base collision system (create, insert, update, draw, remove)
  */
@@ -2228,8 +2286,8 @@ exports.BaseSystem = BaseSystem;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Box = void 0;
 const model_1 = __webpack_require__(/*! ../model */ "./src/model.ts");
-const utils_1 = __webpack_require__(/*! ../utils */ "./src/utils.ts");
 const polygon_1 = __webpack_require__(/*! ./polygon */ "./src/bodies/polygon.ts");
+const utils_1 = __webpack_require__(/*! ../utils */ "./src/utils.ts");
 /**
  * collider - box
  */
@@ -2315,9 +2373,9 @@ exports.Box = Box;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Circle = void 0;
-const sat_1 = __webpack_require__(/*! sat */ "./node_modules/.pnpm/sat@0.9.0/node_modules/sat/SAT.js");
 const model_1 = __webpack_require__(/*! ../model */ "./src/model.ts");
 const utils_1 = __webpack_require__(/*! ../utils */ "./src/utils.ts");
+const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 /**
  * collider - circle
  */
@@ -2414,43 +2472,50 @@ class Circle extends sat_1.Circle {
         this._group = (0, utils_1.getGroup)(group);
     }
     /**
-     * update position
+     * update position BY MOVING FORWARD IN ANGLE DIRECTION
      */
-    setPosition(x, y, update = true) {
+    move(speed = 1, updateNow = true) {
+        (0, utils_1.move)(this, speed, updateNow);
+        return this;
+    }
+    /**
+     * update position BY TELEPORTING
+     */
+    setPosition(x, y, updateNow = true) {
         this.pos.x = x;
         this.pos.y = y;
-        this.markAsDirty(update);
+        this.markAsDirty(updateNow);
         return this;
     }
     /**
      * update scale
      */
-    setScale(scaleX, _scaleY = scaleX, update = true) {
+    setScale(scaleX, _scaleY = scaleX, updateNow = true) {
         this.r = this.unscaledRadius * Math.abs(scaleX);
-        this.markAsDirty(update);
+        this.markAsDirty(updateNow);
         return this;
     }
     /**
      * set rotation
      */
-    setAngle(angle, update = true) {
+    setAngle(angle, updateNow = true) {
         this.angle = angle;
         const { x, y } = this.getOffsetWithAngle();
         this.offset.x = x;
         this.offset.y = y;
-        this.markAsDirty(update);
+        this.markAsDirty(updateNow);
         return this;
     }
     /**
      * set offset from center
      */
-    setOffset(offset, update = true) {
+    setOffset(offset, updateNow = true) {
         this.offsetCopy.x = offset.x;
         this.offsetCopy.y = offset.y;
         const { x, y } = this.getOffsetWithAngle();
         this.offset.x = x;
         this.offset.y = y;
-        this.markAsDirty(update);
+        this.markAsDirty(updateNow);
         return this;
     }
     /**
@@ -2499,9 +2564,9 @@ class Circle extends sat_1.Circle {
     /**
      * inner function for after position change update aabb in system
      */
-    updateBody(update = this.dirty) {
+    updateBody(updateNow = this.dirty) {
         var _a;
-        if (update) {
+        if (updateNow) {
             (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
             this.dirty = false;
         }
@@ -2509,8 +2574,8 @@ class Circle extends sat_1.Circle {
     /**
      * update instantly or mark as dirty
      */
-    markAsDirty(update = false) {
-        if (update) {
+    markAsDirty(updateNow = false) {
+        if (updateNow) {
             this.updateBody(true);
         }
         else {
@@ -2547,8 +2612,8 @@ exports.Circle = Circle;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Ellipse = void 0;
 const model_1 = __webpack_require__(/*! ../model */ "./src/model.ts");
-const utils_1 = __webpack_require__(/*! ../utils */ "./src/utils.ts");
 const polygon_1 = __webpack_require__(/*! ./polygon */ "./src/bodies/polygon.ts");
+const utils_1 = __webpack_require__(/*! ../utils */ "./src/utils.ts");
 /**
  * collider - ellipse
  */
@@ -2651,9 +2716,9 @@ exports.Ellipse = Ellipse;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Line = void 0;
-const sat_1 = __webpack_require__(/*! sat */ "./node_modules/.pnpm/sat@0.9.0/node_modules/sat/SAT.js");
 const model_1 = __webpack_require__(/*! ../model */ "./src/model.ts");
 const polygon_1 = __webpack_require__(/*! ./polygon */ "./src/bodies/polygon.ts");
+const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 /**
  * collider - line
  */
@@ -2730,8 +2795,8 @@ exports.Line = Line;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Point = void 0;
 const model_1 = __webpack_require__(/*! ../model */ "./src/model.ts");
-const utils_1 = __webpack_require__(/*! ../utils */ "./src/utils.ts");
 const box_1 = __webpack_require__(/*! ./box */ "./src/bodies/box.ts");
+const utils_1 = __webpack_require__(/*! ../utils */ "./src/utils.ts");
 /**
  * collider - point (very tiny box)
  */
@@ -2766,12 +2831,12 @@ exports.Point = Point;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Polygon = exports.isSimple = void 0;
-const poly_decomp_es_1 = __webpack_require__(/*! poly-decomp-es */ "./node_modules/.pnpm/poly-decomp-es@0.4.2/node_modules/poly-decomp-es/dist/poly-decomp-es.js");
-Object.defineProperty(exports, "isSimple", ({ enumerable: true, get: function () { return poly_decomp_es_1.isSimple; } }));
-const sat_1 = __webpack_require__(/*! sat */ "./node_modules/.pnpm/sat@0.9.0/node_modules/sat/SAT.js");
 const model_1 = __webpack_require__(/*! ../model */ "./src/model.ts");
-const optimized_1 = __webpack_require__(/*! ../optimized */ "./src/optimized.ts");
 const utils_1 = __webpack_require__(/*! ../utils */ "./src/utils.ts");
+const optimized_1 = __webpack_require__(/*! ../optimized */ "./src/optimized.ts");
+const poly_decomp_es_1 = __webpack_require__(/*! poly-decomp-es */ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js");
+Object.defineProperty(exports, "isSimple", ({ enumerable: true, get: function () { return poly_decomp_es_1.isSimple; } }));
+const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 /**
  * collider - polygon
  */
@@ -2881,18 +2946,25 @@ class Polygon extends sat_1.Polygon {
         this._group = (0, utils_1.getGroup)(group);
     }
     /**
-     * update position
+     * update position BY MOVING FORWARD IN ANGLE DIRECTION
      */
-    setPosition(x, y, update = true) {
+    move(speed = 1, updateNow = true) {
+        (0, utils_1.move)(this, speed, updateNow);
+        return this;
+    }
+    /**
+     * update position BY TELEPORTING
+     */
+    setPosition(x, y, updateNow = true) {
         this.pos.x = x;
         this.pos.y = y;
-        this.markAsDirty(update);
+        this.markAsDirty(updateNow);
         return this;
     }
     /**
      * update scale
      */
-    setScale(x, y = x, update = true) {
+    setScale(x, y = x, updateNow = true) {
         this.scaleVector.x = Math.abs(x);
         this.scaleVector.y = Math.abs(y);
         super.setPoints((0, optimized_1.map)(this.points, (point, index) => {
@@ -2900,17 +2972,17 @@ class Polygon extends sat_1.Polygon {
             point.y = this.pointsBackup[index].y * this.scaleVector.y;
             return point;
         }));
-        this.markAsDirty(update);
+        this.markAsDirty(updateNow);
         return this;
     }
-    setAngle(angle, update = true) {
+    setAngle(angle, updateNow = true) {
         super.setAngle(angle);
-        this.markAsDirty(update);
+        this.markAsDirty(updateNow);
         return this;
     }
-    setOffset(offset, update = true) {
+    setOffset(offset, updateNow = true) {
         super.setOffset(offset);
-        this.markAsDirty(update);
+        this.markAsDirty(updateNow);
         return this;
     }
     /**
@@ -2988,9 +3060,9 @@ class Polygon extends sat_1.Polygon {
     /**
      * inner function for after position change update aabb in system and convex inner polygons
      */
-    updateBody(update = this.dirty) {
+    updateBody(updateNow = this.dirty) {
         var _a;
-        if (update) {
+        if (updateNow) {
             this.updateConvexPolygonPositions();
             (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
             this.dirty = false;
@@ -3007,8 +3079,8 @@ class Polygon extends sat_1.Polygon {
     /**
      * update instantly or mark as dirty
      */
-    markAsDirty(update = false) {
-        if (update) {
+    markAsDirty(updateNow = false) {
+        if (updateNow) {
             this.updateBody(true);
         }
         else {
@@ -3091,10 +3163,21 @@ exports.Polygon = Polygon;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineLineFast = exports.intersectLineCircle = exports.circleOutsidePolygon = exports.circleInPolygon = exports.circleInCircle = exports.pointOnCircle = exports.polygonInPolygon = exports.pointInPolygon = exports.polygonInCircle = exports.ensureConvex = void 0;
-const sat_1 = __webpack_require__(/*! sat */ "./node_modules/.pnpm/sat@0.9.0/node_modules/sat/SAT.js");
+exports.ensureConvex = ensureConvex;
+exports.polygonInCircle = polygonInCircle;
+exports.pointInPolygon = pointInPolygon;
+exports.polygonInPolygon = polygonInPolygon;
+exports.pointOnCircle = pointOnCircle;
+exports.circleInCircle = circleInCircle;
+exports.circleInPolygon = circleInPolygon;
+exports.circleOutsidePolygon = circleOutsidePolygon;
+exports.intersectLineCircle = intersectLineCircle;
+exports.intersectLineLineFast = intersectLineLineFast;
+exports.intersectLineLine = intersectLineLine;
+exports.intersectLinePolygon = intersectLinePolygon;
 const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
 const optimized_1 = __webpack_require__(/*! ./optimized */ "./src/optimized.ts");
+const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 /**
  * replace body with array of related convex polygons
  */
@@ -3104,19 +3187,15 @@ function ensureConvex(body) {
     }
     return body.convexPolygons;
 }
-exports.ensureConvex = ensureConvex;
 function polygonInCircle(polygon, circle) {
     return (0, optimized_1.every)(polygon.calcPoints, p => (0, sat_1.pointInCircle)({ x: p.x + polygon.pos.x, y: p.y + polygon.pos.y }, circle));
 }
-exports.polygonInCircle = polygonInCircle;
 function pointInPolygon(point, polygon) {
     return (0, optimized_1.some)(ensureConvex(polygon), convex => (0, sat_1.pointInPolygon)(point, convex));
 }
-exports.pointInPolygon = pointInPolygon;
 function polygonInPolygon(polygonA, polygonB) {
     return (0, optimized_1.every)(polygonA.calcPoints, point => pointInPolygon({ x: point.x + polygonA.pos.x, y: point.y + polygonA.pos.y }, polygonB));
 }
-exports.polygonInPolygon = polygonInPolygon;
 /**
  * https://stackoverflow.com/a/68197894/1749528
  */
@@ -3125,7 +3204,6 @@ function pointOnCircle(point, circle) {
         (point.y - circle.pos.y) * (point.y - circle.pos.y) ===
         circle.r * circle.r);
 }
-exports.pointOnCircle = pointOnCircle;
 /**
  * https://stackoverflow.com/a/68197894/1749528
  */
@@ -3139,7 +3217,6 @@ function circleInCircle(bodyA, bodyB) {
     const distSq = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
     return distSq + r2 === r1 || distSq + r2 < r1;
 }
-exports.circleInCircle = circleInCircle;
 /**
  * https://stackoverflow.com/a/68197894/1749528
  */
@@ -3178,7 +3255,6 @@ function circleInPolygon(circle, polygon) {
     }
     return true;
 }
-exports.circleInPolygon = circleInPolygon;
 /**
  * https://stackoverflow.com/a/68197894/1749528
  */
@@ -3217,7 +3293,6 @@ function circleOutsidePolygon(circle, polygon) {
     }
     return true;
 }
-exports.circleOutsidePolygon = circleOutsidePolygon;
 /**
  * https://stackoverflow.com/a/37225895/1749528
  */
@@ -3244,7 +3319,6 @@ function intersectLineCircle(line, { pos, r }) {
     }
     return results;
 }
-exports.intersectLineCircle = intersectLineCircle;
 /**
  * helper for intersectLineLineFast
  */
@@ -3263,7 +3337,6 @@ function intersectLineLineFast(line1, line2) {
         isTurn(line1.start, line1.end, line2.start) !==
             isTurn(line1.start, line1.end, line2.end));
 }
-exports.intersectLineLineFast = intersectLineLineFast;
 /**
  * returns the point of intersection
  * https://stackoverflow.com/a/24392281/1749528
@@ -3287,7 +3360,6 @@ function intersectLineLine(line1, line2) {
     }
     return { x: line1.start.x + lambda * dX, y: line1.start.y + lambda * dY };
 }
-exports.intersectLineLine = intersectLineLine;
 function intersectLinePolygon(line, polygon) {
     const results = [];
     (0, optimized_1.forEach)(polygon.calcPoints, (to, index) => {
@@ -3305,7 +3377,6 @@ function intersectLinePolygon(line, polygon) {
     });
     return results;
 }
-exports.intersectLinePolygon = intersectLinePolygon;
 
 
 /***/ }),
@@ -3323,14 +3394,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BodyGroup = exports.BodyType = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = exports.isSimple = void 0;
-const rbush_1 = __importDefault(__webpack_require__(/*! rbush */ "./node_modules/.pnpm/rbush@3.0.1/node_modules/rbush/rbush.min.js"));
-Object.defineProperty(exports, "RBush", ({ enumerable: true, get: function () { return rbush_1.default; } }));
-const sat_1 = __webpack_require__(/*! sat */ "./node_modules/.pnpm/sat@0.9.0/node_modules/sat/SAT.js");
+const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 Object.defineProperty(exports, "SATCircle", ({ enumerable: true, get: function () { return sat_1.Circle; } }));
 Object.defineProperty(exports, "SATPolygon", ({ enumerable: true, get: function () { return sat_1.Polygon; } }));
 Object.defineProperty(exports, "Response", ({ enumerable: true, get: function () { return sat_1.Response; } }));
 Object.defineProperty(exports, "SATVector", ({ enumerable: true, get: function () { return sat_1.Vector; } }));
-var poly_decomp_es_1 = __webpack_require__(/*! poly-decomp-es */ "./node_modules/.pnpm/poly-decomp-es@0.4.2/node_modules/poly-decomp-es/dist/poly-decomp-es.js");
+// version 4.0.0 1=1 copy
+const rbush_1 = __importDefault(__webpack_require__(/*! ./rbush */ "./src/rbush.js"));
+exports.RBush = rbush_1.default;
+var poly_decomp_es_1 = __webpack_require__(/*! poly-decomp-es */ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js");
 Object.defineProperty(exports, "isSimple", ({ enumerable: true, get: function () { return poly_decomp_es_1.isSimple; } }));
 /**
  * types
@@ -3343,7 +3415,7 @@ var BodyType;
     BodyType["Box"] = "Box";
     BodyType["Line"] = "Line";
     BodyType["Point"] = "Point";
-})(BodyType = exports.BodyType || (exports.BodyType = {}));
+})(BodyType || (exports.BodyType = BodyType = {}));
 /**
  * for groups
  */
@@ -3355,7 +3427,7 @@ var BodyGroup;
     BodyGroup[BodyGroup["Box"] = 4] = "Box";
     BodyGroup[BodyGroup["Line"] = 2] = "Line";
     BodyGroup[BodyGroup["Point"] = 1] = "Point";
-})(BodyGroup = exports.BodyGroup || (exports.BodyGroup = {}));
+})(BodyGroup || (exports.BodyGroup = BodyGroup = {}));
 
 
 /***/ }),
@@ -3453,12 +3525,12 @@ exports.map = map;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.System = void 0;
+const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
+const utils_1 = __webpack_require__(/*! ./utils */ "./src/utils.ts");
+const intersect_1 = __webpack_require__(/*! ./intersect */ "./src/intersect.ts");
+const optimized_1 = __webpack_require__(/*! ./optimized */ "./src/optimized.ts");
 const base_system_1 = __webpack_require__(/*! ./base-system */ "./src/base-system.ts");
 const line_1 = __webpack_require__(/*! ./bodies/line */ "./src/bodies/line.ts");
-const intersect_1 = __webpack_require__(/*! ./intersect */ "./src/intersect.ts");
-const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
-const optimized_1 = __webpack_require__(/*! ./optimized */ "./src/optimized.ts");
-const utils_1 = __webpack_require__(/*! ./utils */ "./src/utils.ts");
 /**
  * collision system
  */
@@ -3545,7 +3617,7 @@ class System extends base_system_1.BaseSystem {
      */
     checkCollision(bodyA, bodyB, response = this.response) {
         const { bbox: bboxA } = bodyA;
-        const { bbox: bboxB } = bodyA;
+        const { bbox: bboxB } = bodyB;
         // assess the bodies real aabb without padding
         if (!(0, utils_1.canInteract)(bodyA, bodyB) ||
             !bboxA ||
@@ -3637,10 +3709,39 @@ exports.System = System;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.groupBits = exports.ensureNumber = exports.bin2dec = exports.getGroup = exports.returnTrue = exports.cloneResponse = exports.drawBVH = exports.drawPolygon = exports.dashLineTo = exports.getSATTest = exports.getBounceDirection = exports.mapArrayToVector = exports.mapVectorToArray = exports.clonePointsArray = exports.checkAInB = exports.canInteract = exports.intersectAABB = exports.notIntersectAABB = exports.bodyMoved = exports.extendBody = exports.clockwise = exports.distance = exports.ensurePolygonPoints = exports.ensureVectorPoint = exports.createBox = exports.createEllipse = exports.rad2deg = exports.deg2rad = exports.RAD2DEG = exports.DEG2RAD = void 0;
-const sat_1 = __webpack_require__(/*! sat */ "./node_modules/.pnpm/sat@0.9.0/node_modules/sat/SAT.js");
-const intersect_1 = __webpack_require__(/*! ./intersect */ "./src/intersect.ts");
+exports.RAD2DEG = exports.DEG2RAD = void 0;
+exports.deg2rad = deg2rad;
+exports.rad2deg = rad2deg;
+exports.createEllipse = createEllipse;
+exports.createBox = createBox;
+exports.ensureVectorPoint = ensureVectorPoint;
+exports.ensurePolygonPoints = ensurePolygonPoints;
+exports.distance = distance;
+exports.clockwise = clockwise;
+exports.extendBody = extendBody;
+exports.bodyMoved = bodyMoved;
+exports.notIntersectAABB = notIntersectAABB;
+exports.intersectAABB = intersectAABB;
+exports.canInteract = canInteract;
+exports.checkAInB = checkAInB;
+exports.clonePointsArray = clonePointsArray;
+exports.mapVectorToArray = mapVectorToArray;
+exports.mapArrayToVector = mapArrayToVector;
+exports.getBounceDirection = getBounceDirection;
+exports.getSATTest = getSATTest;
+exports.dashLineTo = dashLineTo;
+exports.drawPolygon = drawPolygon;
+exports.drawBVH = drawBVH;
+exports.cloneResponse = cloneResponse;
+exports.returnTrue = returnTrue;
+exports.getGroup = getGroup;
+exports.bin2dec = bin2dec;
+exports.ensureNumber = ensureNumber;
+exports.groupBits = groupBits;
+exports.move = move;
 const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
+const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
+const intersect_1 = __webpack_require__(/*! ./intersect */ "./src/intersect.ts");
 const optimized_1 = __webpack_require__(/*! ./optimized */ "./src/optimized.ts");
 /* helpers for faster getSATTest() and checkAInB() */
 const testMap = {
@@ -3670,14 +3771,12 @@ exports.RAD2DEG = 180 / Math.PI;
 function deg2rad(degrees) {
     return degrees * exports.DEG2RAD;
 }
-exports.deg2rad = deg2rad;
 /**
  * convert from radians to degrees
  */
 function rad2deg(radians) {
     return radians * exports.RAD2DEG;
 }
-exports.rad2deg = rad2deg;
 /**
  * creates ellipse-shaped polygon based on params
  */
@@ -3693,7 +3792,6 @@ function createEllipse(radiusX, radiusY = radiusX, step = 1) {
     }
     return ellipse;
 }
-exports.createEllipse = createEllipse;
 /**
  * creates box shaped polygon points
  */
@@ -3705,7 +3803,6 @@ function createBox(width, height) {
         new sat_1.Vector(0, height)
     ];
 }
-exports.createBox = createBox;
 /**
  * ensure SATVector type point result
  */
@@ -3714,7 +3811,6 @@ function ensureVectorPoint(point = {}) {
         ? point
         : new sat_1.Vector(point.x || 0, point.y || 0);
 }
-exports.ensureVectorPoint = ensureVectorPoint;
 /**
  * ensure Vector points (for polygon) in counter-clockwise order
  */
@@ -3722,7 +3818,6 @@ function ensurePolygonPoints(points = []) {
     const polygonPoints = (0, optimized_1.map)(points, ensureVectorPoint);
     return clockwise(polygonPoints) ? polygonPoints.reverse() : polygonPoints;
 }
-exports.ensurePolygonPoints = ensurePolygonPoints;
 /**
  * get distance between two Vector points
  */
@@ -3731,7 +3826,6 @@ function distance(bodyA, bodyB) {
     const yDiff = bodyA.y - bodyB.y;
     return Math.hypot(xDiff, yDiff);
 }
-exports.distance = distance;
 /**
  * check [is clockwise] direction of polygon
  */
@@ -3744,7 +3838,6 @@ function clockwise(points) {
     });
     return sum > 0;
 }
-exports.clockwise = clockwise;
 /**
  * used for all types of bodies in constructor
  */
@@ -3758,7 +3851,6 @@ function extendBody(body, options = {}) {
     }
     body.setAngle(options.angle || 0);
 }
-exports.extendBody = extendBody;
 /**
  * check if body moved outside of its padding
  */
@@ -3766,7 +3858,6 @@ function bodyMoved(body) {
     const { bbox, minX, minY, maxX, maxY } = body;
     return (bbox.minX < minX || bbox.minY < minY || bbox.maxX > maxX || bbox.maxY > maxY);
 }
-exports.bodyMoved = bodyMoved;
 /**
  * returns true if two boxes not intersect
  */
@@ -3776,14 +3867,12 @@ function notIntersectAABB(bodyA, bodyB) {
         bodyB.maxX < bodyA.minX ||
         bodyB.maxY < bodyA.minY);
 }
-exports.notIntersectAABB = notIntersectAABB;
 /**
  * checks if two boxes intersect
  */
 function intersectAABB(bodyA, bodyB) {
     return !notIntersectAABB(bodyA, bodyB);
 }
-exports.intersectAABB = intersectAABB;
 /**
  * checks if two bodies can interact (for collision filtering)
  */
@@ -3791,7 +3880,6 @@ function canInteract(bodyA, bodyB) {
     return (((bodyA.group >> 16) & (bodyB.group & 0xFFFF) &&
         (bodyB.group >> 16) & (bodyA.group & 0xFFFF)) !== 0);
 }
-exports.canInteract = canInteract;
 /**
  * checks if body a is in body b
  */
@@ -3801,28 +3889,24 @@ function checkAInB(bodyA, bodyB) {
         : polygonInFunctions;
     return check[bodyB.type](bodyA, bodyB);
 }
-exports.checkAInB = checkAInB;
 /**
  * clone sat vector points array into vector points array
  */
 function clonePointsArray(points) {
     return (0, optimized_1.map)(points, ({ x, y }) => ({ x, y }));
 }
-exports.clonePointsArray = clonePointsArray;
 /**
  * change format from SAT.js to poly-decomp
  */
 function mapVectorToArray({ x, y } = { x: 0, y: 0 }) {
     return [x, y];
 }
-exports.mapVectorToArray = mapVectorToArray;
 /**
  * change format from poly-decomp to SAT.js
  */
 function mapArrayToVector([x, y] = [0, 0]) {
     return { x, y };
 }
-exports.mapArrayToVector = mapArrayToVector;
 /**
  * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
  */
@@ -3832,7 +3916,6 @@ function getBounceDirection(body, collider) {
     const len = v1.dot(v2.normalize()) * 2;
     return new sat_1.Vector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
 }
-exports.getBounceDirection = getBounceDirection;
 /**
  * returns correct sat.js testing function based on body types
  */
@@ -3842,7 +3925,6 @@ function getSATTest(bodyA, bodyB) {
         : polygonSATFunctions;
     return check[bodyB.type];
 }
-exports.getSATTest = getSATTest;
 /**
  * draws dashed line on canvas context
  */
@@ -3864,7 +3946,6 @@ function dashLineTo(context, fromX, fromY, toX, toY, dash = 2, gap = 4) {
         dist -= dash + gap;
     }
 }
-exports.dashLineTo = dashLineTo;
 /**
  * draw polygon
  */
@@ -3890,7 +3971,6 @@ function drawPolygon(context, { pos, calcPoints }, isTrigger = false) {
         }
     });
 }
-exports.drawPolygon = drawPolygon;
 /**
  * draw body bounding body box
  */
@@ -3900,7 +3980,6 @@ function drawBVH(context, body) {
         calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY)
     });
 }
-exports.drawBVH = drawBVH;
 /**
  * clone response object returning new response with previous ones values
  */
@@ -3916,28 +3995,24 @@ function cloneResponse(response) {
     clone.bInA = bInA;
     return clone;
 }
-exports.cloneResponse = cloneResponse;
 /**
  * dummy fn used as default, for optimization
  */
 function returnTrue() {
     return true;
 }
-exports.returnTrue = returnTrue;
 /**
  * for groups
  */
 function getGroup(group) {
     return Math.max(0, Math.min(group, 0x7FFFFFFF));
 }
-exports.getGroup = getGroup;
 /**
  * binary string to decimal number
  */
 function bin2dec(binary) {
     return Number(`0b${binary}`.replace(/\s/g, ""));
 }
-exports.bin2dec = bin2dec;
 /**
  * helper for groupBits()
  *
@@ -3946,7 +4021,6 @@ exports.bin2dec = bin2dec;
 function ensureNumber(input) {
     return typeof input === "number" ? input : bin2dec(input);
 }
-exports.ensureNumber = ensureNumber;
 /**
  * create group bits from category and mask
  *
@@ -3956,7 +4030,14 @@ exports.ensureNumber = ensureNumber;
 function groupBits(category, mask = category) {
     return (ensureNumber(category) << 16) | ensureNumber(mask);
 }
-exports.groupBits = groupBits;
+function move(body, speed = 1, updateNow = true) {
+    if (!speed) {
+        return;
+    }
+    const moveX = Math.cos(body.angle) * speed;
+    const moveY = Math.sin(body.angle) * speed;
+    body.setPosition(body.x + moveX, body.y + moveY, updateNow);
+}
 
 
 /***/ }),
@@ -4074,7 +4155,7 @@ const { BodyGroup } = __webpack_require__(/*! ../model */ "./src/model.ts");
 const { System } = __webpack_require__(/*! ../system */ "./src/system.ts");
 const { getBounceDirection, groupBits } = __webpack_require__(/*! ../utils */ "./src/utils.ts");
 const { width, height, loop } = __webpack_require__(/*! ./canvas */ "./src/demo/canvas.js");
-const seededRandom = (__webpack_require__(/*! random-seed */ "./node_modules/.pnpm/random-seed@0.3.0/node_modules/random-seed/index.js").create)("@Prozi").random;
+const seededRandom = (__webpack_require__(/*! random-seed */ "./node_modules/random-seed/index.js").create)("@Prozi").random;
 
 function random(min, max) {
   return Math.floor(seededRandom() * max) + min;
@@ -4588,7 +4669,7 @@ class Tank {
     return this.physics.createPolygon(
       { x: this.scaleX(x), y: this.scaleY(y) },
       scaledPoints,
-      { angle },
+      { angle, isStatic: true },
     );
   }
 
@@ -4724,6 +4805,534 @@ class Tank {
 }
 
 module.exports = Tank;
+
+
+/***/ }),
+
+/***/ "./src/rbush.js":
+/*!**********************!*\
+  !*** ./src/rbush.js ***!
+  \**********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ RBush)
+/* harmony export */ });
+/* harmony import */ var quickselect__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! quickselect */ "./node_modules/quickselect/index.js");
+
+
+class RBush {
+    constructor(maxEntries = 9) {
+        // max entries in a node is 9 by default; min node fill is 40% for best performance
+        this._maxEntries = Math.max(4, maxEntries);
+        this._minEntries = Math.max(2, Math.ceil(this._maxEntries * 0.4));
+        this.clear();
+    }
+
+    all() {
+        return this._all(this.data, []);
+    }
+
+    search(bbox) {
+        let node = this.data;
+        const result = [];
+
+        if (!intersects(bbox, node)) return result;
+
+        const toBBox = this.toBBox;
+        const nodesToSearch = [];
+
+        while (node) {
+            for (let i = 0; i < node.children.length; i++) {
+                const child = node.children[i];
+                const childBBox = node.leaf ? toBBox(child) : child;
+
+                if (intersects(bbox, childBBox)) {
+                    if (node.leaf) result.push(child);
+                    else if (contains(bbox, childBBox)) this._all(child, result);
+                    else nodesToSearch.push(child);
+                }
+            }
+            node = nodesToSearch.pop();
+        }
+
+        return result;
+    }
+
+    collides(bbox) {
+        let node = this.data;
+
+        if (!intersects(bbox, node)) return false;
+
+        const nodesToSearch = [];
+        while (node) {
+            for (let i = 0; i < node.children.length; i++) {
+                const child = node.children[i];
+                const childBBox = node.leaf ? this.toBBox(child) : child;
+
+                if (intersects(bbox, childBBox)) {
+                    if (node.leaf || contains(bbox, childBBox)) return true;
+                    nodesToSearch.push(child);
+                }
+            }
+            node = nodesToSearch.pop();
+        }
+
+        return false;
+    }
+
+    load(data) {
+        if (!(data && data.length)) return this;
+
+        if (data.length < this._minEntries) {
+            for (let i = 0; i < data.length; i++) {
+                this.insert(data[i]);
+            }
+            return this;
+        }
+
+        // recursively build the tree with the given data from scratch using OMT algorithm
+        let node = this._build(data.slice(), 0, data.length - 1, 0);
+
+        if (!this.data.children.length) {
+            // save as is if tree is empty
+            this.data = node;
+
+        } else if (this.data.height === node.height) {
+            // split root if trees have the same height
+            this._splitRoot(this.data, node);
+
+        } else {
+            if (this.data.height < node.height) {
+                // swap trees if inserted one is bigger
+                const tmpNode = this.data;
+                this.data = node;
+                node = tmpNode;
+            }
+
+            // insert the small tree into the large tree at appropriate level
+            this._insert(node, this.data.height - node.height - 1, true);
+        }
+
+        return this;
+    }
+
+    insert(item) {
+        if (item) this._insert(item, this.data.height - 1);
+        return this;
+    }
+
+    clear() {
+        this.data = createNode([]);
+        return this;
+    }
+
+    remove(item, equalsFn) {
+        if (!item) return this;
+
+        let node = this.data;
+        const bbox = this.toBBox(item);
+        const path = [];
+        const indexes = [];
+        let i, parent, goingUp;
+
+        // depth-first iterative tree traversal
+        while (node || path.length) {
+
+            if (!node) { // go up
+                node = path.pop();
+                parent = path[path.length - 1];
+                i = indexes.pop();
+                goingUp = true;
+            }
+
+            if (node.leaf) { // check current node
+                const index = findItem(item, node.children, equalsFn);
+
+                if (index !== -1) {
+                    // item found, remove the item and condense tree upwards
+                    node.children.splice(index, 1);
+                    path.push(node);
+                    this._condense(path);
+                    return this;
+                }
+            }
+
+            if (!goingUp && !node.leaf && contains(node, bbox)) { // go down
+                path.push(node);
+                indexes.push(i);
+                i = 0;
+                parent = node;
+                node = node.children[0];
+
+            } else if (parent) { // go right
+                i++;
+                node = parent.children[i];
+                goingUp = false;
+
+            } else node = null; // nothing found
+        }
+
+        return this;
+    }
+
+    toBBox(item) { return item; }
+
+    compareMinX(a, b) { return a.minX - b.minX; }
+    compareMinY(a, b) { return a.minY - b.minY; }
+
+    toJSON() { return this.data; }
+
+    fromJSON(data) {
+        this.data = data;
+        return this;
+    }
+
+    _all(node, result) {
+        const nodesToSearch = [];
+        while (node) {
+            if (node.leaf) result.push(...node.children);
+            else nodesToSearch.push(...node.children);
+
+            node = nodesToSearch.pop();
+        }
+        return result;
+    }
+
+    _build(items, left, right, height) {
+
+        const N = right - left + 1;
+        let M = this._maxEntries;
+        let node;
+
+        if (N <= M) {
+            // reached leaf level; return leaf
+            node = createNode(items.slice(left, right + 1));
+            calcBBox(node, this.toBBox);
+            return node;
+        }
+
+        if (!height) {
+            // target height of the bulk-loaded tree
+            height = Math.ceil(Math.log(N) / Math.log(M));
+
+            // target number of root entries to maximize storage utilization
+            M = Math.ceil(N / Math.pow(M, height - 1));
+        }
+
+        node = createNode([]);
+        node.leaf = false;
+        node.height = height;
+
+        // split the items into M mostly square tiles
+
+        const N2 = Math.ceil(N / M);
+        const N1 = N2 * Math.ceil(Math.sqrt(M));
+
+        multiSelect(items, left, right, N1, this.compareMinX);
+
+        for (let i = left; i <= right; i += N1) {
+
+            const right2 = Math.min(i + N1 - 1, right);
+
+            multiSelect(items, i, right2, N2, this.compareMinY);
+
+            for (let j = i; j <= right2; j += N2) {
+
+                const right3 = Math.min(j + N2 - 1, right2);
+
+                // pack each entry recursively
+                node.children.push(this._build(items, j, right3, height - 1));
+            }
+        }
+
+        calcBBox(node, this.toBBox);
+
+        return node;
+    }
+
+    _chooseSubtree(bbox, node, level, path) {
+        while (true) {
+            path.push(node);
+
+            if (node.leaf || path.length - 1 === level) break;
+
+            let minArea = Infinity;
+            let minEnlargement = Infinity;
+            let targetNode;
+
+            for (let i = 0; i < node.children.length; i++) {
+                const child = node.children[i];
+                const area = bboxArea(child);
+                const enlargement = enlargedArea(bbox, child) - area;
+
+                // choose entry with the least area enlargement
+                if (enlargement < minEnlargement) {
+                    minEnlargement = enlargement;
+                    minArea = area < minArea ? area : minArea;
+                    targetNode = child;
+
+                } else if (enlargement === minEnlargement) {
+                    // otherwise choose one with the smallest area
+                    if (area < minArea) {
+                        minArea = area;
+                        targetNode = child;
+                    }
+                }
+            }
+
+            node = targetNode || node.children[0];
+        }
+
+        return node;
+    }
+
+    _insert(item, level, isNode) {
+        const bbox = isNode ? item : this.toBBox(item);
+        const insertPath = [];
+
+        // find the best node for accommodating the item, saving all nodes along the path too
+        const node = this._chooseSubtree(bbox, this.data, level, insertPath);
+
+        // put the item into the node
+        node.children.push(item);
+        extend(node, bbox);
+
+        // split on node overflow; propagate upwards if necessary
+        while (level >= 0) {
+            if (insertPath[level].children.length > this._maxEntries) {
+                this._split(insertPath, level);
+                level--;
+            } else break;
+        }
+
+        // adjust bboxes along the insertion path
+        this._adjustParentBBoxes(bbox, insertPath, level);
+    }
+
+    // split overflowed node into two
+    _split(insertPath, level) {
+        const node = insertPath[level];
+        const M = node.children.length;
+        const m = this._minEntries;
+
+        this._chooseSplitAxis(node, m, M);
+
+        const splitIndex = this._chooseSplitIndex(node, m, M);
+
+        const newNode = createNode(node.children.splice(splitIndex, node.children.length - splitIndex));
+        newNode.height = node.height;
+        newNode.leaf = node.leaf;
+
+        calcBBox(node, this.toBBox);
+        calcBBox(newNode, this.toBBox);
+
+        if (level) insertPath[level - 1].children.push(newNode);
+        else this._splitRoot(node, newNode);
+    }
+
+    _splitRoot(node, newNode) {
+        // split root node
+        this.data = createNode([node, newNode]);
+        this.data.height = node.height + 1;
+        this.data.leaf = false;
+        calcBBox(this.data, this.toBBox);
+    }
+
+    _chooseSplitIndex(node, m, M) {
+        let index;
+        let minOverlap = Infinity;
+        let minArea = Infinity;
+
+        for (let i = m; i <= M - m; i++) {
+            const bbox1 = distBBox(node, 0, i, this.toBBox);
+            const bbox2 = distBBox(node, i, M, this.toBBox);
+
+            const overlap = intersectionArea(bbox1, bbox2);
+            const area = bboxArea(bbox1) + bboxArea(bbox2);
+
+            // choose distribution with minimum overlap
+            if (overlap < minOverlap) {
+                minOverlap = overlap;
+                index = i;
+
+                minArea = area < minArea ? area : minArea;
+
+            } else if (overlap === minOverlap) {
+                // otherwise choose distribution with minimum area
+                if (area < minArea) {
+                    minArea = area;
+                    index = i;
+                }
+            }
+        }
+
+        return index || M - m;
+    }
+
+    // sorts node children by the best axis for split
+    _chooseSplitAxis(node, m, M) {
+        const compareMinX = node.leaf ? this.compareMinX : compareNodeMinX;
+        const compareMinY = node.leaf ? this.compareMinY : compareNodeMinY;
+        const xMargin = this._allDistMargin(node, m, M, compareMinX);
+        const yMargin = this._allDistMargin(node, m, M, compareMinY);
+
+        // if total distributions margin value is minimal for x, sort by minX,
+        // otherwise it's already sorted by minY
+        if (xMargin < yMargin) node.children.sort(compareMinX);
+    }
+
+    // total margin of all possible split distributions where each node is at least m full
+    _allDistMargin(node, m, M, compare) {
+        node.children.sort(compare);
+
+        const toBBox = this.toBBox;
+        const leftBBox = distBBox(node, 0, m, toBBox);
+        const rightBBox = distBBox(node, M - m, M, toBBox);
+        let margin = bboxMargin(leftBBox) + bboxMargin(rightBBox);
+
+        for (let i = m; i < M - m; i++) {
+            const child = node.children[i];
+            extend(leftBBox, node.leaf ? toBBox(child) : child);
+            margin += bboxMargin(leftBBox);
+        }
+
+        for (let i = M - m - 1; i >= m; i--) {
+            const child = node.children[i];
+            extend(rightBBox, node.leaf ? toBBox(child) : child);
+            margin += bboxMargin(rightBBox);
+        }
+
+        return margin;
+    }
+
+    _adjustParentBBoxes(bbox, path, level) {
+        // adjust bboxes along the given tree path
+        for (let i = level; i >= 0; i--) {
+            extend(path[i], bbox);
+        }
+    }
+
+    _condense(path) {
+        // go through the path, removing empty nodes and updating bboxes
+        for (let i = path.length - 1, siblings; i >= 0; i--) {
+            if (path[i].children.length === 0) {
+                if (i > 0) {
+                    siblings = path[i - 1].children;
+                    siblings.splice(siblings.indexOf(path[i]), 1);
+
+                } else this.clear();
+
+            } else calcBBox(path[i], this.toBBox);
+        }
+    }
+}
+
+function findItem(item, items, equalsFn) {
+    if (!equalsFn) return items.indexOf(item);
+
+    for (let i = 0; i < items.length; i++) {
+        if (equalsFn(item, items[i])) return i;
+    }
+    return -1;
+}
+
+// calculate node's bbox from bboxes of its children
+function calcBBox(node, toBBox) {
+    distBBox(node, 0, node.children.length, toBBox, node);
+}
+
+// min bounding rectangle of node children from k to p-1
+function distBBox(node, k, p, toBBox, destNode) {
+    if (!destNode) destNode = createNode(null);
+    destNode.minX = Infinity;
+    destNode.minY = Infinity;
+    destNode.maxX = -Infinity;
+    destNode.maxY = -Infinity;
+
+    for (let i = k; i < p; i++) {
+        const child = node.children[i];
+        extend(destNode, node.leaf ? toBBox(child) : child);
+    }
+
+    return destNode;
+}
+
+function extend(a, b) {
+    a.minX = Math.min(a.minX, b.minX);
+    a.minY = Math.min(a.minY, b.minY);
+    a.maxX = Math.max(a.maxX, b.maxX);
+    a.maxY = Math.max(a.maxY, b.maxY);
+    return a;
+}
+
+function compareNodeMinX(a, b) { return a.minX - b.minX; }
+function compareNodeMinY(a, b) { return a.minY - b.minY; }
+
+function bboxArea(a)   { return (a.maxX - a.minX) * (a.maxY - a.minY); }
+function bboxMargin(a) { return (a.maxX - a.minX) + (a.maxY - a.minY); }
+
+function enlargedArea(a, b) {
+    return (Math.max(b.maxX, a.maxX) - Math.min(b.minX, a.minX)) *
+           (Math.max(b.maxY, a.maxY) - Math.min(b.minY, a.minY));
+}
+
+function intersectionArea(a, b) {
+    const minX = Math.max(a.minX, b.minX);
+    const minY = Math.max(a.minY, b.minY);
+    const maxX = Math.min(a.maxX, b.maxX);
+    const maxY = Math.min(a.maxY, b.maxY);
+
+    return Math.max(0, maxX - minX) *
+           Math.max(0, maxY - minY);
+}
+
+function contains(a, b) {
+    return a.minX <= b.minX &&
+           a.minY <= b.minY &&
+           b.maxX <= a.maxX &&
+           b.maxY <= a.maxY;
+}
+
+function intersects(a, b) {
+    return b.minX <= a.maxX &&
+           b.minY <= a.maxY &&
+           b.maxX >= a.minX &&
+           b.maxY >= a.minY;
+}
+
+function createNode(children) {
+    return {
+        children,
+        height: 1,
+        leaf: true,
+        minX: Infinity,
+        minY: Infinity,
+        maxX: -Infinity,
+        maxY: -Infinity
+    };
+}
+
+// sort an array so that items come in groups of n unsorted items, with groups sorted between each other;
+// combines selection algorithm with binary divide & conquer approach
+
+function multiSelect(arr, left, right, n, compare) {
+    const stack = [left, right];
+
+    while (stack.length) {
+        right = stack.pop();
+        left = stack.pop();
+
+        if (right - left <= n) continue;
+
+        const mid = left + Math.ceil((right - left) / n / 2) * n;
+        (0,quickselect__WEBPACK_IMPORTED_MODULE_0__["default"])(arr, mid, left, right, compare);
+
+        stack.push(left, mid, mid, right);
+    }
+}
 
 
 /***/ })

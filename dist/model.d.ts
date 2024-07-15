@@ -1,4 +1,3 @@
-import { BBox, default as RBush } from "rbush";
 import { Circle as SATCircle, Polygon as SATPolygon, Response, Vector as SATVector } from "sat";
 import { System } from "./system";
 import { Box } from "./bodies/box";
@@ -7,8 +6,15 @@ import { Ellipse } from "./bodies/ellipse";
 import { Line } from "./bodies/line";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
+import RBush from "./rbush";
 export { Polygon as DecompPolygon, Point as DecompPoint, isSimple } from "poly-decomp-es";
-export { RBush, BBox, Response, SATVector, SATPolygon, SATCircle };
+export interface BBox {
+    minX: number;
+    minY: number;
+    maxX: number;
+    maxY: number;
+}
+export { RBush, Response, SATVector, SATPolygon, SATCircle };
 export type CollisionCallback = (response: Response) => boolean | void;
 /**
  * types
@@ -155,21 +161,25 @@ export interface BodyProps extends Required<BodyOptions> {
      */
     get scaleY(): number;
     /**
-     * update position, and cached convexes positions
+     * update position BY MOVING FORWARD IN ANGLE DIRECTION
      */
-    setPosition(x: number, y: number, update?: boolean): Circle | SATPolygon;
+    move(speed: number, updateNow?: boolean): Circle | SATPolygon;
+    /**
+     * update position BY TELEPORTING
+     */
+    setPosition(x: number, y: number, updateNow?: boolean): Circle | SATPolygon;
     /**
      * for setting scale
      */
-    setScale(x: number, y: number, update?: boolean): Circle | SATPolygon;
+    setScale(x: number, y: number, updateNow?: boolean): Circle | SATPolygon;
     /**
      * for setting angle
      */
-    setAngle(angle: number, update?: boolean): Circle | SATPolygon;
+    setAngle(angle: number, updateNow?: boolean): Circle | SATPolygon;
     /**
      * for setting offset from center
      */
-    setOffset(offset: Vector, update?: boolean): Circle | SATPolygon;
+    setOffset(offset: Vector, updateNow?: boolean): Circle | SATPolygon;
     /**
      * draw the bounding box
      */

@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Circle = void 0;
-const sat_1 = require("sat");
 const model_1 = require("../model");
 const utils_1 = require("../utils");
+const sat_1 = require("sat");
 /**
  * collider - circle
  */
@@ -100,43 +100,50 @@ class Circle extends sat_1.Circle {
         this._group = (0, utils_1.getGroup)(group);
     }
     /**
-     * update position
+     * update position BY MOVING FORWARD IN ANGLE DIRECTION
      */
-    setPosition(x, y, update = true) {
+    move(speed = 1, updateNow = true) {
+        (0, utils_1.move)(this, speed, updateNow);
+        return this;
+    }
+    /**
+     * update position BY TELEPORTING
+     */
+    setPosition(x, y, updateNow = true) {
         this.pos.x = x;
         this.pos.y = y;
-        this.markAsDirty(update);
+        this.markAsDirty(updateNow);
         return this;
     }
     /**
      * update scale
      */
-    setScale(scaleX, _scaleY = scaleX, update = true) {
+    setScale(scaleX, _scaleY = scaleX, updateNow = true) {
         this.r = this.unscaledRadius * Math.abs(scaleX);
-        this.markAsDirty(update);
+        this.markAsDirty(updateNow);
         return this;
     }
     /**
      * set rotation
      */
-    setAngle(angle, update = true) {
+    setAngle(angle, updateNow = true) {
         this.angle = angle;
         const { x, y } = this.getOffsetWithAngle();
         this.offset.x = x;
         this.offset.y = y;
-        this.markAsDirty(update);
+        this.markAsDirty(updateNow);
         return this;
     }
     /**
      * set offset from center
      */
-    setOffset(offset, update = true) {
+    setOffset(offset, updateNow = true) {
         this.offsetCopy.x = offset.x;
         this.offsetCopy.y = offset.y;
         const { x, y } = this.getOffsetWithAngle();
         this.offset.x = x;
         this.offset.y = y;
-        this.markAsDirty(update);
+        this.markAsDirty(updateNow);
         return this;
     }
     /**
@@ -185,9 +192,9 @@ class Circle extends sat_1.Circle {
     /**
      * inner function for after position change update aabb in system
      */
-    updateBody(update = this.dirty) {
+    updateBody(updateNow = this.dirty) {
         var _a;
-        if (update) {
+        if (updateNow) {
             (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
             this.dirty = false;
         }
@@ -195,8 +202,8 @@ class Circle extends sat_1.Circle {
     /**
      * update instantly or mark as dirty
      */
-    markAsDirty(update = false) {
-        if (update) {
+    markAsDirty(updateNow = false) {
+        if (updateNow) {
             this.updateBody(true);
         }
         else {

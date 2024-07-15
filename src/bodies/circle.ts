@@ -1,23 +1,24 @@
-import { BBox } from "rbush";
-import { Circle as SATCircle } from "sat";
-
-import { System } from "../system";
 import {
+  BBox,
   BodyGroup,
   BodyOptions,
   BodyProps,
   BodyType,
   PotentialVector,
   SATVector,
-  Vector,
-} from "../model";
+  Vector
+} from "../model"
 import {
   dashLineTo,
   drawBVH,
   ensureVectorPoint,
   extendBody,
   getGroup,
-} from "../utils";
+  move
+} from "../utils"
+
+import { Circle as SATCircle } from "sat"
+import { System } from "../system"
 
 /**
  * collider - circle
@@ -26,97 +27,97 @@ export class Circle extends SATCircle implements BBox, BodyProps {
   /**
    * minimum x bound of body
    */
-  minX!: number;
+  minX!: number
 
   /**
    * maximum x bound of body
    */
-  maxX!: number;
+  maxX!: number
 
   /**
    * minimum y bound of body
    */
-  minY!: number;
+  minY!: number
 
   /**
    * maximum y bound of body
    */
-  maxY!: number;
+  maxY!: number
 
   /**
    * bounding box cache, without padding
    */
-  bbox!: BBox;
+  bbox!: BBox
 
   /**
    * offset
    */
-  offset!: SATVector;
+  offset!: SATVector
 
   /**
    * offset copy without angle applied
    */
-  offsetCopy: Vector = { x: 0, y: 0 };
+  offsetCopy: Vector = { x: 0, y: 0 }
 
   /**
    * bodies are not reinserted during update if their bbox didnt move outside bbox + padding
    */
-  padding!: number;
+  padding!: number
 
   /**
    * for compatibility reasons circle has angle
    */
-  angle!: number;
+  angle!: number
 
   /**
    * static bodies don't move but they collide
    */
-  isStatic!: boolean;
+  isStatic!: boolean
 
   /**
    * trigger bodies move but are like ghosts
    */
-  isTrigger!: boolean;
+  isTrigger!: boolean
 
   /**
    * reference to collision system
    */
-  system?: System;
+  system?: System
 
   /**
    * was the polygon modified and needs update in the next checkCollision
    */
-  dirty = false;
+  dirty = false
 
   /*
    * circles are convex
    */
-  readonly isConvex = true;
+  readonly isConvex = true
 
   /**
    * circle type
    */
-  readonly type: BodyType.Circle = BodyType.Circle;
+  readonly type: BodyType.Circle = BodyType.Circle
 
   /**
    * faster than type
    */
-  readonly typeGroup: BodyGroup.Circle = BodyGroup.Circle;
+  readonly typeGroup: BodyGroup.Circle = BodyGroup.Circle
 
   /**
    * always centered
    */
-  readonly isCentered = true;
+  readonly isCentered = true
 
   /**
    * group for collision filtering
    */
-  protected _group!: number;
+  protected _group!: number
 
   /**
    * saved initial radius - internal
    */
-  protected readonly unscaledRadius: number;
+  protected readonly unscaledRadius: number
 
   /**
    * collider - circle
@@ -124,173 +125,182 @@ export class Circle extends SATCircle implements BBox, BodyProps {
   constructor(
     position: PotentialVector,
     radius: number,
-    options?: BodyOptions,
+    options?: BodyOptions
   ) {
-    super(ensureVectorPoint(position), radius);
+    super(ensureVectorPoint(position), radius)
 
-    extendBody(this, options);
+    extendBody(this, options)
 
-    this.unscaledRadius = radius;
+    this.unscaledRadius = radius
   }
 
   /**
    * get this.pos.x
    */
   get x(): number {
-    return this.pos.x;
+    return this.pos.x
   }
 
   /**
    * updating this.pos.x by this.x = x updates AABB
    */
   set x(x: number) {
-    this.pos.x = x;
-    this.markAsDirty();
+    this.pos.x = x
+    this.markAsDirty()
   }
 
   /**
    * get this.pos.y
    */
   get y(): number {
-    return this.pos.y;
+    return this.pos.y
   }
 
   /**
    * updating this.pos.y by this.y = y updates AABB
    */
   set y(y: number) {
-    this.pos.y = y;
-    this.markAsDirty();
+    this.pos.y = y
+    this.markAsDirty()
   }
 
   /**
    * allow get scale
    */
   get scale(): number {
-    return this.r / this.unscaledRadius;
+    return this.r / this.unscaledRadius
   }
 
   /**
    * shorthand for setScale()
    */
   set scale(scale: number) {
-    this.setScale(scale);
+    this.setScale(scale)
   }
 
   /**
    * scaleX = scale in case of Circles
    */
   get scaleX(): number {
-    return this.scale;
+    return this.scale
   }
 
   /**
    * scaleY = scale in case of Circles
    */
   get scaleY(): number {
-    return this.scale;
+    return this.scale
   }
 
   /**
    * group for collision filtering
    */
   get group(): number {
-    return this._group;
+    return this._group
   }
 
   set group(group: number) {
-    this._group = getGroup(group);
+    this._group = getGroup(group)
   }
 
   /**
-   * update position
+   * update position BY MOVING FORWARD IN ANGLE DIRECTION
    */
-  setPosition(x: number, y: number, update = true): Circle {
-    this.pos.x = x;
-    this.pos.y = y;
-    this.markAsDirty(update);
+  move(speed = 1, updateNow = true): Circle {
+    move(this, speed, updateNow)
 
-    return this;
+    return this
+  }
+
+  /**
+   * update position BY TELEPORTING
+   */
+  setPosition(x: number, y: number, updateNow = true): Circle {
+    this.pos.x = x
+    this.pos.y = y
+    this.markAsDirty(updateNow)
+
+    return this
   }
 
   /**
    * update scale
    */
-  setScale(scaleX: number, _scaleY = scaleX, update = true): Circle {
-    this.r = this.unscaledRadius * Math.abs(scaleX);
-    this.markAsDirty(update);
+  setScale(scaleX: number, _scaleY = scaleX, updateNow = true): Circle {
+    this.r = this.unscaledRadius * Math.abs(scaleX)
+    this.markAsDirty(updateNow)
 
-    return this;
+    return this
   }
 
   /**
    * set rotation
    */
-  setAngle(angle: number, update = true): Circle {
-    this.angle = angle;
+  setAngle(angle: number, updateNow = true): Circle {
+    this.angle = angle
 
-    const { x, y } = this.getOffsetWithAngle();
-    this.offset.x = x;
-    this.offset.y = y;
-    this.markAsDirty(update);
+    const { x, y } = this.getOffsetWithAngle()
+    this.offset.x = x
+    this.offset.y = y
+    this.markAsDirty(updateNow)
 
-    return this;
+    return this
   }
 
   /**
    * set offset from center
    */
-  setOffset(offset: Vector, update = true): Circle {
-    this.offsetCopy.x = offset.x;
-    this.offsetCopy.y = offset.y;
+  setOffset(offset: Vector, updateNow = true): Circle {
+    this.offsetCopy.x = offset.x
+    this.offsetCopy.y = offset.y
 
-    const { x, y } = this.getOffsetWithAngle();
-    this.offset.x = x;
-    this.offset.y = y;
-    this.markAsDirty(update);
+    const { x, y } = this.getOffsetWithAngle()
+    this.offset.x = x
+    this.offset.y = y
+    this.markAsDirty(updateNow)
 
-    return this;
+    return this
   }
 
   /**
    * get body bounding box, without padding
    */
   getAABBAsBBox(): BBox {
-    const x = this.pos.x + this.offset.x;
-    const y = this.pos.y + this.offset.y;
+    const x = this.pos.x + this.offset.x
+    const y = this.pos.y + this.offset.y
 
     return {
       minX: x - this.r,
       maxX: x + this.r,
       minY: y - this.r,
-      maxY: y + this.r,
-    };
+      maxY: y + this.r
+    }
   }
 
   /**
    * Draws collider on a CanvasRenderingContext2D's current path
    */
   draw(context: CanvasRenderingContext2D) {
-    const x = this.pos.x + this.offset.x;
-    const y = this.pos.y + this.offset.y;
-    const r = Math.abs(this.r);
+    const x = this.pos.x + this.offset.x
+    const y = this.pos.y + this.offset.y
+    const r = Math.abs(this.r)
 
     if (this.isTrigger) {
-      const max = Math.max(8, this.r);
+      const max = Math.max(8, this.r)
 
       for (let i = 0; i < max; i++) {
-        const arc = (i / max) * 2 * Math.PI;
-        const arcPrev = ((i - 1) / max) * 2 * Math.PI;
-        const fromX = x + Math.cos(arcPrev) * this.r;
-        const fromY = y + Math.sin(arcPrev) * this.r;
-        const toX = x + Math.cos(arc) * this.r;
-        const toY = y + Math.sin(arc) * this.r;
+        const arc = (i / max) * 2 * Math.PI
+        const arcPrev = ((i - 1) / max) * 2 * Math.PI
+        const fromX = x + Math.cos(arcPrev) * this.r
+        const fromY = y + Math.sin(arcPrev) * this.r
+        const toX = x + Math.cos(arc) * this.r
+        const toY = y + Math.sin(arc) * this.r
 
-        dashLineTo(context, fromX, fromY, toX, toY);
+        dashLineTo(context, fromX, fromY, toX, toY)
       }
     } else {
-      context.moveTo(x + r, y);
-      context.arc(x, y, r, 0, Math.PI * 2);
+      context.moveTo(x + r, y)
+      context.arc(x, y, r, 0, Math.PI * 2)
     }
   }
 
@@ -298,27 +308,27 @@ export class Circle extends SATCircle implements BBox, BodyProps {
    * Draws Bounding Box on canvas context
    */
   drawBVH(context: CanvasRenderingContext2D) {
-    drawBVH(context, this);
+    drawBVH(context, this)
   }
 
   /**
    * inner function for after position change update aabb in system
    */
-  updateBody(update = this.dirty): void {
-    if (update) {
-      this.system?.insert(this);
-      this.dirty = false;
+  updateBody(updateNow = this.dirty): void {
+    if (updateNow) {
+      this.system?.insert(this)
+      this.dirty = false
     }
   }
 
   /**
    * update instantly or mark as dirty
    */
-  protected markAsDirty(update = false): void {
-    if (update) {
-      this.updateBody(true);
+  protected markAsDirty(updateNow = false): void {
+    if (updateNow) {
+      this.updateBody(true)
     } else {
-      this.dirty = true;
+      this.dirty = true
     }
   }
 
@@ -327,14 +337,14 @@ export class Circle extends SATCircle implements BBox, BodyProps {
    */
   protected getOffsetWithAngle(): Vector {
     if ((!this.offsetCopy.x && !this.offsetCopy.y) || !this.angle) {
-      return this.offsetCopy;
+      return this.offsetCopy
     }
 
-    const sin = Math.sin(this.angle);
-    const cos = Math.cos(this.angle);
-    const x = this.offsetCopy.x * cos - this.offsetCopy.y * sin;
-    const y = this.offsetCopy.x * sin + this.offsetCopy.y * cos;
+    const sin = Math.sin(this.angle)
+    const cos = Math.cos(this.angle)
+    const x = this.offsetCopy.x * cos - this.offsetCopy.y * sin
+    const y = this.offsetCopy.x * sin + this.offsetCopy.y * cos
 
-    return { x, y };
+    return { x, y }
   }
 }

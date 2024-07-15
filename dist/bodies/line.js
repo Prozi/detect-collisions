@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Line = void 0;
-const sat_1 = require("sat");
 const model_1 = require("../model");
 const polygon_1 = require("./polygon");
+const sat_1 = require("sat");
 /**
  * collider - line
  */

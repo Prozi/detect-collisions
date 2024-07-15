@@ -1,5 +1,3 @@
-require("pixi-shim");
-
 describe("GIVEN Box", () => {
   it("THEN changing width works correctly", () => {
     const { System } = require("../../src");

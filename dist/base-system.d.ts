@@ -1,14 +1,14 @@
+import { Body, BodyOptions, ChildrenData, Data, InTest, Leaf, PotentialVector, RBush, TraverseFunction, Vector } from "./model";
 import { Box } from "./bodies/box";
 import { Circle } from "./bodies/circle";
 import { Ellipse } from "./bodies/ellipse";
 import { Line } from "./bodies/line";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
-import { Body, BodyOptions, ChildrenData, Data, InTest, Leaf, PotentialVector, RBush, TraverseFunction, Vector } from "./model";
 /**
  * very base collision system (create, insert, update, draw, remove)
  */
-export declare class BaseSystem<TBody extends Body = Body> extends RBush<TBody> implements Data<TBody> {
+export declare class BaseSystem<TBody extends Body = Body> extends RBush implements Data<TBody> {
     data: ChildrenData<TBody>;
     /**
      * create point at position with options and add to system
@@ -38,7 +38,7 @@ export declare class BaseSystem<TBody extends Body = Body> extends RBush<TBody> 
      * re-insert body into collision tree and update its bbox
      * every body can be part of only one system
      */
-    insert(body: TBody): RBush<TBody>;
+    insert(body: TBody): this;
     /**
      * updates body in collision tree
      */
@@ -58,7 +58,7 @@ export declare class BaseSystem<TBody extends Body = Body> extends RBush<TBody> 
     /**
      * remove body aabb from collision tree
      */
-    remove(body: TBody, equals?: InTest<TBody>): RBush<TBody>;
+    remove(body: TBody, equals?: InTest<TBody>): this;
     /**
      * get object potential colliders
      * @deprecated because it's slower to use than checkOne() or checkAll()

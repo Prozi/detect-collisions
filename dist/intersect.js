@@ -1,9 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.intersectLinePolygon = exports.intersectLineLine = exports.intersectLineLineFast = exports.intersectLineCircle = exports.circleOutsidePolygon = exports.circleInPolygon = exports.circleInCircle = exports.pointOnCircle = exports.polygonInPolygon = exports.pointInPolygon = exports.polygonInCircle = exports.ensureConvex = void 0;
-const sat_1 = require("sat");
+exports.ensureConvex = ensureConvex;
+exports.polygonInCircle = polygonInCircle;
+exports.pointInPolygon = pointInPolygon;
+exports.polygonInPolygon = polygonInPolygon;
+exports.pointOnCircle = pointOnCircle;
+exports.circleInCircle = circleInCircle;
+exports.circleInPolygon = circleInPolygon;
+exports.circleOutsidePolygon = circleOutsidePolygon;
+exports.intersectLineCircle = intersectLineCircle;
+exports.intersectLineLineFast = intersectLineLineFast;
+exports.intersectLineLine = intersectLineLine;
+exports.intersectLinePolygon = intersectLinePolygon;
 const model_1 = require("./model");
 const optimized_1 = require("./optimized");
+const sat_1 = require("sat");
 /**
  * replace body with array of related convex polygons
  */
@@ -13,19 +24,15 @@ function ensureConvex(body) {
     }
     return body.convexPolygons;
 }
-exports.ensureConvex = ensureConvex;
 function polygonInCircle(polygon, circle) {
     return (0, optimized_1.every)(polygon.calcPoints, p => (0, sat_1.pointInCircle)({ x: p.x + polygon.pos.x, y: p.y + polygon.pos.y }, circle));
 }
-exports.polygonInCircle = polygonInCircle;
 function pointInPolygon(point, polygon) {
     return (0, optimized_1.some)(ensureConvex(polygon), convex => (0, sat_1.pointInPolygon)(point, convex));
 }
-exports.pointInPolygon = pointInPolygon;
 function polygonInPolygon(polygonA, polygonB) {
     return (0, optimized_1.every)(polygonA.calcPoints, point => pointInPolygon({ x: point.x + polygonA.pos.x, y: point.y + polygonA.pos.y }, polygonB));
 }
-exports.polygonInPolygon = polygonInPolygon;
 /**
  * https://stackoverflow.com/a/68197894/1749528
  */
@@ -34,7 +41,6 @@ function pointOnCircle(point, circle) {
         (point.y - circle.pos.y) * (point.y - circle.pos.y) ===
         circle.r * circle.r);
 }
-exports.pointOnCircle = pointOnCircle;
 /**
  * https://stackoverflow.com/a/68197894/1749528
  */
@@ -48,7 +54,6 @@ function circleInCircle(bodyA, bodyB) {
     const distSq = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
     return distSq + r2 === r1 || distSq + r2 < r1;
 }
-exports.circleInCircle = circleInCircle;
 /**
  * https://stackoverflow.com/a/68197894/1749528
  */
@@ -87,7 +92,6 @@ function circleInPolygon(circle, polygon) {
     }
     return true;
 }
-exports.circleInPolygon = circleInPolygon;
 /**
  * https://stackoverflow.com/a/68197894/1749528
  */
@@ -126,7 +130,6 @@ function circleOutsidePolygon(circle, polygon) {
     }
     return true;
 }
-exports.circleOutsidePolygon = circleOutsidePolygon;
 /**
  * https://stackoverflow.com/a/37225895/1749528
  */
@@ -153,7 +156,6 @@ function intersectLineCircle(line, { pos, r }) {
     }
     return results;
 }
-exports.intersectLineCircle = intersectLineCircle;
 /**
  * helper for intersectLineLineFast
  */
@@ -172,7 +174,6 @@ function intersectLineLineFast(line1, line2) {
         isTurn(line1.start, line1.end, line2.start) !==
             isTurn(line1.start, line1.end, line2.end));
 }
-exports.intersectLineLineFast = intersectLineLineFast;
 /**
  * returns the point of intersection
  * https://stackoverflow.com/a/24392281/1749528
@@ -196,7 +197,6 @@ function intersectLineLine(line1, line2) {
     }
     return { x: line1.start.x + lambda * dX, y: line1.start.y + lambda * dY };
 }
-exports.intersectLineLine = intersectLineLine;
 function intersectLinePolygon(line, polygon) {
     const results = [];
     (0, optimized_1.forEach)(polygon.calcPoints, (to, index) => {
@@ -214,4 +214,3 @@ function intersectLinePolygon(line, polygon) {
     });
     return results;
 }
-exports.intersectLinePolygon = intersectLinePolygon;

@@ -1,6 +1,6 @@
-import { Vector as SATVector } from "sat";
 import { BodyGroup, BodyOptions, BodyType, Vector } from "../model";
 import { Polygon } from "./polygon";
+import { Vector as SATVector } from "sat";
 /**
  * collider - line
  */

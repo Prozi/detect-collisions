@@ -1,9 +1,8 @@
-/// <reference types="sat" />
+import { Body, SATPolygon, Vector } from "./model";
 import { Circle } from "./bodies/circle";
 import { Line } from "./bodies/line";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
-import { Body, SATPolygon, Vector } from "./model";
 /**
  * replace body with array of related convex polygons
  */
