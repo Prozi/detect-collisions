@@ -144,6 +144,9 @@ class BaseSystem extends model_1.RBush {
   }
   /**
    * used to find body deep inside data with finder function returning boolean found or not
+   *
+   * @param traverseFunction
+   * @param tree
    */
   traverse(traverseFunction, { children } = this.data) {
     return children === null || children === void 0

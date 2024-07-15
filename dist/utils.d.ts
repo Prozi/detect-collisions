@@ -68,8 +68,14 @@ export declare function notIntersectAABB(bodyA: BBox, bodyB: BBox): boolean;
 export declare function intersectAABB(bodyA: BBox, bodyB: BBox): boolean;
 /**
  * checks if two bodies can interact (for collision filtering)
+ *
+ * @param bodyA
+ * @param bodyB
  */
-export declare function canInteract(bodyA: Body, bodyB: Body): boolean;
+export declare function canInteract(
+  { group: groupA }: Body,
+  { group: groupB }: Body,
+): boolean;
 /**
  * checks if body a is in body b
  */
@@ -80,10 +86,14 @@ export declare function checkAInB(bodyA: Body, bodyB: Body): boolean;
 export declare function clonePointsArray(points: SATVector[]): Vector[];
 /**
  * change format from SAT.js to poly-decomp
+ *
+ * @param position
  */
 export declare function mapVectorToArray({ x, y }?: Vector): DecompPoint;
 /**
  * change format from poly-decomp to SAT.js
+ *
+ * @param positionAsArray
  */
 export declare function mapArrayToVector([x, y]?: DecompPoint): Vector;
 /**
@@ -111,6 +121,10 @@ export declare function dashLineTo(
 ): void;
 /**
  * draw polygon
+ *
+ * @param context
+ * @param polygon
+ * @param isTrigger
  */
 export declare function drawPolygon(
   context: CanvasRenderingContext2D,

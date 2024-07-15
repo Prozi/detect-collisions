@@ -20,6 +20,10 @@ export function ensureConvex<TBody extends Body = Circle | Point | Polygon>(
   return body.convexPolygons;
 }
 
+/**
+ * @param polygon
+ * @param circle
+ */
 export function polygonInCircle(
   polygon: Polygon,
   circle: Pick<Circle, "pos" | "r">,
@@ -52,6 +56,9 @@ export function polygonInPolygon(
 
 /**
  * https://stackoverflow.com/a/68197894/1749528
+ *
+ * @param point
+ * @param circle
  */
 export function pointOnCircle(
   point: Vector,
@@ -66,17 +73,20 @@ export function pointOnCircle(
 
 /**
  * https://stackoverflow.com/a/68197894/1749528
+ *
+ * @param circle1
+ * @param circle2
  */
 export function circleInCircle(
-  bodyA: Pick<Circle, "pos" | "r">,
-  bodyB: Pick<Circle, "pos" | "r">,
+  circle1: Pick<Circle, "pos" | "r">,
+  circle2: Pick<Circle, "pos" | "r">,
 ) {
-  const x1 = bodyA.pos.x;
-  const y1 = bodyA.pos.y;
-  const x2 = bodyB.pos.x;
-  const y2 = bodyB.pos.y;
-  const r1 = bodyA.r;
-  const r2 = bodyB.r;
+  const x1 = circle1.pos.x;
+  const y1 = circle1.pos.y;
+  const x2 = circle2.pos.x;
+  const y2 = circle2.pos.y;
+  const r1 = circle1.r;
+  const r2 = circle2.r;
   const distSq = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 
   return distSq + r2 === r1 || distSq + r2 < r1;
@@ -84,6 +94,9 @@ export function circleInCircle(
 
 /**
  * https://stackoverflow.com/a/68197894/1749528
+ *
+ * @param circle
+ * @param polygon
  */
 export function circleInPolygon(
   circle: Pick<Circle, "pos" | "r">,
@@ -134,6 +147,9 @@ export function circleInPolygon(
 
 /**
  * https://stackoverflow.com/a/68197894/1749528
+ *
+ * @param circle
+ * @param polygon
  */
 export function circleOutsidePolygon(
   circle: Pick<Circle, "pos" | "r">,
@@ -189,6 +205,9 @@ export function circleOutsidePolygon(
 
 /**
  * https://stackoverflow.com/a/37225895/1749528
+ *
+ * @param line
+ * @param circle
  */
 export function intersectLineCircle(
   line: Pick<Line, "start" | "end">,
@@ -235,6 +254,9 @@ function isTurn(point1: Vector, point2: Vector, point3: Vector) {
 /**
  * faster implementation of intersectLineLine
  * https://stackoverflow.com/a/16725715/1749528
+ *
+ * @param line1
+ * @param line2
  */
 export function intersectLineLineFast(
   line1: Pick<Line, "start" | "end">,
@@ -251,6 +273,9 @@ export function intersectLineLineFast(
 /**
  * returns the point of intersection
  * https://stackoverflow.com/a/24392281/1749528
+ *
+ * @param line1
+ * @param line2
  */
 export function intersectLineLine(
   line1: Pick<Line, "start" | "end">,

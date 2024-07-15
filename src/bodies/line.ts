@@ -49,6 +49,9 @@ export class Line extends Polygon {
     };
   }
 
+  /**
+   * @param position
+   */
   set start({ x, y }: Vector) {
     this.x = x;
     this.y = y;
@@ -61,6 +64,9 @@ export class Line extends Polygon {
     };
   }
 
+  /**
+   * @param position
+   */
   set end({ x, y }: Vector) {
     this.points[1].x = x - this.start.x;
     this.points[1].y = y - this.start.y;

@@ -2486,6 +2486,9 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           }
           /**
            * used to find body deep inside data with finder function returning boolean found or not
+           *
+           * @param traverseFunction
+           * @param tree
            */
           traverse(traverseFunction, { children } = this.data) {
             return children === null || children === void 0
@@ -3029,6 +3032,9 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
               y: this.y + this.calcPoints[0].y,
             };
           }
+          /**
+           * @param position
+           */
           set start({ x, y }) {
             this.x = x;
             this.y = y;
@@ -3039,6 +3045,9 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
               y: this.y + this.calcPoints[1].y,
             };
           }
+          /**
+           * @param position
+           */
           set end({ x, y }) {
             this.points[1].x = x - this.start.x;
             this.points[1].y = y - this.start.y;
@@ -3353,7 +3362,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
            */
           isSimple() {
             return (0, poly_decomp_es_1.isSimple)(
-              this.calcPoints.map(utils_1.mapVectorToArray),
+              (0, optimized_1.map)(this.calcPoints, utils_1.mapVectorToArray),
             );
           }
           /**
@@ -3500,6 +3509,10 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           }
           return body.convexPolygons;
         }
+        /**
+         * @param polygon
+         * @param circle
+         */
         function polygonInCircle(polygon, circle) {
           return (0, optimized_1.every)(polygon.calcPoints, (p) =>
             (0, sat_1.pointInCircle)(
@@ -3523,6 +3536,9 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         }
         /**
          * https://stackoverflow.com/a/68197894/1749528
+         *
+         * @param point
+         * @param circle
          */
         function pointOnCircle(point, circle) {
           return (
@@ -3533,14 +3549,17 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         }
         /**
          * https://stackoverflow.com/a/68197894/1749528
+         *
+         * @param circle1
+         * @param circle2
          */
-        function circleInCircle(bodyA, bodyB) {
-          const x1 = bodyA.pos.x;
-          const y1 = bodyA.pos.y;
-          const x2 = bodyB.pos.x;
-          const y2 = bodyB.pos.y;
-          const r1 = bodyA.r;
-          const r2 = bodyB.r;
+        function circleInCircle(circle1, circle2) {
+          const x1 = circle1.pos.x;
+          const y1 = circle1.pos.y;
+          const x2 = circle2.pos.x;
+          const y2 = circle2.pos.y;
+          const r1 = circle1.r;
+          const r2 = circle2.r;
           const distSq = Math.sqrt(
             (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2),
           );
@@ -3548,6 +3567,9 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         }
         /**
          * https://stackoverflow.com/a/68197894/1749528
+         *
+         * @param circle
+         * @param polygon
          */
         function circleInPolygon(circle, polygon) {
           // Circle with radius 0 isn't a circle
@@ -3595,6 +3617,9 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         }
         /**
          * https://stackoverflow.com/a/68197894/1749528
+         *
+         * @param circle
+         * @param polygon
          */
         function circleOutsidePolygon(circle, polygon) {
           // Circle with radius 0 isn't a circle
@@ -3645,6 +3670,9 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         }
         /**
          * https://stackoverflow.com/a/37225895/1749528
+         *
+         * @param line
+         * @param circle
          */
         function intersectLineCircle(line, { pos, r }) {
           const v1 = {
@@ -3691,6 +3719,9 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         /**
          * faster implementation of intersectLineLine
          * https://stackoverflow.com/a/16725715/1749528
+         *
+         * @param line1
+         * @param line2
          */
         function intersectLineLineFast(line1, line2) {
           return (
@@ -3703,6 +3734,9 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         /**
          * returns the point of intersection
          * https://stackoverflow.com/a/24392281/1749528
+         *
+         * @param line1
+         * @param line2
          */
         function intersectLineLine(line1, line2) {
           const dX = line1.end.x - line1.start.x;
@@ -3991,6 +4025,9 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
               return;
             }
             const offsets = { x: 0, y: 0 };
+            /**
+             * @param response
+             */
             const addOffsets = ({ overlapV: { x, y } }) => {
               offsets.x += x;
               offsets.y += y;
@@ -4049,14 +4086,15 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
            * check do 2 objects collide
            */
           checkCollision(bodyA, bodyB, response = this.response) {
-            const { bbox: bboxA } = bodyA;
-            const { bbox: bboxB } = bodyB;
+            const { bbox: bboxA, padding: paddingA } = bodyA;
+            const { bbox: bboxB, padding: paddingB } = bodyB;
             // assess the bodies real aabb without padding
             if (
-              !(0, utils_1.canInteract)(bodyA, bodyB) ||
               !bboxA ||
               !bboxB ||
-              (0, utils_1.notIntersectAABB)(bboxA, bboxB)
+              !(0, utils_1.canInteract)(bodyA, bodyB) ||
+              ((paddingA || paddingB) &&
+                (0, utils_1.notIntersectAABB)(bboxA, bboxB))
             ) {
               return false;
             }
@@ -4199,7 +4237,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           const bodyGroups = Object.values(model_1.BodyGroup).filter(
             (value) => typeof value === "number",
           );
-          bodyGroups.forEach((bodyGroup) => {
+          (0, optimized_1.forEach)(bodyGroups, (bodyGroup) => {
             arrayResult[bodyGroup] =
               bodyGroup === model_1.BodyGroup.Circle
                 ? testMap[`${testType}${bodyType}Circle`]
@@ -4295,15 +4333,21 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
          * used for all types of bodies in constructor
          */
         function extendBody(body, options = {}) {
+          var _a;
           body.isStatic = !!options.isStatic;
           body.isTrigger = !!options.isTrigger;
           body.padding = options.padding || 0;
           body.group =
-            typeof options.group === "number" ? options.group : 0x7fffffff;
-          if (body.typeGroup !== model_1.BodyGroup.Circle) {
-            body.isCentered = options.isCentered || false;
+            (_a = options.group) !== null && _a !== void 0 ? _a : 0x7fffffff;
+          if (
+            body.typeGroup !== model_1.BodyGroup.Circle &&
+            options.isCentered
+          ) {
+            body.isCentered = true;
           }
-          body.setAngle(options.angle || 0);
+          if (options.angle) {
+            body.setAngle(options.angle);
+          }
         }
         /**
          * check if body moved outside of its padding
@@ -4336,11 +4380,17 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         }
         /**
          * checks if two bodies can interact (for collision filtering)
+         *
+         * @param bodyA
+         * @param bodyB
          */
-        function canInteract(bodyA, bodyB) {
+        function canInteract({ group: groupA }, { group: groupB }) {
           return (
-            ((bodyA.group >> 16) & (bodyB.group & 0xffff) &&
-              (bodyB.group >> 16) & (bodyA.group & 0xffff)) !== 0
+            // most common case
+            groupA === groupB ||
+            // otherwise do some binary magick
+            (((groupA >> 16) & (groupB & 0xffff)) !== 0 &&
+              ((groupB >> 16) & (groupA & 0xffff)) !== 0)
           );
         }
         /**
@@ -4361,12 +4411,16 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         }
         /**
          * change format from SAT.js to poly-decomp
+         *
+         * @param position
          */
         function mapVectorToArray({ x, y } = { x: 0, y: 0 }) {
           return [x, y];
         }
         /**
          * change format from poly-decomp to SAT.js
+         *
+         * @param positionAsArray
          */
         function mapArrayToVector([x, y] = [0, 0]) {
           return { x, y };
@@ -4424,6 +4478,10 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         }
         /**
          * draw polygon
+         *
+         * @param context
+         * @param polygon
+         * @param isTrigger
          */
         function drawPolygon(context, { pos, calcPoints }, isTrigger = false) {
           const lastPoint = calcPoints[calcPoints.length - 1];

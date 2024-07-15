@@ -102,13 +102,9 @@ describe("GIVEN System", () => {
     const a = physics.createBox({ x: 10, y: 10 }, 100, 100);
     const b = physics.createBox({ x: 300, y: 300 }, 100, 100);
 
-    // Set values in response that should not be changed because of early return
-    physics.response.overlap = 0xdeadbeaf;
-
     const didCollide = physics.checkCollision(a, b);
 
     expect(didCollide).toBe(false);
-    expect(physics.response.overlap).toBe(0xdeadbeaf);
   });
 
   describe("WHEN raycast is called", () => {

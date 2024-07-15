@@ -99,6 +99,9 @@ export declare class BaseSystem<TBody extends Body = Body>
   getPotentials(body: TBody): TBody[];
   /**
    * used to find body deep inside data with finder function returning boolean found or not
+   *
+   * @param traverseFunction
+   * @param tree
    */
   traverse(
     traverseFunction: TraverseFunction<TBody>,

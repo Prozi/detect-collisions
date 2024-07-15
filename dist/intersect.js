@@ -24,6 +24,10 @@ function ensureConvex(body) {
   }
   return body.convexPolygons;
 }
+/**
+ * @param polygon
+ * @param circle
+ */
 function polygonInCircle(polygon, circle) {
   return (0, optimized_1.every)(polygon.calcPoints, (p) =>
     (0, sat_1.pointInCircle)(
@@ -47,6 +51,9 @@ function polygonInPolygon(polygonA, polygonB) {
 }
 /**
  * https://stackoverflow.com/a/68197894/1749528
+ *
+ * @param point
+ * @param circle
  */
 function pointOnCircle(point, circle) {
   return (
@@ -57,19 +64,25 @@ function pointOnCircle(point, circle) {
 }
 /**
  * https://stackoverflow.com/a/68197894/1749528
+ *
+ * @param circle1
+ * @param circle2
  */
-function circleInCircle(bodyA, bodyB) {
-  const x1 = bodyA.pos.x;
-  const y1 = bodyA.pos.y;
-  const x2 = bodyB.pos.x;
-  const y2 = bodyB.pos.y;
-  const r1 = bodyA.r;
-  const r2 = bodyB.r;
+function circleInCircle(circle1, circle2) {
+  const x1 = circle1.pos.x;
+  const y1 = circle1.pos.y;
+  const x2 = circle2.pos.x;
+  const y2 = circle2.pos.y;
+  const r1 = circle1.r;
+  const r2 = circle2.r;
   const distSq = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
   return distSq + r2 === r1 || distSq + r2 < r1;
 }
 /**
  * https://stackoverflow.com/a/68197894/1749528
+ *
+ * @param circle
+ * @param polygon
  */
 function circleInPolygon(circle, polygon) {
   // Circle with radius 0 isn't a circle
@@ -112,6 +125,9 @@ function circleInPolygon(circle, polygon) {
 }
 /**
  * https://stackoverflow.com/a/68197894/1749528
+ *
+ * @param circle
+ * @param polygon
  */
 function circleOutsidePolygon(circle, polygon) {
   // Circle with radius 0 isn't a circle
@@ -156,6 +172,9 @@ function circleOutsidePolygon(circle, polygon) {
 }
 /**
  * https://stackoverflow.com/a/37225895/1749528
+ *
+ * @param line
+ * @param circle
  */
 function intersectLineCircle(line, { pos, r }) {
   const v1 = { x: line.end.x - line.start.x, y: line.end.y - line.start.y };
@@ -191,6 +210,9 @@ function isTurn(point1, point2, point3) {
 /**
  * faster implementation of intersectLineLine
  * https://stackoverflow.com/a/16725715/1749528
+ *
+ * @param line1
+ * @param line2
  */
 function intersectLineLineFast(line1, line2) {
   return (
@@ -203,6 +225,9 @@ function intersectLineLineFast(line1, line2) {
 /**
  * returns the point of intersection
  * https://stackoverflow.com/a/24392281/1749528
+ *
+ * @param line1
+ * @param line2
  */
 function intersectLineLine(line1, line2) {
   const dX = line1.end.x - line1.start.x;

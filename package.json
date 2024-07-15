@@ -23,7 +23,7 @@
     "build:demo": "webpack",
     "postbuild:demo": "cp -r dist/demo docs",
     "prebuild:docs": "rm -rf docs",
-    "docs": "npm run build:docs && chef-express docs --debug",
+    "docs": "npm run build:docs && chef-express docs --debug --port 3000",
     "docs-from-master-macos": "find docs -type f -name '*.html' -exec sed -i '' -r 's_/blob/[^/]+/_/blob/master/_g' {} +",
     "docs-from-master-linux": "find docs -type f -name '*.html' -exec sed -i -r 's_/blob/[^/]+/_/blob/master/_g' {} +",
     "docs-from-master": "npm run docs-from-master-macos || npm run docs-from-master-linux",

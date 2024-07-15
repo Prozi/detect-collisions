@@ -379,7 +379,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
    * if true, polygon is not an invalid, self-crossing polygon
    */
   isSimple(): boolean {
-    return isSimple(this.calcPoints.map(mapVectorToArray));
+    return isSimple(map(this.calcPoints, mapVectorToArray));
   }
 
   /**

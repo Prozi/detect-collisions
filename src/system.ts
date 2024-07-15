@@ -71,6 +71,10 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     }
 
     const offsets = { x: 0, y: 0 };
+
+    /**
+     * @param response
+     */
     const addOffsets = ({ overlapV: { x, y } }: Response) => {
       offsets.x += x;
       offsets.y += y;
@@ -146,14 +150,14 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     bodyB: TBody,
     response = this.response,
   ): boolean {
-    const { bbox: bboxA } = bodyA;
-    const { bbox: bboxB } = bodyB;
+    const { bbox: bboxA, padding: paddingA } = bodyA;
+    const { bbox: bboxB, padding: paddingB } = bodyB;
     // assess the bodies real aabb without padding
     if (
-      !canInteract(bodyA, bodyB) ||
       !bboxA ||
       !bboxB ||
-      notIntersectAABB(bboxA, bboxB)
+      !canInteract(bodyA, bodyB) ||
+      ((paddingA || paddingB) && notIntersectAABB(bboxA, bboxB))
     ) {
       return false;
     }

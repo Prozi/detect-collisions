@@ -44,6 +44,9 @@ class System extends base_system_1.BaseSystem {
       return;
     }
     const offsets = { x: 0, y: 0 };
+    /**
+     * @param response
+     */
     const addOffsets = ({ overlapV: { x, y } }) => {
       offsets.x += x;
       offsets.y += y;
@@ -94,14 +97,14 @@ class System extends base_system_1.BaseSystem {
    * check do 2 objects collide
    */
   checkCollision(bodyA, bodyB, response = this.response) {
-    const { bbox: bboxA } = bodyA;
-    const { bbox: bboxB } = bodyB;
+    const { bbox: bboxA, padding: paddingA } = bodyA;
+    const { bbox: bboxB, padding: paddingB } = bodyB;
     // assess the bodies real aabb without padding
     if (
-      !(0, utils_1.canInteract)(bodyA, bodyB) ||
       !bboxA ||
       !bboxB ||
-      (0, utils_1.notIntersectAABB)(bboxA, bboxB)
+      !(0, utils_1.canInteract)(bodyA, bodyB) ||
+      ((paddingA || paddingB) && (0, utils_1.notIntersectAABB)(bboxA, bboxB))
     ) {
       return false;
     }

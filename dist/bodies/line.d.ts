@@ -22,8 +22,14 @@ export declare class Line extends Polygon {
    */
   constructor(start: Vector, end: Vector, options?: BodyOptions);
   get start(): Vector;
+  /**
+   * @param position
+   */
   set start({ x, y }: Vector);
   get end(): Vector;
+  /**
+   * @param position
+   */
   set end({ x, y }: Vector);
   getCentroid(): SATVector;
   /**

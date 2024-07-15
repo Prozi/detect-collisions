@@ -50,7 +50,7 @@ function createArray(bodyType, testType) {
   const bodyGroups = Object.values(model_1.BodyGroup).filter(
     (value) => typeof value === "number",
   );
-  bodyGroups.forEach((bodyGroup) => {
+  (0, optimized_1.forEach)(bodyGroups, (bodyGroup) => {
     arrayResult[bodyGroup] =
       bodyGroup === model_1.BodyGroup.Circle
         ? testMap[`${testType}${bodyType}Circle`]
@@ -141,14 +141,17 @@ function clockwise(points) {
  * used for all types of bodies in constructor
  */
 function extendBody(body, options = {}) {
+  var _a;
   body.isStatic = !!options.isStatic;
   body.isTrigger = !!options.isTrigger;
   body.padding = options.padding || 0;
-  body.group = typeof options.group === "number" ? options.group : 0x7fffffff;
-  if (body.typeGroup !== model_1.BodyGroup.Circle) {
-    body.isCentered = options.isCentered || false;
+  body.group = (_a = options.group) !== null && _a !== void 0 ? _a : 0x7fffffff;
+  if (body.typeGroup !== model_1.BodyGroup.Circle && options.isCentered) {
+    body.isCentered = true;
   }
-  body.setAngle(options.angle || 0);
+  if (options.angle) {
+    body.setAngle(options.angle);
+  }
 }
 /**
  * check if body moved outside of its padding
@@ -178,11 +181,17 @@ function intersectAABB(bodyA, bodyB) {
 }
 /**
  * checks if two bodies can interact (for collision filtering)
+ *
+ * @param bodyA
+ * @param bodyB
  */
-function canInteract(bodyA, bodyB) {
+function canInteract({ group: groupA }, { group: groupB }) {
   return (
-    ((bodyA.group >> 16) & (bodyB.group & 0xffff) &&
-      (bodyB.group >> 16) & (bodyA.group & 0xffff)) !== 0
+    // most common case
+    groupA === groupB ||
+    // otherwise do some binary magick
+    (((groupA >> 16) & (groupB & 0xffff)) !== 0 &&
+      ((groupB >> 16) & (groupA & 0xffff)) !== 0)
   );
 }
 /**
@@ -203,12 +212,16 @@ function clonePointsArray(points) {
 }
 /**
  * change format from SAT.js to poly-decomp
+ *
+ * @param position
  */
 function mapVectorToArray({ x, y } = { x: 0, y: 0 }) {
   return [x, y];
 }
 /**
  * change format from poly-decomp to SAT.js
+ *
+ * @param positionAsArray
  */
 function mapArrayToVector([x, y] = [0, 0]) {
   return { x, y };
@@ -255,6 +268,10 @@ function dashLineTo(context, fromX, fromY, toX, toY, dash = 2, gap = 4) {
 }
 /**
  * draw polygon
+ *
+ * @param context
+ * @param polygon
+ * @param isTrigger
  */
 function drawPolygon(context, { pos, calcPoints }, isTrigger = false) {
   const lastPoint = calcPoints[calcPoints.length - 1];

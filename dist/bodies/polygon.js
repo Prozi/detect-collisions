@@ -236,7 +236,7 @@ class Polygon extends sat_1.Polygon {
    */
   isSimple() {
     return (0, poly_decomp_es_1.isSimple)(
-      this.calcPoints.map(utils_1.mapVectorToArray),
+      (0, optimized_1.map)(this.calcPoints, utils_1.mapVectorToArray),
     );
   }
   /**

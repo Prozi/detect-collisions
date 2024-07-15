@@ -43,6 +43,9 @@ class Line extends polygon_1.Polygon {
       y: this.y + this.calcPoints[0].y,
     };
   }
+  /**
+   * @param position
+   */
   set start({ x, y }) {
     this.x = x;
     this.y = y;
@@ -53,6 +56,9 @@ class Line extends polygon_1.Polygon {
       y: this.y + this.calcPoints[1].y,
     };
   }
+  /**
+   * @param position
+   */
   set end({ x, y }) {
     this.points[1].x = x - this.start.x;
     this.points[1].y = y - this.start.y;

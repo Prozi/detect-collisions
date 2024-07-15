@@ -51,7 +51,7 @@ function createArray<T = SATTest | InTest>(
     (value) => typeof value === "number",
   );
 
-  bodyGroups.forEach((bodyGroup: BodyGroup) => {
+  forEach(bodyGroups, (bodyGroup: BodyGroup) => {
     arrayResult[bodyGroup] = (
       bodyGroup === BodyGroup.Circle
         ? testMap[`${testType}${bodyType}Circle`]
@@ -173,13 +173,15 @@ export function extendBody(body: Body, options: BodyOptions = {}): void {
   body.isStatic = !!options.isStatic;
   body.isTrigger = !!options.isTrigger;
   body.padding = options.padding || 0;
-  body.group = typeof options.group === "number" ? options.group : 0x7fffffff;
+  body.group = options.group ?? 0x7fffffff;
 
-  if (body.typeGroup !== BodyGroup.Circle) {
-    body.isCentered = options.isCentered || false;
+  if (body.typeGroup !== BodyGroup.Circle && options.isCentered) {
+    body.isCentered = true;
   }
 
-  body.setAngle(options.angle || 0);
+  if (options.angle) {
+    body.setAngle(options.angle);
+  }
 }
 
 /**
@@ -214,11 +216,20 @@ export function intersectAABB(bodyA: BBox, bodyB: BBox): boolean {
 
 /**
  * checks if two bodies can interact (for collision filtering)
+ *
+ * @param bodyA
+ * @param bodyB
  */
-export function canInteract(bodyA: Body, bodyB: Body): boolean {
+export function canInteract(
+  { group: groupA }: Body,
+  { group: groupB }: Body,
+): boolean {
   return (
-    ((bodyA.group >> 16) & (bodyB.group & 0xffff) &&
-      (bodyB.group >> 16) & (bodyA.group & 0xffff)) !== 0
+    // most common case
+    groupA === groupB ||
+    // otherwise do some binary magick
+    (((groupA >> 16) & (groupB & 0xffff)) !== 0 &&
+      ((groupB >> 16) & (groupA & 0xffff)) !== 0)
   );
 }
 
@@ -243,6 +254,8 @@ export function clonePointsArray(points: SATVector[]): Vector[] {
 
 /**
  * change format from SAT.js to poly-decomp
+ *
+ * @param position
  */
 export function mapVectorToArray(
   { x, y }: Vector = { x: 0, y: 0 },
@@ -252,6 +265,8 @@ export function mapVectorToArray(
 
 /**
  * change format from poly-decomp to SAT.js
+ *
+ * @param positionAsArray
  */
 export function mapArrayToVector([x, y]: DecompPoint = [0, 0]): Vector {
   return { x, y };
@@ -314,6 +329,10 @@ export function dashLineTo(
 
 /**
  * draw polygon
+ *
+ * @param context
+ * @param polygon
+ * @param isTrigger
  */
 export function drawPolygon(
   context: CanvasRenderingContext2D,
