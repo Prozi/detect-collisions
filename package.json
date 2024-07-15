@@ -1,6 +1,6 @@
 {
   "name": "detect-collisions",
-  "version": "9.9.1",
+  "version": "9.9.2",
   "description": "detecting collisions between bodies: Points, Lines, Boxes, Polygons, Ellipses, Circles. RayCasting. Bodies have offset, rotation, scale, bbox padding, be static (non moving), be trigger bodies (non colliding).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -33,12 +33,13 @@
     "format": "prettier --write {src,docs,*.*}",
     "benchmark": "npm run benchmark-insertion && npm run benchmark-stress",
     "benchmark-stress": "node -r pixi-shim -e 'import(\"./dist/benchmarks/index.js\").then(({ stressBenchmark }) => stressBenchmark());'",
-    "benchmark-insertion": "node -r pixi-shim -e 'import(\"./dist/benchmarks/index.js\").then(({ insertionBenchmark }) => insertionBenchmark());'"
+    "benchmark-insertion": "node -e 'import(\"./dist/benchmarks/index.js\").then(({ insertionBenchmark }) => insertionBenchmark());'"
   },
   "repository": "git://github.com/Prozi/detect-collisions.git",
   "files": [
     "dist/*.*",
-    "dist/bodies/*.*"
+    "dist/bodies/*.*",
+    "dist/external/*.*"
   ],
   "keywords": [
     "javascript",
