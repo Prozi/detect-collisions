@@ -4579,39 +4579,45 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
   !*** ./src/demo/canvas.js ***!
   \****************************/
       /***/ (module) => {
-        const width = window.innerWidth || 1024;
-        const height = window.innerHeight || 768;
+        // super basic mock
+        const win = typeof window !== "undefined" ? window : {};
+        const doc = typeof document !== "undefined" ? document : {};
+
+        const width = win.innerWidth || 1024;
+        const height = win.innerHeight || 768;
 
         class TestCanvas {
           constructor(test) {
             this.test = test;
 
-            this.element = document.createElement("div");
-            this.element.id = "debug";
-            this.element.innerHTML = `${this.test.legend}
+            if (doc.createElement) {
+              this.element = doc.createElement("div");
+              this.element.id = "debug";
+              this.element.innerHTML = `${this.test.legend}
     <div>
       <label>
         <input id="bvh" type="checkbox"/> Show Bounding Volume Hierarchy
       </label>
     </div>`;
 
-            this.canvas = document.createElement("canvas");
-            this.canvas.width = width;
-            this.canvas.height = height;
+              this.canvas = doc.createElement("canvas");
+              this.canvas.width = width;
+              this.canvas.height = height;
 
-            this.context = this.canvas.getContext("2d");
-            this.context.font = "24px Arial";
-            this.test.context = this.context;
+              this.context = this.canvas.getContext("2d");
+              this.context.font = "24px Arial";
+              this.test.context = this.context;
 
-            this.bvhCheckbox = this.element.querySelector("#bvh");
+              this.bvhCheckbox = this.element.querySelector("#bvh");
 
-            if (this.canvas instanceof Node) {
-              this.element.appendChild(this.canvas);
+              if (this.canvas) {
+                this.element.appendChild(this.canvas);
+              }
+
+              this.fps = 0;
+              this.frame = 0;
+              this.started = Date.now();
             }
-
-            this.fps = 0;
-            this.frame = 0;
-            this.started = Date.now();
 
             loop(this.update.bind(this));
           }
@@ -4619,38 +4625,40 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           update() {
             this.frame++;
 
-            const timeDiff = Date.now() - this.started;
-            if (timeDiff >= 1000) {
-              this.fps = this.frame / (timeDiff / 1000);
-              this.frame = 0;
-              this.started = Date.now();
-            }
+            if (!this.test.headless) {
+              const timeDiff = Date.now() - this.started;
+              if (timeDiff >= 1000) {
+                this.fps = this.frame / (timeDiff / 1000);
+                this.frame = 0;
+                this.started = Date.now();
+              }
 
-            // Clear the canvas
-            this.context.fillStyle = "#000000";
-            this.context.fillRect(0, 0, width, height);
+              // Clear the canvas
+              this.context.fillStyle = "#000000";
+              this.context.fillRect(0, 0, width, height);
 
-            // Render the bodies
-            this.context.strokeStyle = "#FFFFFF";
-            this.context.beginPath();
-            this.test.physics.draw(this.context);
-            this.context.stroke();
-
-            // Render the BVH
-            if (this.bvhCheckbox.checked) {
-              this.context.strokeStyle = "#00FF00";
+              // Render the bodies
+              this.context.strokeStyle = "#FFFFFF";
               this.context.beginPath();
-              this.test.physics.drawBVH(this.context);
+              this.test.physics.draw(this.context);
               this.context.stroke();
-            }
 
-            // Render the FPS
-            this.context.fillStyle = "#FFCC00";
-            this.context.fillText(
-              `FPS: ${this.fps ? this.fps.toFixed(0) : "?"}`,
-              24,
-              48,
-            );
+              // Render the BVH
+              if (this.bvhCheckbox.checked) {
+                this.context.strokeStyle = "#00FF00";
+                this.context.beginPath();
+                this.test.physics.drawBVH(this.context);
+                this.context.stroke();
+              }
+
+              // Render the FPS
+              this.context.fillStyle = "#FFCC00";
+              this.context.fillText(
+                `FPS: ${this.fps ? this.fps.toFixed(0) : "?"}`,
+                24,
+                48,
+              );
+            }
 
             if (this.test.drawCallback) {
               this.test.drawCallback();
@@ -4668,6 +4676,10 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         module.exports.TestCanvas = TestCanvas;
 
         module.exports.loop = loop;
+
+        module.exports.win = win;
+
+        module.exports.doc = doc;
 
         module.exports.width = width;
 
@@ -4690,7 +4702,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         const { getBounceDirection, groupBits } = __webpack_require__(
           /*! ../utils */ "./src/utils.ts",
         );
-        const { width, height, loop } = __webpack_require__(
+        const { win, doc, width, height, loop } = __webpack_require__(
           /*! ./canvas */ "./src/demo/canvas.js",
         );
         const seededRandom = __webpack_require__(
@@ -4742,22 +4754,27 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             this.updateBody = this.updateBody.bind(this);
 
             // observer #debug & add filtering checkbox event
-            const observer = new window.MutationObserver((mutations) => {
-              mutations.forEach((mutation) => {
-                mutation.addedNodes.forEach((node) => {
-                  if (node.id == "debug") {
-                    document
-                      .querySelector("#filtering")
-                      .addEventListener("change", () => this.toggleFiltering());
-                    observer.disconnect();
-                  }
+            if (win.MutationObserver) {
+              const observer = new win.MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                  mutation.addedNodes.forEach((node) => {
+                    if (node.id == "debug") {
+                      document
+                        .querySelector("#filtering")
+                        .addEventListener("change", () =>
+                          this.toggleFiltering(),
+                        );
+                      observer.disconnect();
+                    }
+                  });
                 });
               });
-            });
-            observer.observe(document.querySelector("body"), {
-              subtree: false,
-              childList: true,
-            });
+
+              observer.observe(doc.querySelector("body"), {
+                subtree: false,
+                childList: true,
+              });
+            }
 
             this.start = () => {
               loop(this.update.bind(this));
@@ -5015,7 +5032,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         const { mapVectorToArray } = __webpack_require__(
           /*! ../utils */ "./src/utils.ts",
         );
-        const { width, height, loop } = __webpack_require__(
+        const { doc, width, height, loop } = __webpack_require__(
           /*! ./canvas */ "./src/demo/canvas.js",
         );
 
@@ -5054,20 +5071,22 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             this.legend = `<div><b>W, S</b> - Accelerate/Decelerate</div>
     <div><b>A, D</b> - Turn</div>`;
 
-            const updateKeys = ({ type, key }) => {
-              const keyDown = type === "keydown";
-              const keyLowerCase = key.toLowerCase();
+            if (doc.addEventListener) {
+              const updateKeys = ({ type, key }) => {
+                const keyDown = type === "keydown";
+                const keyLowerCase = key.toLowerCase();
 
-              keyLowerCase === "w" && (this.up = keyDown);
-              keyLowerCase === "s" && (this.down = keyDown);
-              keyLowerCase === "a" && (this.left = keyDown);
-              keyLowerCase === "d" && (this.right = keyDown);
-            };
+                keyLowerCase === "w" && (this.up = keyDown);
+                keyLowerCase === "s" && (this.down = keyDown);
+                keyLowerCase === "a" && (this.left = keyDown);
+                keyLowerCase === "d" && (this.right = keyDown);
+              };
 
-            document.addEventListener("keydown", updateKeys);
-            document.addEventListener("keyup", updateKeys);
+              doc.addEventListener("keydown", updateKeys);
+              doc.addEventListener("keyup", updateKeys);
+            }
 
-            if (this.canvas instanceof Node) {
+            if (this.canvas) {
               this.element.appendChild(this.canvas);
             }
 

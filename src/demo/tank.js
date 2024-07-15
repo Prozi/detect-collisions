@@ -1,7 +1,7 @@
 const { BodyGroup } = require("../model");
 const { System } = require("../system");
 const { mapVectorToArray } = require("../utils");
-const { width, height, loop } = require("./canvas");
+const { doc, width, height, loop } = require("./canvas");
 
 class Tank {
   constructor() {
@@ -38,20 +38,22 @@ class Tank {
     this.legend = `<div><b>W, S</b> - Accelerate/Decelerate</div>
     <div><b>A, D</b> - Turn</div>`;
 
-    const updateKeys = ({ type, key }) => {
-      const keyDown = type === "keydown";
-      const keyLowerCase = key.toLowerCase();
+    if (doc.addEventListener) {
+      const updateKeys = ({ type, key }) => {
+        const keyDown = type === "keydown";
+        const keyLowerCase = key.toLowerCase();
 
-      keyLowerCase === "w" && (this.up = keyDown);
-      keyLowerCase === "s" && (this.down = keyDown);
-      keyLowerCase === "a" && (this.left = keyDown);
-      keyLowerCase === "d" && (this.right = keyDown);
-    };
+        keyLowerCase === "w" && (this.up = keyDown);
+        keyLowerCase === "s" && (this.down = keyDown);
+        keyLowerCase === "a" && (this.left = keyDown);
+        keyLowerCase === "d" && (this.right = keyDown);
+      };
 
-    document.addEventListener("keydown", updateKeys);
-    document.addEventListener("keyup", updateKeys);
+      doc.addEventListener("keydown", updateKeys);
+      doc.addEventListener("keyup", updateKeys);
+    }
 
-    if (this.canvas instanceof Node) {
+    if (this.canvas) {
       this.element.appendChild(this.canvas);
     }
 

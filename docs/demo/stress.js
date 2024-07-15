@@ -2,7 +2,7 @@
 const { BodyGroup } = require("../model");
 const { System } = require("../system");
 const { getBounceDirection, groupBits } = require("../utils");
-const { width, height, loop } = require("./canvas");
+const { win, doc, width, height, loop } = require("./canvas");
 const seededRandom = require("random-seed").create("@Prozi").random;
 function random(min, max) {
   return Math.floor(seededRandom() * max) + min;
@@ -42,22 +42,24 @@ class Stress {
     this.lastTime = Date.now();
     this.updateBody = this.updateBody.bind(this);
     // observer #debug & add filtering checkbox event
-    const observer = new window.MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach((node) => {
-          if (node.id == "debug") {
-            document
-              .querySelector("#filtering")
-              .addEventListener("change", () => this.toggleFiltering());
-            observer.disconnect();
-          }
+    if (win.MutationObserver) {
+      const observer = new win.MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          mutation.addedNodes.forEach((node) => {
+            if (node.id == "debug") {
+              document
+                .querySelector("#filtering")
+                .addEventListener("change", () => this.toggleFiltering());
+              observer.disconnect();
+            }
+          });
         });
       });
-    });
-    observer.observe(document.querySelector("body"), {
-      subtree: false,
-      childList: true,
-    });
+      observer.observe(doc.querySelector("body"), {
+        subtree: false,
+        childList: true,
+      });
+    }
     this.start = () => {
       loop(this.update.bind(this));
     };

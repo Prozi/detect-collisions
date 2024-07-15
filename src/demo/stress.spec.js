@@ -1,5 +1,3 @@
-require("pixi-shim");
-
 describe("GIVEN Stress test", () => {
   it("THEN requiring it doesnt throw exception", () => {
     const req = () => require("./stress");

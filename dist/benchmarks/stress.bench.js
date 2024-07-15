@@ -91,6 +91,7 @@ const stressBenchmark = () =>
       warmupIterations: 0,
       setup: ({ opts }) => {
         stressTest = new Stress(opts.items);
+        stressTest.headless = true;
       },
       teardown: () => {
         stressTest.physics.clear();

@@ -1,5 +1,3 @@
-require("pixi-shim");
-
 describe("GIVEN Tank test", () => {
   it("THEN requiring it doesnt throw exception", () => {
     const req = () => require("./tank");

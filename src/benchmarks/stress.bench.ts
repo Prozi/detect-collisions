@@ -11,6 +11,7 @@ export const stressBenchmark = async () => {
     warmupIterations: 0,
     setup: ({ opts }: any) => {
       stressTest = new Stress(opts.items);
+      stressTest.headless = true;
     },
     teardown: () => {
       stressTest.physics.clear();
