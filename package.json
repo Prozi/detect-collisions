@@ -1,6 +1,6 @@
 {
   "name": "detect-collisions",
-  "version": "9.11.0",
+  "version": "9.11.1",
   "description": "Detect collisions between different shapes such as Points, Lines, Boxes, Polygons (including concave), Ellipses, and Circles. Features include RayCasting and support for offsets, rotation, scaling, bounding box padding, with options for static and trigger bodies (non-colliding).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
