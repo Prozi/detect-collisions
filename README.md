@@ -126,21 +126,12 @@ And that's it! You're now ready to utilize the Detect-Collisions library in your
 
 ## Visual Debugging with Rendering
 
-To facilitate debugging, Detect-Collisions allows you to visually represent the collision bodies. By invoking the `draw()` method and supplying a 2D context of a `<canvas>` element, you can draw all the bodies within a collision system.
+To facilitate debugging, Detect-Collisions allows you to visually represent the collision bodies. By invoking the `draw()` method and supplying a 2D context of a `<canvas>` element, you can draw all the bodies within a collision system. You can also opt to draw individual bodies.
 
 ```ts
 const canvas = document.createElement("canvas");
 const context = canvas.getContext("2d");
 
-context.strokeStyle = "#FFFFFF";
-context.beginPath();
-system.draw(context);
-context.stroke();
-```
-
-You can also opt to draw individual bodies.
-
-```ts
 context.strokeStyle = "#FFFFFF";
 context.beginPath();
 // draw specific body

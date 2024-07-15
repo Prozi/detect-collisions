@@ -7,25 +7,25 @@ import {
   RaycastHit,
   Response,
   SATVector,
-  Vector
-} from "./model"
+  Vector,
+} from "./model";
 import {
   canInteract,
   checkAInB,
   distance,
   getSATTest,
   notIntersectAABB,
-  returnTrue
-} from "./utils"
+  returnTrue,
+} from "./utils";
 import {
   ensureConvex,
   intersectLineCircle,
-  intersectLinePolygon
-} from "./intersect"
-import { forEach, some } from "./optimized"
+  intersectLinePolygon,
+} from "./intersect";
+import { forEach, some } from "./optimized";
 
-import { BaseSystem } from "./base-system"
-import { Line } from "./bodies/line"
+import { BaseSystem } from "./base-system";
+import { Line } from "./bodies/line";
 
 /**
  * collision system
@@ -34,23 +34,23 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   /**
    * the last collision result
    */
-  response: Response = new Response()
+  response: Response = new Response();
 
   /**
    * for raycasting
    */
-  protected ray!: Line
+  protected ray!: Line;
 
   /**
    * re-insert body into collision tree and update its bbox
    * every body can be part of only one system
    */
   insert(body: TBody): this {
-    const insertResult = super.insert(body)
+    const insertResult = super.insert(body);
     // set system for later body.system.updateBody(body)
-    body.system = this
+    body.system = this;
 
-    return insertResult
+    return insertResult;
   }
 
   /**
@@ -58,8 +58,8 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
    */
   separate(): void {
     forEach(this.all(), (body: TBody) => {
-      this.separateBody(body)
-    })
+      this.separateBody(body);
+    });
   }
 
   /**
@@ -67,19 +67,19 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
    */
   separateBody(body: TBody): void {
     if (body.isStatic || body.isTrigger) {
-      return
+      return;
     }
 
-    const offsets = { x: 0, y: 0 }
+    const offsets = { x: 0, y: 0 };
     const addOffsets = ({ overlapV: { x, y } }: Response) => {
-      offsets.x += x
-      offsets.y += y
-    }
+      offsets.x += x;
+      offsets.y += y;
+    };
 
-    this.checkOne(body, addOffsets)
+    this.checkOne(body, addOffsets);
 
     if (offsets.x || offsets.y) {
-      body.setPosition(body.x - offsets.x, body.y - offsets.y)
+      body.setPosition(body.x - offsets.x, body.y - offsets.y);
     }
   }
 
@@ -89,24 +89,24 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   checkOne(
     body: TBody,
     callback: CollisionCallback = returnTrue,
-    response = this.response
+    response = this.response,
   ): boolean {
     // no need to check static body collision
     if (body.isStatic) {
-      return false
+      return false;
     }
 
-    const bodies = this.search(body)
+    const bodies = this.search(body);
     const checkCollision = (candidate: TBody) => {
       if (
         candidate !== body &&
         this.checkCollision(body, candidate, response)
       ) {
-        return callback(response)
+        return callback(response);
       }
-    }
+    };
 
-    return some(bodies, checkCollision)
+    return some(bodies, checkCollision);
   }
 
   /**
@@ -115,13 +115,13 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   checkArea(
     area: BBox,
     callback: CollisionCallback = returnTrue,
-    response = this.response
+    response = this.response,
   ): boolean {
     const checkOne = (body: TBody) => {
-      return this.checkOne(body, callback, response)
-    }
+      return this.checkOne(body, callback, response);
+    };
 
-    return some(this.search(area), checkOne)
+    return some(this.search(area), checkOne);
   }
 
   /**
@@ -129,13 +129,13 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
    */
   checkAll(
     callback: CollisionCallback = returnTrue,
-    response = this.response
+    response = this.response,
   ): boolean {
     const checkOne = (body: TBody) => {
-      return this.checkOne(body, callback, response)
-    }
+      return this.checkOne(body, callback, response);
+    };
 
-    return some(this.all(), checkOne)
+    return some(this.all(), checkOne);
   }
 
   /**
@@ -144,10 +144,10 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   checkCollision(
     bodyA: TBody,
     bodyB: TBody,
-    response = this.response
+    response = this.response,
   ): boolean {
-    const { bbox: bboxA } = bodyA
-    const { bbox: bboxB } = bodyB
+    const { bbox: bboxA } = bodyA;
+    const { bbox: bboxB } = bodyB;
     // assess the bodies real aabb without padding
     if (
       !canInteract(bodyA, bodyB) ||
@@ -155,54 +155,54 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
       !bboxB ||
       notIntersectAABB(bboxA, bboxB)
     ) {
-      return false
+      return false;
     }
 
-    const sat = getSATTest(bodyA, bodyB)
+    const sat = getSATTest(bodyA, bodyB);
 
     // 99% of cases
     if (bodyA.isConvex && bodyB.isConvex) {
       // always first clear response
-      response.clear()
+      response.clear();
 
-      return sat(bodyA, bodyB, response)
+      return sat(bodyA, bodyB, response);
     }
 
     // more complex (non convex) cases
-    const convexBodiesA = ensureConvex(bodyA)
-    const convexBodiesB = ensureConvex(bodyB)
+    const convexBodiesA = ensureConvex(bodyA);
+    const convexBodiesB = ensureConvex(bodyB);
 
-    let overlapX = 0
-    let overlapY = 0
-    let collided = false
+    let overlapX = 0;
+    let overlapY = 0;
+    let collided = false;
 
-    forEach(convexBodiesA,convexBodyA => {
-      forEach(convexBodiesB,convexBodyB => {
+    forEach(convexBodiesA, (convexBodyA) => {
+      forEach(convexBodiesB, (convexBodyB) => {
         // always first clear response
-        response.clear()
+        response.clear();
 
         if (sat(convexBodyA, convexBodyB, response)) {
-          collided = true
-          overlapX += response.overlapV.x
-          overlapY += response.overlapV.y
+          collided = true;
+          overlapX += response.overlapV.x;
+          overlapY += response.overlapV.y;
         }
-      })
-    })
+      });
+    });
 
     if (collided) {
-      const vector = new SATVector(overlapX, overlapY)
+      const vector = new SATVector(overlapX, overlapY);
 
-      response.a = bodyA
-      response.b = bodyB
-      response.overlapV.x = overlapX
-      response.overlapV.y = overlapY
-      response.overlapN = vector.normalize()
-      response.overlap = vector.len()
-      response.aInB = checkAInB(bodyA, bodyB)
-      response.bInA = checkAInB(bodyB, bodyA)
+      response.a = bodyA;
+      response.b = bodyB;
+      response.overlapV.x = overlapX;
+      response.overlapV.y = overlapY;
+      response.overlapN = vector.normalize();
+      response.overlap = vector.len();
+      response.aInB = checkAInB(bodyA, bodyB);
+      response.bInA = checkAInB(bodyB, bodyA);
     }
 
-    return collided
+    return collided;
   }
 
   /**
@@ -211,42 +211,42 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   raycast(
     start: Vector,
     end: Vector,
-    allow: (body: TBody, ray: TBody) => boolean = returnTrue
+    allow: (body: TBody, ray: TBody) => boolean = returnTrue,
   ): RaycastHit<TBody> | null {
-    let minDistance = Infinity
-    let result: RaycastHit<TBody> | null = null
+    let minDistance = Infinity;
+    let result: RaycastHit<TBody> | null = null;
 
     if (!this.ray) {
-      this.ray = new Line(start, end, { isTrigger: true })
+      this.ray = new Line(start, end, { isTrigger: true });
     } else {
-      this.ray.start = start
-      this.ray.end = end
+      this.ray.start = start;
+      this.ray.end = end;
     }
 
-    this.insert(this.ray as TBody)
+    this.insert(this.ray as TBody);
 
     this.checkOne(this.ray as TBody, ({ b: body }) => {
       if (!allow(body, this.ray as TBody)) {
-        return false
+        return false;
       }
 
       const points: Vector[] =
         body.typeGroup === BodyGroup.Circle
           ? intersectLineCircle(this.ray, body)
-          : intersectLinePolygon(this.ray, body)
+          : intersectLinePolygon(this.ray, body);
 
       forEach(points, (point: Vector) => {
-        const pointDistance: number = distance(start, point)
+        const pointDistance: number = distance(start, point);
 
         if (pointDistance < minDistance) {
-          minDistance = pointDistance
-          result = { point, body }
+          minDistance = pointDistance;
+          result = { point, body };
         }
-      })
-    })
+      });
+    });
 
-    this.remove(this.ray as TBody)
+    this.remove(this.ray as TBody);
 
-    return result
+    return result;
   }
 }

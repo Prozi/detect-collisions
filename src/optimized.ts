@@ -5,12 +5,12 @@
  */
 export const forEach = <T>(
   array: T[],
-  callback: (item: T, index: number) => void
+  callback: (item: T, index: number) => void,
 ): void => {
   for (let i = 0, l = array.length; i < l; i++) {
-    callback(array[i], i)
+    callback(array[i], i);
   }
-}
+};
 
 /**
  * 20-90% faster than built-in Array.some function.
@@ -19,16 +19,16 @@ export const forEach = <T>(
  */
 export const some = <T>(
   array: T[],
-  callback: (item: T, index: number) => unknown
+  callback: (item: T, index: number) => unknown,
 ): boolean => {
   for (let i = 0, l = array.length; i < l; i++) {
     if (callback(array[i], i)) {
-      return true
+      return true;
     }
   }
 
-  return false
-}
+  return false;
+};
 
 /**
  * 20-40% faster than built-in Array.every function.
@@ -37,16 +37,16 @@ export const some = <T>(
  */
 export const every = <T>(
   array: T[],
-  callback: (item: T, index: number) => unknown
+  callback: (item: T, index: number) => unknown,
 ): boolean => {
   for (let i = 0, l = array.length; i < l; i++) {
     if (!callback(array[i], i)) {
-      return false
+      return false;
     }
   }
 
-  return true
-}
+  return true;
+};
 
 /**
  * 20-60% faster than built-in Array.filter function.
@@ -55,20 +55,20 @@ export const every = <T>(
  */
 export const filter = <T>(
   array: T[],
-  callback: (item: T, index: number) => unknown
+  callback: (item: T, index: number) => unknown,
 ): T[] => {
-  const output: T[] = []
+  const output: T[] = [];
 
   for (let i = 0, l = array.length; i < l; i++) {
-    const item = array[i]
+    const item = array[i];
 
     if (callback(item, i)) {
-      output.push(item)
+      output.push(item);
     }
   }
 
-  return output
-}
+  return output;
+};
 
 /**
  * 20-70% faster than built-in Array.map
@@ -77,14 +77,14 @@ export const filter = <T>(
  */
 export const map = <T, Y>(
   array: T[],
-  callback: (item: T, index: number) => Y
+  callback: (item: T, index: number) => Y,
 ): Y[] => {
-  const l = array.length
-  const output = new Array<Y>(l)
+  const l = array.length;
+  const output = new Array<Y>(l);
 
   for (let i = 0; i < l; i++) {
-    output[i] = callback(array[i], i)
+    output[i] = callback(array[i], i);
   }
 
-  return output
-}
+  return output;
+};

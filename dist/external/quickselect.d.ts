@@ -9,4 +9,10 @@
  * @param {number} [right=arr.length-1] right index
  * @param {(a: T, b: T) => number} [compare = (a, b) => a - b] compare function
  */
-export default function quickselect<T>(arr: T[], k: number, left?: number | undefined, right?: number | undefined, compare?: ((a: T, b: T) => number) | undefined): void;
+export default function quickselect<T>(
+  arr: T[],
+  k: number,
+  left?: number | undefined,
+  right?: number | undefined,
+  compare?: ((a: T, b: T) => number) | undefined,
+): void;

@@ -8,46 +8,47 @@ import {
   PotentialVector,
   RBush,
   TraverseFunction,
-  Vector
-} from "./model"
-import { bodyMoved, drawBVH } from "./utils"
-import { filter, forEach } from "./optimized"
+  Vector,
+} from "./model";
+import { bodyMoved, drawBVH } from "./utils";
+import { filter, forEach } from "./optimized";
 
-import { Box } from "./bodies/box"
-import { Circle } from "./bodies/circle"
-import { Ellipse } from "./bodies/ellipse"
-import { Line } from "./bodies/line"
-import { Point } from "./bodies/point"
-import { Polygon } from "./bodies/polygon"
+import { Box } from "./bodies/box";
+import { Circle } from "./bodies/circle";
+import { Ellipse } from "./bodies/ellipse";
+import { Line } from "./bodies/line";
+import { Point } from "./bodies/point";
+import { Polygon } from "./bodies/polygon";
 
 /**
  * very base collision system (create, insert, update, draw, remove)
  */
 export class BaseSystem<TBody extends Body = Body>
   extends RBush
-  implements Data<TBody> {
-  data!: ChildrenData<TBody>
+  implements Data<TBody>
+{
+  data!: ChildrenData<TBody>;
 
   /**
    * create point at position with options and add to system
    */
   createPoint(position: PotentialVector, options?: BodyOptions): Point {
-    const point = new Point(position, options)
+    const point = new Point(position, options);
 
-    this.insert(point as TBody)
+    this.insert(point as TBody);
 
-    return point
+    return point;
   }
 
   /**
    * create line at position with options and add to system
    */
   createLine(start: Vector, end: Vector, options?: BodyOptions): Line {
-    const line = new Line(start, end, options)
+    const line = new Line(start, end, options);
 
-    this.insert(line as TBody)
+    this.insert(line as TBody);
 
-    return line
+    return line;
   }
 
   /**
@@ -56,13 +57,13 @@ export class BaseSystem<TBody extends Body = Body>
   createCircle(
     position: PotentialVector,
     radius: number,
-    options?: BodyOptions
+    options?: BodyOptions,
   ): Circle {
-    const circle = new Circle(position, radius, options)
+    const circle = new Circle(position, radius, options);
 
-    this.insert(circle as TBody)
+    this.insert(circle as TBody);
 
-    return circle
+    return circle;
   }
 
   /**
@@ -72,13 +73,13 @@ export class BaseSystem<TBody extends Body = Body>
     position: PotentialVector,
     width: number,
     height: number,
-    options?: BodyOptions
+    options?: BodyOptions,
   ): Box {
-    const box = new Box(position, width, height, options)
+    const box = new Box(position, width, height, options);
 
-    this.insert(box as TBody)
+    this.insert(box as TBody);
 
-    return box
+    return box;
   }
 
   /**
@@ -89,13 +90,13 @@ export class BaseSystem<TBody extends Body = Body>
     radiusX: number,
     radiusY: number = radiusX,
     step?: number,
-    options?: BodyOptions
+    options?: BodyOptions,
   ): Ellipse {
-    const ellipse = new Ellipse(position, radiusX, radiusY, step, options)
+    const ellipse = new Ellipse(position, radiusX, radiusY, step, options);
 
-    this.insert(ellipse as TBody)
+    this.insert(ellipse as TBody);
 
-    return ellipse
+    return ellipse;
   }
 
   /**
@@ -104,13 +105,13 @@ export class BaseSystem<TBody extends Body = Body>
   createPolygon(
     position: PotentialVector,
     points: PotentialVector[],
-    options?: BodyOptions
+    options?: BodyOptions,
   ): Polygon {
-    const polygon = new Polygon(position, points, options)
+    const polygon = new Polygon(position, points, options);
 
-    this.insert(polygon as TBody)
+    this.insert(polygon as TBody);
 
-    return polygon
+    return polygon;
   }
 
   /**
@@ -118,33 +119,33 @@ export class BaseSystem<TBody extends Body = Body>
    * every body can be part of only one system
    */
   insert(body: TBody): this {
-    body.bbox = body.getAABBAsBBox()
+    body.bbox = body.getAABBAsBBox();
 
     if (body.system) {
       // allow end if body inserted and not moved
       if (!bodyMoved(body)) {
-        return this
+        return this;
       }
 
       // old bounding box *needs* to be removed
-      body.system.remove(body)
+      body.system.remove(body);
     }
 
     // only then we update min, max
-    body.minX = body.bbox.minX - body.padding
-    body.minY = body.bbox.minY - body.padding
-    body.maxX = body.bbox.maxX + body.padding
-    body.maxY = body.bbox.maxY + body.padding
+    body.minX = body.bbox.minX - body.padding;
+    body.minY = body.bbox.minY - body.padding;
+    body.maxX = body.bbox.maxX + body.padding;
+    body.maxY = body.bbox.maxY + body.padding;
 
     // reinsert bounding box to collision tree
-    return super.insert(body)
+    return super.insert(body);
   }
 
   /**
    * updates body in collision tree
    */
   updateBody(body: TBody): void {
-    body.updateBody()
+    body.updateBody();
   }
 
   /**
@@ -152,8 +153,8 @@ export class BaseSystem<TBody extends Body = Body>
    */
   update(): void {
     forEach(this.all(), (body: TBody) => {
-      this.updateBody(body)
-    })
+      this.updateBody(body);
+    });
   }
 
   /**
@@ -161,8 +162,8 @@ export class BaseSystem<TBody extends Body = Body>
    */
   draw(context: CanvasRenderingContext2D): void {
     forEach(this.all(), (body: TBody) => {
-      body.draw(context)
-    })
+      body.draw(context);
+    });
   }
 
   /**
@@ -170,23 +171,23 @@ export class BaseSystem<TBody extends Body = Body>
    */
   drawBVH(context: CanvasRenderingContext2D): void {
     const drawChildren = (body: Leaf<TBody>) => {
-      drawBVH(context, body as TBody)
+      drawBVH(context, body as TBody);
 
       if (body.children) {
-        forEach(body.children, drawChildren)
+        forEach(body.children, drawChildren);
       }
-    }
+    };
 
-    forEach(this.data.children, drawChildren)
+    forEach(this.data.children, drawChildren);
   }
 
   /**
    * remove body aabb from collision tree
    */
   remove(body: TBody, equals?: InTest<TBody>): this {
-    body.system = undefined
+    body.system = undefined;
 
-    return super.remove(body, equals)
+    return super.remove(body, equals);
   }
 
   /**
@@ -195,7 +196,7 @@ export class BaseSystem<TBody extends Body = Body>
    */
   getPotentials(body: TBody): TBody[] {
     // filter here is required as collides with self
-    return filter(this.search(body), (candidate: TBody) => candidate !== body)
+    return filter(this.search(body), (candidate: TBody) => candidate !== body);
   }
 
   /**
@@ -203,21 +204,21 @@ export class BaseSystem<TBody extends Body = Body>
    */
   traverse(
     traverseFunction: TraverseFunction<TBody>,
-    { children }: { children?: Leaf<TBody>[] } = this.data
+    { children }: { children?: Leaf<TBody>[] } = this.data,
   ): TBody | undefined {
     return children?.find((body, index) => {
       if (!body) {
-        return false
+        return false;
       }
 
       if (body.typeGroup && traverseFunction(body, children, index)) {
-        return true
+        return true;
       }
 
       // if callback returns true, ends forEach
       if (body.children) {
-        this.traverse(traverseFunction, body)
+        this.traverse(traverseFunction, body);
       }
-    })
+    });
   }
 }

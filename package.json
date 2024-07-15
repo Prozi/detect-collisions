@@ -1,11 +1,11 @@
 {
   "name": "detect-collisions",
-  "version": "9.9.4",
+  "version": "9.10.0",
   "description": "Detect collisions between different shapes such as Points, Lines, Boxes, Polygons (including concave), Ellipses, and Circles. Features include RayCasting and support for offsets, rotation, scaling, bounding box padding, with options for static and trigger bodies (non-colliding).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "start": "chef-express dist/demo --debug",
+    "start": "chef-express dist/demo --debug --port 3000",
     "test": "jest --silent --verbose --forceExit",
     "dev": "webpack serve --port 3000",
     "amend": "npm run precommit;git commit -a --am --no-edit",
@@ -30,7 +30,7 @@
     "demo": "npm run build:demo && npm start",
     "precommit": "npm run lint && npm run build",
     "lint": "tslint --project tsconfig.json 'src/**/*.ts' --fix",
-    "format": "prettier --write {src,docs,*.*}",
+    "format": "prettier . --write",
     "benchmark": "npm run benchmark-insertion && npm run benchmark-stress",
     "benchmark-stress": "node -r pixi-shim -e 'import(\"./dist/benchmarks/index.js\").then(({ stressBenchmark }) => stressBenchmark());'",
     "benchmark-insertion": "node -e 'import(\"./dist/benchmarks/index.js\").then(({ insertionBenchmark }) => insertionBenchmark());'"

@@ -8,8 +8,12 @@ function random(min, max) {
   return Math.floor(seededRandom() * max) + min;
 }
 
+function getDefaultCount() {
+  return Math.floor(Math.min(2000, Math.hypot(width, height)));
+}
+
 class Stress {
-  constructor(count = 2000) {
+  constructor(count = getDefaultCount()) {
     this.size = Math.sqrt((width * height) / (count * 50));
 
     this.physics = new System(5);
