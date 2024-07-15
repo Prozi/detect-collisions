@@ -14,7 +14,7 @@ import { Point } from "./bodies/point"
 import { Polygon } from "./bodies/polygon"
 
 // version 4.0.0 1=1 copy
-import RBush from "./rbush"
+import RBush from "./external/rbush"
 
 export {
   Polygon as DecompPolygon,

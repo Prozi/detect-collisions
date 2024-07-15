@@ -694,75 +694,6 @@ function removeDuplicatePoints(polygon, precision) {
 
 /***/ }),
 
-/***/ "./node_modules/quickselect/index.js":
-/*!*******************************************!*\
-  !*** ./node_modules/quickselect/index.js ***!
-  \*******************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ quickselect)
-/* harmony export */ });
-
-function quickselect(arr, k, left, right, compare) {
-    quickselectStep(arr, k, left || 0, right || (arr.length - 1), compare || defaultCompare);
-}
-
-function quickselectStep(arr, k, left, right, compare) {
-
-    while (right > left) {
-        if (right - left > 600) {
-            var n = right - left + 1;
-            var m = k - left + 1;
-            var z = Math.log(n);
-            var s = 0.5 * Math.exp(2 * z / 3);
-            var sd = 0.5 * Math.sqrt(z * s * (n - s) / n) * (m - n / 2 < 0 ? -1 : 1);
-            var newLeft = Math.max(left, Math.floor(k - m * s / n + sd));
-            var newRight = Math.min(right, Math.floor(k + (n - m) * s / n + sd));
-            quickselectStep(arr, k, newLeft, newRight, compare);
-        }
-
-        var t = arr[k];
-        var i = left;
-        var j = right;
-
-        swap(arr, left, k);
-        if (compare(arr[right], t) > 0) swap(arr, left, right);
-
-        while (i < j) {
-            swap(arr, i, j);
-            i++;
-            j--;
-            while (compare(arr[i], t) < 0) i++;
-            while (compare(arr[j], t) > 0) j--;
-        }
-
-        if (compare(arr[left], t) === 0) swap(arr, left, j);
-        else {
-            j++;
-            swap(arr, j, right);
-        }
-
-        if (j <= k) left = j + 1;
-        if (k <= j) right = j - 1;
-    }
-}
-
-function swap(arr, i, j) {
-    var tmp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = tmp;
-}
-
-function defaultCompare(a, b) {
-    return a < b ? -1 : a > b ? 1 : 0;
-}
-
-
-/***/ }),
-
 /***/ "./node_modules/random-seed/index.js":
 /*!*******************************************!*\
   !*** ./node_modules/random-seed/index.js ***!
@@ -3400,7 +3331,7 @@ Object.defineProperty(exports, "SATPolygon", ({ enumerable: true, get: function 
 Object.defineProperty(exports, "Response", ({ enumerable: true, get: function () { return sat_1.Response; } }));
 Object.defineProperty(exports, "SATVector", ({ enumerable: true, get: function () { return sat_1.Vector; } }));
 // version 4.0.0 1=1 copy
-const rbush_1 = __importDefault(__webpack_require__(/*! ./rbush */ "./src/rbush.js"));
+const rbush_1 = __importDefault(__webpack_require__(/*! ./external/rbush */ "./src/external/rbush.js"));
 exports.RBush = rbush_1.default;
 var poly_decomp_es_1 = __webpack_require__(/*! poly-decomp-es */ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js");
 Object.defineProperty(exports, "isSimple", ({ enumerable: true, get: function () { return poly_decomp_es_1.isSimple; } }));
@@ -4809,10 +4740,99 @@ module.exports = Tank;
 
 /***/ }),
 
-/***/ "./src/rbush.js":
-/*!**********************!*\
-  !*** ./src/rbush.js ***!
-  \**********************/
+/***/ "./src/external/quickselect.js":
+/*!*************************************!*\
+  !*** ./src/external/quickselect.js ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ quickselect)
+/* harmony export */ });
+
+/**
+ * Rearranges items so that all items in the [left, k] are the smallest.
+ * The k-th element will have the (k - left + 1)-th smallest value in [left, right].
+ *
+ * @template T
+ * @param {T[]} arr the array to partially sort (in place)
+ * @param {number} k middle index for partial sorting (as defined above)
+ * @param {number} [left=0] left index of the range to sort
+ * @param {number} [right=arr.length-1] right index
+ * @param {(a: T, b: T) => number} [compare = (a, b) => a - b] compare function
+ */
+function quickselect(arr, k, left = 0, right = arr.length - 1, compare = defaultCompare) {
+
+    while (right > left) {
+        if (right - left > 600) {
+            const n = right - left + 1;
+            const m = k - left + 1;
+            const z = Math.log(n);
+            const s = 0.5 * Math.exp(2 * z / 3);
+            const sd = 0.5 * Math.sqrt(z * s * (n - s) / n) * (m - n / 2 < 0 ? -1 : 1);
+            const newLeft = Math.max(left, Math.floor(k - m * s / n + sd));
+            const newRight = Math.min(right, Math.floor(k + (n - m) * s / n + sd));
+            quickselect(arr, k, newLeft, newRight, compare);
+        }
+
+        const t = arr[k];
+        let i = left;
+        /** @type {number} */
+        let j = right;
+
+        swap(arr, left, k);
+        if (compare(arr[right], t) > 0) swap(arr, left, right);
+
+        while (i < j) {
+            swap(arr, i, j);
+            i++;
+            j--;
+            while (compare(arr[i], t) < 0) i++;
+            while (compare(arr[j], t) > 0) j--;
+        }
+
+        if (compare(arr[left], t) === 0) swap(arr, left, j);
+        else {
+            j++;
+            swap(arr, j, right);
+        }
+
+        if (j <= k) left = j + 1;
+        if (k <= j) right = j - 1;
+    }
+}
+
+/**
+ * @template T
+ * @param {T[]} arr
+ * @param {number} i
+ * @param {number} j
+ */
+function swap(arr, i, j) {
+    const tmp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = tmp;
+}
+
+/**
+ * @template T
+ * @param {T} a
+ * @param {T} b
+ * @returns {number}
+ */
+function defaultCompare(a, b) {
+    return a < b ? -1 : a > b ? 1 : 0;
+}
+
+
+/***/ }),
+
+/***/ "./src/external/rbush.js":
+/*!*******************************!*\
+  !*** ./src/external/rbush.js ***!
+  \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -4820,7 +4840,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ RBush)
 /* harmony export */ });
-/* harmony import */ var quickselect__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! quickselect */ "./node_modules/quickselect/index.js");
+/* harmony import */ var _quickselect__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./quickselect */ "./src/external/quickselect.js");
 
 
 class RBush {
@@ -5328,7 +5348,7 @@ function multiSelect(arr, left, right, n, compare) {
         if (right - left <= n) continue;
 
         const mid = left + Math.ceil((right - left) / n / 2) * n;
-        (0,quickselect__WEBPACK_IMPORTED_MODULE_0__["default"])(arr, mid, left, right, compare);
+        (0,_quickselect__WEBPACK_IMPORTED_MODULE_0__["default"])(arr, mid, left, right, compare);
 
         stack.push(left, mid, mid, right);
     }

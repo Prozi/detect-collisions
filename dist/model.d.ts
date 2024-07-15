@@ -6,7 +6,7 @@ import { Ellipse } from "./bodies/ellipse";
 import { Line } from "./bodies/line";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
-import RBush from "./rbush";
+import RBush from "./external/rbush";
 export { Polygon as DecompPolygon, Point as DecompPoint, isSimple } from "poly-decomp-es";
 export interface BBox {
     minX: number;
