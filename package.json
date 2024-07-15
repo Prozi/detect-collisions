@@ -1,13 +1,13 @@
 {
   "name": "detect-collisions",
-  "version": "9.9.3",
-  "description": "detecting collisions between bodies: Points, Lines, Boxes, Polygons, Ellipses, Circles. RayCasting. Bodies have offset, rotation, scale, bbox padding, be static (non moving), be trigger bodies (non colliding).",
+  "version": "9.9.4",
+  "description": "Detect collisions between different shapes such as Points, Lines, Boxes, Polygons (including concave), Ellipses, and Circles. Features include RayCasting and support for offsets, rotation, scaling, bounding box padding, with options for static and trigger bodies (non-colliding).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "start": "chef-express dist/demo --debug",
     "test": "jest --silent --verbose --forceExit",
-    "dev": "webpack serve --port 4200",
+    "dev": "webpack serve --port 3000",
     "amend": "npm run precommit;git commit -a --am --no-edit",
     "use-latest-quickselect-macos": "sed -i '' -e \"s_'quickselect'_'./quickselect'_g\" src/external/rbush.js",
     "use-latest-quickselect-linux": "sed -i -r \"s_'quickselect'_'./quickselect'_g\" src/external/rbush.js",

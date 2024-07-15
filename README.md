@@ -41,7 +41,7 @@ const system = new System();
 
 Bodies possess various properties:
 
-- **Position**: `pos: Vector`, `x: number`, `y: number`.
+- **Position**: Use `setPosition(x: number, y: number)` for teleport and `move(speed: number)` for moving forward in direction of its angle.
 - **Scale**: Use `setScale(x: number, y: number)` for setting and `scale: Vector` for getting scale
 - **Rotation**: Use `setAngle(radians: number)` for setting and `angle: number` for getting and `deg2rad(degrees: number)` to convert to radians.
 - **Offset**: Use `setOffset(offset: Vector)` for setting and `offset: Vector` for getting offset from the body center.
@@ -79,12 +79,14 @@ Manipulate body attributes and update the collision system:
 ```ts
 // if omitted updateNow is true
 const updateNow = false;
+// this should be time scaled, 1 for example
+const speed = 1;
 
 // teleport
 box.setPosition(x, y, updateNow);
 box.setScale(scaleX, scaleY, updateNow);
 box.setAngle(angle, updateNow);
-box.move(1, updateNow);
+box.move(speed, updateNow);
 box.setOffset({ x, y }, updateNow);
 console.log(box.dirty); // true
 
