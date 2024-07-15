@@ -1,10 +1,10 @@
 /******/ (() => {
   // webpackBootstrap
   /******/ var __webpack_modules__ = {
-    /***/ "./node_modules/json-stringify-safe/stringify.js":
-      /*!*******************************************************!*\
-  !*** ./node_modules/json-stringify-safe/stringify.js ***!
-  \*******************************************************/
+    /***/ "./node_modules/.pnpm/json-stringify-safe@5.0.1/node_modules/json-stringify-safe/stringify.js":
+      /*!****************************************************************************************************!*\
+  !*** ./node_modules/.pnpm/json-stringify-safe@5.0.1/node_modules/json-stringify-safe/stringify.js ***!
+  \****************************************************************************************************/
       /***/ (module, exports) => {
         exports = module.exports = stringify;
         exports.getSerialize = serializer;
@@ -47,10 +47,10 @@
         /***/
       },
 
-    /***/ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js":
-      /*!************************************************************!*\
-  !*** ./node_modules/poly-decomp-es/dist/poly-decomp-es.js ***!
-  \************************************************************/
+    /***/ "./node_modules/.pnpm/poly-decomp-es@0.4.2/node_modules/poly-decomp-es/dist/poly-decomp-es.js":
+      /*!****************************************************************************************************!*\
+  !*** ./node_modules/.pnpm/poly-decomp-es@0.4.2/node_modules/poly-decomp-es/dist/poly-decomp-es.js ***!
+  \****************************************************************************************************/
       /***/ (
         __unused_webpack_module,
         __webpack_exports__,
@@ -875,10 +875,10 @@
         /***/
       },
 
-    /***/ "./node_modules/random-seed/index.js":
-      /*!*******************************************!*\
-  !*** ./node_modules/random-seed/index.js ***!
-  \*******************************************/
+    /***/ "./node_modules/.pnpm/random-seed@0.3.0/node_modules/random-seed/index.js":
+      /*!********************************************************************************!*\
+  !*** ./node_modules/.pnpm/random-seed@0.3.0/node_modules/random-seed/index.js ***!
+  \********************************************************************************/
       /***/ (module, __unused_webpack_exports, __webpack_require__) => {
         "use strict";
         /*
@@ -936,7 +936,7 @@
 	============================================================================ */
 
         var stringify = __webpack_require__(
-          /*! json-stringify-safe */ "./node_modules/json-stringify-safe/stringify.js",
+          /*! json-stringify-safe */ "./node_modules/.pnpm/json-stringify-safe@5.0.1/node_modules/json-stringify-safe/stringify.js",
         );
 
         /*	============================================================================
@@ -1161,10 +1161,10 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         /***/
       },
 
-    /***/ "./node_modules/rbush/rbush.min.js":
-      /*!*****************************************!*\
-  !*** ./node_modules/rbush/rbush.min.js ***!
-  \*****************************************/
+    /***/ "./node_modules/.pnpm/rbush@3.0.1/node_modules/rbush/rbush.min.js":
+      /*!************************************************************************!*\
+  !*** ./node_modules/.pnpm/rbush@3.0.1/node_modules/rbush/rbush.min.js ***!
+  \************************************************************************/
       /***/ function (module) {
         !(function (t, i) {
           true ? (module.exports = i()) : 0;
@@ -1563,10 +1563,10 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         /***/
       },
 
-    /***/ "./node_modules/sat/SAT.js":
-      /*!*********************************!*\
-  !*** ./node_modules/sat/SAT.js ***!
-  \*********************************/
+    /***/ "./node_modules/.pnpm/sat@0.9.0/node_modules/sat/SAT.js":
+      /*!**************************************************************!*\
+  !*** ./node_modules/.pnpm/sat@0.9.0/node_modules/sat/SAT.js ***!
+  \**************************************************************/
       /***/ function (module, exports, __webpack_require__) {
         var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__; // Version 0.9.0 - Copyright 2012 - 2021 -  Jim Riecken <jimr@jimr.ca>
         //
@@ -3013,7 +3013,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         Object.defineProperty(exports, "__esModule", { value: true });
         exports.Circle = void 0;
         const sat_1 = __webpack_require__(
-          /*! sat */ "./node_modules/sat/SAT.js",
+          /*! sat */ "./node_modules/.pnpm/sat@0.9.0/node_modules/sat/SAT.js",
         );
         const model_1 = __webpack_require__(/*! ../model */ "./src/model.ts");
         const utils_1 = __webpack_require__(/*! ../utils */ "./src/utils.ts");
@@ -3379,7 +3379,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         Object.defineProperty(exports, "__esModule", { value: true });
         exports.Line = void 0;
         const sat_1 = __webpack_require__(
-          /*! sat */ "./node_modules/sat/SAT.js",
+          /*! sat */ "./node_modules/.pnpm/sat@0.9.0/node_modules/sat/SAT.js",
         );
         const model_1 = __webpack_require__(/*! ../model */ "./src/model.ts");
         const polygon_1 = __webpack_require__(
@@ -3508,7 +3508,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         Object.defineProperty(exports, "__esModule", { value: true });
         exports.Polygon = exports.isSimple = void 0;
         const poly_decomp_es_1 = __webpack_require__(
-          /*! poly-decomp-es */ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js",
+          /*! poly-decomp-es */ "./node_modules/.pnpm/poly-decomp-es@0.4.2/node_modules/poly-decomp-es/dist/poly-decomp-es.js",
         );
         Object.defineProperty(exports, "isSimple", {
           enumerable: true,
@@ -3517,7 +3517,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           },
         });
         const sat_1 = __webpack_require__(
-          /*! sat */ "./node_modules/sat/SAT.js",
+          /*! sat */ "./node_modules/.pnpm/sat@0.9.0/node_modules/sat/SAT.js",
         );
         const model_1 = __webpack_require__(/*! ../model */ "./src/model.ts");
         const optimized_1 = __webpack_require__(
@@ -3786,6 +3786,10 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             (0, optimized_1.forEach)(this.convexPolygons, (polygon) => {
               polygon.pos.x = this.pos.x;
               polygon.pos.y = this.pos.y;
+              if (polygon.angle !== this.angle) {
+                // Must use setAngle to recalculate the points of the Polygon
+                polygon.setAngle(this.angle);
+              }
             });
           }
           /**
@@ -3822,6 +3826,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
               }
               this.convexPolygons[index].pos.x = this.pos.x;
               this.convexPolygons[index].pos.y = this.pos.y;
+              this.convexPolygons[index].angle = this.angle;
               this.convexPolygons[index].setPoints(
                 (0, utils_1.ensurePolygonPoints)(
                   (0, optimized_1.map)(points, utils_1.mapArrayToVector),
@@ -3869,7 +3874,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           exports.ensureConvex =
             void 0;
         const sat_1 = __webpack_require__(
-          /*! sat */ "./node_modules/sat/SAT.js",
+          /*! sat */ "./node_modules/.pnpm/sat@0.9.0/node_modules/sat/SAT.js",
         );
         const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
         const optimized_1 = __webpack_require__(
@@ -4170,7 +4175,9 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           exports.isSimple =
             void 0;
         const rbush_1 = __importDefault(
-          __webpack_require__(/*! rbush */ "./node_modules/rbush/rbush.min.js"),
+          __webpack_require__(
+            /*! rbush */ "./node_modules/.pnpm/rbush@3.0.1/node_modules/rbush/rbush.min.js",
+          ),
         );
         Object.defineProperty(exports, "RBush", {
           enumerable: true,
@@ -4179,7 +4186,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           },
         });
         const sat_1 = __webpack_require__(
-          /*! sat */ "./node_modules/sat/SAT.js",
+          /*! sat */ "./node_modules/.pnpm/sat@0.9.0/node_modules/sat/SAT.js",
         );
         Object.defineProperty(exports, "SATCircle", {
           enumerable: true,
@@ -4206,7 +4213,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           },
         });
         var poly_decomp_es_1 = __webpack_require__(
-          /*! poly-decomp-es */ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js",
+          /*! poly-decomp-es */ "./node_modules/.pnpm/poly-decomp-es@0.4.2/node_modules/poly-decomp-es/dist/poly-decomp-es.js",
         );
         Object.defineProperty(exports, "isSimple", {
           enumerable: true,
@@ -4573,7 +4580,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           exports.DEG2RAD =
             void 0;
         const sat_1 = __webpack_require__(
-          /*! sat */ "./node_modules/sat/SAT.js",
+          /*! sat */ "./node_modules/.pnpm/sat@0.9.0/node_modules/sat/SAT.js",
         );
         const intersect_1 = __webpack_require__(
           /*! ./intersect */ "./src/intersect.ts",
@@ -5051,7 +5058,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           /*! ./canvas */ "./src/demo/canvas.js",
         );
         const seededRandom = __webpack_require__(
-          /*! random-seed */ "./node_modules/random-seed/index.js",
+          /*! random-seed */ "./node_modules/.pnpm/random-seed@0.3.0/node_modules/random-seed/index.js",
         ).create("@Prozi").random;
 
         function random(min, max) {
@@ -5825,29 +5832,26 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
   /******/
   /************************************************************************/
   var __webpack_exports__ = {};
-  // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
-  (() => {
-    /*!***************************!*\
+  /*!***************************!*\
   !*** ./src/demo/index.js ***!
   \***************************/
-    const { TestCanvas } = __webpack_require__(
-      /*! ./canvas */ "./src/demo/canvas.js",
-    );
+  const { TestCanvas } = __webpack_require__(
+    /*! ./canvas */ "./src/demo/canvas.js",
+  );
 
-    const isStressTest = window.location.search.indexOf("?stress") !== -1;
-    const Test = isStressTest
-      ? __webpack_require__(/*! ./stress */ "./src/demo/stress.js")
-      : __webpack_require__(/*! ./tank */ "./src/demo/tank.js");
+  const isStressTest = window.location.search.indexOf("?stress") !== -1;
+  const Test = isStressTest
+    ? __webpack_require__(/*! ./stress */ "./src/demo/stress.js")
+    : __webpack_require__(/*! ./tank */ "./src/demo/tank.js");
 
-    const test = new Test();
-    const canvas = new TestCanvas(test);
+  const test = new Test();
+  const canvas = new TestCanvas(test);
 
-    document.body.appendChild(canvas.element);
+  document.body.appendChild(canvas.element);
 
-    if (test.start) {
-      test.start();
-    }
-  })();
+  if (test.start) {
+    test.start();
+  }
 
   /******/
 })();
