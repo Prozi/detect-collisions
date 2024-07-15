@@ -147,7 +147,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     response = this.response,
   ): boolean {
     const { bbox: bboxA } = bodyA;
-    const { bbox: bboxB } = bodyA;
+    const { bbox: bboxB } = bodyB;
     // assess the bodies real aabb without padding
     if (
       !canInteract(bodyA, bodyB) ||
