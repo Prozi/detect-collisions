@@ -115,9 +115,9 @@ class BaseSystem extends model_1.RBush {
   /**
    * draw bounding boxes hierarchy outline
    */
-  drawBVH(context) {
+  drawBVH(context, isTrigger = true) {
     const drawChildren = (body) => {
-      (0, utils_1.drawBVH)(context, body);
+      (0, utils_1.drawBVH)(context, body, isTrigger);
       if (body.children) {
         (0, optimized_1.forEach)(body.children, drawChildren);
       }

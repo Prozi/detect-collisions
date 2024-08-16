@@ -169,10 +169,9 @@ export class BaseSystem<TBody extends Body = Body>
   /**
    * draw bounding boxes hierarchy outline
    */
-  drawBVH(context: CanvasRenderingContext2D): void {
+  drawBVH(context: CanvasRenderingContext2D, isTrigger = true): void {
     const drawChildren = (body: Leaf<TBody>) => {
-      drawBVH(context, body as TBody);
-
+      drawBVH(context, body, isTrigger);
       if (body.children) {
         forEach(body.children, drawChildren);
       }

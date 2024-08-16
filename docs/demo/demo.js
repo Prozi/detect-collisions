@@ -2457,9 +2457,9 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           /**
            * draw bounding boxes hierarchy outline
            */
-          drawBVH(context) {
+          drawBVH(context, isTrigger = true) {
             const drawChildren = (body) => {
-              (0, utils_1.drawBVH)(context, body);
+              (0, utils_1.drawBVH)(context, body, isTrigger);
               if (body.children) {
                 (0, optimized_1.forEach)(body.children, drawChildren);
               }
@@ -4506,11 +4506,18 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
         /**
          * draw body bounding body box
          */
-        function drawBVH(context, body) {
-          drawPolygon(context, {
-            pos: { x: body.minX, y: body.minY },
-            calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY),
-          });
+        function drawBVH(context, body, isTrigger = true) {
+          drawPolygon(
+            context,
+            {
+              pos: { x: body.minX, y: body.minY },
+              calcPoints: createBox(
+                body.maxX - body.minX,
+                body.maxY - body.minY,
+              ),
+            },
+            isTrigger,
+          );
         }
         /**
          * clone response object returning new response with previous ones values

@@ -142,6 +142,7 @@ export declare function drawPolygon(
 export declare function drawBVH(
   context: CanvasRenderingContext2D,
   body: Body,
+  isTrigger?: boolean,
 ): void;
 /**
  * clone response object returning new response with previous ones values

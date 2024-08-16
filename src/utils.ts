@@ -368,11 +368,19 @@ export function drawPolygon(
 /**
  * draw body bounding body box
  */
-export function drawBVH(context: CanvasRenderingContext2D, body: Body) {
-  drawPolygon(context, {
-    pos: { x: body.minX, y: body.minY },
-    calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY),
-  });
+export function drawBVH(
+  context: CanvasRenderingContext2D,
+  body: Body,
+  isTrigger = true,
+) {
+  drawPolygon(
+    context,
+    {
+      pos: { x: body.minX, y: body.minY },
+      calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY),
+    },
+    isTrigger,
+  );
 }
 
 /**

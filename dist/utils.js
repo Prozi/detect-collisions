@@ -296,11 +296,15 @@ function drawPolygon(context, { pos, calcPoints }, isTrigger = false) {
 /**
  * draw body bounding body box
  */
-function drawBVH(context, body) {
-  drawPolygon(context, {
-    pos: { x: body.minX, y: body.minY },
-    calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY),
-  });
+function drawBVH(context, body, isTrigger = true) {
+  drawPolygon(
+    context,
+    {
+      pos: { x: body.minX, y: body.minY },
+      calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY),
+    },
+    isTrigger,
+  );
 }
 /**
  * clone response object returning new response with previous ones values

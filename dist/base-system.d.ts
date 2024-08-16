@@ -87,7 +87,7 @@ export declare class BaseSystem<TBody extends Body = Body>
   /**
    * draw bounding boxes hierarchy outline
    */
-  drawBVH(context: CanvasRenderingContext2D): void;
+  drawBVH(context: CanvasRenderingContext2D, isTrigger?: boolean): void;
   /**
    * remove body aabb from collision tree
    */
