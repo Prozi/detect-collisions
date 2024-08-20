@@ -31,29 +31,28 @@ class System extends base_system_1.BaseSystem {
   /**
    * separate (move away) bodies
    */
-  separate() {
+  separate(callback = utils_1.returnTrue, response = this.response) {
     (0, optimized_1.forEach)(this.all(), (body) => {
-      this.separateBody(body);
+      this.separateBody(body, callback, response);
     });
   }
   /**
-   * separate (move away) 1 body
+   * separate (move away) 1 body, with optional callback before collision
    */
-  separateBody(body) {
+  separateBody(body, callback = utils_1.returnTrue, response = this.response) {
     if (body.isStatic || body.isTrigger) {
       return;
     }
     const offsets = { x: 0, y: 0 };
-    /**
-     * @param response
-     */
-    const addOffsets = ({ b: { isTrigger }, overlapV: { x, y } }) => {
-      if (!isTrigger) {
-        offsets.x += x;
-        offsets.y += y;
+    const addOffsets = (collision) => {
+      // optional callback
+      callback(collision);
+      if (!collision.b.isTrigger) {
+        offsets.x += collision.overlapV.x;
+        offsets.y += collision.overlapV.y;
       }
     };
-    this.checkOne(body, addOffsets);
+    this.checkOne(body, addOffsets, response);
     if (offsets.x || offsets.y) {
       body.setPosition(body.x - offsets.x, body.y - offsets.y);
     }

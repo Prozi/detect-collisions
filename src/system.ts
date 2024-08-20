@@ -56,33 +56,39 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   /**
    * separate (move away) bodies
    */
-  separate(): void {
+  separate(
+    callback: CollisionCallback = returnTrue,
+    response = this.response,
+  ): void {
     forEach(this.all(), (body: TBody) => {
-      this.separateBody(body);
+      this.separateBody(body, callback, response);
     });
   }
 
   /**
-   * separate (move away) 1 body
+   * separate (move away) 1 body, with optional callback before collision
    */
-  separateBody(body: TBody): void {
+  separateBody(
+    body: TBody,
+    callback: CollisionCallback = returnTrue,
+    response = this.response,
+  ): void {
     if (body.isStatic || body.isTrigger) {
       return;
     }
 
     const offsets = { x: 0, y: 0 };
+    const addOffsets = (collision: Response) => {
+      // optional callback
+      callback(collision);
 
-    /**
-     * @param response
-     */
-    const addOffsets = ({ b: { isTrigger }, overlapV: { x, y } }: Response) => {
-      if (!isTrigger) {
-        offsets.x += x;
-        offsets.y += y;
+      if (!collision.b.isTrigger) {
+        offsets.x += collision.overlapV.x;
+        offsets.y += collision.overlapV.y;
       }
     };
 
-    this.checkOne(body, addOffsets);
+    this.checkOne(body, addOffsets, response);
 
     if (offsets.x || offsets.y) {
       body.setPosition(body.x - offsets.x, body.y - offsets.y);

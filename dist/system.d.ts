@@ -30,11 +30,15 @@ export declare class System<
   /**
    * separate (move away) bodies
    */
-  separate(): void;
+  separate(callback?: CollisionCallback, response?: Response): void;
   /**
-   * separate (move away) 1 body
+   * separate (move away) 1 body, with optional callback before collision
    */
-  separateBody(body: TBody): void;
+  separateBody(
+    body: TBody,
+    callback?: CollisionCallback,
+    response?: Response,
+  ): void;
   /**
    * check one body collisions with callback
    */
