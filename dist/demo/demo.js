@@ -4028,9 +4028,11 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             /**
              * @param response
              */
-            const addOffsets = ({ overlapV: { x, y } }) => {
-              offsets.x += x;
-              offsets.y += y;
+            const addOffsets = ({ b: { isTrigger }, overlapV: { x, y } }) => {
+              if (!isTrigger) {
+                offsets.x += x;
+                offsets.y += y;
+              }
             };
             this.checkOne(body, addOffsets);
             if (offsets.x || offsets.y) {

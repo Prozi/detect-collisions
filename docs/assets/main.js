@@ -2139,7 +2139,9 @@ window.translations = {
       let r = e.appendChild(document.createElement("a"));
       (r.href = K + t.path),
         n && (r.className = n),
-        location.pathname === r.pathname && r.classList.add("current"),
+        location.pathname === r.pathname &&
+          !r.href.includes("#") &&
+          r.classList.add("current"),
         t.kind &&
           (r.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="tsd-kind-icon"><use href="#icon-${t.kind}"></use></svg>`),
         (r.appendChild(document.createElement("span")).textContent = t.text);

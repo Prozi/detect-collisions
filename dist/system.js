@@ -47,9 +47,11 @@ class System extends base_system_1.BaseSystem {
     /**
      * @param response
      */
-    const addOffsets = ({ overlapV: { x, y } }) => {
-      offsets.x += x;
-      offsets.y += y;
+    const addOffsets = ({ b: { isTrigger }, overlapV: { x, y } }) => {
+      if (!isTrigger) {
+        offsets.x += x;
+        offsets.y += y;
+      }
     };
     this.checkOne(body, addOffsets);
     if (offsets.x || offsets.y) {

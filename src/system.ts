@@ -75,9 +75,11 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     /**
      * @param response
      */
-    const addOffsets = ({ overlapV: { x, y } }: Response) => {
-      offsets.x += x;
-      offsets.y += y;
+    const addOffsets = ({ b: { isTrigger }, overlapV: { x, y } }: Response) => {
+      if (!isTrigger) {
+        offsets.x += x;
+        offsets.y += y;
+      }
     };
 
     this.checkOne(body, addOffsets);
