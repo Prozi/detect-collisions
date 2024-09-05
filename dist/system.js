@@ -45,9 +45,8 @@ class System extends base_system_1.BaseSystem {
     }
     const offsets = { x: 0, y: 0 };
     const addOffsets = (collision) => {
-      // optional callback
-      callback(collision);
-      if (!collision.b.isTrigger) {
+      // when is not trigger and callback returns true it continues
+      if (!collision.b.isTrigger && callback(collision)) {
         offsets.x += collision.overlapV.x;
         offsets.y += collision.overlapV.y;
       }
