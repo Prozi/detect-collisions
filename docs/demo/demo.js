@@ -4025,13 +4025,17 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             callback = utils_1.returnTrue,
             response = this.response,
           ) {
-            if (body.isStatic || body.isTrigger) {
+            if (body.isStatic && !body.isTrigger) {
               return;
             }
             const offsets = { x: 0, y: 0 };
             const addOffsets = (collision) => {
               // when is not trigger and callback returns true it continues
-              if (callback(collision) && !collision.b.isTrigger) {
+              if (
+                callback(collision) &&
+                !body.isTrigger &&
+                !collision.b.isTrigger
+              ) {
                 offsets.x += collision.overlapV.x;
                 offsets.y += collision.overlapV.y;
               }

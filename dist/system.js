@@ -40,13 +40,13 @@ class System extends base_system_1.BaseSystem {
    * separate (move away) 1 body, with optional callback before collision
    */
   separateBody(body, callback = utils_1.returnTrue, response = this.response) {
-    if (body.isStatic || body.isTrigger) {
+    if (body.isStatic && !body.isTrigger) {
       return;
     }
     const offsets = { x: 0, y: 0 };
     const addOffsets = (collision) => {
       // when is not trigger and callback returns true it continues
-      if (callback(collision) && !collision.b.isTrigger) {
+      if (callback(collision) && !body.isTrigger && !collision.b.isTrigger) {
         offsets.x += collision.overlapV.x;
         offsets.y += collision.overlapV.y;
       }

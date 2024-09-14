@@ -73,14 +73,14 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     callback: CollisionCallback = returnTrue,
     response = this.response,
   ): void {
-    if (body.isStatic || body.isTrigger) {
+    if (body.isStatic && !body.isTrigger) {
       return;
     }
 
     const offsets = { x: 0, y: 0 };
     const addOffsets = (collision: Response) => {
       // when is not trigger and callback returns true it continues
-      if (callback(collision) && !collision.b.isTrigger) {
+      if (callback(collision) && !body.isTrigger && !collision.b.isTrigger) {
         offsets.x += collision.overlapV.x;
         offsets.y += collision.overlapV.y;
       }
