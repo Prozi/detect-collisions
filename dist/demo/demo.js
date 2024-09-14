@@ -4031,7 +4031,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             const offsets = { x: 0, y: 0 };
             const addOffsets = (collision) => {
               // when is not trigger and callback returns true it continues
-              if (!collision.b.isTrigger && callback(collision)) {
+              if (callback(collision) && !collision.b.isTrigger) {
                 offsets.x += collision.overlapV.x;
                 offsets.y += collision.overlapV.y;
               }
