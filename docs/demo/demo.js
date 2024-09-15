@@ -4054,7 +4054,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             response = this.response,
           ) {
             // no need to check static body collision
-            if (body.isStatic) {
+            if (body.isStatic && !body.isTrigger) {
               return false;
             }
             const bodies = this.search(body);

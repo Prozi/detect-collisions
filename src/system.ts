@@ -102,7 +102,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     response = this.response,
   ): boolean {
     // no need to check static body collision
-    if (body.isStatic) {
+    if (body.isStatic && !body.isTrigger) {
       return false;
     }
 
