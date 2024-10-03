@@ -141,9 +141,6 @@ export declare class Polygon extends SATPolygon implements BBox, BodyProps {
    * allow easier setting of scale
    */
   set scale(scale: number);
-  /**
-   * group for collision filtering
-   */
   get group(): number;
   set group(group: number);
   /**

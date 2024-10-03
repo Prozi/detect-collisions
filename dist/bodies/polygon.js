@@ -114,9 +114,7 @@ class Polygon extends sat_1.Polygon {
   set scale(scale) {
     this.setScale(scale);
   }
-  /**
-   * group for collision filtering
-   */
+  // Don't overwrite docs from BodyProps
   get group() {
     return this._group;
   }

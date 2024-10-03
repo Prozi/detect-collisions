@@ -1329,11 +1329,68 @@
                 <li class="tsd-description">
                   <div class="tsd-comment tsd-typography">
                     <p>group for collision filtering</p>
+                    <p>
+                      Based on
+                      <a
+                        href="https://box2d.org/documentation/md_simulation.html#filtering"
+                        >Box2D</a
+                      >
+                      (<a
+                        href="https://aurelienribon.wordpress.com/2011/07/01/box2d-tutorial-collision-filtering/"
+                        >tutorial</a
+                      >)
+                    </p>
+                    <p>
+                      Values in
+                      <a href="../enums/BodyGroup.html" class="tsd-kind-enum"
+                        >BodyGroup</a
+                      >
+                      are predefined and used each the body type and should not
+                      be used for custom filtering
+                    </p>
+                    <p>
+                      <code>0b00000001 &lt;&lt; 16</code> to
+                      <code>0b01000000 &lt;&lt; 16</code> (max 0x7fffffff) are
+                      free to use for custom groups
+                    </p>
                   </div>
                   <h4 class="tsd-returns-title">
                     Returns <span class="tsd-signature-type">number</span>
                   </h4>
-                  <div class="tsd-comment tsd-typography"></div>
+                  <div class="tsd-comment tsd-typography">
+                    <h4 class="tsd-anchor-link">
+                      <a id="See" class="tsd-anchor"></a>See<a
+                        href="#See"
+                        aria-label="Permalink"
+                        class="tsd-anchor-icon"
+                        ><svg viewBox="0 0 24 24">
+                          <use
+                            href="../assets/icons.svg#icon-anchor"
+                          ></use></svg
+                      ></a>
+                    </h4>
+                    <p>
+                      <a
+                        href="../functions/canInteract.html"
+                        class="tsd-kind-function"
+                        >canInteract</a
+                      >
+                      for how groups are used
+                    </p>
+                    <h4 class="tsd-anchor-link">
+                      <a id="Default" class="tsd-anchor"></a>Default<a
+                        href="#Default"
+                        aria-label="Permalink"
+                        class="tsd-anchor-icon"
+                        ><svg viewBox="0 0 24 24">
+                          <use
+                            href="../assets/icons.svg#icon-anchor"
+                          ></use></svg
+                      ></a>
+                    </h4>
+                    <pre><code class="ts"><span class="hl-7">0x7fffffff</span><span class="hl-1"> </span><span class="hl-5">// member of all groups (can interact with everyting)</span>
+</code><button type="button">Copy</button></pre>
+                  </div>
                   <aside class="tsd-sources">
                     <p>
                       Implementation of
@@ -1346,8 +1403,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L198"
-                          >src/bodies/circle.ts:198</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L196"
+                          >src/bodies/circle.ts:196</a
                         >
                       </li>
                     </ul>
@@ -1365,6 +1422,30 @@
                 <li class="tsd-description">
                   <div class="tsd-comment tsd-typography">
                     <p>group for collision filtering</p>
+                    <p>
+                      Based on
+                      <a
+                        href="https://box2d.org/documentation/md_simulation.html#filtering"
+                        >Box2D</a
+                      >
+                      (<a
+                        href="https://aurelienribon.wordpress.com/2011/07/01/box2d-tutorial-collision-filtering/"
+                        >tutorial</a
+                      >)
+                    </p>
+                    <p>
+                      Values in
+                      <a href="../enums/BodyGroup.html" class="tsd-kind-enum"
+                        >BodyGroup</a
+                      >
+                      are predefined and used each the body type and should not
+                      be used for custom filtering
+                    </p>
+                    <p>
+                      <code>0b00000001 &lt;&lt; 16</code> to
+                      <code>0b01000000 &lt;&lt; 16</code> (max 0x7fffffff) are
+                      free to use for custom groups
+                    </p>
                   </div>
                   <div class="tsd-parameters">
                     <h4 class="tsd-parameters-title">Parameters</h4>
@@ -1380,7 +1461,40 @@
                   <h4 class="tsd-returns-title">
                     Returns <span class="tsd-signature-type">void</span>
                   </h4>
-                  <div class="tsd-comment tsd-typography"></div>
+                  <div class="tsd-comment tsd-typography">
+                    <h4 class="tsd-anchor-link">
+                      <a id="See-1" class="tsd-anchor"></a>See<a
+                        href="#See-1"
+                        aria-label="Permalink"
+                        class="tsd-anchor-icon"
+                        ><svg viewBox="0 0 24 24">
+                          <use
+                            href="../assets/icons.svg#icon-anchor"
+                          ></use></svg
+                      ></a>
+                    </h4>
+                    <p>
+                      <a
+                        href="../functions/canInteract.html"
+                        class="tsd-kind-function"
+                        >canInteract</a
+                      >
+                      for how groups are used
+                    </p>
+                    <h4 class="tsd-anchor-link">
+                      <a id="Default-1" class="tsd-anchor"></a>Default<a
+                        href="#Default-1"
+                        aria-label="Permalink"
+                        class="tsd-anchor-icon"
+                        ><svg viewBox="0 0 24 24">
+                          <use
+                            href="../assets/icons.svg#icon-anchor"
+                          ></use></svg
+                      ></a>
+                    </h4>
+                    <pre><code class="ts"><span class="hl-7">0x7fffffff</span><span class="hl-1"> </span><span class="hl-5">// member of all groups (can interact with everyting)</span>
+</code><button type="button">Copy</button></pre>
+                  </div>
                   <aside class="tsd-sources">
                     <p>
                       Implementation of
@@ -1393,8 +1507,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L202"
-                          >src/bodies/circle.ts:202</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L200"
+                          >src/bodies/circle.ts:200</a
                         >
                       </li>
                     </ul>
@@ -1804,8 +1918,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L283"
-                          >src/bodies/circle.ts:283</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L281"
+                          >src/bodies/circle.ts:281</a
                         >
                       </li>
                     </ul>
@@ -1875,8 +1989,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L310"
-                          >src/bodies/circle.ts:310</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L308"
+                          >src/bodies/circle.ts:308</a
                         >
                       </li>
                     </ul>
@@ -1940,8 +2054,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L268"
-                          >src/bodies/circle.ts:268</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L266"
+                          >src/bodies/circle.ts:266</a
                         >
                       </li>
                     </ul>
@@ -2003,8 +2117,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L338"
-                          >src/bodies/circle.ts:338</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L336"
+                          >src/bodies/circle.ts:336</a
                         >
                       </li>
                     </ul>
@@ -2071,8 +2185,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L327"
-                          >src/bodies/circle.ts:327</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L325"
+                          >src/bodies/circle.ts:325</a
                         >
                       </li>
                     </ul>
@@ -2158,8 +2272,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L209"
-                          >src/bodies/circle.ts:209</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L207"
+                          >src/bodies/circle.ts:207</a
                         >
                       </li>
                     </ul>
@@ -2246,8 +2360,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L239"
-                          >src/bodies/circle.ts:239</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L237"
+                          >src/bodies/circle.ts:237</a
                         >
                       </li>
                     </ul>
@@ -2338,8 +2452,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L253"
-                          >src/bodies/circle.ts:253</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L251"
+                          >src/bodies/circle.ts:251</a
                         >
                       </li>
                     </ul>
@@ -2434,8 +2548,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L218"
-                          >src/bodies/circle.ts:218</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L216"
+                          >src/bodies/circle.ts:216</a
                         >
                       </li>
                     </ul>
@@ -2533,8 +2647,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L229"
-                          >src/bodies/circle.ts:229</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L227"
+                          >src/bodies/circle.ts:227</a
                         >
                       </li>
                     </ul>
@@ -2602,8 +2716,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L317"
-                          >src/bodies/circle.ts:317</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/circle.ts#L315"
+                          >src/bodies/circle.ts:315</a
                         >
                       </li>
                     </ul>

@@ -88,6 +88,17 @@
                 <p>
                   checks if two bodies can interact (for collision filtering)
                 </p>
+                <p>
+                  Based on
+                  <a
+                    href="https://box2d.org/documentation/md_simulation.html#filtering"
+                    >Box2D</a
+                  >
+                  (<a
+                    href="https://aurelienribon.wordpress.com/2011/07/01/box2d-tutorial-collision-filtering/"
+                    >tutorial</a
+                  >)
+                </p>
               </div>
               <div class="tsd-parameters">
                 <h4 class="tsd-parameters-title">Parameters</h4>
@@ -119,14 +130,26 @@
               <h4 class="tsd-returns-title">
                 Returns <span class="tsd-signature-type">boolean</span>
               </h4>
-              <div class="tsd-comment tsd-typography"></div>
+              <div class="tsd-comment tsd-typography">
+                <h4 class="tsd-anchor-link">
+                  <a id="Example" class="tsd-anchor"></a>Example<a
+                    href="#Example"
+                    aria-label="Permalink"
+                    class="tsd-anchor-icon"
+                    ><svg viewBox="0 0 24 24">
+                      <use href="../assets/icons.svg#icon-anchor"></use></svg
+                  ></a>
+                </h4>
+                <pre><code class="ts"><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">body1</span><span class="hl-1"> = { </span><span class="hl-6">group:</span><span class="hl-1"> </span><span class="hl-7">0b00000000_00000000_00000001_00000000</span><span class="hl-1"> }</span><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">body2</span><span class="hl-1"> = { </span><span class="hl-6">group:</span><span class="hl-1"> </span><span class="hl-7">0b11111111_11111111_00000011_00000000</span><span class="hl-1"> }</span><br/><span class="hl-3">const</span><span class="hl-1"> </span><span class="hl-4">body3</span><span class="hl-1"> = { </span><span class="hl-6">group:</span><span class="hl-1"> </span><span class="hl-7">0b00000010_00000000_00000100_00000000</span><span class="hl-1"> }</span><br/><br/><span class="hl-5">// Body 1 has the first custom group but cannot interact with any other groups</span><br/><span class="hl-5">// except itself because the first 16 bits are all zeros, only bodies with an</span><br/><span class="hl-5">// identical value can interact with it.</span><br/><span class="hl-0">canInteract</span><span class="hl-1">(</span><span class="hl-6">body1</span><span class="hl-1">, </span><span class="hl-6">body1</span><span class="hl-1">) </span><span class="hl-5">// returns true (identical groups can always interact)</span><br/><span class="hl-0">canInteract</span><span class="hl-1">(</span><span class="hl-6">body1</span><span class="hl-1">, </span><span class="hl-6">body2</span><span class="hl-1">) </span><span class="hl-5">// returns false</span><br/><span class="hl-0">canInteract</span><span class="hl-1">(</span><span class="hl-6">body1</span><span class="hl-1">, </span><span class="hl-6">body3</span><span class="hl-1">) </span><span class="hl-5">// returns false</span><br/><br/><span class="hl-5">// Body 2 has the first and second group and can interact with all other</span><br/><span class="hl-5">// groups, but only if that body also can interact with is custom group.</span><br/><span class="hl-0">canInteract</span><span class="hl-1">(</span><span class="hl-6">body2</span><span class="hl-1">, </span><span class="hl-6">body1</span><span class="hl-1">) </span><span class="hl-5">// returns false (body1 cannot interact with others)</span><br/><span class="hl-0">canInteract</span><span class="hl-1">(</span><span class="hl-6">body2</span><span class="hl-1">, </span><span class="hl-6">body2</span><span class="hl-1">) </span><span class="hl-5">// returns true (identical groups can always interact)</span><br/><span class="hl-0">canInteract</span><span class="hl-1">(</span><span class="hl-6">body2</span><span class="hl-1">, </span><span class="hl-6">body3</span><span class="hl-1">) </span><span class="hl-5">// returns true</span><br/><br/><span class="hl-5">// Body 3 has the third group but can interact with the second group.</span><br/><span class="hl-5">// This means that Body 2 and Body 3 can interact with each other but no other</span><br/><span class="hl-5">// body can interact with Body 1 because it doesn&#39;t allow interactions with</span><br/><span class="hl-5">// any other custom group.</span><br/><span class="hl-0">canInteract</span><span class="hl-1">(</span><span class="hl-6">body3</span><span class="hl-1">, </span><span class="hl-6">body1</span><span class="hl-1">) </span><span class="hl-5">// returns false (body1 cannot interact with others)</span><br/><span class="hl-0">canInteract</span><span class="hl-1">(</span><span class="hl-6">body3</span><span class="hl-1">, </span><span class="hl-6">body2</span><span class="hl-1">) </span><span class="hl-5">// returns true</span><br/><span class="hl-0">canInteract</span><span class="hl-1">(</span><span class="hl-6">body3</span><span class="hl-1">, </span><span class="hl-6">body3</span><span class="hl-1">) </span><span class="hl-5">// returns true (identical groups can always interact)</span>
+</code><button type="button">Copy</button></pre>
+              </div>
               <aside class="tsd-sources">
                 <ul>
                   <li>
                     Defined in
                     <a
-                      href="https://github.com/Prozi/detect-collisions/blob/master/src/utils.ts#L222"
-                      >src/utils.ts:222</a
+                      href="https://github.com/Prozi/detect-collisions/blob/master/src/utils.ts#L252"
+                      >src/utils.ts:252</a
                     >
                   </li>
                 </ul>

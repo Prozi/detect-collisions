@@ -91,6 +91,17 @@ export interface BodyOptions {
   padding?: number;
   /**
    * group for collision filtering
+   *
+   * Based on {@link https://box2d.org/documentation/md_simulation.html#filtering Box2D}
+   * ({@link https://aurelienribon.wordpress.com/2011/07/01/box2d-tutorial-collision-filtering/ tutorial})
+   *
+   * Values in {@link BodyGroup} are predefined and used each the body type and
+   * should not be used for custom filtering
+   *
+   * `0b00000001 << 16` to `0b01000000 << 16` (max 0x7fffffff) are free to use for custom groups
+   *
+   * @see {@link canInteract} for how groups are used
+   * @default 0x7fffffff // member of all groups (can interact with everyting)
    */
   group?: number;
 }

@@ -123,9 +123,6 @@ export declare class Circle extends SATCircle implements BBox, BodyProps {
    * scaleY = scale in case of Circles
    */
   get scaleY(): number;
-  /**
-   * group for collision filtering
-   */
   get group(): number;
   set group(group: number);
   /**

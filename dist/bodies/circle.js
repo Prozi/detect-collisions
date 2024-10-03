@@ -90,9 +90,7 @@ class Circle extends sat_1.Circle {
   get scaleY() {
     return this.scale;
   }
-  /**
-   * group for collision filtering
-   */
+  // Don't overwrite docs from BodyProps
   get group() {
     return this._group;
   }
