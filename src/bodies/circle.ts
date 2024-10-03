@@ -192,9 +192,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
     return this.scale;
   }
 
-  /**
-   * group for collision filtering
-   */
+  // Don't overwrite docs from BodyProps
   get group(): number {
     return this._group;
   }

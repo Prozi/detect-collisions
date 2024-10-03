@@ -229,9 +229,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
     this.setScale(scale);
   }
 
-  /**
-   * group for collision filtering
-   */
+  // Don't overwrite docs from BodyProps
   get group(): number {
     return this._group;
   }

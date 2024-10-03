@@ -173,6 +173,7 @@ export function extendBody(body: Body, options: BodyOptions = {}): void {
   body.isStatic = !!options.isStatic;
   body.isTrigger = !!options.isTrigger;
   body.padding = options.padding || 0;
+  // Default value should be reflected in documentation of `BodyOptions.group`
   body.group = options.group ?? 0x7fffffff;
 
   if (body.typeGroup !== BodyGroup.Circle && options.isCentered) {
@@ -217,8 +218,37 @@ export function intersectAABB(bodyA: BBox, bodyB: BBox): boolean {
 /**
  * checks if two bodies can interact (for collision filtering)
  *
+ * Based on {@link https://box2d.org/documentation/md_simulation.html#filtering Box2D}
+ * ({@link https://aurelienribon.wordpress.com/2011/07/01/box2d-tutorial-collision-filtering/ tutorial})
+ *
  * @param bodyA
  * @param bodyB
+ *
+ * @example
+ * const body1 = { group: 0b00000000_00000000_00000001_00000000 }
+ * const body2 = { group: 0b11111111_11111111_00000011_00000000 }
+ * const body3 = { group: 0b00000010_00000000_00000100_00000000 }
+ *
+ * // Body 1 has the first custom group but cannot interact with any other groups
+ * // except itself because the first 16 bits are all zeros, only bodies with an
+ * // identical value can interact with it.
+ * canInteract(body1, body1) // returns true (identical groups can always interact)
+ * canInteract(body1, body2) // returns false
+ * canInteract(body1, body3) // returns false
+ *
+ * // Body 2 has the first and second group and can interact with all other
+ * // groups, but only if that body also can interact with is custom group.
+ * canInteract(body2, body1) // returns false (body1 cannot interact with others)
+ * canInteract(body2, body2) // returns true (identical groups can always interact)
+ * canInteract(body2, body3) // returns true
+ *
+ * // Body 3 has the third group but can interact with the second group.
+ * // This means that Body 2 and Body 3 can interact with each other but no other
+ * // body can interact with Body 1 because it doesn't allow interactions with
+ * // any other custom group.
+ * canInteract(body3, body1) // returns false (body1 cannot interact with others)
+ * canInteract(body3, body2) // returns true
+ * canInteract(body3, body3) // returns true (identical groups can always interact)
  */
 export function canInteract(
   { group: groupA }: Body,
