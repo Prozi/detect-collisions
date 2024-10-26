@@ -125,6 +125,11 @@ export interface BodyOptions {
    * @default 0x7fffffff // member of all groups (can interact with everyting)
    */
   group?: number;
+
+  /**
+   * allows the user to set any misc data for client use
+   */
+  userData?: any;
 }
 
 /**

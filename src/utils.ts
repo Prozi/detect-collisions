@@ -175,6 +175,7 @@ export function extendBody(body: Body, options: BodyOptions = {}): void {
   body.padding = options.padding || 0;
   // Default value should be reflected in documentation of `BodyOptions.group`
   body.group = options.group ?? 0x7fffffff;
+  body.userData = options.userData || null;
 
   if (body.typeGroup !== BodyGroup.Circle && options.isCentered) {
     body.isCentered = true;

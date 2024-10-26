@@ -89,6 +89,11 @@ export class Circle extends SATCircle implements BBox, BodyProps {
    */
   dirty = false;
 
+  /**
+   * allows the user to set any misc data for client use
+   */
+  userData = null;
+
   /*
    * circles are convex
    */

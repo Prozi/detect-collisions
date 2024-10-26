@@ -66,6 +66,10 @@ export declare class Polygon extends SATPolygon implements BBox, BodyProps {
    */
   dirty: boolean;
   /**
+   * allows the user to set any misc data for client use
+   */
+  userData: null;
+  /**
    * type of body
    */
   readonly type:
