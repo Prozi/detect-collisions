@@ -4352,7 +4352,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
             const observer = new win.MutationObserver(mutations => {
               mutations.forEach(mutation => {
                 mutation.addedNodes.forEach(node => {
-                  if (node.id == "debug") {
+                  if (node.id === "debug") {
                     document
                       .querySelector("#filtering")
                       .addEventListener("change", () => this.toggleFiltering());
