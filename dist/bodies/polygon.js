@@ -29,6 +29,10 @@ class Polygon extends sat_1.Polygon {
      */
     this.dirty = false;
     /**
+     * allows the user to set any misc data for client use
+     */
+    this.userData = null;
+    /**
      * type of body
      */
     this.type = model_1.BodyType.Polygon;

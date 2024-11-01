@@ -4,7 +4,7 @@
     "ban-types": [true],
     "member-access": [true, "no-public"],
     "member-ordering": [true, { "order": "fields-first" }],
-    "no-any": true,
+    "no-any": false,
     "no-empty-interface": true,
     "no-import-side-effect": false,
     "no-inferrable-types": true,

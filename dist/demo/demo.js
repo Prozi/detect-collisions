@@ -2635,6 +2635,10 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
              * was the polygon modified and needs update in the next checkCollision
              */
             this.dirty = false;
+            /**
+             * allows the user to set any misc data for client use
+             */
+            this.userData = null;
             /*
              * circles are convex
              */
@@ -3152,6 +3156,10 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
              * was the polygon modified and needs update in the next checkCollision
              */
             this.dirty = false;
+            /**
+             * allows the user to set any misc data for client use
+             */
+            this.userData = null;
             /**
              * type of body
              */
@@ -4344,6 +4352,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           // Default value should be reflected in documentation of `BodyOptions.group`
           body.group =
             (_a = options.group) !== null && _a !== void 0 ? _a : 0x7fffffff;
+          body.userData = options.userData || null;
           if (
             body.typeGroup !== model_1.BodyGroup.Circle &&
             options.isCentered

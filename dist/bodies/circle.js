@@ -21,6 +21,10 @@ class Circle extends sat_1.Circle {
      * was the polygon modified and needs update in the next checkCollision
      */
     this.dirty = false;
+    /**
+     * allows the user to set any misc data for client use
+     */
+    this.userData = null;
     /*
      * circles are convex
      */

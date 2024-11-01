@@ -66,6 +66,10 @@ export declare class Circle extends SATCircle implements BBox, BodyProps {
    * was the polygon modified and needs update in the next checkCollision
    */
   dirty: boolean;
+  /**
+   * allows the user to set any misc data for client use
+   */
+  userData: null;
   readonly isConvex = true;
   /**
    * circle type
