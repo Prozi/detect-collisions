@@ -135,7 +135,7 @@ export interface GetAABBAsBox {
 /**
  * generic body union type
  */
-export type Body = Point | Line | Ellipse | Circle | Box | Polygon;
+export type Body<UserDataType = any> = Point<UserDataType> | Line<UserDataType> | Ellipse<UserDataType> | Circle<UserDataType> | Box<UserDataType> | Polygon<UserDataType>;
 /**
  * each body contains those regardless of type
  */

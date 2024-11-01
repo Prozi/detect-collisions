@@ -48,7 +48,7 @@ Bodies possess various properties:
 - **AABB Bounding Box**: Use `aabb: BBox` for inserted or `getAABBAsBBox(): BBox` for non inserted bodies to get the bounding box.
 - **Padding**: Use `padding: number` and set to nonzero value to reduce costly reinserts on attributes' change.
 - **Collision Filtering**: Use `group: number` for collision filtering, with a range within 0x0 ~ 0x7fffffff.
-- **Body Options**: Use `isStatic: boolean` to mark body as non movable and `isTrigger: boolean` to set body as ghost.
+- **Body Options**: Use `isStatic: boolean` to mark body as non movable and `isTrigger: boolean` to set body as ghost. Use `userData` option to pass any custom data to your body.
 
 ### Step 3: Create and Manage Bodies
 

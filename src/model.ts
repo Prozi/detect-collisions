@@ -167,7 +167,13 @@ export interface GetAABBAsBox {
 /**
  * generic body union type
  */
-export type Body = Point | Line | Ellipse | Circle | Box | Polygon;
+export type Body<UserDataType = any> =
+  | Point<UserDataType>
+  | Line<UserDataType>
+  | Ellipse<UserDataType>
+  | Circle<UserDataType>
+  | Box<UserDataType>
+  | Polygon<UserDataType>;
 
 /**
  * each body contains those regardless of type
@@ -262,16 +268,16 @@ export interface BodyProps<UserDataType = any>
 
 export type SATTest<
   T extends {} = Circle | Polygon | SATPolygon,
-  Y extends {} = Circle | Polygon | SATPolygon,
+  Y extends {} = Circle | Polygon | SATPolygon
 > = (bodyA: T, bodyB: Y, response: Response) => boolean;
 
 export type InTest<TBody extends Body = Body> = (
   bodyA: TBody,
-  bodyB: TBody,
+  bodyB: TBody
 ) => boolean;
 
 export type TraverseFunction<TBody extends Body = Body> = (
   child: Leaf<TBody>,
   children: Leaf<TBody>[],
-  index: number,
+  index: number
 ) => boolean | void;
