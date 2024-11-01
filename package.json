@@ -1,6 +1,6 @@
 {
   "name": "detect-collisions",
-  "version": "9.21.0",
+  "version": "9.22.0",
   "description": "Points, Lines, Boxes, Polygons (also hollow), Ellipses, Circles. RayCasting, offsets, rotation, scaling, bounding box padding, flags for static and ghost/trigger bodies",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,7 +17,7 @@
     "copy-npm-modules": "npm run copy-rbush && npm run copy-quickselect && npm run use-latest-quickselect",
     "prebuild": "rm -rf dist && npm run copy-npm-modules",
     "build": "tsc",
-    "postbuild": "npm run test && npm run build:docs && npm run build:demo && npm run benchmark",
+    "postbuild": "npm run test && npm run build:docs && npm run build:demo && npm run lint-build; npm run benchmark",
     "build:docs": "typedoc --customCss typedoc.css",
     "postbuild:docs": "npm run docs-from-master || echo ok",
     "build:demo": "webpack",
@@ -30,6 +30,7 @@
     "demo": "npm run build:demo && npm start",
     "precommit": "npm run lint && npm run build",
     "lint": "eslint src --ignore-pattern src/demo --fix",
+    "lint-build": "eslint dist --fix",
     "benchmark": "npm run benchmark-insertion && npm run benchmark-stress",
     "benchmark-stress": "node -e 'import(\"./dist/benchmarks/index.js\").then(({ stressBenchmark }) => stressBenchmark());'",
     "benchmark-insertion": "node -e 'import(\"./dist/benchmarks/index.js\").then(({ insertionBenchmark }) => insertionBenchmark());'"
