@@ -441,7 +441,7 @@ describe("GIVEN Polygon", () => {
     it("THEN only collides with matching group", () => {
       const { System } = require("../../src");
 
-      const dec = (binary) => Number(`0b${binary}`.replace(/\s/g, ""));
+      const dec = binary => Number(`0b${binary}`.replace(/\s/g, ""));
 
       const physics = new System();
 

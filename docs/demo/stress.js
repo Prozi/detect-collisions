@@ -43,9 +43,9 @@ class Stress {
         this.updateBody = this.updateBody.bind(this);
         // observer #debug & add filtering checkbox event
         if (win.MutationObserver) {
-            const observer = new win.MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    mutation.addedNodes.forEach((node) => {
+            const observer = new win.MutationObserver(mutations => {
+                mutations.forEach(mutation => {
+                    mutation.addedNodes.forEach(node => {
                         if (node.id == "debug") {
                             document
                                 .querySelector("#filtering")
@@ -156,7 +156,7 @@ class Stress {
             padding: (minSize + maxSize) * 0.2,
         };
         let body;
-        let variant = this.lastVariant++ % 5;
+        const variant = this.lastVariant++ % 5;
         switch (variant) {
             case 0:
                 if (this.enableFiltering) {

@@ -76,7 +76,7 @@ describe("GIVEN Box", () => {
 
     expect(case1works).toBeTruthy();
 
-    physics.getPotentials(circle2).forEach((collider) => {
+    physics.getPotentials(circle2).forEach(collider => {
       if (physics.checkCollision(circle2, collider)) {
         case2works = true;
       }
@@ -122,7 +122,7 @@ describe("GIVEN Box", () => {
     const potentials = system.getPotentials(bbox);
 
     // the list of bodies colliding
-    const collisions = potentials.filter((body) =>
+    const collisions = potentials.filter(body =>
       system.checkCollision(box, body),
     );
 

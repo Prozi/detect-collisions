@@ -43,7 +43,7 @@ describe("GIVEN Circle", () => {
       physics.createCircle({ x: 0, y: 0 }, 10);
       physics.createCircle({ x: 0, y: 0 }, 10);
 
-      physics.checkAll((result) => {
+      physics.checkAll(result => {
         expect(result.aInB).toBeTruthy();
         expect(result.bInA).toBeTruthy();
       });
@@ -87,7 +87,7 @@ describe("GIVEN Circle", () => {
     it("THEN only collides with matching group", () => {
       const { System } = require("../../src");
 
-      const dec = (binary) => Number(`0b${binary}`.replace(/\s/g, ""));
+      const dec = binary => Number(`0b${binary}`.replace(/\s/g, ""));
 
       const physics = new System();
 

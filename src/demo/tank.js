@@ -156,7 +156,7 @@ class Tank {
     const hit = this.physics.raycast(
       this.playerTurret.start,
       this.playerTurret.end,
-      (test) => test !== this.player,
+      test => test !== this.player,
     );
 
     this.drawCallback = () => {
@@ -173,16 +173,16 @@ class Tank {
     const player =
       Math.random() < 0.5
         ? this.physics.createCircle(
-            { x: this.scaleX(x), y: this.scaleY(y) },
-            this.scaleX(size / 2),
-            { isCentered: true },
-          )
+          { x: this.scaleX(x), y: this.scaleY(y) },
+          this.scaleX(size / 2),
+          { isCentered: true },
+        )
         : this.physics.createBox(
-            { x: this.scaleX(x - size / 2), y: this.scaleY(y - size / 2) },
-            this.scaleX(size),
-            this.scaleX(size),
-            { isCentered: true },
-          );
+          { x: this.scaleX(x - size / 2), y: this.scaleY(y - size / 2) },
+          this.scaleX(size),
+          this.scaleX(size),
+          { isCentered: true },
+        );
 
     player.velocity = 0;
     player.setOffset({ x: -this.scaleX(size / 2), y: 0 });
