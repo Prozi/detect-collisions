@@ -153,7 +153,7 @@ export class Polygon<UserDataType = any>
   constructor(
     position: PotentialVector,
     points: PotentialVector[],
-    options?: BodyOptions,
+    options?: BodyOptions<UserDataType>,
   ) {
     super(ensureVectorPoint(position), ensurePolygonPoints(points));
 

@@ -28,7 +28,7 @@ export declare class Ellipse<UserDataType = any> extends Polygon<UserDataType> {
     /**
      * collider - ellipse
      */
-    constructor(position: PotentialVector, radiusX: number, radiusY?: number, step?: number, options?: BodyOptions);
+    constructor(position: PotentialVector, radiusX: number, radiusY?: number, step?: number, options?: BodyOptions<UserDataType>);
     /**
      * flag to set is body centered
      */

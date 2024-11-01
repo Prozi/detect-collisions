@@ -29,7 +29,7 @@ export class Line<UserDataType = any> extends Polygon<UserDataType> {
   /**
    * collider - line from start to end
    */
-  constructor(start: Vector, end: Vector, options?: BodyOptions) {
+  constructor(start: Vector, end: Vector, options?: BodyOptions<UserDataType>) {
     super(
       start,
       [

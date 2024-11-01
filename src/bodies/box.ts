@@ -48,7 +48,7 @@ export class Box<UserDataType = any> extends Polygon<UserDataType> {
     position: PotentialVector,
     width: number,
     height: number,
-    options?: BodyOptions
+    options?: BodyOptions<UserDataType>
   ) {
     super(position, createBox(width, height), options);
 

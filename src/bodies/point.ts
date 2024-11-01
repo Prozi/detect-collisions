@@ -24,7 +24,7 @@ export class Point<UserDataType = any> extends Box<UserDataType> {
   /**
    * collider - point (very tiny box)
    */
-  constructor(position: PotentialVector, options?: BodyOptions) {
+  constructor(position: PotentialVector, options?: BodyOptions<UserDataType>) {
     super(ensureVectorPoint(position), 0.001, 0.001, options);
   }
 }

@@ -30,7 +30,7 @@ export declare class Box<UserDataType = any> extends Polygon<UserDataType> {
     /**
      * collider - box
      */
-    constructor(position: PotentialVector, width: number, height: number, options?: BodyOptions);
+    constructor(position: PotentialVector, width: number, height: number, options?: BodyOptions<UserDataType>);
     /**
      * get box width
      */

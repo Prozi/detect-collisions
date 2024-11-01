@@ -141,7 +141,7 @@ export class Circle<UserDataType = any>
   constructor(
     position: PotentialVector,
     radius: number,
-    options?: BodyOptions
+    options?: BodyOptions<UserDataType>
   ) {
     super(ensureVectorPoint(position), radius);
 

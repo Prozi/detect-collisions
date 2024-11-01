@@ -88,7 +88,7 @@ export declare class Circle<UserDataType = any> extends SATCircle implements BBo
     /**
      * collider - circle
      */
-    constructor(position: PotentialVector, radius: number, options?: BodyOptions);
+    constructor(position: PotentialVector, radius: number, options?: BodyOptions<UserDataType>);
     /**
      * get this.pos.x
      */

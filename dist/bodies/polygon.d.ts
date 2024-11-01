@@ -87,7 +87,7 @@ export declare class Polygon<UserDataType = any> extends SATPolygon implements B
     /**
      * collider - polygon
      */
-    constructor(position: PotentialVector, points: PotentialVector[], options?: BodyOptions);
+    constructor(position: PotentialVector, points: PotentialVector[], options?: BodyOptions<UserDataType>);
     /**
      * flag to set is polygon centered
      */
