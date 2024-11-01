@@ -31,86 +31,93 @@ export class BaseSystem<TBody extends Body = Body>
   /**
    * create point at position with options and add to system
    */
-  createPoint(position: PotentialVector, options?: BodyOptions): Point {
+  createPoint<TPoint extends Point>(
+    position: PotentialVector,
+    options?: BodyOptions
+  ): TPoint {
     const point = new Point(position, options);
 
     this.insert(point as TBody);
 
-    return point;
+    return point as TPoint;
   }
 
   /**
    * create line at position with options and add to system
    */
-  createLine(start: Vector, end: Vector, options?: BodyOptions): Line {
+  createLine<TLine extends Line>(
+    start: Vector,
+    end: Vector,
+    options?: BodyOptions
+  ): TLine {
     const line = new Line(start, end, options);
 
     this.insert(line as TBody);
 
-    return line;
+    return line as TLine;
   }
 
   /**
    * create circle at position with options and add to system
    */
-  createCircle(
+  createCircle<TCircle extends Circle>(
     position: PotentialVector,
     radius: number,
-    options?: BodyOptions,
-  ): Circle {
+    options?: BodyOptions
+  ): TCircle {
     const circle = new Circle(position, radius, options);
 
     this.insert(circle as TBody);
 
-    return circle;
+    return circle as TCircle;
   }
 
   /**
    * create box at position with options and add to system
    */
-  createBox(
+  createBox<TBox extends Box>(
     position: PotentialVector,
     width: number,
     height: number,
-    options?: BodyOptions,
-  ): Box {
+    options?: BodyOptions
+  ): TBox {
     const box = new Box(position, width, height, options);
 
     this.insert(box as TBody);
 
-    return box;
+    return box as TBox;
   }
 
   /**
    * create ellipse at position with options and add to system
    */
-  createEllipse(
+  createEllipse<TEllipse extends Ellipse>(
     position: PotentialVector,
     radiusX: number,
     radiusY: number = radiusX,
     step?: number,
-    options?: BodyOptions,
-  ): Ellipse {
+    options?: BodyOptions
+  ): TEllipse {
     const ellipse = new Ellipse(position, radiusX, radiusY, step, options);
 
     this.insert(ellipse as TBody);
 
-    return ellipse;
+    return ellipse as TEllipse;
   }
 
   /**
    * create polygon at position with options and add to system
    */
-  createPolygon(
+  createPolygon<TPolygon extends Polygon>(
     position: PotentialVector,
     points: PotentialVector[],
-    options?: BodyOptions,
-  ): Polygon {
+    options?: BodyOptions
+  ): TPolygon {
     const polygon = new Polygon(position, points, options);
 
     this.insert(polygon as TBody);
 
-    return polygon;
+    return polygon as TPolygon;
   }
 
   /**
@@ -205,7 +212,7 @@ export class BaseSystem<TBody extends Body = Body>
    */
   traverse(
     traverseFunction: TraverseFunction<TBody>,
-    { children }: { children?: Leaf<TBody>[] } = this.data,
+    { children }: { children?: Leaf<TBody>[] } = this.data
   ): TBody | undefined {
     return children?.find((body, index) => {
       if (!body) {

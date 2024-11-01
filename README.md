@@ -17,7 +17,7 @@ Detect-Collisions 💫 is a lightning-fast ⚡️ TypeScript library built to de
 ## Installation
 
 ```bash
-$ npm i detect-collisions --save
+npm i detect-collisions --save
 ```
 
 ## API Documentation
@@ -48,7 +48,7 @@ Bodies possess various properties:
 - **AABB Bounding Box**: Use `aabb: BBox` for inserted or `getAABBAsBBox(): BBox` for non inserted bodies to get the bounding box.
 - **Padding**: Use `padding: number` and set to nonzero value to reduce costly reinserts on attributes' change.
 - **Collision Filtering**: Use `group: number` for collision filtering, with a range within 0x0 ~ 0x7fffffff.
-- **Body Options**: Use `isStatic: boolean` to mark body as non movable and `isTrigger: boolean` to set body as ghost. Use `userData` option to pass any custom data to your body.
+- **Body Options**: [Read more in BodyOptions documentation](https://prozi.github.io/detect-collisions/interfaces/BodyOptions.html)
 
 ### Step 3: Create and Manage Bodies
 
@@ -190,9 +190,9 @@ While physics engines like [Matter-js](https://github.com/liabru/matter-js) or [
 This will provide you with the results of both the insertion test benchmark and a headless [Stress Demo](https://prozi.github.io/detect-collisions/demo/?stress) benchmark, featuring moving bodies, with increasing amounts in each step.
 
 ```bash
-$ git clone https://github.com/Prozi/detect-collisions.git
-$ cd detect-collisions
-$ npm i && npm run build # will build & run tests & run benchmarks
+git clone https://github.com/Prozi/detect-collisions.git
+cd detect-collisions
+npm i && npm run build # will build & run tests & run benchmarks
 ```
 
 ## License
@@ -201,4 +201,4 @@ MIT
 
 ## You can buy me a coffee
 
-https://paypal.me/jacekpietal
+<https://paypal.me/jacekpietal>

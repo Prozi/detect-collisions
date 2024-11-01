@@ -13,27 +13,27 @@ export declare class BaseSystem<TBody extends Body = Body> extends RBush impleme
     /**
      * create point at position with options and add to system
      */
-    createPoint(position: PotentialVector, options?: BodyOptions): Point;
+    createPoint<TPoint extends Point>(position: PotentialVector, options?: BodyOptions): TPoint;
     /**
      * create line at position with options and add to system
      */
-    createLine(start: Vector, end: Vector, options?: BodyOptions): Line;
+    createLine<TLine extends Line>(start: Vector, end: Vector, options?: BodyOptions): TLine;
     /**
      * create circle at position with options and add to system
      */
-    createCircle(position: PotentialVector, radius: number, options?: BodyOptions): Circle;
+    createCircle<TCircle extends Circle>(position: PotentialVector, radius: number, options?: BodyOptions): TCircle;
     /**
      * create box at position with options and add to system
      */
-    createBox(position: PotentialVector, width: number, height: number, options?: BodyOptions): Box;
+    createBox<TBox extends Box>(position: PotentialVector, width: number, height: number, options?: BodyOptions): TBox;
     /**
      * create ellipse at position with options and add to system
      */
-    createEllipse(position: PotentialVector, radiusX: number, radiusY?: number, step?: number, options?: BodyOptions): Ellipse;
+    createEllipse<TEllipse extends Ellipse>(position: PotentialVector, radiusX: number, radiusY?: number, step?: number, options?: BodyOptions): TEllipse;
     /**
      * create polygon at position with options and add to system
      */
-    createPolygon(position: PotentialVector, points: PotentialVector[], options?: BodyOptions): Polygon;
+    createPolygon<TPolygon extends Polygon>(position: PotentialVector, points: PotentialVector[], options?: BodyOptions): TPolygon;
     /**
      * re-insert body into collision tree and update its bbox
      * every body can be part of only one system
