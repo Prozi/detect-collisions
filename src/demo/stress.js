@@ -210,7 +210,6 @@ class Stress {
       const height = random(minSize, maxSize);
       if (this.enableFiltering) {
         options.group = groupBits(BodyGroup.Ellipse);
-        console.log();
       }
       body = this.physics.createEllipse({ x, y }, width, height, 2, options);
 
