@@ -147,8 +147,10 @@ function extendBody(body, options = {}) {
   body.padding = options.padding || 0;
   // Default value should be reflected in documentation of `BodyOptions.group`
   body.group = (_a = options.group) !== null && _a !== void 0 ? _a : 0x7fffffff;
-  body.userData = options.userData || null;
-  if (body.typeGroup !== model_1.BodyGroup.Circle && options.isCentered) {
+  if ("userData" in options) {
+    body.userData = options.userData;
+  }
+  if (options.isCentered && body.typeGroup !== model_1.BodyGroup.Circle) {
     body.isCentered = true;
   }
   if (options.angle) {

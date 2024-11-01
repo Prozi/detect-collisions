@@ -23,7 +23,10 @@ import { System } from "../system";
 /**
  * collider - circle
  */
-export class Circle extends SATCircle implements BBox, BodyProps {
+export class Circle<UserDataType = any>
+  extends SATCircle
+  implements BBox, BodyProps<UserDataType>
+{
   /**
    * minimum x bound of body
    */
@@ -92,7 +95,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
   /**
    * allows the user to set any misc data for client use
    */
-  userData = null;
+  userData?: BodyProps["userData"];
 
   /*
    * circles are convex
@@ -202,6 +205,7 @@ export class Circle extends SATCircle implements BBox, BodyProps {
     return this._group;
   }
 
+  // Don't overwrite docs from BodyProps
   set group(group: number) {
     this._group = getGroup(group);
   }

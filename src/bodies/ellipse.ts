@@ -6,7 +6,7 @@ import { createEllipse } from "../utils";
 /**
  * collider - ellipse
  */
-export class Ellipse extends Polygon {
+export class Ellipse<UserDataType = any> extends Polygon<UserDataType> {
   /**
    * ellipse type
    */

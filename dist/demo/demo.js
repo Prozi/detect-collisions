@@ -2635,10 +2635,6 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
              * was the polygon modified and needs update in the next checkCollision
              */
             this.dirty = false;
-            /**
-             * allows the user to set any misc data for client use
-             */
-            this.userData = null;
             /*
              * circles are convex
              */
@@ -2712,6 +2708,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           get group() {
             return this._group;
           }
+          // Don't overwrite docs from BodyProps
           set group(group) {
             this._group = (0, utils_1.getGroup)(group);
           }
@@ -3157,10 +3154,6 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
              */
             this.dirty = false;
             /**
-             * allows the user to set any misc data for client use
-             */
-            this.userData = null;
-            /**
              * type of body
              */
             this.type = model_1.BodyType.Polygon;
@@ -3250,6 +3243,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           get group() {
             return this._group;
           }
+          // Don't overwrite docs from BodyProps
           set group(group) {
             this._group = (0, utils_1.getGroup)(group);
           }
@@ -4352,10 +4346,12 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
           // Default value should be reflected in documentation of `BodyOptions.group`
           body.group =
             (_a = options.group) !== null && _a !== void 0 ? _a : 0x7fffffff;
-          body.userData = options.userData || null;
+          if ("userData" in options) {
+            body.userData = options.userData;
+          }
           if (
-            body.typeGroup !== model_1.BodyGroup.Circle &&
-            options.isCentered
+            options.isCentered &&
+            body.typeGroup !== model_1.BodyGroup.Circle
           ) {
             body.isCentered = true;
           }
@@ -6208,7 +6204,7 @@ which is good.	See: http://baagoe.com/en/RandomMusings/hash/avalanche.xhtml
   /******/
   /************************************************************************/
   var __webpack_exports__ = {};
-  // This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+  // This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
   (() => {
     /*!***************************!*\
   !*** ./src/demo/index.js ***!

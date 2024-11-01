@@ -1,3 +1,5 @@
+const { describe } = require("node:test");
+
 describe("GIVEN Circle", () => {
   describe("AND you adjust radius", () => {
     it("THEN it gives correct collision results", () => {
@@ -113,5 +115,40 @@ describe("GIVEN Circle", () => {
 
       expect(collisions).toBe(2);
     });
+  });
+
+  it("THEN not setting userData works", () => {
+    const { System } = require("../../src");
+
+    const physics = new System();
+    const circle = physics.createCircle({ x: 0, y: 0 }, 10);
+
+    expect(circle.userData).toBe(undefined);
+  });
+
+  it("THEN setting userData works", () => {
+    const { System } = require("../../src");
+
+    const physics = new System();
+    const circle = physics.createCircle({ x: 0, y: 0 }, 10, {
+      userData: { thank: "you" },
+    });
+
+    expect(circle.userData.thank).toBe("you");
+  });
+
+  it("THEN setting userData to falsy values works", () => {
+    const { System } = require("../../src");
+
+    const physics = new System();
+    const circleFalse = physics.createCircle({ x: 0, y: 0 }, 10, {
+      userData: false,
+    });
+    const circleNull = physics.createCircle({ x: 0, y: 0 }, 10, {
+      userData: null,
+    });
+
+    expect(circleFalse.userData).toBe(false);
+    expect(circleNull.userData).toBe(null);
   });
 });

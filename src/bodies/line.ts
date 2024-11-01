@@ -6,7 +6,7 @@ import { Vector as SATVector } from "sat";
 /**
  * collider - line
  */
-export class Line extends Polygon {
+export class Line<UserDataType = any> extends Polygon<UserDataType> {
   /**
    * line type
    */

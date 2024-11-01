@@ -11,13 +11,13 @@ declare class Stress {
   lines: number;
   lastVariant: number;
   count: number;
-  bounds: import("..").Box[];
+  bounds: import("..").Box<any>[];
   enableFiltering: boolean;
   legend: string;
   lastTime: number;
   updateBody(body: any): void;
   start: () => void;
-  getBounds(): import("..").Box[];
+  getBounds(): import("..").Box<any>[];
   toggleFiltering(): void;
   update(): void;
   timeScale: number | undefined;

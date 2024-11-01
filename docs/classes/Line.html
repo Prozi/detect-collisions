@@ -62,11 +62,23 @@
             <li><a href="../modules.html">Detect-Collisions</a></li>
             <li><a href="Line.html">Line</a></li>
           </ul>
-          <h1>Class Line</h1>
+          <h1>Class Line&lt;UserDataType&gt;</h1>
         </div>
         <section class="tsd-panel tsd-comment">
           <div class="tsd-comment tsd-typography"><p>collider - line</p></div>
           <div class="tsd-comment tsd-typography"></div>
+        </section>
+        <section class="tsd-panel">
+          <h4>Type Parameters</h4>
+          <ul class="tsd-type-parameter-list">
+            <li>
+              <span
+                ><a id="UserDataType" class="tsd-anchor"></a
+                ><span class="tsd-kind-type-parameter">UserDataType</span> =
+                <span class="tsd-signature-type">any</span></span
+              >
+            </li>
+          </ul>
         </section>
         <section class="tsd-panel tsd-hierarchy">
           <h4>Hierarchy (<a href="../hierarchy.html#Line">view full</a>)</h4>
@@ -74,7 +86,12 @@
             <li>
               <a href="Polygon.html" class="tsd-signature-type tsd-kind-class"
                 >Polygon</a
-              >
+              ><span class="tsd-signature-symbol">&lt;</span
+              ><a
+                class="tsd-signature-type tsd-kind-type-parameter"
+                href="Line.html#constructor.new_Line.UserDataType-1"
+                >UserDataType</a
+              ><span class="tsd-signature-symbol">&gt;</span>
               <ul class="tsd-hierarchy">
                 <li><span class="target">Line</span></li>
               </ul>
@@ -290,6 +307,13 @@
                       ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
                         <use href="../assets/icons.svg#icon-1024"></use></svg
                       ><span>type<wbr />Group</span></a
+                    >
+                    <a
+                      href="Line.html#userData"
+                      class="tsd-index-link tsd-is-inherited"
+                      ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
+                        <use href="../assets/icons.svg#icon-1024"></use></svg
+                      ><span>user<wbr />Data?</span></a
                     >
                   </div>
                 </section>
@@ -552,6 +576,12 @@
                   <a id="constructor.new_Line" class="tsd-anchor"></a
                   ><span class="tsd-kind-constructor-signature"
                     >new <wbr />Line</span
+                  ><span class="tsd-signature-symbol">&lt;</span
+                  ><a
+                    class="tsd-signature-type tsd-kind-type-parameter"
+                    href="Line.html#constructor.new_Line.UserDataType-1"
+                    >UserDataType</a
+                  ><span class="tsd-signature-symbol">&gt;</span
                   ><span class="tsd-signature-symbol">(</span
                   ><span class="tsd-kind-parameter">start</span>,
                   <span class="tsd-kind-parameter">end</span>,
@@ -561,6 +591,12 @@
                   ><span class="tsd-signature-symbol">: </span
                   ><a href="Line.html" class="tsd-signature-type tsd-kind-class"
                     >Line</a
+                  ><span class="tsd-signature-symbol">&lt;</span
+                  ><a
+                    class="tsd-signature-type tsd-kind-type-parameter"
+                    href="Line.html#constructor.new_Line.UserDataType-1"
+                    >UserDataType</a
+                  ><span class="tsd-signature-symbol">&gt;</span
                   ><a
                     href="#constructor.new_Line"
                     aria-label="Permalink"
@@ -573,6 +609,23 @@
                   <div class="tsd-comment tsd-typography">
                     <p>collider - line from start to end</p>
                   </div>
+                  <section class="tsd-panel">
+                    <h4>Type Parameters</h4>
+                    <ul class="tsd-type-parameter-list">
+                      <li>
+                        <span
+                          ><a
+                            id="constructor.new_Line.UserDataType-1"
+                            class="tsd-anchor"
+                          ></a
+                          ><span class="tsd-kind-type-parameter"
+                            >UserDataType</span
+                          >
+                          = <span class="tsd-signature-type">any</span></span
+                        >
+                      </li>
+                    </ul>
+                  </section>
                   <div class="tsd-parameters">
                     <h4 class="tsd-parameters-title">Parameters</h4>
                     <ul class="tsd-parameter-list">
@@ -604,7 +657,9 @@
                             href="../interfaces/BodyOptions.html"
                             class="tsd-signature-type tsd-kind-interface"
                             >BodyOptions</a
-                          ></span
+                          ><span class="tsd-signature-symbol">&lt;</span
+                          ><span class="tsd-signature-type">any</span
+                          ><span class="tsd-signature-symbol">&gt;</span></span
                         >
                       </li>
                     </ul>
@@ -615,7 +670,12 @@
                       href="Line.html"
                       class="tsd-signature-type tsd-kind-class"
                       >Line</a
-                    >
+                    ><span class="tsd-signature-symbol">&lt;</span
+                    ><a
+                      class="tsd-signature-type tsd-kind-type-parameter"
+                      href="Line.html#constructor.new_Line.UserDataType-1"
+                      >UserDataType</a
+                    ><span class="tsd-signature-symbol">&gt;</span>
                   </h4>
                   <div class="tsd-comment tsd-typography"></div>
                   <aside class="tsd-sources">
@@ -684,8 +744,8 @@
                   <li>
                     Defined in
                     <a
-                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L130"
-                      >src/bodies/polygon.ts:130</a
+                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L137"
+                      >src/bodies/polygon.ts:137</a
                     >
                   </li>
                 </ul>
@@ -708,7 +768,10 @@
                 <span class="tsd-signature-type">number</span>
               </div>
               <div class="tsd-comment tsd-typography">
-                <p>body angle in radians use deg2rad to convert</p>
+                <p>
+                  body angle in radians use deg2rad to convert move(speed) moves
+                  at <code>1 speed = 1px</code> towards angle
+                </p>
               </div>
               <div class="tsd-comment tsd-typography"></div>
               <aside class="tsd-sources">
@@ -756,8 +819,8 @@
                   <li>
                     Defined in
                     <a
-                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L60"
-                      >src/bodies/polygon.ts:60</a
+                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L62"
+                      >src/bodies/polygon.ts:62</a
                     >
                   </li>
                 </ul>
@@ -833,8 +896,8 @@
                   <li>
                     Defined in
                     <a
-                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L125"
-                      >src/bodies/polygon.ts:125</a
+                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L132"
+                      >src/bodies/polygon.ts:132</a
                     >
                   </li>
                 </ul>
@@ -876,8 +939,8 @@
                   <li>
                     Defined in
                     <a
-                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L70"
-                      >src/bodies/polygon.ts:70</a
+                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L72"
+                      >src/bodies/polygon.ts:72</a
                     >
                   </li>
                 </ul>
@@ -916,8 +979,8 @@
                   <li>
                     Defined in
                     <a
-                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L95"
-                      >src/bodies/polygon.ts:95</a
+                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L97"
+                      >src/bodies/polygon.ts:97</a
                     >
                   </li>
                 </ul>
@@ -969,8 +1032,6 @@
               </h3>
               <div class="tsd-signature">
                 <span class="tsd-kind-property">is<wbr />Convex</span
-                ><span class="tsd-signature-symbol">:</span>
-                <span class="tsd-signature-type">true</span
                 ><span class="tsd-signature-symbol"> = true</span>
               </div>
               <div class="tsd-comment tsd-typography">
@@ -1027,8 +1088,8 @@
                   <li>
                     Defined in
                     <a
-                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L80"
-                      >src/bodies/polygon.ts:80</a
+                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L82"
+                      >src/bodies/polygon.ts:82</a
                     >
                   </li>
                 </ul>
@@ -1066,8 +1127,8 @@
                   <li>
                     Defined in
                     <a
-                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L85"
-                      >src/bodies/polygon.ts:85</a
+                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L87"
+                      >src/bodies/polygon.ts:87</a
                     >
                   </li>
                 </ul>
@@ -1102,8 +1163,8 @@
                   <li>
                     Defined in
                     <a
-                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L45"
-                      >src/bodies/polygon.ts:45</a
+                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L47"
+                      >src/bodies/polygon.ts:47</a
                     >
                   </li>
                 </ul>
@@ -1138,8 +1199,8 @@
                   <li>
                     Defined in
                     <a
-                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L55"
-                      >src/bodies/polygon.ts:55</a
+                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L57"
+                      >src/bodies/polygon.ts:57</a
                     >
                   </li>
                 </ul>
@@ -1174,8 +1235,8 @@
                   <li>
                     Defined in
                     <a
-                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L40"
-                      >src/bodies/polygon.ts:40</a
+                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L42"
+                      >src/bodies/polygon.ts:42</a
                     >
                   </li>
                 </ul>
@@ -1210,8 +1271,8 @@
                   <li>
                     Defined in
                     <a
-                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L50"
-                      >src/bodies/polygon.ts:50</a
+                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L52"
+                      >src/bodies/polygon.ts:52</a
                     >
                   </li>
                 </ul>
@@ -1326,8 +1387,8 @@
                   <li>
                     Defined in
                     <a
-                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L75"
-                      >src/bodies/polygon.ts:75</a
+                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L77"
+                      >src/bodies/polygon.ts:77</a
                     >
                   </li>
                 </ul>
@@ -1407,8 +1468,8 @@
                   <li>
                     Defined in
                     <a
-                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L120"
-                      >src/bodies/polygon.ts:120</a
+                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L127"
+                      >src/bodies/polygon.ts:127</a
                     >
                   </li>
                 </ul>
@@ -1486,8 +1547,8 @@
                   <li>
                     Defined in
                     <a
-                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L135"
-                      >src/bodies/polygon.ts:135</a
+                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L142"
+                      >src/bodies/polygon.ts:142</a
                     >
                   </li>
                 </ul>
@@ -1532,8 +1593,8 @@
                   <li>
                     Defined in
                     <a
-                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L90"
-                      >src/bodies/polygon.ts:90</a
+                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L92"
+                      >src/bodies/polygon.ts:92</a
                     >
                   </li>
                 </ul>
@@ -1616,6 +1677,45 @@
                     <a
                       href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/line.ts#L18"
                       >src/bodies/line.ts:18</a
+                    >
+                  </li>
+                </ul>
+              </aside>
+            </section>
+            <section class="tsd-panel tsd-member tsd-is-inherited">
+              <a id="userData" class="tsd-anchor"></a>
+              <h3 class="tsd-anchor-link">
+                <code class="tsd-tag">Optional</code><span>user<wbr />Data</span
+                ><a
+                  href="#userData"
+                  aria-label="Permalink"
+                  class="tsd-anchor-icon"
+                  ><svg viewBox="0 0 24 24">
+                    <use href="../assets/icons.svg#icon-anchor"></use></svg
+                ></a>
+              </h3>
+              <div class="tsd-signature">
+                <span class="tsd-kind-property">user<wbr />Data</span
+                ><span class="tsd-signature-symbol">?:</span>
+                <span class="tsd-signature-type">any</span>
+              </div>
+              <div class="tsd-comment tsd-typography">
+                <p>allows the user to set any misc data for client use</p>
+              </div>
+              <div class="tsd-comment tsd-typography"></div>
+              <aside class="tsd-sources">
+                <p>
+                  Inherited from <a href="Polygon.html">Polygon</a>.<a
+                    href="Polygon.html#userData"
+                    >userData</a
+                  >
+                </p>
+                <ul>
+                  <li>
+                    Defined in
+                    <a
+                      href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L102"
+                      >src/bodies/polygon.ts:102</a
                     >
                   </li>
                 </ul>
@@ -1770,38 +1870,42 @@
                     Returns <span class="tsd-signature-type">number</span>
                   </h4>
                   <div class="tsd-comment tsd-typography">
-                    <h4 class="tsd-anchor-link">
-                      <a id="See" class="tsd-anchor"></a>See<a
-                        href="#See"
-                        aria-label="Permalink"
-                        class="tsd-anchor-icon"
-                        ><svg viewBox="0 0 24 24">
-                          <use
-                            href="../assets/icons.svg#icon-anchor"
-                          ></use></svg
-                      ></a>
-                    </h4>
-                    <p>
-                      <a
-                        href="../functions/canInteract.html"
-                        class="tsd-kind-function"
-                        >canInteract</a
-                      >
-                      for how groups are used
-                    </p>
-                    <h4 class="tsd-anchor-link">
-                      <a id="Default" class="tsd-anchor"></a>Default<a
-                        href="#Default"
-                        aria-label="Permalink"
-                        class="tsd-anchor-icon"
-                        ><svg viewBox="0 0 24 24">
-                          <use
-                            href="../assets/icons.svg#icon-anchor"
-                          ></use></svg
-                      ></a>
-                    </h4>
-                    <pre><code class="ts"><span class="hl-7">0x7fffffff</span><span class="hl-1"> </span><span class="hl-5">// member of all groups (can interact with everyting)</span>
+                    <div class="tsd-tag-See">
+                      <h4 class="tsd-anchor-link">
+                        <a id="See" class="tsd-anchor"></a>See<a
+                          href="#See"
+                          aria-label="Permalink"
+                          class="tsd-anchor-icon"
+                          ><svg viewBox="0 0 24 24">
+                            <use
+                              href="../assets/icons.svg#icon-anchor"
+                            ></use></svg
+                        ></a>
+                      </h4>
+                      <p>
+                        <a
+                          href="../functions/canInteract.html"
+                          class="tsd-kind-function"
+                          >canInteract</a
+                        >
+                        for how groups are used
+                      </p>
+                    </div>
+                    <div class="tsd-tag-Default">
+                      <h4 class="tsd-anchor-link">
+                        <a id="Default" class="tsd-anchor"></a>Default<a
+                          href="#Default"
+                          aria-label="Permalink"
+                          class="tsd-anchor-icon"
+                          ><svg viewBox="0 0 24 24">
+                            <use
+                              href="../assets/icons.svg#icon-anchor"
+                            ></use></svg
+                        ></a>
+                      </h4>
+                      <pre><code class="ts"><span class="hl-7">0x7fffffff</span><span class="hl-1"> </span><span class="hl-5">// member of all groups (can interact with everyting)</span>
 </code><button type="button">Copy</button></pre>
+                    </div>
                   </div>
                   <aside class="tsd-sources">
                     <p>Inherited from Polygon.group</p>
@@ -1809,8 +1913,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L233"
-                          >src/bodies/polygon.ts:233</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L240"
+                          >src/bodies/polygon.ts:240</a
                         >
                       </li>
                     </ul>
@@ -1868,38 +1972,42 @@
                     Returns <span class="tsd-signature-type">void</span>
                   </h4>
                   <div class="tsd-comment tsd-typography">
-                    <h4 class="tsd-anchor-link">
-                      <a id="See-1" class="tsd-anchor"></a>See<a
-                        href="#See-1"
-                        aria-label="Permalink"
-                        class="tsd-anchor-icon"
-                        ><svg viewBox="0 0 24 24">
-                          <use
-                            href="../assets/icons.svg#icon-anchor"
-                          ></use></svg
-                      ></a>
-                    </h4>
-                    <p>
-                      <a
-                        href="../functions/canInteract.html"
-                        class="tsd-kind-function"
-                        >canInteract</a
-                      >
-                      for how groups are used
-                    </p>
-                    <h4 class="tsd-anchor-link">
-                      <a id="Default-1" class="tsd-anchor"></a>Default<a
-                        href="#Default-1"
-                        aria-label="Permalink"
-                        class="tsd-anchor-icon"
-                        ><svg viewBox="0 0 24 24">
-                          <use
-                            href="../assets/icons.svg#icon-anchor"
-                          ></use></svg
-                      ></a>
-                    </h4>
-                    <pre><code class="ts"><span class="hl-7">0x7fffffff</span><span class="hl-1"> </span><span class="hl-5">// member of all groups (can interact with everyting)</span>
+                    <div class="tsd-tag-See">
+                      <h4 class="tsd-anchor-link">
+                        <a id="See-1" class="tsd-anchor"></a>See<a
+                          href="#See-1"
+                          aria-label="Permalink"
+                          class="tsd-anchor-icon"
+                          ><svg viewBox="0 0 24 24">
+                            <use
+                              href="../assets/icons.svg#icon-anchor"
+                            ></use></svg
+                        ></a>
+                      </h4>
+                      <p>
+                        <a
+                          href="../functions/canInteract.html"
+                          class="tsd-kind-function"
+                          >canInteract</a
+                        >
+                        for how groups are used
+                      </p>
+                    </div>
+                    <div class="tsd-tag-Default">
+                      <h4 class="tsd-anchor-link">
+                        <a id="Default-1" class="tsd-anchor"></a>Default<a
+                          href="#Default-1"
+                          aria-label="Permalink"
+                          class="tsd-anchor-icon"
+                          ><svg viewBox="0 0 24 24">
+                            <use
+                              href="../assets/icons.svg#icon-anchor"
+                            ></use></svg
+                        ></a>
+                      </h4>
+                      <pre><code class="ts"><span class="hl-7">0x7fffffff</span><span class="hl-1"> </span><span class="hl-5">// member of all groups (can interact with everyting)</span>
 </code><button type="button">Copy</button></pre>
+                    </div>
                   </div>
                   <aside class="tsd-sources">
                     <p>Inherited from Polygon.group</p>
@@ -1907,8 +2015,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L237"
-                          >src/bodies/polygon.ts:237</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L245"
+                          >src/bodies/polygon.ts:245</a
                         >
                       </li>
                     </ul>
@@ -1951,8 +2059,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L176"
-                          >src/bodies/polygon.ts:176</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L183"
+                          >src/bodies/polygon.ts:183</a
                         >
                       </li>
                     </ul>
@@ -1992,8 +2100,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L157"
-                          >src/bodies/polygon.ts:157</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L164"
+                          >src/bodies/polygon.ts:164</a
                         >
                       </li>
                     </ul>
@@ -2033,8 +2141,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L221"
-                          >src/bodies/polygon.ts:221</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L228"
+                          >src/bodies/polygon.ts:228</a
                         >
                       </li>
                     </ul>
@@ -2074,8 +2182,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L228"
-                          >src/bodies/polygon.ts:228</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L235"
+                          >src/bodies/polygon.ts:235</a
                         >
                       </li>
                     </ul>
@@ -2120,8 +2228,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L207"
-                          >src/bodies/polygon.ts:207</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L214"
+                          >src/bodies/polygon.ts:214</a
                         >
                       </li>
                     </ul>
@@ -2166,8 +2274,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L214"
-                          >src/bodies/polygon.ts:214</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L221"
+                          >src/bodies/polygon.ts:221</a
                         >
                       </li>
                     </ul>
@@ -2290,8 +2398,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L180"
-                          >src/bodies/polygon.ts:180</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L187"
+                          >src/bodies/polygon.ts:187</a
                         >
                       </li>
                     </ul>
@@ -2331,8 +2439,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L187"
-                          >src/bodies/polygon.ts:187</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L194"
+                          >src/bodies/polygon.ts:194</a
                         >
                       </li>
                     </ul>
@@ -2368,8 +2476,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L192"
-                          >src/bodies/polygon.ts:192</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L199"
+                          >src/bodies/polygon.ts:199</a
                         >
                       </li>
                     </ul>
@@ -2409,8 +2517,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L199"
-                          >src/bodies/polygon.ts:199</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L206"
+                          >src/bodies/polygon.ts:206</a
                         >
                       </li>
                     </ul>
@@ -2488,8 +2596,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L313"
-                          >src/bodies/polygon.ts:313</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L321"
+                          >src/bodies/polygon.ts:321</a
                         >
                       </li>
                     </ul>
@@ -2558,8 +2666,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L320"
-                          >src/bodies/polygon.ts:320</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L328"
+                          >src/bodies/polygon.ts:328</a
                         >
                       </li>
                     </ul>
@@ -2678,8 +2786,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L299"
-                          >src/bodies/polygon.ts:299</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L307"
+                          >src/bodies/polygon.ts:307</a
                         >
                       </li>
                     </ul>
@@ -2807,8 +2915,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L327"
-                          >src/bodies/polygon.ts:327</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L335"
+                          >src/bodies/polygon.ts:335</a
                         >
                       </li>
                     </ul>
@@ -2878,8 +2986,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L438"
-                          >src/bodies/polygon.ts:438</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L446"
+                          >src/bodies/polygon.ts:446</a
                         >
                       </li>
                     </ul>
@@ -2936,8 +3044,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L379"
-                          >src/bodies/polygon.ts:379</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L387"
+                          >src/bodies/polygon.ts:387</a
                         >
                       </li>
                     </ul>
@@ -3012,8 +3120,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L408"
-                          >src/bodies/polygon.ts:408</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L416"
+                          >src/bodies/polygon.ts:416</a
                         >
                       </li>
                     </ul>
@@ -3098,8 +3206,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L244"
-                          >src/bodies/polygon.ts:244</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L252"
+                          >src/bodies/polygon.ts:252</a
                         >
                       </li>
                     </ul>
@@ -3168,8 +3276,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L394"
-                          >src/bodies/polygon.ts:394</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L402"
+                          >src/bodies/polygon.ts:402</a
                         >
                       </li>
                     </ul>
@@ -3201,6 +3309,9 @@
                     href="Polygon.html"
                     class="tsd-signature-type tsd-kind-class"
                     >Polygon</a
+                  ><span class="tsd-signature-symbol">&lt;</span
+                  ><span class="tsd-signature-type">any</span
+                  ><span class="tsd-signature-symbol">&gt;</span
                   ><a
                     href="#rotate.rotate-1"
                     aria-label="Permalink"
@@ -3230,7 +3341,9 @@
                       href="Polygon.html"
                       class="tsd-signature-type tsd-kind-class"
                       >Polygon</a
-                    >
+                    ><span class="tsd-signature-symbol">&lt;</span
+                    ><span class="tsd-signature-type">any</span
+                    ><span class="tsd-signature-symbol">&gt;</span>
                   </h4>
                   <div class="tsd-comment tsd-typography"></div>
                   <aside class="tsd-sources">
@@ -3244,8 +3357,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L369"
-                          >src/bodies/polygon.ts:369</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L377"
+                          >src/bodies/polygon.ts:377</a
                         >
                       </li>
                     </ul>
@@ -3331,8 +3444,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L282"
-                          >src/bodies/polygon.ts:282</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L290"
+                          >src/bodies/polygon.ts:290</a
                         >
                       </li>
                     </ul>
@@ -3422,8 +3535,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L289"
-                          >src/bodies/polygon.ts:289</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L297"
+                          >src/bodies/polygon.ts:297</a
                         >
                       </li>
                     </ul>
@@ -3455,6 +3568,9 @@
                     href="Polygon.html"
                     class="tsd-signature-type tsd-kind-class"
                     >Polygon</a
+                  ><span class="tsd-signature-symbol">&lt;</span
+                  ><span class="tsd-signature-type">any</span
+                  ><span class="tsd-signature-symbol">&gt;</span
                   ><a
                     href="#setPoints.setPoints-1"
                     aria-label="Permalink"
@@ -3488,7 +3604,9 @@
                       href="Polygon.html"
                       class="tsd-signature-type tsd-kind-class"
                       >Polygon</a
-                    >
+                    ><span class="tsd-signature-symbol">&lt;</span
+                    ><span class="tsd-signature-type">any</span
+                    ><span class="tsd-signature-symbol">&gt;</span>
                   </h4>
                   <div class="tsd-comment tsd-typography"></div>
                   <aside class="tsd-sources">
@@ -3502,8 +3620,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L348"
-                          >src/bodies/polygon.ts:348</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L356"
+                          >src/bodies/polygon.ts:356</a
                         >
                       </li>
                     </ul>
@@ -3597,8 +3715,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L253"
-                          >src/bodies/polygon.ts:253</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L261"
+                          >src/bodies/polygon.ts:261</a
                         >
                       </li>
                     </ul>
@@ -3693,8 +3811,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L264"
-                          >src/bodies/polygon.ts:264</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L272"
+                          >src/bodies/polygon.ts:272</a
                         >
                       </li>
                     </ul>
@@ -3727,6 +3845,9 @@
                     href="Polygon.html"
                     class="tsd-signature-type tsd-kind-class"
                     >Polygon</a
+                  ><span class="tsd-signature-symbol">&lt;</span
+                  ><span class="tsd-signature-type">any</span
+                  ><span class="tsd-signature-symbol">&gt;</span
                   ><a
                     href="#translate.translate-1"
                     aria-label="Permalink"
@@ -3762,7 +3883,9 @@
                       href="Polygon.html"
                       class="tsd-signature-type tsd-kind-class"
                       >Polygon</a
-                    >
+                    ><span class="tsd-signature-symbol">&lt;</span
+                    ><span class="tsd-signature-type">any</span
+                    ><span class="tsd-signature-symbol">&gt;</span>
                   </h4>
                   <div class="tsd-comment tsd-typography"></div>
                   <aside class="tsd-sources">
@@ -3776,8 +3899,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L359"
-                          >src/bodies/polygon.ts:359</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L367"
+                          >src/bodies/polygon.ts:367</a
                         >
                       </li>
                     </ul>
@@ -3851,8 +3974,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L386"
-                          >src/bodies/polygon.ts:386</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L394"
+                          >src/bodies/polygon.ts:394</a
                         >
                       </li>
                     </ul>
@@ -3917,8 +4040,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L420"
-                          >src/bodies/polygon.ts:420</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L428"
+                          >src/bodies/polygon.ts:428</a
                         >
                       </li>
                     </ul>
@@ -4000,8 +4123,8 @@
                       <li>
                         Defined in
                         <a
-                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L454"
-                          >src/bodies/polygon.ts:454</a
+                          href="https://github.com/Prozi/detect-collisions/blob/master/src/bodies/polygon.ts#L462"
+                          >src/bodies/polygon.ts:462</a
                         >
                       </li>
                     </ul>
@@ -4337,6 +4460,10 @@
                     ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
                       <use href="../assets/icons.svg#icon-1024"></use></svg
                     ><span>type<wbr />Group</span></a
+                  ><a href="#userData" class="tsd-is-inherited"
+                    ><svg class="tsd-kind-icon" viewBox="0 0 24 24">
+                      <use href="../assets/icons.svg#icon-1024"></use></svg
+                    ><span>user<wbr />Data</span></a
                   >
                 </div>
               </details>

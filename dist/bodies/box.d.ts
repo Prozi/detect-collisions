@@ -3,7 +3,7 @@ import { Polygon } from "./polygon";
 /**
  * collider - box
  */
-export declare class Box extends Polygon {
+export declare class Box<UserDataType = any> extends Polygon<UserDataType> {
   /**
    * type of body
    */

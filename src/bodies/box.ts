@@ -6,7 +6,7 @@ import { createBox } from "../utils";
 /**
  * collider - box
  */
-export class Box extends Polygon {
+export class Box<UserDataType = any> extends Polygon<UserDataType> {
   /**
    * type of body
    */

@@ -84,7 +84,7 @@ export interface Data<TBody extends Body> {
 /**
  * BodyOptions for body creation
  */
-export interface BodyOptions {
+export interface BodyOptions<UserDataType = any> {
   /**
    * system.separate() doesn't move this body
    */
@@ -102,6 +102,7 @@ export interface BodyOptions {
 
   /**
    * body angle in radians use deg2rad to convert
+   * move(speed) moves at `1 speed = 1px` towards angle
    */
   angle?: number;
 
@@ -129,7 +130,7 @@ export interface BodyOptions {
   /**
    * allows the user to set any misc data for client use
    */
-  userData?: any;
+  userData?: UserDataType;
 }
 
 /**
@@ -171,7 +172,8 @@ export type Body = Point | Line | Ellipse | Circle | Box | Polygon;
 /**
  * each body contains those regardless of type
  */
-export interface BodyProps extends Required<BodyOptions> {
+export interface BodyProps<UserDataType = any>
+  extends BodyOptions<UserDataType> {
   /**
    * type of body
    */

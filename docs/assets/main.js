@@ -2145,7 +2145,12 @@ window.translations = {
         t.kind &&
           (r.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="tsd-kind-icon"><use href="#icon-${t.kind}"></use></svg>`),
         (r.appendChild(document.createElement("span")).textContent = t.text);
-    } else e.appendChild(document.createElement("span")).textContent = t.text;
+    } else {
+      let r = e.appendChild(document.createElement("span"));
+      (r.innerHTML =
+        '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" class="tsd-kind-icon"><use href="#icon-folder"></use></svg>'),
+        (r.appendChild(document.createElement("span")).textContent = t.text);
+    }
   }
   G(X, "a[data-toggle]");
   G(Z, ".tsd-accordion");

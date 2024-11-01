@@ -29,10 +29,6 @@ class Polygon extends sat_1.Polygon {
      */
     this.dirty = false;
     /**
-     * allows the user to set any misc data for client use
-     */
-    this.userData = null;
-    /**
      * type of body
      */
     this.type = model_1.BodyType.Polygon;
@@ -122,6 +118,7 @@ class Polygon extends sat_1.Polygon {
   get group() {
     return this._group;
   }
+  // Don't overwrite docs from BodyProps
   set group(group) {
     this._group = (0, utils_1.getGroup)(group);
   }

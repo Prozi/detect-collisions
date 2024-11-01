@@ -3,7 +3,7 @@ import { Polygon } from "./polygon";
 /**
  * collider - ellipse
  */
-export declare class Ellipse extends Polygon {
+export declare class Ellipse<UserDataType = any> extends Polygon<UserDataType> {
   /**
    * ellipse type
    */

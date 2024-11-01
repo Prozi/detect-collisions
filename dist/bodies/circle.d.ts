@@ -13,7 +13,10 @@ import { System } from "../system";
 /**
  * collider - circle
  */
-export declare class Circle extends SATCircle implements BBox, BodyProps {
+export declare class Circle<UserDataType = any>
+  extends SATCircle
+  implements BBox, BodyProps<UserDataType>
+{
   /**
    * minimum x bound of body
    */
@@ -69,7 +72,7 @@ export declare class Circle extends SATCircle implements BBox, BodyProps {
   /**
    * allows the user to set any misc data for client use
    */
-  userData: null;
+  userData?: BodyProps["userData"];
   readonly isConvex = true;
   /**
    * circle type

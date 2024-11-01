@@ -6,7 +6,7 @@ import { ensureVectorPoint } from "../utils";
 /**
  * collider - point (very tiny box)
  */
-export class Point extends Box {
+export class Point<UserDataType = any> extends Box<UserDataType> {
   /**
    * point type
    */

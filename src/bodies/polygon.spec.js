@@ -2,13 +2,13 @@ describe("GIVEN Polygon", () => {
   it("THEN you need at least one point to create", () => {
     const { Polygon } = require("../../src");
 
-    const nullParams = () => new Polygon({});
-    const zeroParams = () => new Polygon({}, []);
-    const oneParam = () => new Polygon({}, [{}]);
+    const nullPoints = () => new Polygon({});
+    const zeroPoints = () => new Polygon({}, []);
+    const onePoint = () => new Polygon({}, [{}]);
 
-    expect(nullParams).toThrow();
-    expect(zeroParams).toThrow();
-    expect(oneParam).not.toThrow();
+    expect(nullPoints).toThrow();
+    expect(zeroPoints).toThrow();
+    expect(onePoint).not.toThrow();
   });
 
   it("THEN you can set position by setting x & y", () => {
@@ -489,5 +489,40 @@ describe("GIVEN Polygon", () => {
 
       expect(collisions).toBe(2);
     });
+  });
+
+  it("THEN not setting userData works", () => {
+    const { System } = require("../../src");
+
+    const physics = new System();
+    const polygon = physics.createPolygon({}, [{}]);
+
+    expect(polygon.userData).toBe(undefined);
+  });
+
+  it("THEN setting userData works", () => {
+    const { System } = require("../../src");
+
+    const physics = new System();
+    const polygon = physics.createPolygon({}, [{}], {
+      userData: { thank: "you" },
+    });
+
+    expect(polygon.userData.thank).toBe("you");
+  });
+
+  it("THEN setting userData to falsy values works", () => {
+    const { System } = require("../../src");
+
+    const physics = new System();
+    const polygonFalse = physics.createPolygon({}, [{}], {
+      userData: false,
+    });
+    const polygonNull = physics.createPolygon({}, [{}], {
+      userData: null,
+    });
+
+    expect(polygonFalse.userData).toBe(false);
+    expect(polygonNull.userData).toBe(null);
   });
 });

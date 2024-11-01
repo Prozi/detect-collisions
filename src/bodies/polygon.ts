@@ -33,7 +33,10 @@ export { isSimple };
 /**
  * collider - polygon
  */
-export class Polygon extends SATPolygon implements BBox, BodyProps {
+export class Polygon<UserDataType = any>
+  extends SATPolygon
+  implements BBox, BodyProps<UserDataType>
+{
   /**
    * minimum x bound of body
    */
@@ -97,7 +100,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
   /**
    * allows the user to set any misc data for client use
    */
-  userData = null;
+  userData?: BodyProps["userData"];
 
   /**
    * type of body
@@ -239,6 +242,7 @@ export class Polygon extends SATPolygon implements BBox, BodyProps {
     return this._group;
   }
 
+  // Don't overwrite docs from BodyProps
   set group(group: number) {
     this._group = getGroup(group);
   }

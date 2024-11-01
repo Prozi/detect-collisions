@@ -16,7 +16,10 @@ export { isSimple };
 /**
  * collider - polygon
  */
-export declare class Polygon extends SATPolygon implements BBox, BodyProps {
+export declare class Polygon<UserDataType = any>
+  extends SATPolygon
+  implements BBox, BodyProps<UserDataType>
+{
   /**
    * minimum x bound of body
    */
@@ -68,7 +71,7 @@ export declare class Polygon extends SATPolygon implements BBox, BodyProps {
   /**
    * allows the user to set any misc data for client use
    */
-  userData: null;
+  userData?: BodyProps["userData"];
   /**
    * type of body
    */

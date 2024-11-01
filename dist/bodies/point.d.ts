@@ -3,7 +3,7 @@ import { Box } from "./box";
 /**
  * collider - point (very tiny box)
  */
-export declare class Point extends Box {
+export declare class Point<UserDataType = any> extends Box<UserDataType> {
   /**
    * point type
    */
