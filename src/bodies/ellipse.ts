@@ -1,7 +1,7 @@
 import { BodyGroup, BodyOptions, BodyType, PotentialVector } from "../model";
 
-import { Polygon } from "./polygon";
 import { createEllipse } from "../utils";
+import { Polygon } from "./polygon";
 
 /**
  * collider - ellipse

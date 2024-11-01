@@ -25,8 +25,7 @@ import { System } from "../system";
  */
 export class Circle<UserDataType = any>
   extends SATCircle
-  implements BBox, BodyProps<UserDataType>
-{
+  implements BBox, BodyProps<UserDataType> {
   /**
    * minimum x bound of body
    */

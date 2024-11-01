@@ -1,7 +1,7 @@
 /* tslint:disable:no-implicit-dependencies variable-name no-any */
 import { Bench } from "tinybench";
 
-export const stressBenchmark = async () => {
+export const stressBenchmark = async() => {
   const { default: Stress } = await import("../demo/stress.js");
 
   let stressTest: any;

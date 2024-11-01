@@ -1,13 +1,5 @@
-import {
-  BBox,
-  Body,
-  BodyOptions,
-  PotentialVector,
-  SATPolygon,
-  SATTest,
-  Vector,
-} from "./model";
 import { Response, Vector as SATVector } from "sat";
+import { BBox, Body, BodyOptions, PotentialVector, SATPolygon, SATTest, Vector } from "./model";
 import { Point as DecompPoint } from "poly-decomp-es";
 import { Polygon } from "./bodies/polygon";
 export declare const DEG2RAD: number;
@@ -23,11 +15,7 @@ export declare function rad2deg(radians: number): number;
 /**
  * creates ellipse-shaped polygon based on params
  */
-export declare function createEllipse(
-  radiusX: number,
-  radiusY?: number,
-  step?: number,
-): SATVector[];
+export declare function createEllipse(radiusX: number, radiusY?: number, step?: number): SATVector[];
 /**
  * creates box shaped polygon points
  */
@@ -39,9 +27,7 @@ export declare function ensureVectorPoint(point?: PotentialVector): SATVector;
 /**
  * ensure Vector points (for polygon) in counter-clockwise order
  */
-export declare function ensurePolygonPoints(
-  points?: PotentialVector[],
-): SATVector[];
+export declare function ensurePolygonPoints(points?: PotentialVector[]): SATVector[];
 /**
  * get distance between two Vector points
  */
@@ -101,10 +87,7 @@ export declare function intersectAABB(bodyA: BBox, bodyB: BBox): boolean;
  * canInteract(body3, body2) // returns true
  * canInteract(body3, body3) // returns true (identical groups can always interact)
  */
-export declare function canInteract(
-  { group: groupA }: Body,
-  { group: groupB }: Body,
-): boolean;
+export declare function canInteract({ group: groupA }: Body, { group: groupB }: Body): boolean;
 /**
  * checks if body a is in body b
  */
@@ -128,10 +111,7 @@ export declare function mapArrayToVector([x, y]?: DecompPoint): Vector;
 /**
  * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
  */
-export declare function getBounceDirection(
-  body: Vector,
-  collider: Vector,
-): SATVector;
+export declare function getBounceDirection(body: Vector, collider: Vector): SATVector;
 /**
  * returns correct sat.js testing function based on body types
  */
@@ -139,15 +119,7 @@ export declare function getSATTest(bodyA: Body, bodyB: Body): SATTest;
 /**
  * draws dashed line on canvas context
  */
-export declare function dashLineTo(
-  context: CanvasRenderingContext2D,
-  fromX: number,
-  fromY: number,
-  toX: number,
-  toY: number,
-  dash?: number,
-  gap?: number,
-): void;
+export declare function dashLineTo(context: CanvasRenderingContext2D, fromX: number, fromY: number, toX: number, toY: number, dash?: number, gap?: number): void;
 /**
  * draw polygon
  *
@@ -155,24 +127,13 @@ export declare function dashLineTo(
  * @param polygon
  * @param isTrigger
  */
-export declare function drawPolygon(
-  context: CanvasRenderingContext2D,
-  {
-    pos,
-    calcPoints,
-  }: Pick<Polygon | SATPolygon, "calcPoints"> & {
+export declare function drawPolygon(context: CanvasRenderingContext2D, { pos, calcPoints, }: Pick<Polygon | SATPolygon, "calcPoints"> & {
     pos: Vector;
-  },
-  isTrigger?: boolean,
-): void;
+}, isTrigger?: boolean): void;
 /**
  * draw body bounding body box
  */
-export declare function drawBVH(
-  context: CanvasRenderingContext2D,
-  body: Body,
-  isTrigger?: boolean,
-): void;
+export declare function drawBVH(context: CanvasRenderingContext2D, body: Body, isTrigger?: boolean): void;
 /**
  * clone response object returning new response with previous ones values
  */
@@ -201,12 +162,5 @@ export declare function ensureNumber(input: number | string): number;
  * @param category - category bits
  * @param mask - mask bits (default: category)
  */
-export declare function groupBits(
-  category: number | string,
-  mask?: number | string,
-): number;
-export declare function move(
-  body: Body,
-  speed?: number,
-  updateNow?: boolean,
-): void;
+export declare function groupBits(category: number | string, mask?: number | string): number;
+export declare function move(body: Body, speed?: number, updateNow?: boolean): void;

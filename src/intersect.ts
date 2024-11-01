@@ -1,6 +1,9 @@
+/* tslint:disable:trailing-whitespace */
+/* tslint:disable:cyclomatic-complexity */
+
+import { pointInCircle, pointInPolygon as pointInConvexPolygon } from "sat";
 import { Body, BodyGroup, SATPolygon, SATVector, Vector } from "./model";
 import { every, forEach, map, some } from "./optimized";
-import { pointInCircle, pointInPolygon as pointInConvexPolygon } from "sat";
 
 import { Circle } from "./bodies/circle";
 import { Line } from "./bodies/line";
@@ -28,16 +31,18 @@ export function polygonInCircle(
   polygon: Polygon,
   circle: Pick<Circle, "pos" | "r">,
 ): boolean {
-  return every(polygon.calcPoints, (p) =>
-    pointInCircle(
-      { x: p.x + polygon.pos.x, y: p.y + polygon.pos.y } as SATVector,
-      circle,
-    ),
-  );
+  return every(polygon.calcPoints,p => {
+    const point = {
+      x: p.x + polygon.pos.x,
+      y: p.y + polygon.pos.y,
+    } as SATVector;
+
+    return pointInCircle(point, circle);
+  });
 }
 
 export function pointInPolygon(point: Vector, polygon: Polygon): boolean {
-  return some(ensureConvex(polygon), (convex) =>
+  return some(ensureConvex(polygon),convex =>
     pointInConvexPolygon(point as SATVector, convex),
   );
 }
@@ -46,7 +51,7 @@ export function polygonInPolygon(
   polygonA: Polygon,
   polygonB: Polygon,
 ): boolean {
-  return every(polygonA.calcPoints, (point) =>
+  return every(polygonA.calcPoints,point =>
     pointInPolygon(
       { x: point.x + polygonA.pos.x, y: point.y + polygonA.pos.y },
       polygonB,
@@ -123,7 +128,7 @@ export function circleInPolygon(
   // If the center of the circle is within the polygon,
   // the circle is not outside of the polygon completely.
   // so return false.
-  if (some(points, (point) => pointInCircle(point, circle))) {
+  if (some(points,point => pointInCircle(point, circle))) {
     return false;
   }
 
@@ -178,8 +183,7 @@ export function circleOutsidePolygon(
   // so return false.
   if (
     some(
-      points,
-      (point) => pointInCircle(point, circle) || pointOnCircle(point, circle),
+      points,point => pointInCircle(point, circle) || pointOnCircle(point, circle),
     )
   ) {
     return false;
@@ -280,7 +284,7 @@ export function intersectLineLineFast(
 export function intersectLineLine(
   line1: Pick<Line, "start" | "end">,
   line2: Pick<Line, "start" | "end">,
-): Vector | null {
+): Vector | undefined {
   const dX: number = line1.end.x - line1.start.x;
   const dY: number = line1.end.y - line1.start.y;
 
@@ -288,7 +292,7 @@ export function intersectLineLine(
     dX * (line2.end.y - line2.start.y) - (line2.end.x - line2.start.x) * dY;
 
   if (determinant === 0) {
-    return null;
+    return;
   }
 
   const lambda: number =
@@ -303,7 +307,7 @@ export function intersectLineLine(
 
   // check if there is an intersection
   if (!(lambda >= 0 && lambda <= 1) || !(gamma >= 0 && gamma <= 1)) {
-    return null;
+    return;
   }
 
   return { x: line1.start.x + lambda * dX, y: line1.start.y + lambda * dY };

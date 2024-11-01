@@ -1,3 +1,4 @@
+import { isSimple, quickDecomp } from "poly-decomp-es";
 import {
   BBox,
   BodyGroup,
@@ -10,6 +11,7 @@ import {
   SATVector,
   Vector,
 } from "../model";
+import { forEach, map } from "../optimized";
 import {
   clonePointsArray,
   drawBVH,
@@ -22,8 +24,6 @@ import {
   mapVectorToArray,
   move,
 } from "../utils";
-import { forEach, map } from "../optimized";
-import { isSimple, quickDecomp } from "poly-decomp-es";
 
 import { Polygon as SATPolygon } from "sat";
 import { System } from "../system";
@@ -35,8 +35,7 @@ export { isSimple };
  */
 export class Polygon<UserDataType = any>
   extends SATPolygon
-  implements BBox, BodyProps<UserDataType>
-{
+  implements BBox, BodyProps<UserDataType> {
   /**
    * minimum x bound of body
    */
@@ -163,19 +162,17 @@ export class Polygon<UserDataType = any>
    * flag to set is polygon centered
    */
   set isCentered(isCentered: boolean) {
-    if (this.centered === isCentered) {
-      return;
+    if (this.centered !== isCentered) {
+      const { x, y } = this.getCentroidWithoutRotation();
+
+      if (x || y) {
+        const direction = isCentered ? 1 : -1;
+
+        this.translate(-x * direction, -y * direction);
+      }
+
+      this.centered = isCentered;
     }
-    const centroid = this.getCentroidWithoutRotation();
-
-    if (centroid.x || centroid.y) {
-      const x = centroid.x * (isCentered ? 1 : -1);
-      const y = centroid.y * (isCentered ? 1 : -1);
-
-      this.translate(-x, -y);
-    }
-
-    this.centered = isCentered;
   }
 
   /**

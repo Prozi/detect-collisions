@@ -1,3 +1,19 @@
+/* tslint:disable:cyclomatic-complexity */
+
+import {
+  Response,
+  testCircleCircle,
+  testCirclePolygon,
+  testPolygonCircle,
+  testPolygonPolygon,
+  Vector as SATVector,
+} from "sat";
+import {
+  circleInCircle,
+  circleInPolygon,
+  polygonInCircle,
+  polygonInPolygon,
+} from "./intersect";
 import {
   BBox,
   Body,
@@ -10,20 +26,6 @@ import {
   SATTest,
   Vector,
 } from "./model";
-import {
-  Response,
-  Vector as SATVector,
-  testCircleCircle,
-  testCirclePolygon,
-  testPolygonCircle,
-  testPolygonPolygon,
-} from "sat";
-import {
-  circleInCircle,
-  circleInPolygon,
-  polygonInCircle,
-  polygonInPolygon,
-} from "./intersect";
 import { forEach, map } from "./optimized";
 
 import { Point as DecompPoint } from "poly-decomp-es";
@@ -47,9 +49,9 @@ function createArray<T = SATTest | InTest>(
   testType: "sat" | "in",
 ): T[] {
   const arrayResult: T[] = [];
-  const bodyGroups = Object.values(BodyGroup).filter(
-    (value) => typeof value === "number",
-  );
+  const bodyGroups = Object
+    .values(BodyGroup)
+    .filter(value => typeof value === "number");
 
   forEach(bodyGroups, (bodyGroup: BodyGroup) => {
     arrayResult[bodyGroup] = (
@@ -174,7 +176,7 @@ export function extendBody(body: Body, options: BodyOptions = {}): void {
   body.isTrigger = !!options.isTrigger;
   body.padding = options.padding || 0;
   // Default value should be reflected in documentation of `BodyOptions.group`
-  body.group = options.group ?? 0x7fffffff;
+  body.group = options.group ?? 0x7FFFFFFF;
 
   if ("userData" in options) {
     body.userData = options.userData;
@@ -262,8 +264,8 @@ export function canInteract(
     // most common case
     groupA === groupB ||
     // otherwise do some binary magick
-    (((groupA >> 16) & (groupB & 0xffff)) !== 0 &&
-      ((groupB >> 16) & (groupA & 0xffff)) !== 0)
+    (((groupA >> 16) & (groupB & 0xFFFF)) !== 0 &&
+      ((groupB >> 16) & (groupA & 0xFFFF)) !== 0)
   );
 }
 
@@ -445,7 +447,7 @@ export function returnTrue() {
  * for groups
  */
 export function getGroup(group: number): number {
-  return Math.max(0, Math.min(group, 0x7fffffff));
+  return Math.max(0, Math.min(group, 0x7FFFFFFF));
 }
 
 /**

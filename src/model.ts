@@ -5,13 +5,13 @@ import {
   Vector as SATVector,
 } from "sat";
 
-import { System } from "./system";
 import { Box } from "./bodies/box";
 import { Circle } from "./bodies/circle";
 import { Ellipse } from "./bodies/ellipse";
 import { Line } from "./bodies/line";
 import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
+import { System } from "./system";
 
 // version 4.0.0 1=1 copy
 import RBush from "./external/rbush";

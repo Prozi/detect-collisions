@@ -10,8 +10,8 @@ import {
   TraverseFunction,
   Vector,
 } from "./model";
-import { bodyMoved, drawBVH } from "./utils";
 import { filter, forEach } from "./optimized";
+import { bodyMoved, drawBVH } from "./utils";
 
 import { Box } from "./bodies/box";
 import { Circle } from "./bodies/circle";
@@ -25,8 +25,7 @@ import { Polygon } from "./bodies/polygon";
  */
 export class BaseSystem<TBody extends Body = Body>
   extends RBush
-  implements Data<TBody>
-{
+  implements Data<TBody> {
   data!: ChildrenData<TBody>;
 
   /**

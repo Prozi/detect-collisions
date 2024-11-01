@@ -1,14 +1,19 @@
 import {
+  ensureConvex,
+  intersectLineCircle,
+  intersectLinePolygon,
+} from "./intersect";
+import {
   BBox,
   Body,
   BodyGroup,
   CollisionCallback,
-  RBush,
   RaycastHit,
   Response,
   SATVector,
   Vector,
 } from "./model";
+import { forEach, some } from "./optimized";
 import {
   canInteract,
   checkAInB,
@@ -17,12 +22,6 @@ import {
   notIntersectAABB,
   returnTrue,
 } from "./utils";
-import {
-  ensureConvex,
-  intersectLineCircle,
-  intersectLinePolygon,
-} from "./intersect";
-import { forEach, some } from "./optimized";
 
 import { BaseSystem } from "./base-system";
 import { Line } from "./bodies/line";
@@ -159,6 +158,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     const { bbox: bboxA, padding: paddingA } = bodyA;
     const { bbox: bboxB, padding: paddingB } = bodyB;
     // assess the bodies real aabb without padding
+    /* tslint:disable-next-line:cyclomatic-complexity */
     if (
       !bboxA ||
       !bboxB ||
@@ -186,8 +186,8 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     let overlapY = 0;
     let collided = false;
 
-    forEach(convexBodiesA, (convexBodyA) => {
-      forEach(convexBodiesB, (convexBodyB) => {
+    forEach(convexBodiesA,convexBodyA => {
+      forEach(convexBodiesB,convexBodyB => {
         // always first clear response
         response.clear();
 
@@ -222,9 +222,9 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     start: Vector,
     end: Vector,
     allow: (body: TBody, ray: TBody) => boolean = returnTrue,
-  ): RaycastHit<TBody> | null {
+  ): RaycastHit<TBody> | undefined {
     let minDistance = Infinity;
-    let result: RaycastHit<TBody> | null = null;
+    let result: RaycastHit<TBody> | undefined;
 
     if (!this.ray) {
       this.ray = new Line(start, end, { isTrigger: true });

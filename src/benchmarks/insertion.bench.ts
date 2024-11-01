@@ -108,7 +108,7 @@ export const insertionBenchmark = () => {
         })),
       );
     })
-    .catch((err) => {
+    .catch(err => {
       console.warn(err.message || err);
     });
 };

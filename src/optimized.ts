@@ -1,3 +1,5 @@
+/* tslint:disable:one-variable-per-declaration */
+
 /**
  * 40-90% faster than built-in Array.forEach function.
  *
