@@ -28,7 +28,13 @@ import {
 import { Polygon as SATPolygon } from "sat";
 import { System } from "../system";
 
-export { isSimple };
+export interface PolygonConstructor<TPolygon extends Polygon> {
+  new (
+    position: PotentialVector,
+    points: PotentialVector[],
+    options?: BodyOptions,
+  ): TPolygon;
+}
 
 /**
  * collider - polygon

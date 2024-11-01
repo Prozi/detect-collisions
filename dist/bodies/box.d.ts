@@ -1,5 +1,8 @@
 import { BodyGroup, BodyOptions, BodyType, PotentialVector } from "../model";
 import { Polygon } from "./polygon";
+export interface BoxConstructor<TBox extends Box> {
+    new (position: PotentialVector, width: number, height: number, options?: BodyOptions): TBox;
+}
 /**
  * collider - box
  */

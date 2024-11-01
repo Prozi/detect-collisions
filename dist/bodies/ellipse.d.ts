@@ -1,5 +1,8 @@
 import { BodyGroup, BodyOptions, BodyType, PotentialVector } from "../model";
 import { Polygon } from "./polygon";
+export interface EllipseConstructor<TEllipse extends Ellipse> {
+    new (position: PotentialVector, radiusX: number, radiusY?: number, step?: number, options?: BodyOptions): TEllipse;
+}
 /**
  * collider - ellipse
  */

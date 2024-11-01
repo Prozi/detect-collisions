@@ -2067,48 +2067,54 @@ class BaseSystem extends model_1.RBush {
     /**
      * create point at position with options and add to system
      */
-    createPoint(position, options) {
-        const point = new point_1.Point(position, options);
+    createPoint(position, options, Class) {
+        const PointClass = Class || point_1.Point;
+        const point = new PointClass(position, options);
         this.insert(point);
         return point;
     }
     /**
      * create line at position with options and add to system
      */
-    createLine(start, end, options) {
-        const line = new line_1.Line(start, end, options);
+    createLine(start, end, options, Class) {
+        const LineClass = Class || line_1.Line;
+        const line = new LineClass(start, end, options);
         this.insert(line);
         return line;
     }
     /**
      * create circle at position with options and add to system
      */
-    createCircle(position, radius, options) {
-        const circle = new circle_1.Circle(position, radius, options);
+    createCircle(position, radius, options, Class) {
+        const CircleClass = Class || circle_1.Circle;
+        const circle = new CircleClass(position, radius, options);
         this.insert(circle);
         return circle;
     }
     /**
      * create box at position with options and add to system
      */
-    createBox(position, width, height, options) {
-        const box = new box_1.Box(position, width, height, options);
+    createBox(position, width, height, options, Class) {
+        const BoxClass = Class || box_1.Box;
+        const box = new BoxClass(position, width, height, options);
         this.insert(box);
         return box;
     }
     /**
      * create ellipse at position with options and add to system
      */
-    createEllipse(position, radiusX, radiusY = radiusX, step, options) {
-        const ellipse = new ellipse_1.Ellipse(position, radiusX, radiusY, step, options);
+    createEllipse(position, radiusX, radiusY = radiusX, step, options, Class) {
+        const EllipseClass = Class || ellipse_1.Ellipse;
+        const ellipse = new EllipseClass(position, radiusX, radiusY, step, options);
         this.insert(ellipse);
         return ellipse;
     }
     /**
      * create polygon at position with options and add to system
      */
-    createPolygon(position, points, options) {
-        const polygon = new polygon_1.Polygon(position, points, options);
+    createPolygon(position, points, options, Class) {
+        const PolygonClass = Class || polygon_1.Polygon;
+        const polygon = new PolygonClass(position, points, options);
         this.insert(polygon);
         return polygon;
     }
@@ -2769,9 +2775,8 @@ exports.Point = Point;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Polygon = exports.isSimple = void 0;
+exports.Polygon = void 0;
 const poly_decomp_es_1 = __webpack_require__(/*! poly-decomp-es */ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js");
-Object.defineProperty(exports, "isSimple", ({ enumerable: true, get: function () { return poly_decomp_es_1.isSimple; } }));
 const model_1 = __webpack_require__(/*! ../model */ "./src/model.ts");
 const optimized_1 = __webpack_require__(/*! ../optimized */ "./src/optimized.ts");
 const utils_1 = __webpack_require__(/*! ../utils */ "./src/utils.ts");

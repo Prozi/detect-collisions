@@ -3,6 +3,16 @@ import { BodyGroup, BodyOptions, BodyType, PotentialVector } from "../model";
 import { createEllipse } from "../utils";
 import { Polygon } from "./polygon";
 
+export interface EllipseConstructor<TEllipse extends Ellipse> {
+  new (
+    position: PotentialVector,
+    radiusX: number,
+    radiusY?: number,
+    step?: number,
+    options?: BodyOptions
+  ): TEllipse;
+}
+
 /**
  * collider - ellipse
  */
@@ -37,7 +47,7 @@ export class Ellipse<UserDataType = any> extends Polygon<UserDataType> {
     radiusX: number,
     radiusY: number = radiusX,
     step: number = (radiusX + radiusY) / Math.PI,
-    options?: BodyOptions,
+    options?: BodyOptions
   ) {
     super(position, createEllipse(radiusX, radiusY, step), options);
 

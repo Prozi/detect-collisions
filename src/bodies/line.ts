@@ -3,6 +3,10 @@ import { BodyGroup, BodyOptions, BodyType, Vector } from "../model";
 import { Vector as SATVector } from "sat";
 import { Polygon } from "./polygon";
 
+export interface LineConstructor<TLine extends Line> {
+  new (start: Vector, end: Vector, options?: BodyOptions): TLine;
+}
+
 /**
  * collider - line
  */
@@ -32,7 +36,7 @@ export class Line<UserDataType = any> extends Polygon<UserDataType> {
         { x: 0, y: 0 },
         { x: end.x - start.x, y: end.y - start.y },
       ],
-      options,
+      options
     );
 
     if (this.calcPoints.length === 1 || !end) {
@@ -76,7 +80,7 @@ export class Line<UserDataType = any> extends Polygon<UserDataType> {
   getCentroid(): SATVector {
     return new SATVector(
       (this.end.x - this.start.x) / 2,
-      (this.end.y - this.start.y) / 2,
+      (this.end.y - this.start.y) / 2
     );
   }
 

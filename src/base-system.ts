@@ -13,19 +13,20 @@ import {
 import { filter, forEach } from "./optimized";
 import { bodyMoved, drawBVH } from "./utils";
 
-import { Box } from "./bodies/box";
-import { Circle } from "./bodies/circle";
-import { Ellipse } from "./bodies/ellipse";
-import { Line } from "./bodies/line";
-import { Point } from "./bodies/point";
-import { Polygon } from "./bodies/polygon";
+import { Box, BoxConstructor } from "./bodies/box";
+import { Circle, CircleConstructor } from "./bodies/circle";
+import { Ellipse, EllipseConstructor } from "./bodies/ellipse";
+import { Line, LineConstructor } from "./bodies/line";
+import { Point, PointConstructor } from "./bodies/point";
+import { Polygon, PolygonConstructor } from "./bodies/polygon";
 
 /**
  * very base collision system (create, insert, update, draw, remove)
  */
 export class BaseSystem<TBody extends Body = Body>
   extends RBush
-  implements Data<TBody> {
+  implements Data<TBody>
+{
   data!: ChildrenData<TBody>;
 
   /**
@@ -33,13 +34,15 @@ export class BaseSystem<TBody extends Body = Body>
    */
   createPoint<TPoint extends Point>(
     position: PotentialVector,
-    options?: BodyOptions
-  ): TPoint {
-    const point = new Point(position, options);
+    options?: BodyOptions,
+    Class?: PointConstructor<TPoint>
+  ): TPoint | Point {
+    const PointClass = Class || Point;
+    const point = new PointClass(position, options);
 
     this.insert(point as TBody);
 
-    return point as TPoint;
+    return point;
   }
 
   /**
@@ -48,13 +51,15 @@ export class BaseSystem<TBody extends Body = Body>
   createLine<TLine extends Line>(
     start: Vector,
     end: Vector,
-    options?: BodyOptions
-  ): TLine {
-    const line = new Line(start, end, options);
+    options?: BodyOptions,
+    Class?: LineConstructor<TLine>
+  ): TLine | Line {
+    const LineClass = Class || Line;
+    const line = new LineClass(start, end, options);
 
     this.insert(line as TBody);
 
-    return line as TLine;
+    return line;
   }
 
   /**
@@ -63,13 +68,15 @@ export class BaseSystem<TBody extends Body = Body>
   createCircle<TCircle extends Circle>(
     position: PotentialVector,
     radius: number,
-    options?: BodyOptions
-  ): TCircle {
-    const circle = new Circle(position, radius, options);
+    options?: BodyOptions,
+    Class?: CircleConstructor<TCircle>
+  ): TCircle | Circle {
+    const CircleClass = Class || Circle;
+    const circle = new CircleClass(position, radius, options);
 
     this.insert(circle as TBody);
 
-    return circle as TCircle;
+    return circle;
   }
 
   /**
@@ -79,13 +86,15 @@ export class BaseSystem<TBody extends Body = Body>
     position: PotentialVector,
     width: number,
     height: number,
-    options?: BodyOptions
-  ): TBox {
-    const box = new Box(position, width, height, options);
+    options?: BodyOptions,
+    Class?: BoxConstructor<TBox>
+  ): TBox | Box {
+    const BoxClass = Class || Box;
+    const box = new BoxClass(position, width, height, options);
 
     this.insert(box as TBody);
 
-    return box as TBox;
+    return box;
   }
 
   /**
@@ -96,13 +105,15 @@ export class BaseSystem<TBody extends Body = Body>
     radiusX: number,
     radiusY: number = radiusX,
     step?: number,
-    options?: BodyOptions
-  ): TEllipse {
-    const ellipse = new Ellipse(position, radiusX, radiusY, step, options);
+    options?: BodyOptions,
+    Class?: EllipseConstructor<TEllipse>
+  ): TEllipse | Ellipse {
+    const EllipseClass = Class || Ellipse;
+    const ellipse = new EllipseClass(position, radiusX, radiusY, step, options);
 
     this.insert(ellipse as TBody);
 
-    return ellipse as TEllipse;
+    return ellipse;
   }
 
   /**
@@ -111,13 +122,15 @@ export class BaseSystem<TBody extends Body = Body>
   createPolygon<TPolygon extends Polygon>(
     position: PotentialVector,
     points: PotentialVector[],
-    options?: BodyOptions
-  ): TPolygon {
-    const polygon = new Polygon(position, points, options);
+    options?: BodyOptions,
+    Class?: PolygonConstructor<TPolygon>
+  ): TPolygon | Polygon {
+    const PolygonClass = Class || Polygon;
+    const polygon = new PolygonClass(position, points, options);
 
     this.insert(polygon as TBody);
 
-    return polygon as TPolygon;
+    return polygon;
   }
 
   /**

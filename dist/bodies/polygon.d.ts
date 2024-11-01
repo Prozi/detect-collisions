@@ -1,8 +1,9 @@
-import { isSimple } from "poly-decomp-es";
 import { BBox, BodyGroup, BodyOptions, BodyProps, BodyType, DecompPolygon, PotentialVector, SATVector, Vector } from "../model";
 import { Polygon as SATPolygon } from "sat";
 import { System } from "../system";
-export { isSimple };
+export interface PolygonConstructor<TPolygon extends Polygon> {
+    new (position: PotentialVector, points: PotentialVector[], options?: BodyOptions): TPolygon;
+}
 /**
  * collider - polygon
  */

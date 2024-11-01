@@ -184,4 +184,21 @@ describe("GIVEN System", () => {
       expectToBeNear(hit.point.y, 70, 10);
     });
   });
+
+  it("THEN I can provide custom class to body create functions", () => {
+    const { System, Polygon } = require(".");
+    const physics = new System();
+
+    class MyPolygon extends Polygon {
+      constructor(position, points, options) {
+        super(position, points, options);
+        this.foo = "bar";
+      }
+    }
+
+    // create minimal MyPolygon and insert to system
+    const myPolygon = physics.createPolygon({}, [{}], {}, MyPolygon);
+
+    expect(myPolygon.foo).toBe("bar");
+  });
 });

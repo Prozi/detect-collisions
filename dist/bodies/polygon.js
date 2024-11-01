@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Polygon = exports.isSimple = void 0;
+exports.Polygon = void 0;
 const poly_decomp_es_1 = require("poly-decomp-es");
-Object.defineProperty(exports, "isSimple", { enumerable: true, get: function () { return poly_decomp_es_1.isSimple; } });
 const model_1 = require("../model");
 const optimized_1 = require("../optimized");
 const utils_1 = require("../utils");

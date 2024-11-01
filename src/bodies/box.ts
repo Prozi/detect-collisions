@@ -3,6 +3,15 @@ import { BodyGroup, BodyOptions, BodyType, PotentialVector } from "../model";
 import { createBox } from "../utils";
 import { Polygon } from "./polygon";
 
+export interface BoxConstructor<TBox extends Box> {
+  new (
+    position: PotentialVector,
+    width: number,
+    height: number,
+    options?: BodyOptions
+  ): TBox;
+}
+
 /**
  * collider - box
  */
@@ -39,7 +48,7 @@ export class Box<UserDataType = any> extends Polygon<UserDataType> {
     position: PotentialVector,
     width: number,
     height: number,
-    options?: BodyOptions,
+    options?: BodyOptions
   ) {
     super(position, createBox(width, height), options);
 

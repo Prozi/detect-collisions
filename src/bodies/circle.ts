@@ -20,12 +20,21 @@ import {
 import { Circle as SATCircle } from "sat";
 import { System } from "../system";
 
+export interface CircleConstructor<TCircle extends Circle> {
+  new (
+    position: PotentialVector,
+    radius: number,
+    options?: BodyOptions
+  ): TCircle;
+}
+
 /**
  * collider - circle
  */
 export class Circle<UserDataType = any>
   extends SATCircle
-  implements BBox, BodyProps<UserDataType> {
+  implements BBox, BodyProps<UserDataType>
+{
   /**
    * minimum x bound of body
    */
@@ -132,7 +141,7 @@ export class Circle<UserDataType = any>
   constructor(
     position: PotentialVector,
     radius: number,
-    options?: BodyOptions,
+    options?: BodyOptions
   ) {
     super(ensureVectorPoint(position), radius);
 

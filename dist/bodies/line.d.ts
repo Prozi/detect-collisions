@@ -1,6 +1,9 @@
 import { BodyGroup, BodyOptions, BodyType, Vector } from "../model";
 import { Vector as SATVector } from "sat";
 import { Polygon } from "./polygon";
+export interface LineConstructor<TLine extends Line> {
+    new (start: Vector, end: Vector, options?: BodyOptions): TLine;
+}
 /**
  * collider - line
  */

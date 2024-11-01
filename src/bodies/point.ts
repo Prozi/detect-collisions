@@ -3,6 +3,10 @@ import { BodyGroup, BodyOptions, BodyType, PotentialVector } from "../model";
 import { ensureVectorPoint } from "../utils";
 import { Box } from "./box";
 
+export interface PointConstructor<TPoint extends Point> {
+  new (position: PotentialVector, options?: BodyOptions): TPoint;
+}
+
 /**
  * collider - point (very tiny box)
  */
