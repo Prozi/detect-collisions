@@ -11,39 +11,38 @@ const sat_1 = require("sat");
  */
 class Polygon extends sat_1.Polygon {
   /**
-     * collider - polygon
-     */
+   * collider - polygon
+   */
   constructor(position, points, options) {
     super((0, utils_1.ensureVectorPoint)(position), (0, utils_1.ensurePolygonPoints)(points));
     /**
-         * was the polygon modified and needs update in the next checkCollision
-         */
+     * was the polygon modified and needs update in the next checkCollision
+     */
     this.dirty = false;
     /**
-         * type of body
-         */
+     * type of body
+     */
     this.type = model_1.BodyType.Polygon;
     /**
-         * faster than type
-         */
+     * faster than type
+     */
     this.typeGroup = model_1.BodyGroup.Polygon;
     /**
-         * is body centered
-         */
+     * is body centered
+     */
     this.centered = false;
     /**
-         * scale Vector of body
-         */
+     * scale Vector of body
+     */
     this.scaleVector = { x: 1, y: 1 };
     if (!points.length) {
       throw new Error("No points in polygon");
     }
     (0, utils_1.extendBody)(this, options);
   }
-
   /**
-     * flag to set is polygon centered
-     */
+   * flag to set is polygon centered
+   */
   set isCentered(isCentered) {
     if (this.centered !== isCentered) {
       const { x, y } = this.getCentroidWithoutRotation();
@@ -54,97 +53,83 @@ class Polygon extends sat_1.Polygon {
       this.centered = isCentered;
     }
   }
-
   /**
-     * is polygon centered?
-     */
+   * is polygon centered?
+   */
   get isCentered() {
     return this.centered;
   }
-
   get x() {
     return this.pos.x;
   }
-
   /**
-     * updating this.pos.x by this.x = x updates AABB
-     */
+   * updating this.pos.x by this.x = x updates AABB
+   */
   set x(x) {
     this.pos.x = x;
     this.markAsDirty();
   }
-
   get y() {
     return this.pos.y;
   }
-
   /**
-     * updating this.pos.y by this.y = y updates AABB
-     */
+   * updating this.pos.y by this.y = y updates AABB
+   */
   set y(y) {
     this.pos.y = y;
     this.markAsDirty();
   }
-
   /**
-     * allow exact getting of scale x - use setScale(x, y) to set
-     */
+   * allow exact getting of scale x - use setScale(x, y) to set
+   */
   get scaleX() {
     return this.scaleVector.x;
   }
-
   /**
-     * allow exact getting of scale y - use setScale(x, y) to set
-     */
+   * allow exact getting of scale y - use setScale(x, y) to set
+   */
   get scaleY() {
     return this.scaleVector.y;
   }
-
   /**
-     * allow approx getting of scale
-     */
+   * allow approx getting of scale
+   */
   get scale() {
     return (this.scaleVector.x + this.scaleVector.y) / 2;
   }
-
   /**
-     * allow easier setting of scale
-     */
+   * allow easier setting of scale
+   */
   set scale(scale) {
     this.setScale(scale);
   }
-
   // Don't overwrite docs from BodyProps
   get group() {
     return this._group;
   }
-
   // Don't overwrite docs from BodyProps
   set group(group) {
     this._group = (0, utils_1.getGroup)(group);
   }
-
   /**
-     * update position BY MOVING FORWARD IN ANGLE DIRECTION
-     */
+   * update position BY MOVING FORWARD IN ANGLE DIRECTION
+   */
   move(speed = 1, updateNow = true) {
     (0, utils_1.move)(this, speed, updateNow);
     return this;
   }
-
   /**
-     * update position BY TELEPORTING
-     */
+   * update position BY TELEPORTING
+   */
   setPosition(x, y, updateNow = true) {
     this.pos.x = x;
     this.pos.y = y;
     this.markAsDirty(updateNow);
     return this;
   }
-
   /**
-     * update scale
-     */
+   * update scale
+   */
   setScale(x, y = x, updateNow = true) {
     this.scaleVector.x = Math.abs(x);
     this.scaleVector.y = Math.abs(y);
@@ -156,22 +141,19 @@ class Polygon extends sat_1.Polygon {
     this.markAsDirty(updateNow);
     return this;
   }
-
   setAngle(angle, updateNow = true) {
     super.setAngle(angle);
     this.markAsDirty(updateNow);
     return this;
   }
-
   setOffset(offset, updateNow = true) {
     super.setOffset(offset);
     this.markAsDirty(updateNow);
     return this;
   }
-
   /**
-     * get body bounding box, without padding
-     */
+   * get body bounding box, without padding
+   */
   getAABBAsBBox() {
     const { pos, w, h } = this.getAABBAsBox();
     return {
@@ -181,24 +163,21 @@ class Polygon extends sat_1.Polygon {
       maxY: pos.y + h,
     };
   }
-
   /**
-     * Draws exact collider on canvas context
-     */
+   * Draws exact collider on canvas context
+   */
   draw(context) {
     (0, utils_1.drawPolygon)(context, this, this.isTrigger);
   }
-
   /**
-     * Draws Bounding Box on canvas context
-     */
+   * Draws Bounding Box on canvas context
+   */
   drawBVH(context) {
     (0, utils_1.drawBVH)(context, this);
   }
-
   /**
-     * get body centroid without applied angle
-     */
+   * get body centroid without applied angle
+   */
   getCentroidWithoutRotation() {
     // keep angle copy
     const angle = this.angle;
@@ -213,54 +192,48 @@ class Polygon extends sat_1.Polygon {
     }
     return this.getCentroid();
   }
-
   /**
-     * sets polygon points to new array of vectors
-     */
+   * sets polygon points to new array of vectors
+   */
   setPoints(points) {
     super.setPoints(points);
     this.updateIsConvex();
     this.pointsBackup = (0, utils_1.clonePointsArray)(points);
     return this;
   }
-
   /**
-     * translates polygon points in x, y direction
-     */
+   * translates polygon points in x, y direction
+   */
   translate(x, y) {
     super.translate(x, y);
     this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
     return this;
   }
-
   /**
-     * rotates polygon points by angle, in radians
-     */
+   * rotates polygon points by angle, in radians
+   */
   rotate(angle) {
     super.rotate(angle);
     this.pointsBackup = (0, utils_1.clonePointsArray)(this.points);
     return this;
   }
-
   /**
-     * if true, polygon is not an invalid, self-crossing polygon
-     */
+   * if true, polygon is not an invalid, self-crossing polygon
+   */
   isSimple() {
     return (0, poly_decomp_es_1.isSimple)((0, optimized_1.map)(this.calcPoints, utils_1.mapVectorToArray));
   }
-
   /**
-     * inner function for after position change update aabb in system and convex inner polygons
-     */
+   * inner function for after position change update aabb in system and convex inner polygons
+   */
   updateBody(updateNow = this.dirty) {
-    let _a;
+    var _a;
     if (updateNow) {
       this.updateConvexPolygonPositions();
       (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
       this.dirty = false;
     }
   }
-
   retranslate(isCentered = this.isCentered) {
     const centroid = this.getCentroidWithoutRotation();
     if (centroid.x || centroid.y) {
@@ -269,10 +242,9 @@ class Polygon extends sat_1.Polygon {
       this.translate(-x, -y);
     }
   }
-
   /**
-     * update instantly or mark as dirty
-     */
+   * update instantly or mark as dirty
+   */
   markAsDirty(updateNow = false) {
     if (updateNow) {
       this.updateBody(true);
@@ -281,16 +253,15 @@ class Polygon extends sat_1.Polygon {
       this.dirty = true;
     }
   }
-
   /**
-     * update the position of the decomposed convex polygons (if any), called
-     * after the position of the body has changed
-     */
+   * update the position of the decomposed convex polygons (if any), called
+   * after the position of the body has changed
+   */
   updateConvexPolygonPositions() {
     if (this.isConvex || !this.convexPolygons) {
       return;
     }
-    (0, optimized_1.forEach)(this.convexPolygons, polygon => {
+    (0, optimized_1.forEach)(this.convexPolygons, (polygon) => {
       polygon.pos.x = this.pos.x;
       polygon.pos.y = this.pos.y;
       if (polygon.angle !== this.angle) {
@@ -299,22 +270,20 @@ class Polygon extends sat_1.Polygon {
       }
     });
   }
-
   /**
-     * returns body split into convex polygons, or empty array for convex bodies
-     */
+   * returns body split into convex polygons, or empty array for convex bodies
+   */
   getConvex() {
     if ((this.typeGroup && this.typeGroup !== model_1.BodyGroup.Polygon) ||
-            this.points.length < 4) {
+      this.points.length < 4) {
       return [];
     }
     const points = (0, optimized_1.map)(this.calcPoints, utils_1.mapVectorToArray);
     return (0, poly_decomp_es_1.quickDecomp)(points);
   }
-
   /**
-     * updates convex polygons cache in body
-     */
+   * updates convex polygons cache in body
+   */
   updateConvexPolygons(convex = this.getConvex()) {
     if (this.isConvex) {
       return;
@@ -335,10 +304,9 @@ class Polygon extends sat_1.Polygon {
     // trim array length
     this.convexPolygons.length = convex.length;
   }
-
   /**
-     * after points update set is convex
-     */
+   * after points update set is convex
+   */
   updateIsConvex() {
     // all other types other than polygon are always convex
     const convex = this.getConvex();

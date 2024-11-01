@@ -28,17 +28,17 @@ class Stress {
       this.createShape(!random(0, 20));
     }
     this.legend = `<div><b>Total:</b> ${count}</div>
-    <div><b>Polygons:</b> ${this.polygons}</div>
-    <div><b>Boxes:</b> ${this.boxes}</div>
-    <div><b>Circles:</b> ${this.circles}</div>
-    <div><b>Ellipses:</b> ${this.ellipses}</div>
-    <div><b>Lines:</b> ${this.lines}</div>
-    <div>
-      <label>
-        <input id="filtering" type="checkbox"/> Enable Collision Filtering
-      </label>
-    </div>
-    `;
+  <div><b>Polygons:</b> ${this.polygons}</div>
+  <div><b>Boxes:</b> ${this.boxes}</div>
+  <div><b>Circles:</b> ${this.circles}</div>
+  <div><b>Ellipses:</b> ${this.ellipses}</div>
+  <div><b>Lines:</b> ${this.lines}</div>
+  <div>
+    <label>
+    <input id="filtering" type="checkbox"/> Enable Collision Filtering
+    </label>
+  </div>
+  `;
     this.lastTime = Date.now();
     this.updateBody = this.updateBody.bind(this);
     // observer #debug & add filtering checkbox event
@@ -64,7 +64,6 @@ class Stress {
       loop(this.update.bind(this));
     };
   }
-
   getBounds() {
     return [
       this.physics.createBox({ x: 0, y: 0 }, width, 10, {
@@ -81,7 +80,6 @@ class Stress {
       }),
     ];
   }
-
   toggleFiltering() {
     this.enableFiltering = !this.enableFiltering;
     this.physics.clear();
@@ -97,14 +95,12 @@ class Stress {
       this.createShape(!random(0, 20));
     }
   }
-
   update() {
     const now = Date.now();
     this.timeScale = Math.min(1000, now - this.lastTime) / 60;
     this.lastTime = now;
     this.bodies.forEach(this.updateBody);
   }
-
   updateBody(body) {
     body.setAngle(body.angle + body.rotationSpeed * this.timeScale, false);
     if (seededRandom() < 0.05 * this.timeScale) {
@@ -115,9 +111,9 @@ class Stress {
     }
     if (Math.abs(body.targetScale.x - body.scaleX) > 0.01) {
       const scaleX = body.scaleX +
-                Math.sign(body.targetScale.x - body.scaleX) * 0.02 * this.timeScale;
+        Math.sign(body.targetScale.x - body.scaleX) * 0.02 * this.timeScale;
       const scaleY = body.scaleY +
-                Math.sign(body.targetScale.y - body.scaleY) * 0.02 * this.timeScale;
+        Math.sign(body.targetScale.y - body.scaleY) * 0.02 * this.timeScale;
       body.setScale(scaleX, scaleY, false);
     }
     // as last step update position, and bounding box
@@ -125,7 +121,6 @@ class Stress {
     // separate + bounce
     this.bounceBody(body);
   }
-
   bounceBody(body) {
     const bounces = { x: 0, y: 0 };
     const addBounces = ({ overlapV: { x, y } }) => {
@@ -150,7 +145,6 @@ class Stress {
       body.setPosition(body.x - bounces.x, body.y - bounces.y);
     }
   }
-
   createShape(large) {
     const minSize = this.size * 1.0 * (large ? seededRandom() + 1 : 1);
     const maxSize = this.size * 1.25 * (large ? seededRandom() * 2 + 1 : 1);
@@ -164,51 +158,51 @@ class Stress {
     let body;
     const variant = this.lastVariant++ % 5;
     switch (variant) {
-    case 0:
-      if (this.enableFiltering) {
-        options.group = groupBits(BodyGroup.Circle);
-      }
-      body = this.physics.createCircle({ x, y }, random(minSize, maxSize) / 2, options);
-      ++this.circles;
-      break;
-    case 1:
-      const width = random(minSize, maxSize);
-      const height = random(minSize, maxSize);
-      if (this.enableFiltering) {
-        options.group = groupBits(BodyGroup.Ellipse);
-      }
-      body = this.physics.createEllipse({ x, y }, width, height, 2, options);
-      ++this.ellipses;
-      break;
-    case 2:
-      if (this.enableFiltering) {
-        options.group = groupBits(BodyGroup.Box);
-      }
-      body = this.physics.createBox({ x, y }, random(minSize, maxSize), random(minSize, maxSize), options);
-      ++this.boxes;
-      break;
-    case 3:
-      if (this.enableFiltering) {
-        options.group = groupBits(BodyGroup.Line);
-      }
-      body = this.physics.createLine({ x, y }, {
-        x: x + random(minSize, maxSize),
-        y: y + random(minSize, maxSize),
-      }, options);
-      ++this.lines;
-      break;
-    default:
-      if (this.enableFiltering) {
-        options.group = groupBits(BodyGroup.Polygon);
-      }
-      body = this.physics.createPolygon({ x, y }, [
-        { x: -random(minSize, maxSize), y: random(minSize, maxSize) },
-        { x: random(minSize, maxSize), y: random(minSize, maxSize) },
-        { x: random(minSize, maxSize), y: -random(minSize, maxSize) },
-        { x: -random(minSize, maxSize), y: -random(minSize, maxSize) },
-      ], options);
-      ++this.polygons;
-      break;
+      case 0:
+        if (this.enableFiltering) {
+          options.group = groupBits(BodyGroup.Circle);
+        }
+        body = this.physics.createCircle({ x, y }, random(minSize, maxSize) / 2, options);
+        ++this.circles;
+        break;
+      case 1:
+        const width = random(minSize, maxSize);
+        const height = random(minSize, maxSize);
+        if (this.enableFiltering) {
+          options.group = groupBits(BodyGroup.Ellipse);
+        }
+        body = this.physics.createEllipse({ x, y }, width, height, 2, options);
+        ++this.ellipses;
+        break;
+      case 2:
+        if (this.enableFiltering) {
+          options.group = groupBits(BodyGroup.Box);
+        }
+        body = this.physics.createBox({ x, y }, random(minSize, maxSize), random(minSize, maxSize), options);
+        ++this.boxes;
+        break;
+      case 3:
+        if (this.enableFiltering) {
+          options.group = groupBits(BodyGroup.Line);
+        }
+        body = this.physics.createLine({ x, y }, {
+          x: x + random(minSize, maxSize),
+          y: y + random(minSize, maxSize),
+        }, options);
+        ++this.lines;
+        break;
+      default:
+        if (this.enableFiltering) {
+          options.group = groupBits(BodyGroup.Polygon);
+        }
+        body = this.physics.createPolygon({ x, y }, [
+          { x: -random(minSize, maxSize), y: random(minSize, maxSize) },
+          { x: random(minSize, maxSize), y: random(minSize, maxSize) },
+          { x: random(minSize, maxSize), y: -random(minSize, maxSize) },
+          { x: -random(minSize, maxSize), y: -random(minSize, maxSize) },
+        ], options);
+        ++this.polygons;
+        break;
     }
     // set initial rotation angle direction
     body.rotationSpeed = (seededRandom() - seededRandom()) * 0.1;

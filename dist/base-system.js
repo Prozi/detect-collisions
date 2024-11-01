@@ -15,69 +15,63 @@ const polygon_1 = require("./bodies/polygon");
  */
 class BaseSystem extends model_1.RBush {
   /**
-     * create point at position with options and add to system
-     */
+   * create point at position with options and add to system
+   */
   createPoint(position, options, Class) {
     const PointClass = Class || point_1.Point;
     const point = new PointClass(position, options);
     this.insert(point);
     return point;
   }
-
   /**
-     * create line at position with options and add to system
-     */
+   * create line at position with options and add to system
+   */
   createLine(start, end, options, Class) {
     const LineClass = Class || line_1.Line;
     const line = new LineClass(start, end, options);
     this.insert(line);
     return line;
   }
-
   /**
-     * create circle at position with options and add to system
-     */
+   * create circle at position with options and add to system
+   */
   createCircle(position, radius, options, Class) {
     const CircleClass = Class || circle_1.Circle;
     const circle = new CircleClass(position, radius, options);
     this.insert(circle);
     return circle;
   }
-
   /**
-     * create box at position with options and add to system
-     */
+   * create box at position with options and add to system
+   */
   createBox(position, width, height, options, Class) {
     const BoxClass = Class || box_1.Box;
     const box = new BoxClass(position, width, height, options);
     this.insert(box);
     return box;
   }
-
   /**
-     * create ellipse at position with options and add to system
-     */
+   * create ellipse at position with options and add to system
+   */
   createEllipse(position, radiusX, radiusY = radiusX, step, options, Class) {
     const EllipseClass = Class || ellipse_1.Ellipse;
     const ellipse = new EllipseClass(position, radiusX, radiusY, step, options);
     this.insert(ellipse);
     return ellipse;
   }
-
   /**
-     * create polygon at position with options and add to system
-     */
+   * create polygon at position with options and add to system
+   */
   createPolygon(position, points, options, Class) {
     const PolygonClass = Class || polygon_1.Polygon;
     const polygon = new PolygonClass(position, points, options);
     this.insert(polygon);
     return polygon;
   }
-
   /**
-     * re-insert body into collision tree and update its bbox
-     * every body can be part of only one system
-     */
+   * re-insert body into collision tree and update its bbox
+   * every body can be part of only one system
+   */
   insert(body) {
     body.bbox = body.getAABBAsBBox();
     if (body.system) {
@@ -96,37 +90,33 @@ class BaseSystem extends model_1.RBush {
     // reinsert bounding box to collision tree
     return super.insert(body);
   }
-
   /**
-     * updates body in collision tree
-     */
+   * updates body in collision tree
+   */
   updateBody(body) {
     body.updateBody();
   }
-
   /**
-     * update all bodies aabb
-     */
+   * update all bodies aabb
+   */
   update() {
-    (0, optimized_1.forEach)(this.all(), body => {
+    (0, optimized_1.forEach)(this.all(), (body) => {
       this.updateBody(body);
     });
   }
-
   /**
-     * draw exact bodies colliders outline
-     */
+   * draw exact bodies colliders outline
+   */
   draw(context) {
-    (0, optimized_1.forEach)(this.all(), body => {
+    (0, optimized_1.forEach)(this.all(), (body) => {
       body.draw(context);
     });
   }
-
   /**
-     * draw bounding boxes hierarchy outline
-     */
+   * draw bounding boxes hierarchy outline
+   */
   drawBVH(context, isTrigger = true) {
-    const drawChildren = body => {
+    const drawChildren = (body) => {
       (0, utils_1.drawBVH)(context, body, isTrigger);
       if (body.children) {
         (0, optimized_1.forEach)(body.children, drawChildren);
@@ -134,30 +124,27 @@ class BaseSystem extends model_1.RBush {
     };
     (0, optimized_1.forEach)(this.data.children, drawChildren);
   }
-
   /**
-     * remove body aabb from collision tree
-     */
+   * remove body aabb from collision tree
+   */
   remove(body, equals) {
     body.system = undefined;
     return super.remove(body, equals);
   }
-
   /**
-     * get object potential colliders
-     * @deprecated because it's slower to use than checkOne() or checkAll()
-     */
+   * get object potential colliders
+   * @deprecated because it's slower to use than checkOne() or checkAll()
+   */
   getPotentials(body) {
     // filter here is required as collides with self
-    return (0, optimized_1.filter)(this.search(body), candidate => candidate !== body);
+    return (0, optimized_1.filter)(this.search(body), (candidate) => candidate !== body);
   }
-
   /**
-     * used to find body deep inside data with finder function returning boolean found or not
-     *
-     * @param traverseFunction
-     * @param tree
-     */
+   * used to find body deep inside data with finder function returning boolean found or not
+   *
+   * @param traverseFunction
+   * @param tree
+   */
   traverse(traverseFunction, { children } = this.data) {
     return children === null || children === void 0 ? void 0 : children.find((body, index) => {
       if (!body) {

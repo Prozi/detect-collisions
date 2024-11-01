@@ -11,11 +11,11 @@ class TestCanvas {
       this.element = doc.createElement("div");
       this.element.id = "debug";
       this.element.innerHTML = `${this.test.legend}
-    <div>
-      <label>
-        <input id="bvh" type="checkbox"/> Show Bounding Volume Hierarchy
-      </label>
-    </div>`;
+  <div>
+    <label>
+    <input id="bvh" type="checkbox"/> Show Bounding Volume Hierarchy
+    </label>
+  </div>`;
       this.canvas = doc.createElement("canvas");
       this.canvas.width = width;
       this.canvas.height = height;
@@ -32,7 +32,6 @@ class TestCanvas {
     }
     loop(this.update.bind(this));
   }
-
   update() {
     this.frame++;
     if (!this.test.headless) {

@@ -14,40 +14,37 @@ class System extends base_system_1.BaseSystem {
   constructor() {
     super(...arguments);
     /**
-         * the last collision result
-         */
+     * the last collision result
+     */
     this.response = new model_1.Response();
   }
-
   /**
-     * re-insert body into collision tree and update its bbox
-     * every body can be part of only one system
-     */
+   * re-insert body into collision tree and update its bbox
+   * every body can be part of only one system
+   */
   insert(body) {
     const insertResult = super.insert(body);
     // set system for later body.system.updateBody(body)
     body.system = this;
     return insertResult;
   }
-
   /**
-     * separate (move away) bodies
-     */
+   * separate (move away) bodies
+   */
   separate(callback = utils_1.returnTrue, response = this.response) {
-    (0, optimized_1.forEach)(this.all(), body => {
+    (0, optimized_1.forEach)(this.all(), (body) => {
       this.separateBody(body, callback, response);
     });
   }
-
   /**
-     * separate (move away) 1 body, with optional callback before collision
-     */
+   * separate (move away) 1 body, with optional callback before collision
+   */
   separateBody(body, callback = utils_1.returnTrue, response = this.response) {
     if (body.isStatic && !body.isTrigger) {
       return;
     }
     const offsets = { x: 0, y: 0 };
-    const addOffsets = collision => {
+    const addOffsets = (collision) => {
       // when is not trigger and callback returns true it continues
       if (callback(collision) && !body.isTrigger && !collision.b.isTrigger) {
         offsets.x += collision.overlapV.x;
@@ -59,57 +56,53 @@ class System extends base_system_1.BaseSystem {
       body.setPosition(body.x - offsets.x, body.y - offsets.y);
     }
   }
-
   /**
-     * check one body collisions with callback
-     */
+   * check one body collisions with callback
+   */
   checkOne(body, callback = utils_1.returnTrue, response = this.response) {
     // no need to check static body collision
     if (body.isStatic && !body.isTrigger) {
       return false;
     }
     const bodies = this.search(body);
-    const checkCollision = candidate => {
+    const checkCollision = (candidate) => {
       if (candidate !== body &&
-                this.checkCollision(body, candidate, response)) {
+        this.checkCollision(body, candidate, response)) {
         return callback(response);
       }
     };
     return (0, optimized_1.some)(bodies, checkCollision);
   }
-
   /**
-     * check all bodies collisions in area with callback
-     */
+   * check all bodies collisions in area with callback
+   */
   checkArea(area, callback = utils_1.returnTrue, response = this.response) {
-    const checkOne = body => {
+    const checkOne = (body) => {
       return this.checkOne(body, callback, response);
     };
     return (0, optimized_1.some)(this.search(area), checkOne);
   }
-
   /**
-     * check all bodies collisions with callback
-     */
+   * check all bodies collisions with callback
+   */
   checkAll(callback = utils_1.returnTrue, response = this.response) {
-    const checkOne = body => {
+    const checkOne = (body) => {
       return this.checkOne(body, callback, response);
     };
     return (0, optimized_1.some)(this.all(), checkOne);
   }
-
   /**
-     * check do 2 objects collide
-     */
+   * check do 2 objects collide
+   */
   checkCollision(bodyA, bodyB, response = this.response) {
     const { bbox: bboxA, padding: paddingA } = bodyA;
     const { bbox: bboxB, padding: paddingB } = bodyB;
     // assess the bodies real aabb without padding
     /* tslint:disable-next-line:cyclomatic-complexity */
     if (!bboxA ||
-            !bboxB ||
-            !(0, utils_1.canInteract)(bodyA, bodyB) ||
-            ((paddingA || paddingB) && (0, utils_1.notIntersectAABB)(bboxA, bboxB))) {
+      !bboxB ||
+      !(0, utils_1.canInteract)(bodyA, bodyB) ||
+      ((paddingA || paddingB) && (0, utils_1.notIntersectAABB)(bboxA, bboxB))) {
       return false;
     }
     const sat = (0, utils_1.getSATTest)(bodyA, bodyB);
@@ -149,10 +142,9 @@ class System extends base_system_1.BaseSystem {
     }
     return collided;
   }
-
   /**
-     * raycast to get collider of ray from start to end
-     */
+   * raycast to get collider of ray from start to end
+   */
   raycast(start, end, allow = utils_1.returnTrue) {
     let minDistance = Infinity;
     let result;
@@ -171,7 +163,7 @@ class System extends base_system_1.BaseSystem {
       const points = body.typeGroup === model_1.BodyGroup.Circle
         ? (0, intersect_1.intersectLineCircle)(this.ray, body)
         : (0, intersect_1.intersectLinePolygon)(this.ray, body);
-      (0, optimized_1.forEach)(points, point => {
+      (0, optimized_1.forEach)(points, (point) => {
         const pointDistance = (0, utils_1.distance)(start, point);
         if (pointDistance < minDistance) {
           minDistance = pointDistance;

@@ -30,26 +30,26 @@ function quickselect(arr, k, left = 0, right = arr.length - 1, compare = default
     let j = right;
     swap(arr, left, k);
     if (compare(arr[right], t) > 0)
-    {swap(arr, left, right);}
+      swap(arr, left, right);
     while (i < j) {
       swap(arr, i, j);
       i++;
       j--;
       while (compare(arr[i], t) < 0)
-      {i++;}
+        i++;
       while (compare(arr[j], t) > 0)
-      {j--;}
+        j--;
     }
     if (compare(arr[left], t) === 0)
-    {swap(arr, left, j);}
+      swap(arr, left, j);
     else {
       j++;
       swap(arr, j, right);
     }
     if (j <= k)
-    {left = j + 1;}
+      left = j + 1;
     if (k <= j)
-    {right = j - 1;}
+      right = j - 1;
   }
 }
 /**

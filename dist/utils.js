@@ -51,7 +51,7 @@ function createArray(bodyType, testType) {
   const bodyGroups = Object
     .values(model_1.BodyGroup)
     .filter(value => typeof value === "number");
-  (0, optimized_1.forEach)(bodyGroups, bodyGroup => {
+  (0, optimized_1.forEach)(bodyGroups, (bodyGroup) => {
     arrayResult[bodyGroup] = (bodyGroup === model_1.BodyGroup.Circle
       ? testMap[`${testType}${bodyType}Circle`]
       : testMap[`${testType}${bodyType}Polygon`]);
@@ -141,7 +141,7 @@ function clockwise(points) {
  * used for all types of bodies in constructor
  */
 function extendBody(body, options = {}) {
-  let _a;
+  var _a;
   body.isStatic = !!options.isStatic;
   body.isTrigger = !!options.isTrigger;
   body.padding = options.padding || 0;
@@ -169,9 +169,9 @@ function bodyMoved(body) {
  */
 function notIntersectAABB(bodyA, bodyB) {
   return (bodyB.minX > bodyA.maxX ||
-        bodyB.minY > bodyA.maxY ||
-        bodyB.maxX < bodyA.minX ||
-        bodyB.maxY < bodyA.minY);
+    bodyB.minY > bodyA.maxY ||
+    bodyB.maxX < bodyA.minX ||
+    bodyB.maxY < bodyA.minY);
 }
 /**
  * checks if two boxes intersect
@@ -216,11 +216,11 @@ function intersectAABB(bodyA, bodyB) {
  */
 function canInteract({ group: groupA }, { group: groupB }) {
   return (
-    // most common case
-    groupA === groupB ||
-        // otherwise do some binary magick
-        (((groupA >> 16) & (groupB & 0xFFFF)) !== 0 &&
-            ((groupB >> 16) & (groupA & 0xFFFF)) !== 0));
+  // most common case
+  groupA === groupB ||
+    // otherwise do some binary magick
+    (((groupA >> 16) & (groupB & 0xFFFF)) !== 0 &&
+      ((groupB >> 16) & (groupA & 0xFFFF)) !== 0));
 }
 /**
  * checks if body a is in body b
@@ -299,7 +299,7 @@ function dashLineTo(context, fromX, fromY, toX, toY, dash = 2, gap = 4) {
  * @param polygon
  * @param isTrigger
  */
-function drawPolygon(context, { pos, calcPoints }, isTrigger = false) {
+function drawPolygon(context, { pos, calcPoints, }, isTrigger = false) {
   const lastPoint = calcPoints[calcPoints.length - 1];
   const fromX = pos.x + lastPoint.x;
   const fromY = pos.y + lastPoint.y;

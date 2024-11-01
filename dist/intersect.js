@@ -53,8 +53,8 @@ function polygonInPolygon(polygonA, polygonB) {
  */
 function pointOnCircle(point, circle) {
   return ((point.x - circle.pos.x) * (point.x - circle.pos.x) +
-        (point.y - circle.pos.y) * (point.y - circle.pos.y) ===
-        circle.r * circle.r);
+    (point.y - circle.pos.y) * (point.y - circle.pos.y) ===
+    circle.r * circle.r);
 }
 /**
  * https://stackoverflow.com/a/68197894/1749528
@@ -94,9 +94,9 @@ function circleInPolygon(circle, polygon) {
     x: x + polygon.pos.x,
     y: y + polygon.pos.y,
   }));
-    // If the center of the circle is within the polygon,
-    // the circle is not outside of the polygon completely.
-    // so return false.
+  // If the center of the circle is within the polygon,
+  // the circle is not outside of the polygon completely.
+  // so return false.
   if ((0, optimized_1.some)(points, point => (0, sat_1.pointInCircle)(point, circle))) {
     return false;
   }
@@ -135,9 +135,9 @@ function circleOutsidePolygon(circle, polygon) {
     x: x + polygon.pos.x,
     y: y + polygon.pos.y,
   }));
-    // If the center of the circle is within the polygon,
-    // the circle is not outside of the polygon completely.
-    // so return false.
+  // If the center of the circle is within the polygon,
+  // the circle is not outside of the polygon completely.
+  // so return false.
   if ((0, optimized_1.some)(points, point => (0, sat_1.pointInCircle)(point, circle) || pointOnCircle(point, circle))) {
     return false;
   }
@@ -200,9 +200,9 @@ function isTurn(point1, point2, point3) {
  */
 function intersectLineLineFast(line1, line2) {
   return (isTurn(line1.start, line2.start, line2.end) !==
-        isTurn(line1.end, line2.start, line2.end) &&
-        isTurn(line1.start, line1.end, line2.start) !==
-            isTurn(line1.start, line1.end, line2.end));
+    isTurn(line1.end, line2.start, line2.end) &&
+    isTurn(line1.start, line1.end, line2.start) !==
+      isTurn(line1.start, line1.end, line2.end));
 }
 /**
  * returns the point of intersection
@@ -219,12 +219,12 @@ function intersectLineLine(line1, line2) {
     return;
   }
   const lambda = ((line2.end.y - line2.start.y) * (line2.end.x - line1.start.x) +
-        (line2.start.x - line2.end.x) * (line2.end.y - line1.start.y)) /
-        determinant;
+    (line2.start.x - line2.end.x) * (line2.end.y - line1.start.y)) /
+    determinant;
   const gamma = ((line1.start.y - line1.end.y) * (line2.end.x - line1.start.x) +
-        dX * (line2.end.y - line1.start.y)) /
-        determinant;
-    // check if there is an intersection
+    dX * (line2.end.y - line1.start.y)) /
+    determinant;
+  // check if there is an intersection
   if (!(lambda >= 0 && lambda <= 1) || !(gamma >= 0 && gamma <= 1)) {
     return;
   }

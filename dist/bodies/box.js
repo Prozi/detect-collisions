@@ -9,60 +9,55 @@ const polygon_1 = require("./polygon");
  */
 class Box extends polygon_1.Polygon {
   /**
-     * collider - box
-     */
+   * collider - box
+   */
   constructor(position, width, height, options) {
     super(position, (0, utils_1.createBox)(width, height), options);
     /**
-         * type of body
-         */
+     * type of body
+     */
     this.type = model_1.BodyType.Box;
     /**
-         * faster than type
-         */
+     * faster than type
+     */
     this.typeGroup = model_1.BodyGroup.Box;
     /**
-         * boxes are convex
-         */
+     * boxes are convex
+     */
     this.isConvex = true;
     this._width = width;
     this._height = height;
   }
-
   /**
-     * get box width
-     */
+   * get box width
+   */
   get width() {
     return this._width;
   }
-
   /**
-     * set box width, update points
-     */
+   * set box width, update points
+   */
   set width(width) {
     this._width = width;
     this.afterUpdateSize();
   }
-
   /**
-     * get box height
-     */
+   * get box height
+   */
   get height() {
     return this._height;
   }
-
   /**
-     * set box height, update points
-     */
+   * set box height, update points
+   */
   set height(height) {
     this._height = height;
     this.afterUpdateSize();
   }
-
   /**
-     * after setting width/height update translate
-     * see https://github.com/Prozi/detect-collisions/issues/70
-     */
+   * after setting width/height update translate
+   * see https://github.com/Prozi/detect-collisions/issues/70
+   */
   afterUpdateSize() {
     if (this.isCentered) {
       this.retranslate(false);
@@ -72,10 +67,9 @@ class Box extends polygon_1.Polygon {
       this.retranslate();
     }
   }
-
   /**
-     * do not attempt to use Polygon.updateIsConvex()
-     */
+   * do not attempt to use Polygon.updateIsConvex()
+   */
   updateIsConvex() {
     return;
   }

@@ -44,58 +44,58 @@ const insertionBenchmark = () => {
   }
   benchmark
     .add("non overlapping circles", () => {
-      const uut = new system_js_1.System(BODY_COUNT);
-      for (let ndx = 0; ndx < BODY_COUNT; ndx++) {
-        uut.insert(nonoverlappingBodies[ndx]);
-      }
-    })
+    const uut = new system_js_1.System(BODY_COUNT);
+    for (let ndx = 0; ndx < BODY_COUNT; ndx++) {
+      uut.insert(nonoverlappingBodies[ndx]);
+    }
+  })
     .add("overlapping circles", () => {
-      const uut = new system_js_1.System(BODY_COUNT);
-      for (let ndx = 0; ndx < BODY_COUNT; ndx++) {
-        uut.insert(overlappingBodies[ndx]);
-      }
-    })
+    const uut = new system_js_1.System(BODY_COUNT);
+    for (let ndx = 0; ndx < BODY_COUNT; ndx++) {
+      uut.insert(overlappingBodies[ndx]);
+    }
+  })
     .add("non-overlapping triangles", () => {
-      const uut = new system_js_1.System(BODY_COUNT);
-      for (let ndx = 0; ndx < BODY_COUNT; ndx++) {
-        uut.insert(nonoverlappingTriangles[ndx]);
-      }
-    })
+    const uut = new system_js_1.System(BODY_COUNT);
+    for (let ndx = 0; ndx < BODY_COUNT; ndx++) {
+      uut.insert(nonoverlappingTriangles[ndx]);
+    }
+  })
     .add("overlapping triangles", () => {
-      const uut = new system_js_1.System(BODY_COUNT);
-      for (let ndx = 0; ndx < BODY_COUNT; ndx++) {
-        uut.insert(overlappingTriangles[ndx]);
-      }
-    })
+    const uut = new system_js_1.System(BODY_COUNT);
+    for (let ndx = 0; ndx < BODY_COUNT; ndx++) {
+      uut.insert(overlappingTriangles[ndx]);
+    }
+  })
     .add("non-overlapping quad", () => {
-      const uut = new system_js_1.System(BODY_COUNT);
-      for (let ndx = 0; ndx < BODY_COUNT; ndx++) {
-        uut.insert(nonoverlappingRectangles[ndx]);
-      }
-    })
+    const uut = new system_js_1.System(BODY_COUNT);
+    for (let ndx = 0; ndx < BODY_COUNT; ndx++) {
+      uut.insert(nonoverlappingRectangles[ndx]);
+    }
+  })
     .add("overlapping quad", () => {
-      const uut = new system_js_1.System(BODY_COUNT);
-      for (let ndx = 0; ndx < BODY_COUNT; ndx++) {
-        uut.insert(overlappingRectangles[ndx]);
-      }
-    });
+    const uut = new system_js_1.System(BODY_COUNT);
+    for (let ndx = 0; ndx < BODY_COUNT; ndx++) {
+      uut.insert(overlappingRectangles[ndx]);
+    }
+  });
   benchmark
     .run()
     .then(() => {
-      console.table(benchmark.tasks.map(({ name, result }) => {
-        let _a, _b, _c, _d, _e;
-        return ({
-          "Task Name": name,
-          "Average Time (s)": parseFloat(((_a = result === null || result === void 0 ? void 0 : result.mean) !== null && _a !== void 0 ? _a : 0).toFixed(3)),
-          "Standard Deviation (s)": parseFloat(((_b = result === null || result === void 0 ? void 0 : result.sd) !== null && _b !== void 0 ? _b : 0).toFixed(3)),
-          hz: parseFloat(((_c = result === null || result === void 0 ? void 0 : result.hz) !== null && _c !== void 0 ? _c : 0).toFixed(3)),
-          "p99 (s)": parseFloat(((_d = result === null || result === void 0 ? void 0 : result.p99) !== null && _d !== void 0 ? _d : 0).toFixed(3)),
-          "p995 (s)": parseFloat(((_e = result === null || result === void 0 ? void 0 : result.p995) !== null && _e !== void 0 ? _e : 0).toFixed(3)),
-        });
-      }));
-    })
+    console.table(benchmark.tasks.map(({ name, result }) => {
+      var _a, _b, _c, _d, _e;
+      return ({
+        "Task Name": name,
+        "Average Time (s)": parseFloat(((_a = result === null || result === void 0 ? void 0 : result.mean) !== null && _a !== void 0 ? _a : 0).toFixed(3)),
+        "Standard Deviation (s)": parseFloat(((_b = result === null || result === void 0 ? void 0 : result.sd) !== null && _b !== void 0 ? _b : 0).toFixed(3)),
+        hz: parseFloat(((_c = result === null || result === void 0 ? void 0 : result.hz) !== null && _c !== void 0 ? _c : 0).toFixed(3)),
+        "p99 (s)": parseFloat(((_d = result === null || result === void 0 ? void 0 : result.p99) !== null && _d !== void 0 ? _d : 0).toFixed(3)),
+        "p995 (s)": parseFloat(((_e = result === null || result === void 0 ? void 0 : result.p995) !== null && _e !== void 0 ? _e : 0).toFixed(3)),
+      });
+    }));
+  })
     .catch(err => {
-      console.warn(err.message || err);
-    });
+    console.warn(err.message || err);
+  });
 };
 exports.insertionBenchmark = insertionBenchmark;
