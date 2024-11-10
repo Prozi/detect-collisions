@@ -13,6 +13,7 @@ Detect-Collisions 💫 is a lightning-fast ⚡️ TypeScript library built to de
 - [Tank](https://prozi.github.io/detect-collisions/demo/)
 - [Stress Test](https://prozi.github.io/detect-collisions/demo/?stress)
 - [Stackblitz](https://stackblitz.com/edit/detect-collisions)
+- [CodePan](https://code.pietal.dev/#/boilerplate/detect-collisions?pans=html,console)
 
 ## Installation
 
@@ -160,7 +161,10 @@ Detect-Collisions provides the functionality to gather raycast data. Here's how:
 ```ts
 const start = { x: 0, y: 0 };
 const end = { x: 0, y: -10 };
-const hit = system.raycast(start, end);
+const hit = system.raycast(start, end, (body, ray) => {
+  // if you don't want the body to be hit by raycast return false
+  return true;
+});
 
 if (hit) {
   const { point, body } = hit;
@@ -170,6 +174,12 @@ if (hit) {
 ```
 
 In this example, `point` is a `Vector` with the coordinates of the nearest intersection, and `body` is a reference to the closest body.
+
+## Usage in Browsers
+
+Just do what I did here, import from proper cdn as module, and v'oila:
+
+<https://code.pietal.dev/#/boilerplate/detect-collisions?pans=html,console>
 
 ## Contributing to the Project
 
