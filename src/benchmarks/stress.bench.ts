@@ -1,38 +1,37 @@
 /* tslint:disable:no-implicit-dependencies variable-name no-any */
 import { Bench } from "tinybench";
+import Stress from "../demo/stress.js";
 
-export const stressBenchmark = async() => {
-  const { default: Stress } = await import("../demo/stress.js");
+const amounts = Array.from(
+  { length: 10 },
+  (_, index: number) => 1000 * (index + 1)
+);
 
+export const stressBenchmark = async () => {
   let stressTest: any;
 
   const benchmark = new Bench({
     time: 1000,
     warmupIterations: 0,
-    setup: ({ opts }: any) => {
-      stressTest = new Stress(opts.items);
-      stressTest.headless = true;
-    },
-    teardown: () => {
-      stressTest.physics.clear();
-    },
   });
 
-  const recursiveAddTest = (items: number) => {
+  amounts.forEach((items) => {
     benchmark.add(
       `stress test, items=${items}`,
       () => {
         stressTest.update();
       },
-      { items } as any,
+      {
+        beforeEach: () => {
+          stressTest = new Stress(items);
+          stressTest.headless = true;
+        },
+        afterEach: () => {
+          stressTest.physics.clear();
+        },
+      }
     );
-
-    if (items < 10000) {
-      recursiveAddTest(items + 1000);
-    }
-  };
-
-  recursiveAddTest(1000);
+  });
 
   await benchmark.run();
 
