@@ -1,12 +1,15 @@
 import {
   ensureConvex,
+  intersectCircleCircle,
   intersectLineCircle,
+  intersectLineLine,
   intersectLinePolygon,
 } from "./intersect";
 import {
   BBox,
   Body,
   BodyGroup,
+  BodyType,
   CollisionCallback,
   RaycastHit,
   Response,
@@ -17,6 +20,7 @@ import { forEach, some } from "./optimized";
 import {
   canInteract,
   checkAInB,
+  createLine,
   distance,
   getSATTest,
   notIntersectAABB,
@@ -25,6 +29,8 @@ import {
 
 import { BaseSystem } from "./base-system";
 import { Line } from "./bodies/line";
+import { Polygon } from "./bodies/polygon";
+import { Circle } from "./bodies/circle";
 
 /**
  * collision system
@@ -57,7 +63,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
    */
   separate(
     callback: CollisionCallback = returnTrue,
-    response = this.response,
+    response = this.response
   ): void {
     forEach(this.all(), (body: TBody) => {
       this.separateBody(body, callback, response);
@@ -70,7 +76,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   separateBody(
     body: TBody,
     callback: CollisionCallback = returnTrue,
-    response = this.response,
+    response = this.response
   ): void {
     if (body.isStatic && !body.isTrigger) {
       return;
@@ -98,7 +104,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   checkOne(
     body: TBody,
     callback: CollisionCallback = returnTrue,
-    response = this.response,
+    response = this.response
   ): boolean {
     // no need to check static body collision
     if (body.isStatic && !body.isTrigger) {
@@ -124,7 +130,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   checkArea(
     area: BBox,
     callback: CollisionCallback = returnTrue,
-    response = this.response,
+    response = this.response
   ): boolean {
     const checkOne = (body: TBody) => {
       return this.checkOne(body, callback, response);
@@ -138,7 +144,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
    */
   checkAll(
     callback: CollisionCallback = returnTrue,
-    response = this.response,
+    response = this.response
   ): boolean {
     const checkOne = (body: TBody) => {
       return this.checkOne(body, callback, response);
@@ -153,7 +159,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   checkCollision(
     bodyA: TBody,
     bodyB: TBody,
-    response = this.response,
+    response = this.response
   ): boolean {
     const { bbox: bboxA, padding: paddingA } = bodyA;
     const { bbox: bboxB, padding: paddingB } = bodyB;
@@ -186,8 +192,8 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     let overlapY = 0;
     let collided = false;
 
-    forEach(convexBodiesA,convexBodyA => {
-      forEach(convexBodiesB,convexBodyB => {
+    forEach(convexBodiesA, (convexBodyA) => {
+      forEach(convexBodiesB, (convexBodyB) => {
         // always first clear response
         response.clear();
 
@@ -221,7 +227,7 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
   raycast(
     start: Vector,
     end: Vector,
-    allow: (body: TBody, ray: TBody) => boolean = returnTrue,
+    allow: (body: TBody, ray: TBody) => boolean = returnTrue
   ): RaycastHit<TBody> | undefined {
     let minDistance = Infinity;
     let result: RaycastHit<TBody> | undefined;
@@ -258,5 +264,49 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     this.remove(this.ray as TBody);
 
     return result;
+  }
+
+  /**
+   * find collisions points between 2 bodies
+   */
+  getCollisionPoints(a: Body, b: Body): Vector[] {
+    const collisionPoints: Vector[] = [];
+
+    if (a.typeGroup === BodyGroup.Circle && b.typeGroup === BodyGroup.Circle) {
+      collisionPoints.push(...intersectCircleCircle(a, b));
+    }
+
+    if (a.typeGroup === BodyGroup.Circle && b.typeGroup !== BodyGroup.Circle) {
+      for (let index = 0; index < b.calcPoints.length; index++) {
+        collisionPoints.push(...intersectLineCircle(createLine(b, index), a));
+      }
+    }
+
+    if (a.typeGroup !== BodyGroup.Circle) {
+      for (let indexA = 0; indexA < a.calcPoints.length; indexA++) {
+        const lineA = createLine(a, indexA);
+
+        if (b.typeGroup === BodyGroup.Circle) {
+          collisionPoints.push(...intersectLineCircle(lineA, b));
+        } else {
+          for (let indexB = 0; indexB < b.calcPoints.length; indexB++) {
+            const hit = intersectLineLine(lineA, createLine(b, indexB));
+
+            if (hit) {
+              collisionPoints.push(hit);
+            }
+          }
+        }
+      }
+    }
+
+    // unique
+    return collisionPoints.filter(
+      ({ x, y }, index) =>
+        index ===
+        collisionPoints.findIndex(
+          (collisionPoint) => collisionPoint.x === x && collisionPoint.y === y
+        )
+    );
   }
 }

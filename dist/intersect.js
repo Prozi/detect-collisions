@@ -14,6 +14,7 @@ exports.intersectLineCircle = intersectLineCircle;
 exports.intersectLineLineFast = intersectLineLineFast;
 exports.intersectLineLine = intersectLineLine;
 exports.intersectLinePolygon = intersectLinePolygon;
+exports.intersectCircleCircle = intersectCircleCircle;
 const sat_1 = require("sat");
 const model_1 = require("./model");
 const optimized_1 = require("./optimized");
@@ -31,7 +32,7 @@ function ensureConvex(body) {
  * @param circle
  */
 function polygonInCircle(polygon, circle) {
-  return (0, optimized_1.every)(polygon.calcPoints, p => {
+  return (0, optimized_1.every)(polygon.calcPoints, (p) => {
     const point = {
       x: p.x + polygon.pos.x,
       y: p.y + polygon.pos.y,
@@ -40,10 +41,10 @@ function polygonInCircle(polygon, circle) {
   });
 }
 function pointInPolygon(point, polygon) {
-  return (0, optimized_1.some)(ensureConvex(polygon), convex => (0, sat_1.pointInPolygon)(point, convex));
+  return (0, optimized_1.some)(ensureConvex(polygon), (convex) => (0, sat_1.pointInPolygon)(point, convex));
 }
 function polygonInPolygon(polygonA, polygonB) {
-  return (0, optimized_1.every)(polygonA.calcPoints, point => pointInPolygon({ x: point.x + polygonA.pos.x, y: point.y + polygonA.pos.y }, polygonB));
+  return (0, optimized_1.every)(polygonA.calcPoints, (point) => pointInPolygon({ x: point.x + polygonA.pos.x, y: point.y + polygonA.pos.y }, polygonB));
 }
 /**
  * https://stackoverflow.com/a/68197894/1749528
@@ -97,7 +98,7 @@ function circleInPolygon(circle, polygon) {
   // If the center of the circle is within the polygon,
   // the circle is not outside of the polygon completely.
   // so return false.
-  if ((0, optimized_1.some)(points, point => (0, sat_1.pointInCircle)(point, circle))) {
+  if ((0, optimized_1.some)(points, (point) => (0, sat_1.pointInCircle)(point, circle))) {
     return false;
   }
   // If any line-segment of the polygon intersects the circle,
@@ -138,7 +139,7 @@ function circleOutsidePolygon(circle, polygon) {
   // If the center of the circle is within the polygon,
   // the circle is not outside of the polygon completely.
   // so return false.
-  if ((0, optimized_1.some)(points, point => (0, sat_1.pointInCircle)(point, circle) || pointOnCircle(point, circle))) {
+  if ((0, optimized_1.some)(points, (point) => (0, sat_1.pointInCircle)(point, circle) || pointOnCircle(point, circle))) {
     return false;
   }
   // If any line-segment of the polygon intersects the circle,
@@ -245,5 +246,39 @@ function intersectLinePolygon(line, polygon) {
       results.push(hit);
     }
   });
+  return results;
+}
+/**
+ * @param circle1
+ * @param circle2
+ */
+function intersectCircleCircle(circle1, circle2) {
+  const results = [];
+  const x1 = circle1.pos.x;
+  const y1 = circle1.pos.y;
+  const r1 = circle1.r;
+  const x2 = circle2.pos.x;
+  const y2 = circle2.pos.y;
+  const r2 = circle2.r;
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+  if (dist > r1 + r2 || dist < Math.abs(r1 - r2) || dist === 0) {
+    return results;
+  }
+  const a = (r1 * r1 - r2 * r2 + dist * dist) / (2 * dist);
+  const h = Math.sqrt(r1 * r1 - a * a);
+  const px = x1 + (dx * a) / dist;
+  const py = y1 + (dy * a) / dist;
+  const intersection1 = {
+    x: px + (h * dy) / dist,
+    y: py - (h * dx) / dist,
+  };
+  results.push(intersection1);
+  const intersection2 = {
+    x: px - (h * dy) / dist,
+    y: py + (h * dx) / dist,
+  };
+  results.push(intersection2);
   return results;
 }

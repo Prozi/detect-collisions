@@ -1,6 +1,6 @@
 {
   "name": "detect-collisions",
-  "version": "9.24.0",
+  "version": "9.25.0",
   "description": "Points, Lines, Boxes, Polygons (also hollow), Ellipses, Circles. RayCasting, offsets, rotation, scaling, bounding box padding, flags for static and ghost/trigger bodies",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -74,7 +74,7 @@
   },
   "devDependencies": {
     "@stylistic/eslint-plugin": "^2.13.0",
-    "@types/node": "^22.10.6",
+    "@types/node": "^22.10.7",
     "@types/rbush": "^4.0.0",
     "chef-express": "^2.4.2",
     "eslint": "^9.18.0",

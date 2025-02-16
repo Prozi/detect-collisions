@@ -65,4 +65,9 @@ export declare function intersectLineLineFast(line1: Pick<Line, "start" | "end">
  * @param line2
  */
 export declare function intersectLineLine(line1: Pick<Line, "start" | "end">, line2: Pick<Line, "start" | "end">): Vector | undefined;
-export declare function intersectLinePolygon(line: Line, polygon: Polygon): Vector[];
+export declare function intersectLinePolygon(line: Pick<Line, "start" | "end">, polygon: Polygon): Vector[];
+/**
+ * @param circle1
+ * @param circle2
+ */
+export declare function intersectCircleCircle(circle1: Circle, circle2: Circle): Vector[];

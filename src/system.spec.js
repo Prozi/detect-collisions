@@ -201,4 +201,34 @@ describe("GIVEN System", () => {
 
     expect(myPolygon.foo).toBe("bar");
   });
+
+  it("THEN getCollisionPoints(Circle, Circle) works", () => {
+    const { System } = require(".");
+    const physics = new System();
+
+    const a = physics.createCircle({ x: 10, y: 10 }, 10);
+    const b = physics.createCircle({ x: 30, y: 10 }, 10);
+
+    expect(physics.getCollisionPoints(a, b)).toStrictEqual([{ x: 20, y: 10 }]);
+  });
+
+  it("THEN getCollisionPoints(Circle, Box) works", () => {
+    const { System } = require(".");
+    const physics = new System();
+
+    const a = physics.createCircle({ x: 10, y: 10 }, 10);
+    const b = physics.createBox({ x: 20, y: 0 }, 20, 20);
+
+    expect(physics.getCollisionPoints(a, b)).toStrictEqual([{ x: 20, y: 10 }]);
+  });
+
+  it("THEN getCollisionPoints(Box, Circle) works", () => {
+    const { System } = require(".");
+    const physics = new System();
+
+    const a = physics.createBox({ x: 20, y: 0 }, 20, 20);
+    const b = physics.createCircle({ x: 10, y: 10 }, 10);
+
+    expect(physics.getCollisionPoints(a, b)).toStrictEqual([{ x: 20, y: 10 }]);
+  });
 });

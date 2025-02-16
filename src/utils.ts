@@ -46,12 +46,12 @@ const testMap = {
 
 function createArray<T = SATTest | InTest>(
   bodyType: BodyType.Circle | BodyType.Polygon,
-  testType: "sat" | "in",
+  testType: "sat" | "in"
 ): T[] {
   const arrayResult: T[] = [];
-  const bodyGroups = Object
-    .values(BodyGroup)
-    .filter(value => typeof value === "number");
+  const bodyGroups = Object.values(BodyGroup).filter(
+    (value) => typeof value === "number"
+  );
 
   forEach(bodyGroups, (bodyGroup: BodyGroup) => {
     arrayResult[bodyGroup] = (
@@ -93,7 +93,7 @@ export function rad2deg(radians: number) {
 export function createEllipse(
   radiusX: number,
   radiusY: number = radiusX,
-  step = 1,
+  step = 1
 ): SATVector[] {
   const steps: number = Math.PI * Math.hypot(radiusX, radiusY) * 2;
   const length: number = Math.max(8, Math.ceil(steps / Math.max(1, step)));
@@ -135,7 +135,7 @@ export function ensureVectorPoint(point: PotentialVector = {}): SATVector {
  * ensure Vector points (for polygon) in counter-clockwise order
  */
 export function ensurePolygonPoints(
-  points: PotentialVector[] = [],
+  points: PotentialVector[] = []
 ): SATVector[] {
   const polygonPoints: SATVector[] = map(points, ensureVectorPoint);
 
@@ -176,7 +176,7 @@ export function extendBody(body: Body, options: BodyOptions = {}): void {
   body.isTrigger = !!options.isTrigger;
   body.padding = options.padding || 0;
   // Default value should be reflected in documentation of `BodyOptions.group`
-  body.group = options.group ?? 0x7FFFFFFF;
+  body.group = options.group ?? 0x7fffffff;
 
   if ("userData" in options) {
     body.userData = options.userData;
@@ -258,14 +258,14 @@ export function intersectAABB(bodyA: BBox, bodyB: BBox): boolean {
  */
 export function canInteract(
   { group: groupA }: Body,
-  { group: groupB }: Body,
+  { group: groupB }: Body
 ): boolean {
   return (
     // most common case
     groupA === groupB ||
     // otherwise do some binary magick
-    (((groupA >> 16) & (groupB & 0xFFFF)) !== 0 &&
-      ((groupB >> 16) & (groupA & 0xFFFF)) !== 0)
+    (((groupA >> 16) & (groupB & 0xffff)) !== 0 &&
+      ((groupB >> 16) & (groupA & 0xffff)) !== 0)
   );
 }
 
@@ -294,7 +294,7 @@ export function clonePointsArray(points: SATVector[]): Vector[] {
  * @param position
  */
 export function mapVectorToArray(
-  { x, y }: Vector = { x: 0, y: 0 },
+  { x, y }: Vector = { x: 0, y: 0 }
 ): DecompPoint {
   return [x, y];
 }
@@ -341,7 +341,7 @@ export function dashLineTo(
   toX: number,
   toY: number,
   dash = 2,
-  gap = 4,
+  gap = 4
 ): void {
   const xDiff = toX - fromX;
   const yDiff = toY - fromY;
@@ -376,7 +376,7 @@ export function drawPolygon(
     pos,
     calcPoints,
   }: Pick<Polygon | SATPolygon, "calcPoints"> & { pos: Vector },
-  isTrigger = false,
+  isTrigger = false
 ): void {
   const lastPoint = calcPoints[calcPoints.length - 1];
   const fromX = pos.x + lastPoint.x;
@@ -407,7 +407,7 @@ export function drawPolygon(
 export function drawBVH(
   context: CanvasRenderingContext2D,
   body: Body,
-  isTrigger = true,
+  isTrigger = true
 ) {
   drawPolygon(
     context,
@@ -415,7 +415,7 @@ export function drawBVH(
       pos: { x: body.minX, y: body.minY },
       calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY),
     },
-    isTrigger,
+    isTrigger
   );
 }
 
@@ -447,7 +447,7 @@ export function returnTrue() {
  * for groups
  */
 export function getGroup(group: number): number {
-  return Math.max(0, Math.min(group, 0x7FFFFFFF));
+  return Math.max(0, Math.min(group, 0x7fffffff));
 }
 
 /**
@@ -474,7 +474,7 @@ export function ensureNumber(input: number | string): number {
  */
 export function groupBits(
   category: number | string,
-  mask: number | string = category,
+  mask: number | string = category
 ) {
   return (ensureNumber(category) << 16) | ensureNumber(mask);
 }
@@ -486,4 +486,22 @@ export function move(body: Body, speed = 1, updateNow = true) {
   const moveX = Math.cos(body.angle) * speed;
   const moveY = Math.sin(body.angle) * speed;
   body.setPosition(body.x + moveX, body.y + moveY, updateNow);
+}
+
+export function createLine(
+  { pos, calcPoints }: Pick<Polygon, "pos" | "calcPoints">,
+  index: number
+): { start: Vector; end: Vector } {
+  const { x, y } = calcPoints[index];
+  const start = {
+    x: pos.x + x,
+    y: pos.y + y,
+  };
+
+  const end = {
+    x: pos.x + calcPoints[(index + 1) % calcPoints.length].x,
+    y: pos.y + calcPoints[(index + 1) % calcPoints.length].y,
+  };
+
+  return { start, end };
 }

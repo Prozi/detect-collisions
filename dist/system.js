@@ -118,8 +118,8 @@ class System extends base_system_1.BaseSystem {
     let overlapX = 0;
     let overlapY = 0;
     let collided = false;
-    (0, optimized_1.forEach)(convexBodiesA, convexBodyA => {
-      (0, optimized_1.forEach)(convexBodiesB, convexBodyB => {
+    (0, optimized_1.forEach)(convexBodiesA, (convexBodyA) => {
+      (0, optimized_1.forEach)(convexBodiesB, (convexBodyB) => {
         // always first clear response
         response.clear();
         if (sat(convexBodyA, convexBodyB, response)) {
@@ -173,6 +173,39 @@ class System extends base_system_1.BaseSystem {
     });
     this.remove(this.ray);
     return result;
+  }
+  /**
+   * find collisions points between 2 bodies
+   */
+  getCollisionPoints(a, b) {
+    const collisionPoints = [];
+    if (a.typeGroup === model_1.BodyGroup.Circle && b.typeGroup === model_1.BodyGroup.Circle) {
+      collisionPoints.push(...(0, intersect_1.intersectCircleCircle)(a, b));
+    }
+    if (a.typeGroup === model_1.BodyGroup.Circle && b.typeGroup !== model_1.BodyGroup.Circle) {
+      for (let index = 0; index < b.calcPoints.length; index++) {
+        collisionPoints.push(...(0, intersect_1.intersectLineCircle)((0, utils_1.createLine)(b, index), a));
+      }
+    }
+    if (a.typeGroup !== model_1.BodyGroup.Circle) {
+      for (let indexA = 0; indexA < a.calcPoints.length; indexA++) {
+        const lineA = (0, utils_1.createLine)(a, indexA);
+        if (b.typeGroup === model_1.BodyGroup.Circle) {
+          collisionPoints.push(...(0, intersect_1.intersectLineCircle)(lineA, b));
+        }
+        else {
+          for (let indexB = 0; indexB < b.calcPoints.length; indexB++) {
+            const hit = (0, intersect_1.intersectLineLine)(lineA, (0, utils_1.createLine)(b, indexB));
+            if (hit) {
+              collisionPoints.push(hit);
+            }
+          }
+        }
+      }
+    }
+    // unique
+    return collisionPoints.filter(({ x, y }, index) => index ===
+      collisionPoints.findIndex((collisionPoint) => collisionPoint.x === x && collisionPoint.y === y));
   }
 }
 exports.System = System;

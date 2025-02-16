@@ -3118,6 +3118,7 @@ exports.intersectLineCircle = intersectLineCircle;
 exports.intersectLineLineFast = intersectLineLineFast;
 exports.intersectLineLine = intersectLineLine;
 exports.intersectLinePolygon = intersectLinePolygon;
+exports.intersectCircleCircle = intersectCircleCircle;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
 const optimized_1 = __webpack_require__(/*! ./optimized */ "./src/optimized.ts");
@@ -3135,7 +3136,7 @@ function ensureConvex(body) {
  * @param circle
  */
 function polygonInCircle(polygon, circle) {
-  return (0, optimized_1.every)(polygon.calcPoints, p => {
+  return (0, optimized_1.every)(polygon.calcPoints, (p) => {
     const point = {
       x: p.x + polygon.pos.x,
       y: p.y + polygon.pos.y,
@@ -3144,10 +3145,10 @@ function polygonInCircle(polygon, circle) {
   });
 }
 function pointInPolygon(point, polygon) {
-  return (0, optimized_1.some)(ensureConvex(polygon), convex => (0, sat_1.pointInPolygon)(point, convex));
+  return (0, optimized_1.some)(ensureConvex(polygon), (convex) => (0, sat_1.pointInPolygon)(point, convex));
 }
 function polygonInPolygon(polygonA, polygonB) {
-  return (0, optimized_1.every)(polygonA.calcPoints, point => pointInPolygon({ x: point.x + polygonA.pos.x, y: point.y + polygonA.pos.y }, polygonB));
+  return (0, optimized_1.every)(polygonA.calcPoints, (point) => pointInPolygon({ x: point.x + polygonA.pos.x, y: point.y + polygonA.pos.y }, polygonB));
 }
 /**
  * https://stackoverflow.com/a/68197894/1749528
@@ -3201,7 +3202,7 @@ function circleInPolygon(circle, polygon) {
   // If the center of the circle is within the polygon,
   // the circle is not outside of the polygon completely.
   // so return false.
-  if ((0, optimized_1.some)(points, point => (0, sat_1.pointInCircle)(point, circle))) {
+  if ((0, optimized_1.some)(points, (point) => (0, sat_1.pointInCircle)(point, circle))) {
     return false;
   }
   // If any line-segment of the polygon intersects the circle,
@@ -3242,7 +3243,7 @@ function circleOutsidePolygon(circle, polygon) {
   // If the center of the circle is within the polygon,
   // the circle is not outside of the polygon completely.
   // so return false.
-  if ((0, optimized_1.some)(points, point => (0, sat_1.pointInCircle)(point, circle) || pointOnCircle(point, circle))) {
+  if ((0, optimized_1.some)(points, (point) => (0, sat_1.pointInCircle)(point, circle) || pointOnCircle(point, circle))) {
     return false;
   }
   // If any line-segment of the polygon intersects the circle,
@@ -3349,6 +3350,40 @@ function intersectLinePolygon(line, polygon) {
       results.push(hit);
     }
   });
+  return results;
+}
+/**
+ * @param circle1
+ * @param circle2
+ */
+function intersectCircleCircle(circle1, circle2) {
+  const results = [];
+  const x1 = circle1.pos.x;
+  const y1 = circle1.pos.y;
+  const r1 = circle1.r;
+  const x2 = circle2.pos.x;
+  const y2 = circle2.pos.y;
+  const r2 = circle2.r;
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+  if (dist > r1 + r2 || dist < Math.abs(r1 - r2) || dist === 0) {
+    return results;
+  }
+  const a = (r1 * r1 - r2 * r2 + dist * dist) / (2 * dist);
+  const h = Math.sqrt(r1 * r1 - a * a);
+  const px = x1 + (dx * a) / dist;
+  const py = y1 + (dy * a) / dist;
+  const intersection1 = {
+    x: px + (h * dy) / dist,
+    y: py - (h * dx) / dist,
+  };
+  results.push(intersection1);
+  const intersection2 = {
+    x: px - (h * dy) / dist,
+    y: py + (h * dx) / dist,
+  };
+  results.push(intersection2);
   return results;
 }
 
@@ -3617,8 +3652,8 @@ class System extends base_system_1.BaseSystem {
     let overlapX = 0;
     let overlapY = 0;
     let collided = false;
-    (0, optimized_1.forEach)(convexBodiesA, convexBodyA => {
-      (0, optimized_1.forEach)(convexBodiesB, convexBodyB => {
+    (0, optimized_1.forEach)(convexBodiesA, (convexBodyA) => {
+      (0, optimized_1.forEach)(convexBodiesB, (convexBodyB) => {
         // always first clear response
         response.clear();
         if (sat(convexBodyA, convexBodyB, response)) {
@@ -3673,6 +3708,39 @@ class System extends base_system_1.BaseSystem {
     this.remove(this.ray);
     return result;
   }
+  /**
+   * find collisions points between 2 bodies
+   */
+  getCollisionPoints(a, b) {
+    const collisionPoints = [];
+    if (a.typeGroup === model_1.BodyGroup.Circle && b.typeGroup === model_1.BodyGroup.Circle) {
+      collisionPoints.push(...(0, intersect_1.intersectCircleCircle)(a, b));
+    }
+    if (a.typeGroup === model_1.BodyGroup.Circle && b.typeGroup !== model_1.BodyGroup.Circle) {
+      for (let index = 0; index < b.calcPoints.length; index++) {
+        collisionPoints.push(...(0, intersect_1.intersectLineCircle)((0, utils_1.createLine)(b, index), a));
+      }
+    }
+    if (a.typeGroup !== model_1.BodyGroup.Circle) {
+      for (let indexA = 0; indexA < a.calcPoints.length; indexA++) {
+        const lineA = (0, utils_1.createLine)(a, indexA);
+        if (b.typeGroup === model_1.BodyGroup.Circle) {
+          collisionPoints.push(...(0, intersect_1.intersectLineCircle)(lineA, b));
+        }
+        else {
+          for (let indexB = 0; indexB < b.calcPoints.length; indexB++) {
+            const hit = (0, intersect_1.intersectLineLine)(lineA, (0, utils_1.createLine)(b, indexB));
+            if (hit) {
+              collisionPoints.push(hit);
+            }
+          }
+        }
+      }
+    }
+    // unique
+    return collisionPoints.filter(({ x, y }, index) => index ===
+      collisionPoints.findIndex((collisionPoint) => collisionPoint.x === x && collisionPoint.y === y));
+  }
 }
 exports.System = System;
 
@@ -3719,6 +3787,7 @@ exports.bin2dec = bin2dec;
 exports.ensureNumber = ensureNumber;
 exports.groupBits = groupBits;
 exports.move = move;
+exports.createLine = createLine;
 const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const intersect_1 = __webpack_require__(/*! ./intersect */ "./src/intersect.ts");
 const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
@@ -3736,9 +3805,7 @@ const testMap = {
 };
 function createArray(bodyType, testType) {
   const arrayResult = [];
-  const bodyGroups = Object
-    .values(model_1.BodyGroup)
-    .filter(value => typeof value === "number");
+  const bodyGroups = Object.values(model_1.BodyGroup).filter((value) => typeof value === "number");
   (0, optimized_1.forEach)(bodyGroups, (bodyGroup) => {
     arrayResult[bodyGroup] = (bodyGroup === model_1.BodyGroup.Circle
       ? testMap[`${testType}${bodyType}Circle`]
@@ -3834,7 +3901,7 @@ function extendBody(body, options = {}) {
   body.isTrigger = !!options.isTrigger;
   body.padding = options.padding || 0;
   // Default value should be reflected in documentation of `BodyOptions.group`
-  body.group = (_a = options.group) !== null && _a !== void 0 ? _a : 0x7FFFFFFF;
+  body.group = (_a = options.group) !== null && _a !== void 0 ? _a : 0x7fffffff;
   if ("userData" in options) {
     body.userData = options.userData;
   }
@@ -3907,8 +3974,8 @@ function canInteract({ group: groupA }, { group: groupB }) {
   // most common case
   groupA === groupB ||
     // otherwise do some binary magick
-    (((groupA >> 16) & (groupB & 0xFFFF)) !== 0 &&
-      ((groupB >> 16) & (groupA & 0xFFFF)) !== 0));
+    (((groupA >> 16) & (groupB & 0xffff)) !== 0 &&
+      ((groupB >> 16) & (groupA & 0xffff)) !== 0));
 }
 /**
  * checks if body a is in body b
@@ -4043,7 +4110,7 @@ function returnTrue() {
  * for groups
  */
 function getGroup(group) {
-  return Math.max(0, Math.min(group, 0x7FFFFFFF));
+  return Math.max(0, Math.min(group, 0x7fffffff));
 }
 /**
  * binary string to decimal number
@@ -4075,6 +4142,18 @@ function move(body, speed = 1, updateNow = true) {
   const moveX = Math.cos(body.angle) * speed;
   const moveY = Math.sin(body.angle) * speed;
   body.setPosition(body.x + moveX, body.y + moveY, updateNow);
+}
+function createLine({ pos, calcPoints }, index) {
+  const { x, y } = calcPoints[index];
+  const start = {
+    x: pos.x + x,
+    y: pos.y + y,
+  };
+  const end = {
+    x: pos.x + calcPoints[(index + 1) % calcPoints.length].x,
+    y: pos.y + calcPoints[(index + 1) % calcPoints.length].y,
+  };
+  return { start, end };
 }
 
 

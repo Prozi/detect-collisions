@@ -14,7 +14,7 @@ import { Polygon } from "./bodies/polygon";
  * replace body with array of related convex polygons
  */
 export function ensureConvex<TBody extends Body = Circle | Point | Polygon>(
-  body: TBody,
+  body: TBody
 ): (TBody | SATPolygon)[] {
   if (body.isConvex || body.typeGroup !== BodyGroup.Polygon) {
     return [body];
@@ -29,9 +29,9 @@ export function ensureConvex<TBody extends Body = Circle | Point | Polygon>(
  */
 export function polygonInCircle(
   polygon: Polygon,
-  circle: Pick<Circle, "pos" | "r">,
+  circle: Pick<Circle, "pos" | "r">
 ): boolean {
-  return every(polygon.calcPoints,p => {
+  return every(polygon.calcPoints, (p) => {
     const point = {
       x: p.x + polygon.pos.x,
       y: p.y + polygon.pos.y,
@@ -42,20 +42,20 @@ export function polygonInCircle(
 }
 
 export function pointInPolygon(point: Vector, polygon: Polygon): boolean {
-  return some(ensureConvex(polygon),convex =>
-    pointInConvexPolygon(point as SATVector, convex),
+  return some(ensureConvex(polygon), (convex) =>
+    pointInConvexPolygon(point as SATVector, convex)
   );
 }
 
 export function polygonInPolygon(
   polygonA: Polygon,
-  polygonB: Polygon,
+  polygonB: Polygon
 ): boolean {
-  return every(polygonA.calcPoints,point =>
+  return every(polygonA.calcPoints, (point) =>
     pointInPolygon(
       { x: point.x + polygonA.pos.x, y: point.y + polygonA.pos.y },
-      polygonB,
-    ),
+      polygonB
+    )
   );
 }
 
@@ -67,7 +67,7 @@ export function polygonInPolygon(
  */
 export function pointOnCircle(
   point: Vector,
-  circle: Pick<Circle, "pos" | "r">,
+  circle: Pick<Circle, "pos" | "r">
 ): boolean {
   return (
     (point.x - circle.pos.x) * (point.x - circle.pos.x) +
@@ -84,7 +84,7 @@ export function pointOnCircle(
  */
 export function circleInCircle(
   circle1: Pick<Circle, "pos" | "r">,
-  circle2: Pick<Circle, "pos" | "r">,
+  circle2: Pick<Circle, "pos" | "r">
 ) {
   const x1 = circle1.pos.x;
   const y1 = circle1.pos.y;
@@ -105,7 +105,7 @@ export function circleInCircle(
  */
 export function circleInPolygon(
   circle: Pick<Circle, "pos" | "r">,
-  polygon: Polygon,
+  polygon: Polygon
 ): boolean {
   // Circle with radius 0 isn't a circle
   if (circle.r === 0) {
@@ -128,7 +128,7 @@ export function circleInPolygon(
   // If the center of the circle is within the polygon,
   // the circle is not outside of the polygon completely.
   // so return false.
-  if (some(points,point => pointInCircle(point, circle))) {
+  if (some(points, (point) => pointInCircle(point, circle))) {
     return false;
   }
 
@@ -158,7 +158,7 @@ export function circleInPolygon(
  */
 export function circleOutsidePolygon(
   circle: Pick<Circle, "pos" | "r">,
-  polygon: Polygon,
+  polygon: Polygon
 ): boolean {
   // Circle with radius 0 isn't a circle
   if (circle.r === 0) {
@@ -183,7 +183,8 @@ export function circleOutsidePolygon(
   // so return false.
   if (
     some(
-      points,point => pointInCircle(point, circle) || pointOnCircle(point, circle),
+      points,
+      (point) => pointInCircle(point, circle) || pointOnCircle(point, circle)
     )
   ) {
     return false;
@@ -215,7 +216,7 @@ export function circleOutsidePolygon(
  */
 export function intersectLineCircle(
   line: Pick<Line, "start" | "end">,
-  { pos, r }: Pick<Circle, "pos" | "r">,
+  { pos, r }: Pick<Circle, "pos" | "r">
 ): Vector[] {
   const v1 = { x: line.end.x - line.start.x, y: line.end.y - line.start.y };
   const v2 = { x: line.start.x - pos.x, y: line.start.y - pos.y };
@@ -264,7 +265,7 @@ function isTurn(point1: Vector, point2: Vector, point3: Vector) {
  */
 export function intersectLineLineFast(
   line1: Pick<Line, "start" | "end">,
-  line2: Pick<Line, "start" | "end">,
+  line2: Pick<Line, "start" | "end">
 ): boolean {
   return (
     isTurn(line1.start, line2.start, line2.end) !==
@@ -283,7 +284,7 @@ export function intersectLineLineFast(
  */
 export function intersectLineLine(
   line1: Pick<Line, "start" | "end">,
-  line2: Pick<Line, "start" | "end">,
+  line2: Pick<Line, "start" | "end">
 ): Vector | undefined {
   const dX: number = line1.end.x - line1.start.x;
   const dY: number = line1.end.y - line1.start.y;
@@ -313,7 +314,10 @@ export function intersectLineLine(
   return { x: line1.start.x + lambda * dX, y: line1.start.y + lambda * dY };
 }
 
-export function intersectLinePolygon(line: Line, polygon: Polygon): Vector[] {
+export function intersectLinePolygon(
+  line: Pick<Line, "start" | "end">,
+  polygon: Polygon
+): Vector[] {
   const results: Vector[] = [];
 
   forEach(polygon.calcPoints, (to: Vector, index: number) => {
@@ -331,6 +335,55 @@ export function intersectLinePolygon(line: Line, polygon: Polygon): Vector[] {
       results.push(hit);
     }
   });
+
+  return results;
+}
+
+/**
+ * @param circle1
+ * @param circle2
+ */
+export function intersectCircleCircle(
+  circle1: Circle,
+  circle2: Circle
+): Vector[] {
+  const results: Vector[] = [];
+
+  const x1 = circle1.pos.x;
+  const y1 = circle1.pos.y;
+  const r1 = circle1.r;
+
+  const x2 = circle2.pos.x;
+  const y2 = circle2.pos.y;
+  const r2 = circle2.r;
+
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const dist = Math.sqrt(dx * dx + dy * dy);
+
+  if (dist > r1 + r2 || dist < Math.abs(r1 - r2) || dist === 0) {
+    return results;
+  }
+
+  const a = (r1 * r1 - r2 * r2 + dist * dist) / (2 * dist);
+  const h = Math.sqrt(r1 * r1 - a * a);
+
+  const px = x1 + (dx * a) / dist;
+  const py = y1 + (dy * a) / dist;
+
+  const intersection1: Vector = {
+    x: px + (h * dy) / dist,
+    y: py - (h * dx) / dist,
+  };
+
+  results.push(intersection1);
+
+  const intersection2: Vector = {
+    x: px - (h * dy) / dist,
+    y: py + (h * dx) / dist,
+  };
+
+  results.push(intersection2);
 
   return results;
 }

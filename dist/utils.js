@@ -31,6 +31,7 @@ exports.bin2dec = bin2dec;
 exports.ensureNumber = ensureNumber;
 exports.groupBits = groupBits;
 exports.move = move;
+exports.createLine = createLine;
 const sat_1 = require("sat");
 const intersect_1 = require("./intersect");
 const model_1 = require("./model");
@@ -48,9 +49,7 @@ const testMap = {
 };
 function createArray(bodyType, testType) {
   const arrayResult = [];
-  const bodyGroups = Object
-    .values(model_1.BodyGroup)
-    .filter(value => typeof value === "number");
+  const bodyGroups = Object.values(model_1.BodyGroup).filter((value) => typeof value === "number");
   (0, optimized_1.forEach)(bodyGroups, (bodyGroup) => {
     arrayResult[bodyGroup] = (bodyGroup === model_1.BodyGroup.Circle
       ? testMap[`${testType}${bodyType}Circle`]
@@ -146,7 +145,7 @@ function extendBody(body, options = {}) {
   body.isTrigger = !!options.isTrigger;
   body.padding = options.padding || 0;
   // Default value should be reflected in documentation of `BodyOptions.group`
-  body.group = (_a = options.group) !== null && _a !== void 0 ? _a : 0x7FFFFFFF;
+  body.group = (_a = options.group) !== null && _a !== void 0 ? _a : 0x7fffffff;
   if ("userData" in options) {
     body.userData = options.userData;
   }
@@ -219,8 +218,8 @@ function canInteract({ group: groupA }, { group: groupB }) {
   // most common case
   groupA === groupB ||
     // otherwise do some binary magick
-    (((groupA >> 16) & (groupB & 0xFFFF)) !== 0 &&
-      ((groupB >> 16) & (groupA & 0xFFFF)) !== 0));
+    (((groupA >> 16) & (groupB & 0xffff)) !== 0 &&
+      ((groupB >> 16) & (groupA & 0xffff)) !== 0));
 }
 /**
  * checks if body a is in body b
@@ -355,7 +354,7 @@ function returnTrue() {
  * for groups
  */
 function getGroup(group) {
-  return Math.max(0, Math.min(group, 0x7FFFFFFF));
+  return Math.max(0, Math.min(group, 0x7fffffff));
 }
 /**
  * binary string to decimal number
@@ -387,4 +386,16 @@ function move(body, speed = 1, updateNow = true) {
   const moveX = Math.cos(body.angle) * speed;
   const moveY = Math.sin(body.angle) * speed;
   body.setPosition(body.x + moveX, body.y + moveY, updateNow);
+}
+function createLine({ pos, calcPoints }, index) {
+  const { x, y } = calcPoints[index];
+  const start = {
+    x: pos.x + x,
+    y: pos.y + y,
+  };
+  const end = {
+    x: pos.x + calcPoints[(index + 1) % calcPoints.length].x,
+    y: pos.y + calcPoints[(index + 1) % calcPoints.length].y,
+  };
+  return { start, end };
 }

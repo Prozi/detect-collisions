@@ -164,3 +164,7 @@ export declare function ensureNumber(input: number | string): number;
  */
 export declare function groupBits(category: number | string, mask?: number | string): number;
 export declare function move(body: Body, speed?: number, updateNow?: boolean): void;
+export declare function createLine({ pos, calcPoints }: Pick<Polygon, "pos" | "calcPoints">, index: number): {
+  start: Vector;
+  end: Vector;
+};
