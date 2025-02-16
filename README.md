@@ -103,6 +103,10 @@ console.log(box.dirty); // false
 Detect collisions and respond accordingly:
 
 ```ts
+const callback = (result) => {
+  console.info(result);
+}
+
 if (system.checkAll(callback)) {
   // Do something yourself
 }
@@ -113,6 +117,13 @@ if (system.checkOne(body, callback)) {
 
 // Or separate bodies based on isStatic/isTrigger
 system.separate();
+```
+
+Get exact collision points:
+
+```ts
+const { a, b } = result;
+const points = system.getCollisionPoints(a, b)
 ```
 
 ### Step 6: Cleaning Up

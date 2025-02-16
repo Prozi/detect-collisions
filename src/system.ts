@@ -1,3 +1,5 @@
+import { BaseSystem } from "./base-system";
+import { Line } from "./bodies/line";
 import {
   ensureConvex,
   intersectCircleCircle,
@@ -9,7 +11,6 @@ import {
   BBox,
   Body,
   BodyGroup,
-  BodyType,
   CollisionCallback,
   RaycastHit,
   Response,
@@ -20,17 +21,11 @@ import { forEach, some } from "./optimized";
 import {
   canInteract,
   checkAInB,
-  createLine,
   distance,
   getSATTest,
   notIntersectAABB,
   returnTrue,
 } from "./utils";
-
-import { BaseSystem } from "./base-system";
-import { Line } from "./bodies/line";
-import { Polygon } from "./bodies/polygon";
-import { Circle } from "./bodies/circle";
 
 /**
  * collision system
@@ -277,20 +272,23 @@ export class System<TBody extends Body = Body> extends BaseSystem<TBody> {
     }
 
     if (a.typeGroup === BodyGroup.Circle && b.typeGroup !== BodyGroup.Circle) {
-      for (let index = 0; index < b.calcPoints.length; index++) {
-        collisionPoints.push(...intersectLineCircle(createLine(b, index), a));
+      for (let indexB = 0; indexB < b.calcPoints.length; indexB++) {
+        const lineB = b.getEdge(indexB);
+
+        collisionPoints.push(...intersectLineCircle(lineB, a));
       }
     }
 
     if (a.typeGroup !== BodyGroup.Circle) {
       for (let indexA = 0; indexA < a.calcPoints.length; indexA++) {
-        const lineA = createLine(a, indexA);
+        const lineA = a.getEdge(indexA);
 
         if (b.typeGroup === BodyGroup.Circle) {
           collisionPoints.push(...intersectLineCircle(lineA, b));
         } else {
           for (let indexB = 0; indexB < b.calcPoints.length; indexB++) {
-            const hit = intersectLineLine(lineA, createLine(b, indexB));
+            const lineB = b.getEdge(indexB);
+            const hit = intersectLineLine(lineA, lineB);
 
             if (hit) {
               collisionPoints.push(hit);

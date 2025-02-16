@@ -8,9 +8,9 @@ exports.map = exports.filter = exports.every = exports.some = exports.forEach = 
  * basic benchmark: https://jsbench.me/urle772xdn
  */
 const forEach = (array, callback) => {
-  for (let i = 0, l = array.length; i < l; i++) {
-    callback(array[i], i);
-  }
+    for (let i = 0, l = array.length; i < l; i++) {
+        callback(array[i], i);
+    }
 };
 exports.forEach = forEach;
 /**
@@ -19,12 +19,12 @@ exports.forEach = forEach;
  * basic benchmark: https://jsbench.me/l0le7bnnsq
  */
 const some = (array, callback) => {
-  for (let i = 0, l = array.length; i < l; i++) {
-    if (callback(array[i], i)) {
-      return true;
+    for (let i = 0, l = array.length; i < l; i++) {
+        if (callback(array[i], i)) {
+            return true;
+        }
     }
-  }
-  return false;
+    return false;
 };
 exports.some = some;
 /**
@@ -33,12 +33,12 @@ exports.some = some;
  * basic benchmark: https://jsbench.me/unle7da29v
  */
 const every = (array, callback) => {
-  for (let i = 0, l = array.length; i < l; i++) {
-    if (!callback(array[i], i)) {
-      return false;
+    for (let i = 0, l = array.length; i < l; i++) {
+        if (!callback(array[i], i)) {
+            return false;
+        }
     }
-  }
-  return true;
+    return true;
 };
 exports.every = every;
 /**
@@ -47,14 +47,14 @@ exports.every = every;
  * basic benchmark: https://jsbench.me/o1le77ev4l
  */
 const filter = (array, callback) => {
-  const output = [];
-  for (let i = 0, l = array.length; i < l; i++) {
-    const item = array[i];
-    if (callback(item, i)) {
-      output.push(item);
+    const output = [];
+    for (let i = 0, l = array.length; i < l; i++) {
+        const item = array[i];
+        if (callback(item, i)) {
+            output.push(item);
+        }
     }
-  }
-  return output;
+    return output;
 };
 exports.filter = filter;
 /**
@@ -63,11 +63,11 @@ exports.filter = filter;
  * basic benchmark: https://jsbench.me/oyle77vbpc
  */
 const map = (array, callback) => {
-  const l = array.length;
-  const output = new Array(l);
-  for (let i = 0; i < l; i++) {
-    output[i] = callback(array[i], i);
-  }
-  return output;
+    const l = array.length;
+    const output = new Array(l);
+    for (let i = 0; i < l; i++) {
+        output[i] = callback(array[i], i);
+    }
+    return output;
 };
 exports.map = map;

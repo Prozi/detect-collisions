@@ -1,4 +1,5 @@
 import { isSimple, quickDecomp } from "poly-decomp-es";
+import { Polygon as SATPolygon } from "sat";
 import {
   BBox,
   BodyGroup,
@@ -12,6 +13,7 @@ import {
   Vector,
 } from "../model";
 import { forEach, map } from "../optimized";
+import { System } from "../system";
 import {
   clonePointsArray,
   drawBVH,
@@ -25,14 +27,11 @@ import {
   move,
 } from "../utils";
 
-import { Polygon as SATPolygon } from "sat";
-import { System } from "../system";
-
 export interface PolygonConstructor<TPolygon extends Polygon> {
   new (
     position: PotentialVector,
     points: PotentialVector[],
-    options?: BodyOptions,
+    options?: BodyOptions
   ): TPolygon;
 }
 
@@ -41,7 +40,8 @@ export interface PolygonConstructor<TPolygon extends Polygon> {
  */
 export class Polygon<UserDataType = any>
   extends SATPolygon
-  implements BBox, BodyProps<UserDataType> {
+  implements BBox, BodyProps<UserDataType>
+{
   /**
    * minimum x bound of body
    */
@@ -153,7 +153,7 @@ export class Polygon<UserDataType = any>
   constructor(
     position: PotentialVector,
     points: PotentialVector[],
-    options?: BodyOptions<UserDataType>,
+    options?: BodyOptions<UserDataType>
   ) {
     super(ensureVectorPoint(position), ensurePolygonPoints(points));
 
@@ -283,7 +283,7 @@ export class Polygon<UserDataType = any>
         point.y = this.pointsBackup[index].y * this.scaleVector.y;
 
         return point;
-      }),
+      })
     );
 
     this.markAsDirty(updateNow);
@@ -317,6 +317,24 @@ export class Polygon<UserDataType = any>
       maxX: pos.x + w,
       maxY: pos.y + h,
     };
+  }
+
+  /**
+   * Get edge line by index
+   */
+  getEdge(index: number) {
+    const { x, y } = this.calcPoints[index];
+    const next = this.calcPoints[(index + 1) % this.calcPoints.length];
+    const start = {
+      x: this.x + x,
+      y: this.y + y,
+    };
+    const end = {
+      x: this.x + next.x,
+      y: this.y + next.y,
+    };
+
+    return { start, end };
   }
 
   /**
@@ -464,7 +482,7 @@ export class Polygon<UserDataType = any>
    * updates convex polygons cache in body
    */
   protected updateConvexPolygons(
-    convex: DecompPolygon[] = this.getConvex(),
+    convex: DecompPolygon[] = this.getConvex()
   ): void {
     if (this.isConvex) {
       return;
@@ -484,7 +502,7 @@ export class Polygon<UserDataType = any>
       this.convexPolygons[index].pos.y = this.pos.y;
       this.convexPolygons[index].angle = this.angle;
       this.convexPolygons[index].setPoints(
-        ensurePolygonPoints(map(points, mapArrayToVector)),
+        ensurePolygonPoints(map(points, mapArrayToVector))
       );
     });
 

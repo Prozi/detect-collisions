@@ -1,13 +1,15 @@
 /* tslint:disable:cyclomatic-complexity */
 
+import { Point as DecompPoint } from "poly-decomp-es";
 import {
   Response,
+  Vector as SATVector,
   testCircleCircle,
   testCirclePolygon,
   testPolygonCircle,
   testPolygonPolygon,
-  Vector as SATVector,
 } from "sat";
+import { Polygon } from "./bodies/polygon";
 import {
   circleInCircle,
   circleInPolygon,
@@ -27,9 +29,6 @@ import {
   Vector,
 } from "./model";
 import { forEach, map } from "./optimized";
-
-import { Point as DecompPoint } from "poly-decomp-es";
-import { Polygon } from "./bodies/polygon";
 
 /* helpers for faster getSATTest() and checkAInB() */
 
@@ -486,22 +485,4 @@ export function move(body: Body, speed = 1, updateNow = true) {
   const moveX = Math.cos(body.angle) * speed;
   const moveY = Math.sin(body.angle) * speed;
   body.setPosition(body.x + moveX, body.y + moveY, updateNow);
-}
-
-export function createLine(
-  { pos, calcPoints }: Pick<Polygon, "pos" | "calcPoints">,
-  index: number
-): { start: Vector; end: Vector } {
-  const { x, y } = calcPoints[index];
-  const start = {
-    x: pos.x + x,
-    y: pos.y + y,
-  };
-
-  const end = {
-    x: pos.x + calcPoints[(index + 1) % calcPoints.length].x,
-    y: pos.y + calcPoints[(index + 1) % calcPoints.length].y,
-  };
-
-  return { start, end };
 }

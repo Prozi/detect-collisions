@@ -2777,10 +2777,10 @@ exports.Point = Point;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Polygon = void 0;
 const poly_decomp_es_1 = __webpack_require__(/*! poly-decomp-es */ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js");
+const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 const model_1 = __webpack_require__(/*! ../model */ "./src/model.ts");
 const optimized_1 = __webpack_require__(/*! ../optimized */ "./src/optimized.ts");
 const utils_1 = __webpack_require__(/*! ../utils */ "./src/utils.ts");
-const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
 /**
  * collider - polygon
  */
@@ -2939,6 +2939,22 @@ class Polygon extends sat_1.Polygon {
         };
     }
     /**
+     * Get edge line by index
+     */
+    getEdge(index) {
+        const { x, y } = this.calcPoints[index];
+        const next = this.calcPoints[(index + 1) % this.calcPoints.length];
+        const start = {
+            x: this.x + x,
+            y: this.y + y,
+        };
+        const end = {
+            x: this.x + next.x,
+            y: this.y + next.y,
+        };
+        return { start, end };
+    }
+    /**
      * Draws exact collider on canvas context
      */
     draw(context) {
@@ -3091,1070 +3107,6 @@ class Polygon extends sat_1.Polygon {
     }
 }
 exports.Polygon = Polygon;
-
-
-/***/ }),
-
-/***/ "./src/intersect.ts":
-/*!**************************!*\
-  !*** ./src/intersect.ts ***!
-  \**************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-/* tslint:disable:trailing-whitespace */
-/* tslint:disable:cyclomatic-complexity */
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ensureConvex = ensureConvex;
-exports.polygonInCircle = polygonInCircle;
-exports.pointInPolygon = pointInPolygon;
-exports.polygonInPolygon = polygonInPolygon;
-exports.pointOnCircle = pointOnCircle;
-exports.circleInCircle = circleInCircle;
-exports.circleInPolygon = circleInPolygon;
-exports.circleOutsidePolygon = circleOutsidePolygon;
-exports.intersectLineCircle = intersectLineCircle;
-exports.intersectLineLineFast = intersectLineLineFast;
-exports.intersectLineLine = intersectLineLine;
-exports.intersectLinePolygon = intersectLinePolygon;
-exports.intersectCircleCircle = intersectCircleCircle;
-const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
-const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
-const optimized_1 = __webpack_require__(/*! ./optimized */ "./src/optimized.ts");
-/**
- * replace body with array of related convex polygons
- */
-function ensureConvex(body) {
-    if (body.isConvex || body.typeGroup !== model_1.BodyGroup.Polygon) {
-        return [body];
-    }
-    return body.convexPolygons;
-}
-/**
- * @param polygon
- * @param circle
- */
-function polygonInCircle(polygon, circle) {
-    return (0, optimized_1.every)(polygon.calcPoints, (p) => {
-        const point = {
-            x: p.x + polygon.pos.x,
-            y: p.y + polygon.pos.y,
-        };
-        return (0, sat_1.pointInCircle)(point, circle);
-    });
-}
-function pointInPolygon(point, polygon) {
-    return (0, optimized_1.some)(ensureConvex(polygon), (convex) => (0, sat_1.pointInPolygon)(point, convex));
-}
-function polygonInPolygon(polygonA, polygonB) {
-    return (0, optimized_1.every)(polygonA.calcPoints, (point) => pointInPolygon({ x: point.x + polygonA.pos.x, y: point.y + polygonA.pos.y }, polygonB));
-}
-/**
- * https://stackoverflow.com/a/68197894/1749528
- *
- * @param point
- * @param circle
- */
-function pointOnCircle(point, circle) {
-    return ((point.x - circle.pos.x) * (point.x - circle.pos.x) +
-        (point.y - circle.pos.y) * (point.y - circle.pos.y) ===
-        circle.r * circle.r);
-}
-/**
- * https://stackoverflow.com/a/68197894/1749528
- *
- * @param circle1
- * @param circle2
- */
-function circleInCircle(circle1, circle2) {
-    const x1 = circle1.pos.x;
-    const y1 = circle1.pos.y;
-    const x2 = circle2.pos.x;
-    const y2 = circle2.pos.y;
-    const r1 = circle1.r;
-    const r2 = circle2.r;
-    const distSq = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-    return distSq + r2 === r1 || distSq + r2 < r1;
-}
-/**
- * https://stackoverflow.com/a/68197894/1749528
- *
- * @param circle
- * @param polygon
- */
-function circleInPolygon(circle, polygon) {
-    // Circle with radius 0 isn't a circle
-    if (circle.r === 0) {
-        return false;
-    }
-    // If the center of the circle is not within the polygon,
-    // then the circle may overlap, but it'll never be "contained"
-    // so return false
-    if (!pointInPolygon(circle.pos, polygon)) {
-        return false;
-    }
-    // Necessary add polygon pos to points
-    const points = (0, optimized_1.map)(polygon.calcPoints, ({ x, y }) => ({
-        x: x + polygon.pos.x,
-        y: y + polygon.pos.y,
-    }));
-    // If the center of the circle is within the polygon,
-    // the circle is not outside of the polygon completely.
-    // so return false.
-    if ((0, optimized_1.some)(points, (point) => (0, sat_1.pointInCircle)(point, circle))) {
-        return false;
-    }
-    // If any line-segment of the polygon intersects the circle,
-    // the circle is not "contained"
-    // so return false
-    if ((0, optimized_1.some)(points, (end, index) => {
-        const start = index
-            ? points[index - 1]
-            : points[points.length - 1];
-        return intersectLineCircle({ start, end }, circle).length > 0;
-    })) {
-        return false;
-    }
-    return true;
-}
-/**
- * https://stackoverflow.com/a/68197894/1749528
- *
- * @param circle
- * @param polygon
- */
-function circleOutsidePolygon(circle, polygon) {
-    // Circle with radius 0 isn't a circle
-    if (circle.r === 0) {
-        return false;
-    }
-    // If the center of the circle is within the polygon,
-    // the circle is not outside of the polygon completely.
-    // so return false.
-    if (pointInPolygon(circle.pos, polygon)) {
-        return false;
-    }
-    // Necessary add polygon pos to points
-    const points = (0, optimized_1.map)(polygon.calcPoints, ({ x, y }) => ({
-        x: x + polygon.pos.x,
-        y: y + polygon.pos.y,
-    }));
-    // If the center of the circle is within the polygon,
-    // the circle is not outside of the polygon completely.
-    // so return false.
-    if ((0, optimized_1.some)(points, (point) => (0, sat_1.pointInCircle)(point, circle) || pointOnCircle(point, circle))) {
-        return false;
-    }
-    // If any line-segment of the polygon intersects the circle,
-    // the circle is not "contained"
-    // so return false
-    if ((0, optimized_1.some)(points, (end, index) => {
-        const start = index
-            ? points[index - 1]
-            : points[points.length - 1];
-        return intersectLineCircle({ start, end }, circle).length > 0;
-    })) {
-        return false;
-    }
-    return true;
-}
-/**
- * https://stackoverflow.com/a/37225895/1749528
- *
- * @param line
- * @param circle
- */
-function intersectLineCircle(line, { pos, r }) {
-    const v1 = { x: line.end.x - line.start.x, y: line.end.y - line.start.y };
-    const v2 = { x: line.start.x - pos.x, y: line.start.y - pos.y };
-    const b = (v1.x * v2.x + v1.y * v2.y) * -2;
-    const c = (v1.x * v1.x + v1.y * v1.y) * 2;
-    const d = Math.sqrt(b * b - (v2.x * v2.x + v2.y * v2.y - r * r) * c * 2);
-    if (isNaN(d)) {
-        // no intercept
-        return [];
-    }
-    const u1 = (b - d) / c; // these represent the unit distance of point one and two on the line
-    const u2 = (b + d) / c;
-    const results = []; // return array
-    if (u1 <= 1 && u1 >= 0) {
-        // add point if on the line segment
-        results.push({ x: line.start.x + v1.x * u1, y: line.start.y + v1.y * u1 });
-    }
-    if (u2 <= 1 && u2 >= 0) {
-        // second add point if on the line segment
-        results.push({ x: line.start.x + v1.x * u2, y: line.start.y + v1.y * u2 });
-    }
-    return results;
-}
-/**
- * helper for intersectLineLineFast
- */
-function isTurn(point1, point2, point3) {
-    const A = (point3.x - point1.x) * (point2.y - point1.y);
-    const B = (point2.x - point1.x) * (point3.y - point1.y);
-    return A > B + Number.EPSILON ? 1 : A + Number.EPSILON < B ? -1 : 0;
-}
-/**
- * faster implementation of intersectLineLine
- * https://stackoverflow.com/a/16725715/1749528
- *
- * @param line1
- * @param line2
- */
-function intersectLineLineFast(line1, line2) {
-    return (isTurn(line1.start, line2.start, line2.end) !==
-        isTurn(line1.end, line2.start, line2.end) &&
-        isTurn(line1.start, line1.end, line2.start) !==
-            isTurn(line1.start, line1.end, line2.end));
-}
-/**
- * returns the point of intersection
- * https://stackoverflow.com/a/24392281/1749528
- *
- * @param line1
- * @param line2
- */
-function intersectLineLine(line1, line2) {
-    const dX = line1.end.x - line1.start.x;
-    const dY = line1.end.y - line1.start.y;
-    const determinant = dX * (line2.end.y - line2.start.y) - (line2.end.x - line2.start.x) * dY;
-    if (determinant === 0) {
-        return;
-    }
-    const lambda = ((line2.end.y - line2.start.y) * (line2.end.x - line1.start.x) +
-        (line2.start.x - line2.end.x) * (line2.end.y - line1.start.y)) /
-        determinant;
-    const gamma = ((line1.start.y - line1.end.y) * (line2.end.x - line1.start.x) +
-        dX * (line2.end.y - line1.start.y)) /
-        determinant;
-    // check if there is an intersection
-    if (!(lambda >= 0 && lambda <= 1) || !(gamma >= 0 && gamma <= 1)) {
-        return;
-    }
-    return { x: line1.start.x + lambda * dX, y: line1.start.y + lambda * dY };
-}
-function intersectLinePolygon(line, polygon) {
-    const results = [];
-    (0, optimized_1.forEach)(polygon.calcPoints, (to, index) => {
-        const from = index
-            ? polygon.calcPoints[index - 1]
-            : polygon.calcPoints[polygon.calcPoints.length - 1];
-        const side = {
-            start: { x: from.x + polygon.pos.x, y: from.y + polygon.pos.y },
-            end: { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y },
-        };
-        const hit = intersectLineLine(line, side);
-        if (hit) {
-            results.push(hit);
-        }
-    });
-    return results;
-}
-/**
- * @param circle1
- * @param circle2
- */
-function intersectCircleCircle(circle1, circle2) {
-    const results = [];
-    const x1 = circle1.pos.x;
-    const y1 = circle1.pos.y;
-    const r1 = circle1.r;
-    const x2 = circle2.pos.x;
-    const y2 = circle2.pos.y;
-    const r2 = circle2.r;
-    const dx = x2 - x1;
-    const dy = y2 - y1;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    if (dist > r1 + r2 || dist < Math.abs(r1 - r2) || dist === 0) {
-        return results;
-    }
-    const a = (r1 * r1 - r2 * r2 + dist * dist) / (2 * dist);
-    const h = Math.sqrt(r1 * r1 - a * a);
-    const px = x1 + (dx * a) / dist;
-    const py = y1 + (dy * a) / dist;
-    const intersection1 = {
-        x: px + (h * dy) / dist,
-        y: py - (h * dx) / dist,
-    };
-    results.push(intersection1);
-    const intersection2 = {
-        x: px - (h * dy) / dist,
-        y: py + (h * dx) / dist,
-    };
-    results.push(intersection2);
-    return results;
-}
-
-
-/***/ }),
-
-/***/ "./src/model.ts":
-/*!**********************!*\
-  !*** ./src/model.ts ***!
-  \**********************/
-/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.BodyGroup = exports.BodyType = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = exports.isSimple = void 0;
-const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
-Object.defineProperty(exports, "SATCircle", ({ enumerable: true, get: function () { return sat_1.Circle; } }));
-Object.defineProperty(exports, "SATPolygon", ({ enumerable: true, get: function () { return sat_1.Polygon; } }));
-Object.defineProperty(exports, "Response", ({ enumerable: true, get: function () { return sat_1.Response; } }));
-Object.defineProperty(exports, "SATVector", ({ enumerable: true, get: function () { return sat_1.Vector; } }));
-// version 4.0.0 1=1 copy
-const rbush_1 = __importDefault(__webpack_require__(/*! ./external/rbush */ "./src/external/rbush.js"));
-exports.RBush = rbush_1.default;
-var poly_decomp_es_1 = __webpack_require__(/*! poly-decomp-es */ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js");
-Object.defineProperty(exports, "isSimple", ({ enumerable: true, get: function () { return poly_decomp_es_1.isSimple; } }));
-/**
- * types
- */
-var BodyType;
-(function (BodyType) {
-    BodyType["Ellipse"] = "Ellipse";
-    BodyType["Circle"] = "Circle";
-    BodyType["Polygon"] = "Polygon";
-    BodyType["Box"] = "Box";
-    BodyType["Line"] = "Line";
-    BodyType["Point"] = "Point";
-})(BodyType || (exports.BodyType = BodyType = {}));
-/**
- * for groups
- */
-var BodyGroup;
-(function (BodyGroup) {
-    BodyGroup[BodyGroup["Ellipse"] = 32] = "Ellipse";
-    BodyGroup[BodyGroup["Circle"] = 16] = "Circle";
-    BodyGroup[BodyGroup["Polygon"] = 8] = "Polygon";
-    BodyGroup[BodyGroup["Box"] = 4] = "Box";
-    BodyGroup[BodyGroup["Line"] = 2] = "Line";
-    BodyGroup[BodyGroup["Point"] = 1] = "Point";
-})(BodyGroup || (exports.BodyGroup = BodyGroup = {}));
-
-
-/***/ }),
-
-/***/ "./src/optimized.ts":
-/*!**************************!*\
-  !*** ./src/optimized.ts ***!
-  \**************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-/* tslint:disable:one-variable-per-declaration */
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.map = exports.filter = exports.every = exports.some = exports.forEach = void 0;
-/**
- * 40-90% faster than built-in Array.forEach function.
- *
- * basic benchmark: https://jsbench.me/urle772xdn
- */
-const forEach = (array, callback) => {
-    for (let i = 0, l = array.length; i < l; i++) {
-        callback(array[i], i);
-    }
-};
-exports.forEach = forEach;
-/**
- * 20-90% faster than built-in Array.some function.
- *
- * basic benchmark: https://jsbench.me/l0le7bnnsq
- */
-const some = (array, callback) => {
-    for (let i = 0, l = array.length; i < l; i++) {
-        if (callback(array[i], i)) {
-            return true;
-        }
-    }
-    return false;
-};
-exports.some = some;
-/**
- * 20-40% faster than built-in Array.every function.
- *
- * basic benchmark: https://jsbench.me/unle7da29v
- */
-const every = (array, callback) => {
-    for (let i = 0, l = array.length; i < l; i++) {
-        if (!callback(array[i], i)) {
-            return false;
-        }
-    }
-    return true;
-};
-exports.every = every;
-/**
- * 20-60% faster than built-in Array.filter function.
- *
- * basic benchmark: https://jsbench.me/o1le77ev4l
- */
-const filter = (array, callback) => {
-    const output = [];
-    for (let i = 0, l = array.length; i < l; i++) {
-        const item = array[i];
-        if (callback(item, i)) {
-            output.push(item);
-        }
-    }
-    return output;
-};
-exports.filter = filter;
-/**
- * 20-70% faster than built-in Array.map
- *
- * basic benchmark: https://jsbench.me/oyle77vbpc
- */
-const map = (array, callback) => {
-    const l = array.length;
-    const output = new Array(l);
-    for (let i = 0; i < l; i++) {
-        output[i] = callback(array[i], i);
-    }
-    return output;
-};
-exports.map = map;
-
-
-/***/ }),
-
-/***/ "./src/system.ts":
-/*!***********************!*\
-  !*** ./src/system.ts ***!
-  \***********************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.System = void 0;
-const intersect_1 = __webpack_require__(/*! ./intersect */ "./src/intersect.ts");
-const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
-const optimized_1 = __webpack_require__(/*! ./optimized */ "./src/optimized.ts");
-const utils_1 = __webpack_require__(/*! ./utils */ "./src/utils.ts");
-const base_system_1 = __webpack_require__(/*! ./base-system */ "./src/base-system.ts");
-const line_1 = __webpack_require__(/*! ./bodies/line */ "./src/bodies/line.ts");
-/**
- * collision system
- */
-class System extends base_system_1.BaseSystem {
-    constructor() {
-        super(...arguments);
-        /**
-         * the last collision result
-         */
-        this.response = new model_1.Response();
-    }
-    /**
-     * re-insert body into collision tree and update its bbox
-     * every body can be part of only one system
-     */
-    insert(body) {
-        const insertResult = super.insert(body);
-        // set system for later body.system.updateBody(body)
-        body.system = this;
-        return insertResult;
-    }
-    /**
-     * separate (move away) bodies
-     */
-    separate(callback = utils_1.returnTrue, response = this.response) {
-        (0, optimized_1.forEach)(this.all(), (body) => {
-            this.separateBody(body, callback, response);
-        });
-    }
-    /**
-     * separate (move away) 1 body, with optional callback before collision
-     */
-    separateBody(body, callback = utils_1.returnTrue, response = this.response) {
-        if (body.isStatic && !body.isTrigger) {
-            return;
-        }
-        const offsets = { x: 0, y: 0 };
-        const addOffsets = (collision) => {
-            // when is not trigger and callback returns true it continues
-            if (callback(collision) && !body.isTrigger && !collision.b.isTrigger) {
-                offsets.x += collision.overlapV.x;
-                offsets.y += collision.overlapV.y;
-            }
-        };
-        this.checkOne(body, addOffsets, response);
-        if (offsets.x || offsets.y) {
-            body.setPosition(body.x - offsets.x, body.y - offsets.y);
-        }
-    }
-    /**
-     * check one body collisions with callback
-     */
-    checkOne(body, callback = utils_1.returnTrue, response = this.response) {
-        // no need to check static body collision
-        if (body.isStatic && !body.isTrigger) {
-            return false;
-        }
-        const bodies = this.search(body);
-        const checkCollision = (candidate) => {
-            if (candidate !== body &&
-                this.checkCollision(body, candidate, response)) {
-                return callback(response);
-            }
-        };
-        return (0, optimized_1.some)(bodies, checkCollision);
-    }
-    /**
-     * check all bodies collisions in area with callback
-     */
-    checkArea(area, callback = utils_1.returnTrue, response = this.response) {
-        const checkOne = (body) => {
-            return this.checkOne(body, callback, response);
-        };
-        return (0, optimized_1.some)(this.search(area), checkOne);
-    }
-    /**
-     * check all bodies collisions with callback
-     */
-    checkAll(callback = utils_1.returnTrue, response = this.response) {
-        const checkOne = (body) => {
-            return this.checkOne(body, callback, response);
-        };
-        return (0, optimized_1.some)(this.all(), checkOne);
-    }
-    /**
-     * check do 2 objects collide
-     */
-    checkCollision(bodyA, bodyB, response = this.response) {
-        const { bbox: bboxA, padding: paddingA } = bodyA;
-        const { bbox: bboxB, padding: paddingB } = bodyB;
-        // assess the bodies real aabb without padding
-        /* tslint:disable-next-line:cyclomatic-complexity */
-        if (!bboxA ||
-            !bboxB ||
-            !(0, utils_1.canInteract)(bodyA, bodyB) ||
-            ((paddingA || paddingB) && (0, utils_1.notIntersectAABB)(bboxA, bboxB))) {
-            return false;
-        }
-        const sat = (0, utils_1.getSATTest)(bodyA, bodyB);
-        // 99% of cases
-        if (bodyA.isConvex && bodyB.isConvex) {
-            // always first clear response
-            response.clear();
-            return sat(bodyA, bodyB, response);
-        }
-        // more complex (non convex) cases
-        const convexBodiesA = (0, intersect_1.ensureConvex)(bodyA);
-        const convexBodiesB = (0, intersect_1.ensureConvex)(bodyB);
-        let overlapX = 0;
-        let overlapY = 0;
-        let collided = false;
-        (0, optimized_1.forEach)(convexBodiesA, (convexBodyA) => {
-            (0, optimized_1.forEach)(convexBodiesB, (convexBodyB) => {
-                // always first clear response
-                response.clear();
-                if (sat(convexBodyA, convexBodyB, response)) {
-                    collided = true;
-                    overlapX += response.overlapV.x;
-                    overlapY += response.overlapV.y;
-                }
-            });
-        });
-        if (collided) {
-            const vector = new model_1.SATVector(overlapX, overlapY);
-            response.a = bodyA;
-            response.b = bodyB;
-            response.overlapV.x = overlapX;
-            response.overlapV.y = overlapY;
-            response.overlapN = vector.normalize();
-            response.overlap = vector.len();
-            response.aInB = (0, utils_1.checkAInB)(bodyA, bodyB);
-            response.bInA = (0, utils_1.checkAInB)(bodyB, bodyA);
-        }
-        return collided;
-    }
-    /**
-     * raycast to get collider of ray from start to end
-     */
-    raycast(start, end, allow = utils_1.returnTrue) {
-        let minDistance = Infinity;
-        let result;
-        if (!this.ray) {
-            this.ray = new line_1.Line(start, end, { isTrigger: true });
-        }
-        else {
-            this.ray.start = start;
-            this.ray.end = end;
-        }
-        this.insert(this.ray);
-        this.checkOne(this.ray, ({ b: body }) => {
-            if (!allow(body, this.ray)) {
-                return false;
-            }
-            const points = body.typeGroup === model_1.BodyGroup.Circle
-                ? (0, intersect_1.intersectLineCircle)(this.ray, body)
-                : (0, intersect_1.intersectLinePolygon)(this.ray, body);
-            (0, optimized_1.forEach)(points, (point) => {
-                const pointDistance = (0, utils_1.distance)(start, point);
-                if (pointDistance < minDistance) {
-                    minDistance = pointDistance;
-                    result = { point, body };
-                }
-            });
-        });
-        this.remove(this.ray);
-        return result;
-    }
-    /**
-     * find collisions points between 2 bodies
-     */
-    getCollisionPoints(a, b) {
-        const collisionPoints = [];
-        if (a.typeGroup === model_1.BodyGroup.Circle && b.typeGroup === model_1.BodyGroup.Circle) {
-            collisionPoints.push(...(0, intersect_1.intersectCircleCircle)(a, b));
-        }
-        if (a.typeGroup === model_1.BodyGroup.Circle && b.typeGroup !== model_1.BodyGroup.Circle) {
-            for (let index = 0; index < b.calcPoints.length; index++) {
-                collisionPoints.push(...(0, intersect_1.intersectLineCircle)((0, utils_1.createLine)(b, index), a));
-            }
-        }
-        if (a.typeGroup !== model_1.BodyGroup.Circle) {
-            for (let indexA = 0; indexA < a.calcPoints.length; indexA++) {
-                const lineA = (0, utils_1.createLine)(a, indexA);
-                if (b.typeGroup === model_1.BodyGroup.Circle) {
-                    collisionPoints.push(...(0, intersect_1.intersectLineCircle)(lineA, b));
-                }
-                else {
-                    for (let indexB = 0; indexB < b.calcPoints.length; indexB++) {
-                        const hit = (0, intersect_1.intersectLineLine)(lineA, (0, utils_1.createLine)(b, indexB));
-                        if (hit) {
-                            collisionPoints.push(hit);
-                        }
-                    }
-                }
-            }
-        }
-        // unique
-        return collisionPoints.filter(({ x, y }, index) => index ===
-            collisionPoints.findIndex((collisionPoint) => collisionPoint.x === x && collisionPoint.y === y));
-    }
-}
-exports.System = System;
-
-
-/***/ }),
-
-/***/ "./src/utils.ts":
-/*!**********************!*\
-  !*** ./src/utils.ts ***!
-  \**********************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-/* tslint:disable:cyclomatic-complexity */
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.RAD2DEG = exports.DEG2RAD = void 0;
-exports.deg2rad = deg2rad;
-exports.rad2deg = rad2deg;
-exports.createEllipse = createEllipse;
-exports.createBox = createBox;
-exports.ensureVectorPoint = ensureVectorPoint;
-exports.ensurePolygonPoints = ensurePolygonPoints;
-exports.distance = distance;
-exports.clockwise = clockwise;
-exports.extendBody = extendBody;
-exports.bodyMoved = bodyMoved;
-exports.notIntersectAABB = notIntersectAABB;
-exports.intersectAABB = intersectAABB;
-exports.canInteract = canInteract;
-exports.checkAInB = checkAInB;
-exports.clonePointsArray = clonePointsArray;
-exports.mapVectorToArray = mapVectorToArray;
-exports.mapArrayToVector = mapArrayToVector;
-exports.getBounceDirection = getBounceDirection;
-exports.getSATTest = getSATTest;
-exports.dashLineTo = dashLineTo;
-exports.drawPolygon = drawPolygon;
-exports.drawBVH = drawBVH;
-exports.cloneResponse = cloneResponse;
-exports.returnTrue = returnTrue;
-exports.getGroup = getGroup;
-exports.bin2dec = bin2dec;
-exports.ensureNumber = ensureNumber;
-exports.groupBits = groupBits;
-exports.move = move;
-exports.createLine = createLine;
-const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
-const intersect_1 = __webpack_require__(/*! ./intersect */ "./src/intersect.ts");
-const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
-const optimized_1 = __webpack_require__(/*! ./optimized */ "./src/optimized.ts");
-/* helpers for faster getSATTest() and checkAInB() */
-const testMap = {
-    satCircleCircle: sat_1.testCircleCircle,
-    satCirclePolygon: sat_1.testCirclePolygon,
-    satPolygonCircle: sat_1.testPolygonCircle,
-    satPolygonPolygon: sat_1.testPolygonPolygon,
-    inCircleCircle: intersect_1.circleInCircle,
-    inCirclePolygon: intersect_1.circleInPolygon,
-    inPolygonCircle: intersect_1.polygonInCircle,
-    inPolygonPolygon: intersect_1.polygonInPolygon,
-};
-function createArray(bodyType, testType) {
-    const arrayResult = [];
-    const bodyGroups = Object.values(model_1.BodyGroup).filter((value) => typeof value === "number");
-    (0, optimized_1.forEach)(bodyGroups, (bodyGroup) => {
-        arrayResult[bodyGroup] = (bodyGroup === model_1.BodyGroup.Circle
-            ? testMap[`${testType}${bodyType}Circle`]
-            : testMap[`${testType}${bodyType}Polygon`]);
-    });
-    return arrayResult;
-}
-const circleSATFunctions = createArray(model_1.BodyType.Circle, "sat");
-const circleInFunctions = createArray(model_1.BodyType.Circle, "in");
-const polygonSATFunctions = createArray(model_1.BodyType.Polygon, "sat");
-const polygonInFunctions = createArray(model_1.BodyType.Polygon, "in");
-exports.DEG2RAD = Math.PI / 180;
-exports.RAD2DEG = 180 / Math.PI;
-/**
- * convert from degrees to radians
- */
-function deg2rad(degrees) {
-    return degrees * exports.DEG2RAD;
-}
-/**
- * convert from radians to degrees
- */
-function rad2deg(radians) {
-    return radians * exports.RAD2DEG;
-}
-/**
- * creates ellipse-shaped polygon based on params
- */
-function createEllipse(radiusX, radiusY = radiusX, step = 1) {
-    const steps = Math.PI * Math.hypot(radiusX, radiusY) * 2;
-    const length = Math.max(8, Math.ceil(steps / Math.max(1, step)));
-    const ellipse = [];
-    for (let index = 0; index < length; index++) {
-        const value = (index / length) * 2 * Math.PI;
-        const x = Math.cos(value) * radiusX;
-        const y = Math.sin(value) * radiusY;
-        ellipse.push(new sat_1.Vector(x, y));
-    }
-    return ellipse;
-}
-/**
- * creates box shaped polygon points
- */
-function createBox(width, height) {
-    return [
-        new sat_1.Vector(0, 0),
-        new sat_1.Vector(width, 0),
-        new sat_1.Vector(width, height),
-        new sat_1.Vector(0, height),
-    ];
-}
-/**
- * ensure SATVector type point result
- */
-function ensureVectorPoint(point = {}) {
-    return point instanceof sat_1.Vector
-        ? point
-        : new sat_1.Vector(point.x || 0, point.y || 0);
-}
-/**
- * ensure Vector points (for polygon) in counter-clockwise order
- */
-function ensurePolygonPoints(points = []) {
-    const polygonPoints = (0, optimized_1.map)(points, ensureVectorPoint);
-    return clockwise(polygonPoints) ? polygonPoints.reverse() : polygonPoints;
-}
-/**
- * get distance between two Vector points
- */
-function distance(bodyA, bodyB) {
-    const xDiff = bodyA.x - bodyB.x;
-    const yDiff = bodyA.y - bodyB.y;
-    return Math.hypot(xDiff, yDiff);
-}
-/**
- * check [is clockwise] direction of polygon
- */
-function clockwise(points) {
-    const length = points.length;
-    let sum = 0;
-    (0, optimized_1.forEach)(points, (v1, index) => {
-        const v2 = points[(index + 1) % length];
-        sum += (v2.x - v1.x) * (v2.y + v1.y);
-    });
-    return sum > 0;
-}
-/**
- * used for all types of bodies in constructor
- */
-function extendBody(body, options = {}) {
-    var _a;
-    body.isStatic = !!options.isStatic;
-    body.isTrigger = !!options.isTrigger;
-    body.padding = options.padding || 0;
-    // Default value should be reflected in documentation of `BodyOptions.group`
-    body.group = (_a = options.group) !== null && _a !== void 0 ? _a : 0x7fffffff;
-    if ("userData" in options) {
-        body.userData = options.userData;
-    }
-    if (options.isCentered && body.typeGroup !== model_1.BodyGroup.Circle) {
-        body.isCentered = true;
-    }
-    if (options.angle) {
-        body.setAngle(options.angle);
-    }
-}
-/**
- * check if body moved outside of its padding
- */
-function bodyMoved(body) {
-    const { bbox, minX, minY, maxX, maxY } = body;
-    return (bbox.minX < minX || bbox.minY < minY || bbox.maxX > maxX || bbox.maxY > maxY);
-}
-/**
- * returns true if two boxes not intersect
- */
-function notIntersectAABB(bodyA, bodyB) {
-    return (bodyB.minX > bodyA.maxX ||
-        bodyB.minY > bodyA.maxY ||
-        bodyB.maxX < bodyA.minX ||
-        bodyB.maxY < bodyA.minY);
-}
-/**
- * checks if two boxes intersect
- */
-function intersectAABB(bodyA, bodyB) {
-    return !notIntersectAABB(bodyA, bodyB);
-}
-/**
- * checks if two bodies can interact (for collision filtering)
- *
- * Based on {@link https://box2d.org/documentation/md_simulation.html#filtering Box2D}
- * ({@link https://aurelienribon.wordpress.com/2011/07/01/box2d-tutorial-collision-filtering/ tutorial})
- *
- * @param bodyA
- * @param bodyB
- *
- * @example
- * const body1 = { group: 0b00000000_00000000_00000001_00000000 }
- * const body2 = { group: 0b11111111_11111111_00000011_00000000 }
- * const body3 = { group: 0b00000010_00000000_00000100_00000000 }
- *
- * // Body 1 has the first custom group but cannot interact with any other groups
- * // except itself because the first 16 bits are all zeros, only bodies with an
- * // identical value can interact with it.
- * canInteract(body1, body1) // returns true (identical groups can always interact)
- * canInteract(body1, body2) // returns false
- * canInteract(body1, body3) // returns false
- *
- * // Body 2 has the first and second group and can interact with all other
- * // groups, but only if that body also can interact with is custom group.
- * canInteract(body2, body1) // returns false (body1 cannot interact with others)
- * canInteract(body2, body2) // returns true (identical groups can always interact)
- * canInteract(body2, body3) // returns true
- *
- * // Body 3 has the third group but can interact with the second group.
- * // This means that Body 2 and Body 3 can interact with each other but no other
- * // body can interact with Body 1 because it doesn't allow interactions with
- * // any other custom group.
- * canInteract(body3, body1) // returns false (body1 cannot interact with others)
- * canInteract(body3, body2) // returns true
- * canInteract(body3, body3) // returns true (identical groups can always interact)
- */
-function canInteract({ group: groupA }, { group: groupB }) {
-    return (
-    // most common case
-    groupA === groupB ||
-        // otherwise do some binary magick
-        (((groupA >> 16) & (groupB & 0xffff)) !== 0 &&
-            ((groupB >> 16) & (groupA & 0xffff)) !== 0));
-}
-/**
- * checks if body a is in body b
- */
-function checkAInB(bodyA, bodyB) {
-    const check = bodyA.typeGroup === model_1.BodyGroup.Circle
-        ? circleInFunctions
-        : polygonInFunctions;
-    return check[bodyB.typeGroup](bodyA, bodyB);
-}
-/**
- * clone sat vector points array into vector points array
- */
-function clonePointsArray(points) {
-    return (0, optimized_1.map)(points, ({ x, y }) => ({ x, y }));
-}
-/**
- * change format from SAT.js to poly-decomp
- *
- * @param position
- */
-function mapVectorToArray({ x, y } = { x: 0, y: 0 }) {
-    return [x, y];
-}
-/**
- * change format from poly-decomp to SAT.js
- *
- * @param positionAsArray
- */
-function mapArrayToVector([x, y] = [0, 0]) {
-    return { x, y };
-}
-/**
- * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
- */
-function getBounceDirection(body, collider) {
-    const v2 = new sat_1.Vector(collider.x - body.x, collider.y - body.y);
-    const v1 = new sat_1.Vector(body.x - collider.x, body.y - collider.y);
-    const len = v1.dot(v2.normalize()) * 2;
-    return new sat_1.Vector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
-}
-/**
- * returns correct sat.js testing function based on body types
- */
-function getSATTest(bodyA, bodyB) {
-    const check = bodyA.typeGroup === model_1.BodyGroup.Circle
-        ? circleSATFunctions
-        : polygonSATFunctions;
-    return check[bodyB.typeGroup];
-}
-/**
- * draws dashed line on canvas context
- */
-function dashLineTo(context, fromX, fromY, toX, toY, dash = 2, gap = 4) {
-    const xDiff = toX - fromX;
-    const yDiff = toY - fromY;
-    const arc = Math.atan2(yDiff, xDiff);
-    const offsetX = Math.cos(arc);
-    const offsetY = Math.sin(arc);
-    let posX = fromX;
-    let posY = fromY;
-    let dist = Math.hypot(xDiff, yDiff);
-    while (dist > 0) {
-        const step = Math.min(dist, dash);
-        context.moveTo(posX, posY);
-        context.lineTo(posX + offsetX * step, posY + offsetY * step);
-        posX += offsetX * (dash + gap);
-        posY += offsetY * (dash + gap);
-        dist -= dash + gap;
-    }
-}
-/**
- * draw polygon
- *
- * @param context
- * @param polygon
- * @param isTrigger
- */
-function drawPolygon(context, { pos, calcPoints, }, isTrigger = false) {
-    const lastPoint = calcPoints[calcPoints.length - 1];
-    const fromX = pos.x + lastPoint.x;
-    const fromY = pos.y + lastPoint.y;
-    if (calcPoints.length === 1) {
-        context.arc(fromX, fromY, 1, 0, Math.PI * 2);
-    }
-    else {
-        context.moveTo(fromX, fromY);
-    }
-    (0, optimized_1.forEach)(calcPoints, (point, index) => {
-        const toX = pos.x + point.x;
-        const toY = pos.y + point.y;
-        if (isTrigger) {
-            const prev = calcPoints[index - 1] || lastPoint;
-            dashLineTo(context, pos.x + prev.x, pos.y + prev.y, toX, toY);
-        }
-        else {
-            context.lineTo(toX, toY);
-        }
-    });
-}
-/**
- * draw body bounding body box
- */
-function drawBVH(context, body, isTrigger = true) {
-    drawPolygon(context, {
-        pos: { x: body.minX, y: body.minY },
-        calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY),
-    }, isTrigger);
-}
-/**
- * clone response object returning new response with previous ones values
- */
-function cloneResponse(response) {
-    const clone = new sat_1.Response();
-    const { a, b, overlap, overlapN, overlapV, aInB, bInA } = response;
-    clone.a = a;
-    clone.b = b;
-    clone.overlap = overlap;
-    clone.overlapN = overlapN.clone();
-    clone.overlapV = overlapV.clone();
-    clone.aInB = aInB;
-    clone.bInA = bInA;
-    return clone;
-}
-/**
- * dummy fn used as default, for optimization
- */
-function returnTrue() {
-    return true;
-}
-/**
- * for groups
- */
-function getGroup(group) {
-    return Math.max(0, Math.min(group, 0x7fffffff));
-}
-/**
- * binary string to decimal number
- */
-function bin2dec(binary) {
-    return Number(`0b${binary}`.replace(/\s/g, ""));
-}
-/**
- * helper for groupBits()
- *
- * @param input - number or binary string
- */
-function ensureNumber(input) {
-    return typeof input === "number" ? input : bin2dec(input);
-}
-/**
- * create group bits from category and mask
- *
- * @param category - category bits
- * @param mask - mask bits (default: category)
- */
-function groupBits(category, mask = category) {
-    return (ensureNumber(category) << 16) | ensureNumber(mask);
-}
-function move(body, speed = 1, updateNow = true) {
-    if (!speed) {
-        return;
-    }
-    const moveX = Math.cos(body.angle) * speed;
-    const moveY = Math.sin(body.angle) * speed;
-    body.setPosition(body.x + moveX, body.y + moveY, updateNow);
-}
-function createLine({ pos, calcPoints }, index) {
-    const { x, y } = calcPoints[index];
-    const start = {
-        x: pos.x + x,
-        y: pos.y + y,
-    };
-    const end = {
-        x: pos.x + calcPoints[(index + 1) % calcPoints.length].x,
-        y: pos.y + calcPoints[(index + 1) % calcPoints.length].y,
-    };
-    return { start, end };
-}
 
 
 /***/ }),
@@ -5558,6 +4510,1059 @@ function multiSelect(arr, left, right, n, compare) {
 
         stack.push(left, mid, mid, right);
     }
+}
+
+
+/***/ }),
+
+/***/ "./src/intersect.ts":
+/*!**************************!*\
+  !*** ./src/intersect.ts ***!
+  \**************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+/* tslint:disable:trailing-whitespace */
+/* tslint:disable:cyclomatic-complexity */
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ensureConvex = ensureConvex;
+exports.polygonInCircle = polygonInCircle;
+exports.pointInPolygon = pointInPolygon;
+exports.polygonInPolygon = polygonInPolygon;
+exports.pointOnCircle = pointOnCircle;
+exports.circleInCircle = circleInCircle;
+exports.circleInPolygon = circleInPolygon;
+exports.circleOutsidePolygon = circleOutsidePolygon;
+exports.intersectLineCircle = intersectLineCircle;
+exports.intersectLineLineFast = intersectLineLineFast;
+exports.intersectLineLine = intersectLineLine;
+exports.intersectLinePolygon = intersectLinePolygon;
+exports.intersectCircleCircle = intersectCircleCircle;
+const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
+const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
+const optimized_1 = __webpack_require__(/*! ./optimized */ "./src/optimized.ts");
+/**
+ * replace body with array of related convex polygons
+ */
+function ensureConvex(body) {
+    if (body.isConvex || body.typeGroup !== model_1.BodyGroup.Polygon) {
+        return [body];
+    }
+    return body.convexPolygons;
+}
+/**
+ * @param polygon
+ * @param circle
+ */
+function polygonInCircle(polygon, circle) {
+    return (0, optimized_1.every)(polygon.calcPoints, (p) => {
+        const point = {
+            x: p.x + polygon.pos.x,
+            y: p.y + polygon.pos.y,
+        };
+        return (0, sat_1.pointInCircle)(point, circle);
+    });
+}
+function pointInPolygon(point, polygon) {
+    return (0, optimized_1.some)(ensureConvex(polygon), (convex) => (0, sat_1.pointInPolygon)(point, convex));
+}
+function polygonInPolygon(polygonA, polygonB) {
+    return (0, optimized_1.every)(polygonA.calcPoints, (point) => pointInPolygon({ x: point.x + polygonA.pos.x, y: point.y + polygonA.pos.y }, polygonB));
+}
+/**
+ * https://stackoverflow.com/a/68197894/1749528
+ *
+ * @param point
+ * @param circle
+ */
+function pointOnCircle(point, circle) {
+    return ((point.x - circle.pos.x) * (point.x - circle.pos.x) +
+        (point.y - circle.pos.y) * (point.y - circle.pos.y) ===
+        circle.r * circle.r);
+}
+/**
+ * https://stackoverflow.com/a/68197894/1749528
+ *
+ * @param circle1
+ * @param circle2
+ */
+function circleInCircle(circle1, circle2) {
+    const x1 = circle1.pos.x;
+    const y1 = circle1.pos.y;
+    const x2 = circle2.pos.x;
+    const y2 = circle2.pos.y;
+    const r1 = circle1.r;
+    const r2 = circle2.r;
+    const distSq = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+    return distSq + r2 === r1 || distSq + r2 < r1;
+}
+/**
+ * https://stackoverflow.com/a/68197894/1749528
+ *
+ * @param circle
+ * @param polygon
+ */
+function circleInPolygon(circle, polygon) {
+    // Circle with radius 0 isn't a circle
+    if (circle.r === 0) {
+        return false;
+    }
+    // If the center of the circle is not within the polygon,
+    // then the circle may overlap, but it'll never be "contained"
+    // so return false
+    if (!pointInPolygon(circle.pos, polygon)) {
+        return false;
+    }
+    // Necessary add polygon pos to points
+    const points = (0, optimized_1.map)(polygon.calcPoints, ({ x, y }) => ({
+        x: x + polygon.pos.x,
+        y: y + polygon.pos.y,
+    }));
+    // If the center of the circle is within the polygon,
+    // the circle is not outside of the polygon completely.
+    // so return false.
+    if ((0, optimized_1.some)(points, (point) => (0, sat_1.pointInCircle)(point, circle))) {
+        return false;
+    }
+    // If any line-segment of the polygon intersects the circle,
+    // the circle is not "contained"
+    // so return false
+    if ((0, optimized_1.some)(points, (end, index) => {
+        const start = index
+            ? points[index - 1]
+            : points[points.length - 1];
+        return intersectLineCircle({ start, end }, circle).length > 0;
+    })) {
+        return false;
+    }
+    return true;
+}
+/**
+ * https://stackoverflow.com/a/68197894/1749528
+ *
+ * @param circle
+ * @param polygon
+ */
+function circleOutsidePolygon(circle, polygon) {
+    // Circle with radius 0 isn't a circle
+    if (circle.r === 0) {
+        return false;
+    }
+    // If the center of the circle is within the polygon,
+    // the circle is not outside of the polygon completely.
+    // so return false.
+    if (pointInPolygon(circle.pos, polygon)) {
+        return false;
+    }
+    // Necessary add polygon pos to points
+    const points = (0, optimized_1.map)(polygon.calcPoints, ({ x, y }) => ({
+        x: x + polygon.pos.x,
+        y: y + polygon.pos.y,
+    }));
+    // If the center of the circle is within the polygon,
+    // the circle is not outside of the polygon completely.
+    // so return false.
+    if ((0, optimized_1.some)(points, (point) => (0, sat_1.pointInCircle)(point, circle) || pointOnCircle(point, circle))) {
+        return false;
+    }
+    // If any line-segment of the polygon intersects the circle,
+    // the circle is not "contained"
+    // so return false
+    if ((0, optimized_1.some)(points, (end, index) => {
+        const start = index
+            ? points[index - 1]
+            : points[points.length - 1];
+        return intersectLineCircle({ start, end }, circle).length > 0;
+    })) {
+        return false;
+    }
+    return true;
+}
+/**
+ * https://stackoverflow.com/a/37225895/1749528
+ *
+ * @param line
+ * @param circle
+ */
+function intersectLineCircle(line, { pos, r }) {
+    const v1 = { x: line.end.x - line.start.x, y: line.end.y - line.start.y };
+    const v2 = { x: line.start.x - pos.x, y: line.start.y - pos.y };
+    const b = (v1.x * v2.x + v1.y * v2.y) * -2;
+    const c = (v1.x * v1.x + v1.y * v1.y) * 2;
+    const d = Math.sqrt(b * b - (v2.x * v2.x + v2.y * v2.y - r * r) * c * 2);
+    if (isNaN(d)) {
+        // no intercept
+        return [];
+    }
+    const u1 = (b - d) / c; // these represent the unit distance of point one and two on the line
+    const u2 = (b + d) / c;
+    const results = []; // return array
+    if (u1 <= 1 && u1 >= 0) {
+        // add point if on the line segment
+        results.push({ x: line.start.x + v1.x * u1, y: line.start.y + v1.y * u1 });
+    }
+    if (u2 <= 1 && u2 >= 0) {
+        // second add point if on the line segment
+        results.push({ x: line.start.x + v1.x * u2, y: line.start.y + v1.y * u2 });
+    }
+    return results;
+}
+/**
+ * helper for intersectLineLineFast
+ */
+function isTurn(point1, point2, point3) {
+    const A = (point3.x - point1.x) * (point2.y - point1.y);
+    const B = (point2.x - point1.x) * (point3.y - point1.y);
+    return A > B + Number.EPSILON ? 1 : A + Number.EPSILON < B ? -1 : 0;
+}
+/**
+ * faster implementation of intersectLineLine
+ * https://stackoverflow.com/a/16725715/1749528
+ *
+ * @param line1
+ * @param line2
+ */
+function intersectLineLineFast(line1, line2) {
+    return (isTurn(line1.start, line2.start, line2.end) !==
+        isTurn(line1.end, line2.start, line2.end) &&
+        isTurn(line1.start, line1.end, line2.start) !==
+            isTurn(line1.start, line1.end, line2.end));
+}
+/**
+ * returns the point of intersection
+ * https://stackoverflow.com/a/24392281/1749528
+ *
+ * @param line1
+ * @param line2
+ */
+function intersectLineLine(line1, line2) {
+    const dX = line1.end.x - line1.start.x;
+    const dY = line1.end.y - line1.start.y;
+    const determinant = dX * (line2.end.y - line2.start.y) - (line2.end.x - line2.start.x) * dY;
+    if (determinant === 0) {
+        return;
+    }
+    const lambda = ((line2.end.y - line2.start.y) * (line2.end.x - line1.start.x) +
+        (line2.start.x - line2.end.x) * (line2.end.y - line1.start.y)) /
+        determinant;
+    const gamma = ((line1.start.y - line1.end.y) * (line2.end.x - line1.start.x) +
+        dX * (line2.end.y - line1.start.y)) /
+        determinant;
+    // check if there is an intersection
+    if (!(lambda >= 0 && lambda <= 1) || !(gamma >= 0 && gamma <= 1)) {
+        return;
+    }
+    return { x: line1.start.x + lambda * dX, y: line1.start.y + lambda * dY };
+}
+function intersectLinePolygon(line, polygon) {
+    const results = [];
+    (0, optimized_1.forEach)(polygon.calcPoints, (to, index) => {
+        const from = index
+            ? polygon.calcPoints[index - 1]
+            : polygon.calcPoints[polygon.calcPoints.length - 1];
+        const side = {
+            start: { x: from.x + polygon.pos.x, y: from.y + polygon.pos.y },
+            end: { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y },
+        };
+        const hit = intersectLineLine(line, side);
+        if (hit) {
+            results.push(hit);
+        }
+    });
+    return results;
+}
+/**
+ * @param circle1
+ * @param circle2
+ */
+function intersectCircleCircle(circle1, circle2) {
+    const results = [];
+    const x1 = circle1.pos.x;
+    const y1 = circle1.pos.y;
+    const r1 = circle1.r;
+    const x2 = circle2.pos.x;
+    const y2 = circle2.pos.y;
+    const r2 = circle2.r;
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist > r1 + r2 || dist < Math.abs(r1 - r2) || dist === 0) {
+        return results;
+    }
+    const a = (r1 * r1 - r2 * r2 + dist * dist) / (2 * dist);
+    const h = Math.sqrt(r1 * r1 - a * a);
+    const px = x1 + (dx * a) / dist;
+    const py = y1 + (dy * a) / dist;
+    const intersection1 = {
+        x: px + (h * dy) / dist,
+        y: py - (h * dx) / dist,
+    };
+    results.push(intersection1);
+    const intersection2 = {
+        x: px - (h * dy) / dist,
+        y: py + (h * dx) / dist,
+    };
+    results.push(intersection2);
+    return results;
+}
+
+
+/***/ }),
+
+/***/ "./src/model.ts":
+/*!**********************!*\
+  !*** ./src/model.ts ***!
+  \**********************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.BodyGroup = exports.BodyType = exports.SATCircle = exports.SATPolygon = exports.SATVector = exports.Response = exports.RBush = exports.isSimple = void 0;
+const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
+Object.defineProperty(exports, "SATCircle", ({ enumerable: true, get: function () { return sat_1.Circle; } }));
+Object.defineProperty(exports, "SATPolygon", ({ enumerable: true, get: function () { return sat_1.Polygon; } }));
+Object.defineProperty(exports, "Response", ({ enumerable: true, get: function () { return sat_1.Response; } }));
+Object.defineProperty(exports, "SATVector", ({ enumerable: true, get: function () { return sat_1.Vector; } }));
+// version 4.0.0 1=1 copy
+const rbush_1 = __importDefault(__webpack_require__(/*! ./external/rbush */ "./src/external/rbush.js"));
+exports.RBush = rbush_1.default;
+var poly_decomp_es_1 = __webpack_require__(/*! poly-decomp-es */ "./node_modules/poly-decomp-es/dist/poly-decomp-es.js");
+Object.defineProperty(exports, "isSimple", ({ enumerable: true, get: function () { return poly_decomp_es_1.isSimple; } }));
+/**
+ * types
+ */
+var BodyType;
+(function (BodyType) {
+    BodyType["Ellipse"] = "Ellipse";
+    BodyType["Circle"] = "Circle";
+    BodyType["Polygon"] = "Polygon";
+    BodyType["Box"] = "Box";
+    BodyType["Line"] = "Line";
+    BodyType["Point"] = "Point";
+})(BodyType || (exports.BodyType = BodyType = {}));
+/**
+ * for groups
+ */
+var BodyGroup;
+(function (BodyGroup) {
+    BodyGroup[BodyGroup["Ellipse"] = 32] = "Ellipse";
+    BodyGroup[BodyGroup["Circle"] = 16] = "Circle";
+    BodyGroup[BodyGroup["Polygon"] = 8] = "Polygon";
+    BodyGroup[BodyGroup["Box"] = 4] = "Box";
+    BodyGroup[BodyGroup["Line"] = 2] = "Line";
+    BodyGroup[BodyGroup["Point"] = 1] = "Point";
+})(BodyGroup || (exports.BodyGroup = BodyGroup = {}));
+
+
+/***/ }),
+
+/***/ "./src/optimized.ts":
+/*!**************************!*\
+  !*** ./src/optimized.ts ***!
+  \**************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+/* tslint:disable:one-variable-per-declaration */
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.map = exports.filter = exports.every = exports.some = exports.forEach = void 0;
+/**
+ * 40-90% faster than built-in Array.forEach function.
+ *
+ * basic benchmark: https://jsbench.me/urle772xdn
+ */
+const forEach = (array, callback) => {
+    for (let i = 0, l = array.length; i < l; i++) {
+        callback(array[i], i);
+    }
+};
+exports.forEach = forEach;
+/**
+ * 20-90% faster than built-in Array.some function.
+ *
+ * basic benchmark: https://jsbench.me/l0le7bnnsq
+ */
+const some = (array, callback) => {
+    for (let i = 0, l = array.length; i < l; i++) {
+        if (callback(array[i], i)) {
+            return true;
+        }
+    }
+    return false;
+};
+exports.some = some;
+/**
+ * 20-40% faster than built-in Array.every function.
+ *
+ * basic benchmark: https://jsbench.me/unle7da29v
+ */
+const every = (array, callback) => {
+    for (let i = 0, l = array.length; i < l; i++) {
+        if (!callback(array[i], i)) {
+            return false;
+        }
+    }
+    return true;
+};
+exports.every = every;
+/**
+ * 20-60% faster than built-in Array.filter function.
+ *
+ * basic benchmark: https://jsbench.me/o1le77ev4l
+ */
+const filter = (array, callback) => {
+    const output = [];
+    for (let i = 0, l = array.length; i < l; i++) {
+        const item = array[i];
+        if (callback(item, i)) {
+            output.push(item);
+        }
+    }
+    return output;
+};
+exports.filter = filter;
+/**
+ * 20-70% faster than built-in Array.map
+ *
+ * basic benchmark: https://jsbench.me/oyle77vbpc
+ */
+const map = (array, callback) => {
+    const l = array.length;
+    const output = new Array(l);
+    for (let i = 0; i < l; i++) {
+        output[i] = callback(array[i], i);
+    }
+    return output;
+};
+exports.map = map;
+
+
+/***/ }),
+
+/***/ "./src/system.ts":
+/*!***********************!*\
+  !*** ./src/system.ts ***!
+  \***********************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.System = void 0;
+const base_system_1 = __webpack_require__(/*! ./base-system */ "./src/base-system.ts");
+const line_1 = __webpack_require__(/*! ./bodies/line */ "./src/bodies/line.ts");
+const intersect_1 = __webpack_require__(/*! ./intersect */ "./src/intersect.ts");
+const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
+const optimized_1 = __webpack_require__(/*! ./optimized */ "./src/optimized.ts");
+const utils_1 = __webpack_require__(/*! ./utils */ "./src/utils.ts");
+/**
+ * collision system
+ */
+class System extends base_system_1.BaseSystem {
+    constructor() {
+        super(...arguments);
+        /**
+         * the last collision result
+         */
+        this.response = new model_1.Response();
+    }
+    /**
+     * re-insert body into collision tree and update its bbox
+     * every body can be part of only one system
+     */
+    insert(body) {
+        const insertResult = super.insert(body);
+        // set system for later body.system.updateBody(body)
+        body.system = this;
+        return insertResult;
+    }
+    /**
+     * separate (move away) bodies
+     */
+    separate(callback = utils_1.returnTrue, response = this.response) {
+        (0, optimized_1.forEach)(this.all(), (body) => {
+            this.separateBody(body, callback, response);
+        });
+    }
+    /**
+     * separate (move away) 1 body, with optional callback before collision
+     */
+    separateBody(body, callback = utils_1.returnTrue, response = this.response) {
+        if (body.isStatic && !body.isTrigger) {
+            return;
+        }
+        const offsets = { x: 0, y: 0 };
+        const addOffsets = (collision) => {
+            // when is not trigger and callback returns true it continues
+            if (callback(collision) && !body.isTrigger && !collision.b.isTrigger) {
+                offsets.x += collision.overlapV.x;
+                offsets.y += collision.overlapV.y;
+            }
+        };
+        this.checkOne(body, addOffsets, response);
+        if (offsets.x || offsets.y) {
+            body.setPosition(body.x - offsets.x, body.y - offsets.y);
+        }
+    }
+    /**
+     * check one body collisions with callback
+     */
+    checkOne(body, callback = utils_1.returnTrue, response = this.response) {
+        // no need to check static body collision
+        if (body.isStatic && !body.isTrigger) {
+            return false;
+        }
+        const bodies = this.search(body);
+        const checkCollision = (candidate) => {
+            if (candidate !== body &&
+                this.checkCollision(body, candidate, response)) {
+                return callback(response);
+            }
+        };
+        return (0, optimized_1.some)(bodies, checkCollision);
+    }
+    /**
+     * check all bodies collisions in area with callback
+     */
+    checkArea(area, callback = utils_1.returnTrue, response = this.response) {
+        const checkOne = (body) => {
+            return this.checkOne(body, callback, response);
+        };
+        return (0, optimized_1.some)(this.search(area), checkOne);
+    }
+    /**
+     * check all bodies collisions with callback
+     */
+    checkAll(callback = utils_1.returnTrue, response = this.response) {
+        const checkOne = (body) => {
+            return this.checkOne(body, callback, response);
+        };
+        return (0, optimized_1.some)(this.all(), checkOne);
+    }
+    /**
+     * check do 2 objects collide
+     */
+    checkCollision(bodyA, bodyB, response = this.response) {
+        const { bbox: bboxA, padding: paddingA } = bodyA;
+        const { bbox: bboxB, padding: paddingB } = bodyB;
+        // assess the bodies real aabb without padding
+        /* tslint:disable-next-line:cyclomatic-complexity */
+        if (!bboxA ||
+            !bboxB ||
+            !(0, utils_1.canInteract)(bodyA, bodyB) ||
+            ((paddingA || paddingB) && (0, utils_1.notIntersectAABB)(bboxA, bboxB))) {
+            return false;
+        }
+        const sat = (0, utils_1.getSATTest)(bodyA, bodyB);
+        // 99% of cases
+        if (bodyA.isConvex && bodyB.isConvex) {
+            // always first clear response
+            response.clear();
+            return sat(bodyA, bodyB, response);
+        }
+        // more complex (non convex) cases
+        const convexBodiesA = (0, intersect_1.ensureConvex)(bodyA);
+        const convexBodiesB = (0, intersect_1.ensureConvex)(bodyB);
+        let overlapX = 0;
+        let overlapY = 0;
+        let collided = false;
+        (0, optimized_1.forEach)(convexBodiesA, (convexBodyA) => {
+            (0, optimized_1.forEach)(convexBodiesB, (convexBodyB) => {
+                // always first clear response
+                response.clear();
+                if (sat(convexBodyA, convexBodyB, response)) {
+                    collided = true;
+                    overlapX += response.overlapV.x;
+                    overlapY += response.overlapV.y;
+                }
+            });
+        });
+        if (collided) {
+            const vector = new model_1.SATVector(overlapX, overlapY);
+            response.a = bodyA;
+            response.b = bodyB;
+            response.overlapV.x = overlapX;
+            response.overlapV.y = overlapY;
+            response.overlapN = vector.normalize();
+            response.overlap = vector.len();
+            response.aInB = (0, utils_1.checkAInB)(bodyA, bodyB);
+            response.bInA = (0, utils_1.checkAInB)(bodyB, bodyA);
+        }
+        return collided;
+    }
+    /**
+     * raycast to get collider of ray from start to end
+     */
+    raycast(start, end, allow = utils_1.returnTrue) {
+        let minDistance = Infinity;
+        let result;
+        if (!this.ray) {
+            this.ray = new line_1.Line(start, end, { isTrigger: true });
+        }
+        else {
+            this.ray.start = start;
+            this.ray.end = end;
+        }
+        this.insert(this.ray);
+        this.checkOne(this.ray, ({ b: body }) => {
+            if (!allow(body, this.ray)) {
+                return false;
+            }
+            const points = body.typeGroup === model_1.BodyGroup.Circle
+                ? (0, intersect_1.intersectLineCircle)(this.ray, body)
+                : (0, intersect_1.intersectLinePolygon)(this.ray, body);
+            (0, optimized_1.forEach)(points, (point) => {
+                const pointDistance = (0, utils_1.distance)(start, point);
+                if (pointDistance < minDistance) {
+                    minDistance = pointDistance;
+                    result = { point, body };
+                }
+            });
+        });
+        this.remove(this.ray);
+        return result;
+    }
+    /**
+     * find collisions points between 2 bodies
+     */
+    getCollisionPoints(a, b) {
+        const collisionPoints = [];
+        if (a.typeGroup === model_1.BodyGroup.Circle && b.typeGroup === model_1.BodyGroup.Circle) {
+            collisionPoints.push(...(0, intersect_1.intersectCircleCircle)(a, b));
+        }
+        if (a.typeGroup === model_1.BodyGroup.Circle && b.typeGroup !== model_1.BodyGroup.Circle) {
+            for (let indexB = 0; indexB < b.calcPoints.length; indexB++) {
+                const lineB = b.getEdge(indexB);
+                collisionPoints.push(...(0, intersect_1.intersectLineCircle)(lineB, a));
+            }
+        }
+        if (a.typeGroup !== model_1.BodyGroup.Circle) {
+            for (let indexA = 0; indexA < a.calcPoints.length; indexA++) {
+                const lineA = a.getEdge(indexA);
+                if (b.typeGroup === model_1.BodyGroup.Circle) {
+                    collisionPoints.push(...(0, intersect_1.intersectLineCircle)(lineA, b));
+                }
+                else {
+                    for (let indexB = 0; indexB < b.calcPoints.length; indexB++) {
+                        const lineB = b.getEdge(indexB);
+                        const hit = (0, intersect_1.intersectLineLine)(lineA, lineB);
+                        if (hit) {
+                            collisionPoints.push(hit);
+                        }
+                    }
+                }
+            }
+        }
+        // unique
+        return collisionPoints.filter(({ x, y }, index) => index ===
+            collisionPoints.findIndex((collisionPoint) => collisionPoint.x === x && collisionPoint.y === y));
+    }
+}
+exports.System = System;
+
+
+/***/ }),
+
+/***/ "./src/utils.ts":
+/*!**********************!*\
+  !*** ./src/utils.ts ***!
+  \**********************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+/* tslint:disable:cyclomatic-complexity */
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RAD2DEG = exports.DEG2RAD = void 0;
+exports.deg2rad = deg2rad;
+exports.rad2deg = rad2deg;
+exports.createEllipse = createEllipse;
+exports.createBox = createBox;
+exports.ensureVectorPoint = ensureVectorPoint;
+exports.ensurePolygonPoints = ensurePolygonPoints;
+exports.distance = distance;
+exports.clockwise = clockwise;
+exports.extendBody = extendBody;
+exports.bodyMoved = bodyMoved;
+exports.notIntersectAABB = notIntersectAABB;
+exports.intersectAABB = intersectAABB;
+exports.canInteract = canInteract;
+exports.checkAInB = checkAInB;
+exports.clonePointsArray = clonePointsArray;
+exports.mapVectorToArray = mapVectorToArray;
+exports.mapArrayToVector = mapArrayToVector;
+exports.getBounceDirection = getBounceDirection;
+exports.getSATTest = getSATTest;
+exports.dashLineTo = dashLineTo;
+exports.drawPolygon = drawPolygon;
+exports.drawBVH = drawBVH;
+exports.cloneResponse = cloneResponse;
+exports.returnTrue = returnTrue;
+exports.getGroup = getGroup;
+exports.bin2dec = bin2dec;
+exports.ensureNumber = ensureNumber;
+exports.groupBits = groupBits;
+exports.move = move;
+const sat_1 = __webpack_require__(/*! sat */ "./node_modules/sat/SAT.js");
+const intersect_1 = __webpack_require__(/*! ./intersect */ "./src/intersect.ts");
+const model_1 = __webpack_require__(/*! ./model */ "./src/model.ts");
+const optimized_1 = __webpack_require__(/*! ./optimized */ "./src/optimized.ts");
+/* helpers for faster getSATTest() and checkAInB() */
+const testMap = {
+    satCircleCircle: sat_1.testCircleCircle,
+    satCirclePolygon: sat_1.testCirclePolygon,
+    satPolygonCircle: sat_1.testPolygonCircle,
+    satPolygonPolygon: sat_1.testPolygonPolygon,
+    inCircleCircle: intersect_1.circleInCircle,
+    inCirclePolygon: intersect_1.circleInPolygon,
+    inPolygonCircle: intersect_1.polygonInCircle,
+    inPolygonPolygon: intersect_1.polygonInPolygon,
+};
+function createArray(bodyType, testType) {
+    const arrayResult = [];
+    const bodyGroups = Object.values(model_1.BodyGroup).filter((value) => typeof value === "number");
+    (0, optimized_1.forEach)(bodyGroups, (bodyGroup) => {
+        arrayResult[bodyGroup] = (bodyGroup === model_1.BodyGroup.Circle
+            ? testMap[`${testType}${bodyType}Circle`]
+            : testMap[`${testType}${bodyType}Polygon`]);
+    });
+    return arrayResult;
+}
+const circleSATFunctions = createArray(model_1.BodyType.Circle, "sat");
+const circleInFunctions = createArray(model_1.BodyType.Circle, "in");
+const polygonSATFunctions = createArray(model_1.BodyType.Polygon, "sat");
+const polygonInFunctions = createArray(model_1.BodyType.Polygon, "in");
+exports.DEG2RAD = Math.PI / 180;
+exports.RAD2DEG = 180 / Math.PI;
+/**
+ * convert from degrees to radians
+ */
+function deg2rad(degrees) {
+    return degrees * exports.DEG2RAD;
+}
+/**
+ * convert from radians to degrees
+ */
+function rad2deg(radians) {
+    return radians * exports.RAD2DEG;
+}
+/**
+ * creates ellipse-shaped polygon based on params
+ */
+function createEllipse(radiusX, radiusY = radiusX, step = 1) {
+    const steps = Math.PI * Math.hypot(radiusX, radiusY) * 2;
+    const length = Math.max(8, Math.ceil(steps / Math.max(1, step)));
+    const ellipse = [];
+    for (let index = 0; index < length; index++) {
+        const value = (index / length) * 2 * Math.PI;
+        const x = Math.cos(value) * radiusX;
+        const y = Math.sin(value) * radiusY;
+        ellipse.push(new sat_1.Vector(x, y));
+    }
+    return ellipse;
+}
+/**
+ * creates box shaped polygon points
+ */
+function createBox(width, height) {
+    return [
+        new sat_1.Vector(0, 0),
+        new sat_1.Vector(width, 0),
+        new sat_1.Vector(width, height),
+        new sat_1.Vector(0, height),
+    ];
+}
+/**
+ * ensure SATVector type point result
+ */
+function ensureVectorPoint(point = {}) {
+    return point instanceof sat_1.Vector
+        ? point
+        : new sat_1.Vector(point.x || 0, point.y || 0);
+}
+/**
+ * ensure Vector points (for polygon) in counter-clockwise order
+ */
+function ensurePolygonPoints(points = []) {
+    const polygonPoints = (0, optimized_1.map)(points, ensureVectorPoint);
+    return clockwise(polygonPoints) ? polygonPoints.reverse() : polygonPoints;
+}
+/**
+ * get distance between two Vector points
+ */
+function distance(bodyA, bodyB) {
+    const xDiff = bodyA.x - bodyB.x;
+    const yDiff = bodyA.y - bodyB.y;
+    return Math.hypot(xDiff, yDiff);
+}
+/**
+ * check [is clockwise] direction of polygon
+ */
+function clockwise(points) {
+    const length = points.length;
+    let sum = 0;
+    (0, optimized_1.forEach)(points, (v1, index) => {
+        const v2 = points[(index + 1) % length];
+        sum += (v2.x - v1.x) * (v2.y + v1.y);
+    });
+    return sum > 0;
+}
+/**
+ * used for all types of bodies in constructor
+ */
+function extendBody(body, options = {}) {
+    var _a;
+    body.isStatic = !!options.isStatic;
+    body.isTrigger = !!options.isTrigger;
+    body.padding = options.padding || 0;
+    // Default value should be reflected in documentation of `BodyOptions.group`
+    body.group = (_a = options.group) !== null && _a !== void 0 ? _a : 0x7fffffff;
+    if ("userData" in options) {
+        body.userData = options.userData;
+    }
+    if (options.isCentered && body.typeGroup !== model_1.BodyGroup.Circle) {
+        body.isCentered = true;
+    }
+    if (options.angle) {
+        body.setAngle(options.angle);
+    }
+}
+/**
+ * check if body moved outside of its padding
+ */
+function bodyMoved(body) {
+    const { bbox, minX, minY, maxX, maxY } = body;
+    return (bbox.minX < minX || bbox.minY < minY || bbox.maxX > maxX || bbox.maxY > maxY);
+}
+/**
+ * returns true if two boxes not intersect
+ */
+function notIntersectAABB(bodyA, bodyB) {
+    return (bodyB.minX > bodyA.maxX ||
+        bodyB.minY > bodyA.maxY ||
+        bodyB.maxX < bodyA.minX ||
+        bodyB.maxY < bodyA.minY);
+}
+/**
+ * checks if two boxes intersect
+ */
+function intersectAABB(bodyA, bodyB) {
+    return !notIntersectAABB(bodyA, bodyB);
+}
+/**
+ * checks if two bodies can interact (for collision filtering)
+ *
+ * Based on {@link https://box2d.org/documentation/md_simulation.html#filtering Box2D}
+ * ({@link https://aurelienribon.wordpress.com/2011/07/01/box2d-tutorial-collision-filtering/ tutorial})
+ *
+ * @param bodyA
+ * @param bodyB
+ *
+ * @example
+ * const body1 = { group: 0b00000000_00000000_00000001_00000000 }
+ * const body2 = { group: 0b11111111_11111111_00000011_00000000 }
+ * const body3 = { group: 0b00000010_00000000_00000100_00000000 }
+ *
+ * // Body 1 has the first custom group but cannot interact with any other groups
+ * // except itself because the first 16 bits are all zeros, only bodies with an
+ * // identical value can interact with it.
+ * canInteract(body1, body1) // returns true (identical groups can always interact)
+ * canInteract(body1, body2) // returns false
+ * canInteract(body1, body3) // returns false
+ *
+ * // Body 2 has the first and second group and can interact with all other
+ * // groups, but only if that body also can interact with is custom group.
+ * canInteract(body2, body1) // returns false (body1 cannot interact with others)
+ * canInteract(body2, body2) // returns true (identical groups can always interact)
+ * canInteract(body2, body3) // returns true
+ *
+ * // Body 3 has the third group but can interact with the second group.
+ * // This means that Body 2 and Body 3 can interact with each other but no other
+ * // body can interact with Body 1 because it doesn't allow interactions with
+ * // any other custom group.
+ * canInteract(body3, body1) // returns false (body1 cannot interact with others)
+ * canInteract(body3, body2) // returns true
+ * canInteract(body3, body3) // returns true (identical groups can always interact)
+ */
+function canInteract({ group: groupA }, { group: groupB }) {
+    return (
+    // most common case
+    groupA === groupB ||
+        // otherwise do some binary magick
+        (((groupA >> 16) & (groupB & 0xffff)) !== 0 &&
+            ((groupB >> 16) & (groupA & 0xffff)) !== 0));
+}
+/**
+ * checks if body a is in body b
+ */
+function checkAInB(bodyA, bodyB) {
+    const check = bodyA.typeGroup === model_1.BodyGroup.Circle
+        ? circleInFunctions
+        : polygonInFunctions;
+    return check[bodyB.typeGroup](bodyA, bodyB);
+}
+/**
+ * clone sat vector points array into vector points array
+ */
+function clonePointsArray(points) {
+    return (0, optimized_1.map)(points, ({ x, y }) => ({ x, y }));
+}
+/**
+ * change format from SAT.js to poly-decomp
+ *
+ * @param position
+ */
+function mapVectorToArray({ x, y } = { x: 0, y: 0 }) {
+    return [x, y];
+}
+/**
+ * change format from poly-decomp to SAT.js
+ *
+ * @param positionAsArray
+ */
+function mapArrayToVector([x, y] = [0, 0]) {
+    return { x, y };
+}
+/**
+ * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
+ */
+function getBounceDirection(body, collider) {
+    const v2 = new sat_1.Vector(collider.x - body.x, collider.y - body.y);
+    const v1 = new sat_1.Vector(body.x - collider.x, body.y - collider.y);
+    const len = v1.dot(v2.normalize()) * 2;
+    return new sat_1.Vector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
+}
+/**
+ * returns correct sat.js testing function based on body types
+ */
+function getSATTest(bodyA, bodyB) {
+    const check = bodyA.typeGroup === model_1.BodyGroup.Circle
+        ? circleSATFunctions
+        : polygonSATFunctions;
+    return check[bodyB.typeGroup];
+}
+/**
+ * draws dashed line on canvas context
+ */
+function dashLineTo(context, fromX, fromY, toX, toY, dash = 2, gap = 4) {
+    const xDiff = toX - fromX;
+    const yDiff = toY - fromY;
+    const arc = Math.atan2(yDiff, xDiff);
+    const offsetX = Math.cos(arc);
+    const offsetY = Math.sin(arc);
+    let posX = fromX;
+    let posY = fromY;
+    let dist = Math.hypot(xDiff, yDiff);
+    while (dist > 0) {
+        const step = Math.min(dist, dash);
+        context.moveTo(posX, posY);
+        context.lineTo(posX + offsetX * step, posY + offsetY * step);
+        posX += offsetX * (dash + gap);
+        posY += offsetY * (dash + gap);
+        dist -= dash + gap;
+    }
+}
+/**
+ * draw polygon
+ *
+ * @param context
+ * @param polygon
+ * @param isTrigger
+ */
+function drawPolygon(context, { pos, calcPoints, }, isTrigger = false) {
+    const lastPoint = calcPoints[calcPoints.length - 1];
+    const fromX = pos.x + lastPoint.x;
+    const fromY = pos.y + lastPoint.y;
+    if (calcPoints.length === 1) {
+        context.arc(fromX, fromY, 1, 0, Math.PI * 2);
+    }
+    else {
+        context.moveTo(fromX, fromY);
+    }
+    (0, optimized_1.forEach)(calcPoints, (point, index) => {
+        const toX = pos.x + point.x;
+        const toY = pos.y + point.y;
+        if (isTrigger) {
+            const prev = calcPoints[index - 1] || lastPoint;
+            dashLineTo(context, pos.x + prev.x, pos.y + prev.y, toX, toY);
+        }
+        else {
+            context.lineTo(toX, toY);
+        }
+    });
+}
+/**
+ * draw body bounding body box
+ */
+function drawBVH(context, body, isTrigger = true) {
+    drawPolygon(context, {
+        pos: { x: body.minX, y: body.minY },
+        calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY),
+    }, isTrigger);
+}
+/**
+ * clone response object returning new response with previous ones values
+ */
+function cloneResponse(response) {
+    const clone = new sat_1.Response();
+    const { a, b, overlap, overlapN, overlapV, aInB, bInA } = response;
+    clone.a = a;
+    clone.b = b;
+    clone.overlap = overlap;
+    clone.overlapN = overlapN.clone();
+    clone.overlapV = overlapV.clone();
+    clone.aInB = aInB;
+    clone.bInA = bInA;
+    return clone;
+}
+/**
+ * dummy fn used as default, for optimization
+ */
+function returnTrue() {
+    return true;
+}
+/**
+ * for groups
+ */
+function getGroup(group) {
+    return Math.max(0, Math.min(group, 0x7fffffff));
+}
+/**
+ * binary string to decimal number
+ */
+function bin2dec(binary) {
+    return Number(`0b${binary}`.replace(/\s/g, ""));
+}
+/**
+ * helper for groupBits()
+ *
+ * @param input - number or binary string
+ */
+function ensureNumber(input) {
+    return typeof input === "number" ? input : bin2dec(input);
+}
+/**
+ * create group bits from category and mask
+ *
+ * @param category - category bits
+ * @param mask - mask bits (default: category)
+ */
+function groupBits(category, mask = category) {
+    return (ensureNumber(category) << 16) | ensureNumber(mask);
+}
+function move(body, speed = 1, updateNow = true) {
+    if (!speed) {
+        return;
+    }
+    const moveX = Math.cos(body.angle) * speed;
+    const moveY = Math.sin(body.angle) * speed;
+    body.setPosition(body.x + moveX, body.y + moveY, updateNow);
 }
 
 

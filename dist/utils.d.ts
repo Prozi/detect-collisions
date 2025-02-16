@@ -1,7 +1,7 @@
-import { Response, Vector as SATVector } from "sat";
-import { BBox, Body, BodyOptions, PotentialVector, SATPolygon, SATTest, Vector } from "./model";
 import { Point as DecompPoint } from "poly-decomp-es";
+import { Response, Vector as SATVector } from "sat";
 import { Polygon } from "./bodies/polygon";
+import { BBox, Body, BodyOptions, PotentialVector, SATPolygon, SATTest, Vector } from "./model";
 export declare const DEG2RAD: number;
 export declare const RAD2DEG: number;
 /**
@@ -128,7 +128,7 @@ export declare function dashLineTo(context: CanvasRenderingContext2D, fromX: num
  * @param isTrigger
  */
 export declare function drawPolygon(context: CanvasRenderingContext2D, { pos, calcPoints, }: Pick<Polygon | SATPolygon, "calcPoints"> & {
-  pos: Vector;
+    pos: Vector;
 }, isTrigger?: boolean): void;
 /**
  * draw body bounding body box
@@ -164,7 +164,3 @@ export declare function ensureNumber(input: number | string): number;
  */
 export declare function groupBits(category: number | string, mask?: number | string): number;
 export declare function move(body: Body, speed?: number, updateNow?: boolean): void;
-export declare function createLine({ pos, calcPoints }: Pick<Polygon, "pos" | "calcPoints">, index: number): {
-  start: Vector;
-  end: Vector;
-};
