@@ -103,7 +103,7 @@ export class Circle<UserDataType = any>
   /**
    * allows the user to set any misc data for client use
    */
-  userData?: BodyProps["userData"];
+  userData?: BodyProps<UserDataType>["userData"];
 
   /*
    * circles are convex
