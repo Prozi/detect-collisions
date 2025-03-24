@@ -171,9 +171,11 @@ export class Polygon<UserDataType = any>
   set isCentered(center: boolean) {
     if (this.centered === center) return;
 
-    // Keep angle value but temporarily set to 0
+    const x = this.x;
+    const y = this.y;
     const angle = this.angle;
-    this.setAngle(0);
+
+    this.setAngle(0, false);
 
     // Get the centroid without rotation
     const centroid = this.getCentroid();
@@ -186,7 +188,8 @@ export class Polygon<UserDataType = any>
     );
 
     // Restore the original angle
-    this.setAngle(angle);
+    this.setAngle(angle, false);
+    this.setPosition(x, y);
   }
 
   /**

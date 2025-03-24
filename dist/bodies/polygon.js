@@ -44,9 +44,10 @@ class Polygon extends model_1.SATPolygon {
     set isCentered(center) {
         if (this.centered === center)
             return;
-        // Keep angle value but temporarily set to 0
+        const x = this.x;
+        const y = this.y;
         const angle = this.angle;
-        this.setAngle(0);
+        this.setAngle(0, false);
         // Get the centroid without rotation
         const centroid = this.getCentroid();
         const offsetX = center ? -centroid.x : centroid.x;
@@ -54,7 +55,8 @@ class Polygon extends model_1.SATPolygon {
         // Shift points relative to the centroid
         this.setPoints(this.points.map(({ x, y }) => new model_1.SATVector(x + offsetX, y + offsetY)));
         // Restore the original angle
-        this.setAngle(angle);
+        this.setAngle(angle, false);
+        this.setPosition(x, y);
     }
     /**
      * is polygon centered?
