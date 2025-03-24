@@ -44,19 +44,14 @@ class Polygon extends model_1.SATPolygon {
     set isCentered(center) {
         if (this.centered === center)
             return;
-        const x = this.x;
-        const y = this.y;
-        const angle = this.angle;
-        this.setAngle(0, false);
-        // Get the centroid without rotation
-        const centroid = this.getCentroid();
-        const offsetX = center ? -centroid.x : centroid.x;
-        const offsetY = center ? -centroid.y : centroid.y;
-        // Shift points relative to the centroid
-        this.setPoints(this.points.map(({ x, y }) => new model_1.SATVector(x + offsetX, y + offsetY)));
-        // Restore the original angle
-        this.setAngle(angle, false);
-        this.setPosition(x, y);
+        let centroid;
+        this.withAngle0(() => {
+            centroid = this.getCentroid();
+        });
+        const offsetX = center ? -centroid.x : -this.points[0].x;
+        const offsetY = center ? -centroid.y : -this.points[0].y;
+        this.setPoints((0, optimized_1.map)(this.points, ({ x, y }) => new model_1.SATVector(x + offsetX, y + offsetY)));
+        this.centered = center;
     }
     /**
      * is polygon centered?
@@ -138,11 +133,7 @@ class Polygon extends model_1.SATPolygon {
     setScale(x, y = x, updateNow = true) {
         this.scaleVector.x = Math.abs(x);
         this.scaleVector.y = Math.abs(y);
-        super.setPoints((0, optimized_1.map)(this.points, (point, index) => {
-            point.x = this.pointsBackup[index].x * this.scaleVector.x;
-            point.y = this.pointsBackup[index].y * this.scaleVector.y;
-            return point;
-        }));
+        super.setPoints((0, optimized_1.map)(this.points, (_point, index) => new model_1.SATVector(this.pointsBackup[index].x * this.scaleVector.x, this.pointsBackup[index].y * this.scaleVector.y)));
         this.markAsDirty(updateNow);
         return this;
     }
@@ -237,6 +228,15 @@ class Polygon extends model_1.SATPolygon {
             (_a = this.system) === null || _a === void 0 ? void 0 : _a.insert(this);
             this.dirty = false;
         }
+    }
+    /**
+     * used to do staff with rotation temporarily disabled
+     */
+    withAngle0(callback, updateNow = true) {
+        const angle = this.angle;
+        this.setAngle(0, false);
+        callback();
+        this.setAngle(angle, updateNow);
     }
     /**
      * update instantly or mark as dirty

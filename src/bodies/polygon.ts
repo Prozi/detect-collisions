@@ -171,25 +171,20 @@ export class Polygon<UserDataType = any>
   set isCentered(center: boolean) {
     if (this.centered === center) return;
 
-    const x = this.x;
-    const y = this.y;
-    const angle = this.angle;
+    let centroid!: Vector;
 
-    this.setAngle(0, false);
+    this.withAngle0(() => {
+      centroid = this.getCentroid();
+    });
 
-    // Get the centroid without rotation
-    const centroid = this.getCentroid();
-    const offsetX = center ? -centroid.x : centroid.x;
-    const offsetY = center ? -centroid.y : centroid.y;
+    const offsetX = center ? -centroid.x : -this.points[0].x;
+    const offsetY = center ? -centroid.y : -this.points[0].y;
 
-    // Shift points relative to the centroid
     this.setPoints(
-      this.points.map(({ x, y }) => new SATVector(x + offsetX, y + offsetY))
+      map(this.points, ({ x, y }) => new SATVector(x + offsetX, y + offsetY))
     );
 
-    // Restore the original angle
-    this.setAngle(angle, false);
-    this.setPosition(x, y);
+    this.centered = center;
   }
 
   /**
@@ -289,12 +284,14 @@ export class Polygon<UserDataType = any>
     this.scaleVector.y = Math.abs(y);
 
     super.setPoints(
-      map(this.points, (point: SATVector, index: number) => {
-        point.x = this.pointsBackup[index].x * this.scaleVector.x;
-        point.y = this.pointsBackup[index].y * this.scaleVector.y;
-
-        return point;
-      })
+      map(
+        this.points,
+        (_point: SATVector, index: number) =>
+          new SATVector(
+            this.pointsBackup[index].x * this.scaleVector.x,
+            this.pointsBackup[index].y * this.scaleVector.y
+          )
+      )
     );
 
     this.markAsDirty(updateNow);
@@ -409,6 +406,16 @@ export class Polygon<UserDataType = any>
       this.system?.insert(this);
       this.dirty = false;
     }
+  }
+
+  /**
+   * used to do staff with rotation temporarily disabled
+   */
+  protected withAngle0(callback: () => void, updateNow = true): void {
+    const angle = this.angle;
+    this.setAngle(0, false);
+    callback();
+    this.setAngle(angle, updateNow);
   }
 
   /**

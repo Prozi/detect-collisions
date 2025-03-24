@@ -183,6 +183,10 @@ export declare class Polygon<UserDataType = any> extends SATPolygon implements B
      */
     updateBody(updateNow?: boolean): void;
     /**
+     * used to do staff with rotation temporarily disabled
+     */
+    protected withAngle0(callback: () => void, updateNow?: boolean): void;
+    /**
      * update instantly or mark as dirty
      */
     protected markAsDirty(updateNow?: boolean): void;

@@ -525,4 +525,34 @@ describe("GIVEN Polygon", () => {
     expect(polygonFalse.userData).toBe(false);
     expect(polygonNull.userData).toBe(null);
   });
+
+  it("THEN isCentered is reversible with angle", () => {
+    const { Polygon } = require("../../src");
+
+    const pos = { x: 100, y: 50 };
+    const points = [{ x: 40, y: 20 }, { x: 200, y: 100 }, { x: 100, y: 60 }];
+    const angle = Math.PI / 7;
+
+    const polygon1 = new Polygon(pos, points, {
+      isCentered: false,
+      angle,
+    });
+    const polygon2 = new Polygon(pos, points, {
+      isCentered: true,
+      angle,
+    });
+
+    expect(polygon1.points).not.toStrictEqual(polygon2.points);
+
+    polygon1.isCentered = true;
+    // both centered same way
+    expect(polygon1.points).toStrictEqual(polygon2.points);
+
+    polygon2.isCentered = false;
+    expect(polygon1.points).not.toStrictEqual(polygon2.points);
+
+    polygon1.isCentered = false;
+    // both uncentered same way
+    expect(polygon1.points).toStrictEqual(polygon2.points);
+  });
 });
