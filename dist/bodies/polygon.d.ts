@@ -91,7 +91,7 @@ export declare class Polygon<UserDataType = any> extends SATPolygon implements B
     /**
      * flag to set is polygon centered
      */
-    set isCentered(isCentered: boolean);
+    set isCentered(center: boolean);
     /**
      * is polygon centered?
      */
@@ -164,10 +164,6 @@ export declare class Polygon<UserDataType = any> extends SATPolygon implements B
      */
     drawBVH(context: CanvasRenderingContext2D): void;
     /**
-     * get body centroid without applied angle
-     */
-    getCentroidWithoutRotation(): Vector;
-    /**
      * sets polygon points to new array of vectors
      */
     setPoints(points: SATVector[]): Polygon;
@@ -187,7 +183,6 @@ export declare class Polygon<UserDataType = any> extends SATPolygon implements B
      * inner function for after position change update aabb in system and convex inner polygons
      */
     updateBody(updateNow?: boolean): void;
-    protected retranslate(isCentered?: boolean): void;
     /**
      * update instantly or mark as dirty
      */

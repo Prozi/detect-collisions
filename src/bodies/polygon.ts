@@ -167,18 +167,25 @@ export class Polygon<UserDataType = any>
   /**
    * flag to set is polygon centered
    */
-  set isCentered(isCentered: boolean) {
-    if (this.centered !== isCentered) {
-      const { x, y } = this.getCentroidWithoutRotation();
+  set isCentered(center: boolean) {
+    if (this.centered === center) return;
 
-      if (x || y) {
-        const direction = isCentered ? 1 : -1;
+    // Keep angle value but temporarily set to 0
+    const angle = this.angle;
+    this.setAngle(0);
 
-        this.translate(-x * direction, -y * direction);
-      }
+    // Get the centroid without rotation
+    const centroid = this.getCentroid();
+    const offsetX = center ? -centroid.x : centroid.x;
+    const offsetY = center ? -centroid.y : centroid.y;
 
-      this.centered = isCentered;
-    }
+    // Shift points relative to the centroid
+    this.setPoints(
+      this.points.map(({ x, y }) => new SAT.Vector(x + offsetX, y + offsetY))
+    );
+
+    // Restore the original angle
+    this.setAngle(angle);
   }
 
   /**
@@ -352,27 +359,6 @@ export class Polygon<UserDataType = any>
   }
 
   /**
-   * get body centroid without applied angle
-   */
-  getCentroidWithoutRotation(): Vector {
-    // keep angle copy
-    const angle = this.angle;
-
-    if (angle) {
-      // reset angle for get centroid
-      this.setAngle(0);
-      // get centroid
-      const centroid = this.getCentroid();
-      // revert angle change
-      this.setAngle(angle);
-
-      return centroid;
-    }
-
-    return this.getCentroid();
-  }
-
-  /**
    * sets polygon points to new array of vectors
    */
   setPoints(points: SATVector[]): Polygon {
@@ -418,17 +404,6 @@ export class Polygon<UserDataType = any>
       this.updateConvexPolygonPositions();
       this.system?.insert(this);
       this.dirty = false;
-    }
-  }
-
-  protected retranslate(isCentered = this.isCentered): void {
-    const centroid = this.getCentroidWithoutRotation();
-
-    if (centroid.x || centroid.y) {
-      const x = centroid.x * (isCentered ? 1 : -1);
-      const y = centroid.y * (isCentered ? 1 : -1);
-
-      this.translate(-x, -y);
     }
   }
 
