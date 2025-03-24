@@ -12,7 +12,6 @@ import {
 } from "./model";
 import { filter, forEach } from "./optimized";
 import { bodyMoved, drawBVH } from "./utils";
-
 import { Box, BoxConstructor } from "./bodies/box";
 import { Circle, CircleConstructor } from "./bodies/circle";
 import { Ellipse, EllipseConstructor } from "./bodies/ellipse";

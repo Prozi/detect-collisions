@@ -5,6 +5,7 @@ import {
   BodyProps,
   BodyType,
   PotentialVector,
+  SATCircle,
   SATVector,
   Vector,
 } from "../model";
@@ -16,8 +17,6 @@ import {
   getGroup,
   move,
 } from "../utils";
-
-import { Circle as SATCircle } from "sat";
 import { System } from "../system";
 
 export interface CircleConstructor<TCircle extends Circle> {

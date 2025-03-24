@@ -3,11 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Circle = void 0;
 const model_1 = require("../model");
 const utils_1 = require("../utils");
-const sat_1 = require("sat");
 /**
  * collider - circle
  */
-class Circle extends sat_1.Circle {
+class Circle extends model_1.SATCircle {
     /**
      * collider - circle
      */

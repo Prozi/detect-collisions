@@ -1,9 +1,6 @@
 /* tslint:disable:cyclomatic-complexity */
 
-import { Point as DecompPoint } from "poly-decomp-es";
 import {
-  Response,
-  Vector as SATVector,
   testCircleCircle,
   testCirclePolygon,
   testPolygonCircle,
@@ -22,10 +19,13 @@ import {
   BodyGroup,
   BodyOptions,
   BodyType,
+  DecompPoint,
   InTest,
   PotentialVector,
+  Response,
   SATPolygon,
   SATTest,
+  SATVector,
   Vector,
 } from "./model";
 import { forEach, map } from "./optimized";

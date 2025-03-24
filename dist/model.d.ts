@@ -1,4 +1,4 @@
-import { Circle as SATCircle, Polygon as SATPolygon, Response, Vector as SATVector } from "sat";
+import { Response, Circle as SATCircle, Polygon as SATPolygon, Vector as SATVector } from "sat";
 import { Box } from "./bodies/box";
 import { Circle } from "./bodies/circle";
 import { Ellipse } from "./bodies/ellipse";
@@ -7,14 +7,14 @@ import { Point } from "./bodies/point";
 import { Polygon } from "./bodies/polygon";
 import { System } from "./system";
 import RBush from "./external/rbush";
-export { Polygon as DecompPolygon, Point as DecompPoint, isSimple, } from "poly-decomp-es";
+export { Point as DecompPoint, Polygon as DecompPolygon, isSimple, quickDecomp, } from "poly-decomp-es";
 export interface BBox {
     minX: number;
     minY: number;
     maxX: number;
     maxY: number;
 }
-export { RBush, Response, SATVector, SATPolygon, SATCircle };
+export { RBush, Response, SATCircle, SATPolygon, SATVector };
 export type CollisionCallback = (response: Response) => boolean | void;
 /**
  * types

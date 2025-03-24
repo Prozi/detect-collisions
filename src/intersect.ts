@@ -4,7 +4,6 @@
 import { pointInCircle, pointInPolygon as pointInConvexPolygon } from "sat";
 import { Body, BodyGroup, SATPolygon, SATVector, Vector } from "./model";
 import { every, forEach, map, some } from "./optimized";
-
 import { Circle } from "./bodies/circle";
 import { Line } from "./bodies/line";
 import { Point } from "./bodies/point";

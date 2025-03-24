@@ -1,5 +1,4 @@
 import { BodyGroup, BodyOptions, BodyType, PotentialVector } from "../model";
-
 import { createBox } from "../utils";
 import { Polygon } from "./polygon";
 

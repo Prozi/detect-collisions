@@ -1,5 +1,3 @@
-import { isSimple, quickDecomp } from "poly-decomp-es";
-import { Polygon as SATPolygon } from "sat";
 import {
   BBox,
   BodyGroup,
@@ -9,8 +7,11 @@ import {
   DecompPolygon,
   GetAABBAsBox,
   PotentialVector,
+  SATPolygon,
   SATVector,
   Vector,
+  isSimple,
+  quickDecomp,
 } from "../model";
 import { forEach, map } from "../optimized";
 import { System } from "../system";
@@ -181,7 +182,7 @@ export class Polygon<UserDataType = any>
 
     // Shift points relative to the centroid
     this.setPoints(
-      this.points.map(({ x, y }) => new SAT.Vector(x + offsetX, y + offsetY))
+      this.points.map(({ x, y }) => new SATVector(x + offsetX, y + offsetY))
     );
 
     // Restore the original angle

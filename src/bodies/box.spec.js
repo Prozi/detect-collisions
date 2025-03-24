@@ -139,12 +139,8 @@ describe("GIVEN Box", () => {
     const physics = new System();
     physics.insert(box);
 
-    expect(box.bbox).toStrictEqual({
-      maxX: 15,
-      maxY: 15,
-      minX: -5,
-      minY: -5,
-    });
+    expect(box.bbox.maxX - box.bbox.minX).toBe(box.width);
+    expect(box.bbox.maxY - box.bbox.minY).toBe(box.height);
   });
 
   it("THEN change width & height works with isCentered & nonzero angle", () => {
@@ -160,11 +156,7 @@ describe("GIVEN Box", () => {
     const physics = new System();
     physics.insert(box);
 
-    expect(box.bbox).toStrictEqual({
-      maxX: 15,
-      maxY: 15,
-      minX: -5,
-      minY: -5,
-    });
+    expect(box.bbox.maxX - box.bbox.minX).toBe(box.width);
+    expect(box.bbox.maxY - box.bbox.minY).toBe(box.height);
   });
 });

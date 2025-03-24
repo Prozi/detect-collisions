@@ -1,7 +1,5 @@
-import { Point as DecompPoint } from "poly-decomp-es";
-import { Response, Vector as SATVector } from "sat";
 import { Polygon } from "./bodies/polygon";
-import { BBox, Body, BodyOptions, PotentialVector, SATPolygon, SATTest, Vector } from "./model";
+import { BBox, Body, BodyOptions, DecompPoint, PotentialVector, Response, SATPolygon, SATTest, SATVector, Vector } from "./model";
 export declare const DEG2RAD: number;
 export declare const RAD2DEG: number;
 /**

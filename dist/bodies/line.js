@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Line = void 0;
 const model_1 = require("../model");
-const sat_1 = require("sat");
 const polygon_1 = require("./polygon");
 /**
  * collider - line
@@ -61,7 +60,7 @@ class Line extends polygon_1.Polygon {
         this.setPoints(this.points);
     }
     getCentroid() {
-        return new sat_1.Vector((this.end.x - this.start.x) / 2, (this.end.y - this.start.y) / 2);
+        return new model_1.SATVector((this.end.x - this.start.x) / 2, (this.end.y - this.start.y) / 2);
     }
     /**
      * do not attempt to use Polygon.updateIsConvex()

@@ -1,5 +1,4 @@
 import { BodyGroup, BodyOptions, BodyType, PotentialVector } from "../model";
-
 import { ensureVectorPoint } from "../utils";
 import { Box } from "./box";
 

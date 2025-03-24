@@ -1,15 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Polygon = void 0;
-const poly_decomp_es_1 = require("poly-decomp-es");
-const sat_1 = require("sat");
 const model_1 = require("../model");
 const optimized_1 = require("../optimized");
 const utils_1 = require("../utils");
 /**
  * collider - polygon
  */
-class Polygon extends sat_1.Polygon {
+class Polygon extends model_1.SATPolygon {
     /**
      * collider - polygon
      */
@@ -54,7 +52,7 @@ class Polygon extends sat_1.Polygon {
         const offsetX = center ? -centroid.x : centroid.x;
         const offsetY = center ? -centroid.y : centroid.y;
         // Shift points relative to the centroid
-        this.setPoints(this.points.map(({ x, y }) => new SAT.Vector(x + offsetX, y + offsetY)));
+        this.setPoints(this.points.map(({ x, y }) => new model_1.SATVector(x + offsetX, y + offsetY)));
         // Restore the original angle
         this.setAngle(angle);
     }
@@ -225,7 +223,7 @@ class Polygon extends sat_1.Polygon {
      * if true, polygon is not an invalid, self-crossing polygon
      */
     isSimple() {
-        return (0, poly_decomp_es_1.isSimple)((0, optimized_1.map)(this.calcPoints, utils_1.mapVectorToArray));
+        return (0, model_1.isSimple)((0, optimized_1.map)(this.calcPoints, utils_1.mapVectorToArray));
     }
     /**
      * inner function for after position change update aabb in system and convex inner polygons
@@ -275,7 +273,7 @@ class Polygon extends sat_1.Polygon {
             return [];
         }
         const points = (0, optimized_1.map)(this.calcPoints, utils_1.mapVectorToArray);
-        return (0, poly_decomp_es_1.quickDecomp)(points);
+        return (0, model_1.quickDecomp)(points);
     }
     /**
      * updates convex polygons cache in body
@@ -290,7 +288,7 @@ class Polygon extends sat_1.Polygon {
         (0, optimized_1.forEach)(convex, (points, index) => {
             // lazy create
             if (!this.convexPolygons[index]) {
-                this.convexPolygons[index] = new sat_1.Polygon();
+                this.convexPolygons[index] = new model_1.SATPolygon();
             }
             this.convexPolygons[index].pos.x = this.pos.x;
             this.convexPolygons[index].pos.y = this.pos.y;

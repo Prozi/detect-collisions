@@ -1,5 +1,4 @@
 import { BodyGroup, BodyOptions, BodyType, PotentialVector } from "../model";
-
 import { createEllipse } from "../utils";
 import { Polygon } from "./polygon";
 

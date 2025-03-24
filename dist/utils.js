@@ -85,7 +85,7 @@ function createEllipse(radiusX, radiusY = radiusX, step = 1) {
         const value = (index / length) * 2 * Math.PI;
         const x = Math.cos(value) * radiusX;
         const y = Math.sin(value) * radiusY;
-        ellipse.push(new sat_1.Vector(x, y));
+        ellipse.push(new model_1.SATVector(x, y));
     }
     return ellipse;
 }
@@ -94,19 +94,19 @@ function createEllipse(radiusX, radiusY = radiusX, step = 1) {
  */
 function createBox(width, height) {
     return [
-        new sat_1.Vector(0, 0),
-        new sat_1.Vector(width, 0),
-        new sat_1.Vector(width, height),
-        new sat_1.Vector(0, height),
+        new model_1.SATVector(0, 0),
+        new model_1.SATVector(width, 0),
+        new model_1.SATVector(width, height),
+        new model_1.SATVector(0, height),
     ];
 }
 /**
  * ensure SATVector type point result
  */
 function ensureVectorPoint(point = {}) {
-    return point instanceof sat_1.Vector
+    return point instanceof model_1.SATVector
         ? point
-        : new sat_1.Vector(point.x || 0, point.y || 0);
+        : new model_1.SATVector(point.x || 0, point.y || 0);
 }
 /**
  * ensure Vector points (for polygon) in counter-clockwise order
@@ -254,10 +254,10 @@ function mapArrayToVector([x, y] = [0, 0]) {
  * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
  */
 function getBounceDirection(body, collider) {
-    const v2 = new sat_1.Vector(collider.x - body.x, collider.y - body.y);
-    const v1 = new sat_1.Vector(body.x - collider.x, body.y - collider.y);
+    const v2 = new model_1.SATVector(collider.x - body.x, collider.y - body.y);
+    const v1 = new model_1.SATVector(body.x - collider.x, body.y - collider.y);
     const len = v1.dot(v2.normalize()) * 2;
-    return new sat_1.Vector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
+    return new model_1.SATVector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
 }
 /**
  * returns correct sat.js testing function based on body types
@@ -331,7 +331,7 @@ function drawBVH(context, body, isTrigger = true) {
  * clone response object returning new response with previous ones values
  */
 function cloneResponse(response) {
-    const clone = new sat_1.Response();
+    const clone = new model_1.Response();
     const { a, b, overlap, overlapN, overlapV, aInB, bInA } = response;
     clone.a = a;
     clone.b = b;

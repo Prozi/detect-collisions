@@ -1,5 +1,4 @@
-import { Polygon as SATPolygon } from "sat";
-import { BBox, BodyGroup, BodyOptions, BodyProps, BodyType, DecompPolygon, PotentialVector, SATVector, Vector } from "../model";
+import { BBox, BodyGroup, BodyOptions, BodyProps, BodyType, DecompPolygon, PotentialVector, SATPolygon, SATVector, Vector } from "../model";
 import { System } from "../system";
 export interface PolygonConstructor<TPolygon extends Polygon> {
     new (position: PotentialVector, points: PotentialVector[], options?: BodyOptions): TPolygon;

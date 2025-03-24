@@ -1,5 +1,4 @@
-import { BBox, BodyGroup, BodyOptions, BodyProps, BodyType, PotentialVector, SATVector, Vector } from "../model";
-import { Circle as SATCircle } from "sat";
+import { BBox, BodyGroup, BodyOptions, BodyProps, BodyType, PotentialVector, SATCircle, SATVector, Vector } from "../model";
 import { System } from "../system";
 export interface CircleConstructor<TCircle extends Circle> {
     new (position: PotentialVector, radius: number, options?: BodyOptions): TCircle;

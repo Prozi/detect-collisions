@@ -1,10 +1,9 @@
 import {
+  Response,
   Circle as SATCircle,
   Polygon as SATPolygon,
-  Response,
   Vector as SATVector,
 } from "sat";
-
 import { Box } from "./bodies/box";
 import { Circle } from "./bodies/circle";
 import { Ellipse } from "./bodies/ellipse";
@@ -20,9 +19,10 @@ import RBush from "./external/rbush";
 import type { canInteract } from "./utils";
 
 export {
-  Polygon as DecompPolygon,
   Point as DecompPoint,
+  Polygon as DecompPolygon,
   isSimple,
+  quickDecomp,
 } from "poly-decomp-es";
 
 export interface BBox {
@@ -32,7 +32,7 @@ export interface BBox {
   maxY: number;
 }
 
-export { RBush, Response, SATVector, SATPolygon, SATCircle };
+export { RBush, Response, SATCircle, SATPolygon, SATVector };
 
 export type CollisionCallback = (response: Response) => boolean | void;
 
