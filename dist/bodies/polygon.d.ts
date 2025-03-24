@@ -59,7 +59,7 @@ export declare class Polygon<UserDataType = any> extends SATPolygon implements B
     /**
      * allows the user to set any misc data for client use
      */
-    userData?: BodyProps["userData"];
+    userData?: BodyProps<UserDataType>["userData"];
     /**
      * type of body
      */

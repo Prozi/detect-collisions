@@ -259,13 +259,11 @@ export function canInteract(
   { group: groupA }: Body,
   { group: groupB }: Body
 ): boolean {
-  return (
-    // most common case
-    groupA === groupB ||
-    // otherwise do some binary magick
-    (((groupA >> 16) & (groupB & 0xffff)) !== 0 &&
-      ((groupB >> 16) & (groupA & 0xffff)) !== 0)
-  );
+  const categoryA = groupA >> 16;
+  const categoryB = groupB >> 16;
+  const maskA = groupA & 0xffff;
+  const maskB = groupB & 0xffff;
+  return (categoryA & maskB) !== 0 && (categoryB & maskA) !== 0; // Box2D rules
 }
 
 /**

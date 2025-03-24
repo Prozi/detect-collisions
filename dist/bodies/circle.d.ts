@@ -63,7 +63,7 @@ export declare class Circle<UserDataType = any> extends SATCircle implements BBo
     /**
      * allows the user to set any misc data for client use
      */
-    userData?: BodyProps["userData"];
+    userData?: BodyProps<UserDataType>["userData"];
     readonly isConvex = true;
     /**
      * circle type
