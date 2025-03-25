@@ -138,10 +138,6 @@ export declare class Polygon<UserDataType = any> extends SATPolygon implements B
     setAngle(angle: number, updateNow?: boolean): SATPolygon;
     setOffset(offset: SATVector, updateNow?: boolean): SATPolygon;
     /**
-     * https://en.wikipedia.org/wiki/Centroid#Of_a_finite_set_of_points
-     */
-    getCentroid(): SATVector;
-    /**
      * get body bounding box, without padding
      */
     getAABBAsBBox(): BBox;

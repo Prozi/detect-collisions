@@ -2917,18 +2917,6 @@ class Polygon extends model_1.SATPolygon {
         return this;
     }
     /**
-     * https://en.wikipedia.org/wiki/Centroid#Of_a_finite_set_of_points
-     */
-    getCentroid() {
-        let x = 0;
-        let y = 0;
-        (0, optimized_1.forEach)(this.points, (point) => {
-            x += point.x;
-            y += point.y;
-        });
-        return new model_1.SATVector(x / this.points.length, y / this.points.length);
-    }
-    /**
      * get body bounding box, without padding
      */
     getAABBAsBBox() {
