@@ -314,6 +314,21 @@ export class Polygon<UserDataType = any>
   }
 
   /**
+   * https://en.wikipedia.org/wiki/Centroid#Of_a_finite_set_of_points
+   */
+  getCentroid(): SATVector {
+    let x = 0;
+    let y = 0;
+
+    forEach(this.points, (point) => {
+      x += point.x;
+      y += point.y;
+    });
+
+    return new SATVector(x / this.points.length, y / this.points.length);
+  }
+
+  /**
    * get body bounding box, without padding
    */
   getAABBAsBBox(): BBox {
