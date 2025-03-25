@@ -2283,9 +2283,7 @@ class Box extends polygon_1.Polygon {
      * see https://github.com/Prozi/detect-collisions/issues/70
      */
     afterUpdateSize() {
-        this.withAngle0(() => {
-            this.setPoints((0, utils_1.createBox)(this._width, this._height));
-        });
+        this.setPoints((0, utils_1.createBox)(this._width, this._height));
     }
     /**
      * do not attempt to use Polygon.updateIsConvex()
@@ -2814,7 +2812,7 @@ class Polygon extends model_1.SATPolygon {
         if (this.centered === center)
             return;
         let centroid;
-        this.withAngle0(() => {
+        this.runWithoutRotation(() => {
             centroid = this.getCentroid();
         });
         const offsetX = center ? -centroid.x : -this.points[0].x;
@@ -2999,13 +2997,13 @@ class Polygon extends model_1.SATPolygon {
         }
     }
     /**
-     * used to do staff with rotation temporarily disabled
+     * used to do stuff with temporarily disabled rotation
      */
-    withAngle0(callback, updateNow = true) {
+    runWithoutRotation(callback) {
         const angle = this.angle;
         this.setAngle(0, false);
         callback();
-        this.setAngle(angle, updateNow);
+        this.setAngle(angle, false);
     }
     /**
      * update instantly or mark as dirty

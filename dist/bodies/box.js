@@ -59,9 +59,7 @@ class Box extends polygon_1.Polygon {
      * see https://github.com/Prozi/detect-collisions/issues/70
      */
     afterUpdateSize() {
-        this.withAngle0(() => {
-            this.setPoints((0, utils_1.createBox)(this._width, this._height));
-        });
+        this.setPoints((0, utils_1.createBox)(this._width, this._height));
     }
     /**
      * do not attempt to use Polygon.updateIsConvex()

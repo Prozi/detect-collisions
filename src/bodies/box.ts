@@ -90,9 +90,7 @@ export class Box<UserDataType = any> extends Polygon<UserDataType> {
    * see https://github.com/Prozi/detect-collisions/issues/70
    */
   protected afterUpdateSize(): void {
-    this.withAngle0(() => {
-      this.setPoints(createBox(this._width, this._height));
-    })
+    this.setPoints(createBox(this._width, this._height));
   }
 
   /**

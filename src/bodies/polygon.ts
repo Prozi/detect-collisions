@@ -173,7 +173,7 @@ export class Polygon<UserDataType = any>
 
     let centroid!: Vector;
 
-    this.withAngle0(() => {
+    this.runWithoutRotation(() => {
       centroid = this.getCentroid();
     });
 
@@ -409,13 +409,13 @@ export class Polygon<UserDataType = any>
   }
 
   /**
-   * used to do staff with rotation temporarily disabled
+   * used to do stuff with temporarily disabled rotation
    */
-  protected withAngle0(callback: () => void, updateNow = true): void {
+  protected runWithoutRotation(callback: () => void): void {
     const angle = this.angle;
     this.setAngle(0, false);
     callback();
-    this.setAngle(angle, updateNow);
+    this.setAngle(angle, false);
   }
 
   /**
