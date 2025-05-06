@@ -1,6 +1,6 @@
 {
   "name": "detect-collisions",
-  "version": "9.27.0",
+  "version": "9.27.1",
   "description": "Points, Lines, Boxes, Polygons (also hollow), Ellipses, Circles. RayCasting, offsets, rotation, scaling, bounding box padding, flags for static and ghost/trigger bodies",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -10,7 +10,7 @@
     "require": "./dist/index.js"
   },
   "scripts": {
-    "start": "chef-express dist/demo --debug --port 3000",
+    "start": "chef-express dist/demo --debug",
     "test": "jest --silent --verbose --forceExit",
     "dev": "webpack serve --port 3000",
     "amend": "NO_BENCH=1 npm run precommit;git commit -a --am --no-edit",
@@ -45,9 +45,7 @@
   },
   "repository": "git://github.com/Prozi/detect-collisions.git",
   "files": [
-    "esm/*.*",
-    "esm/bodies",
-    "esm/external",
+    "esm/index.js",
     "dist/*.*",
     "dist/bodies",
     "dist/external"
