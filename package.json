@@ -1,9 +1,14 @@
 {
   "name": "detect-collisions",
-  "version": "9.26.4",
+  "version": "9.27.0",
   "description": "Points, Lines, Boxes, Polygons (also hollow), Ellipses, Circles. RayCasting, offsets, rotation, scaling, bounding box padding, flags for static and ghost/trigger bodies",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "module": "./esm/index.js",
+  "exports": {
+    "import": "./esm/index.js",
+    "require": "./dist/index.js"
+  },
   "scripts": {
     "start": "chef-express dist/demo --debug --port 3000",
     "test": "jest --silent --verbose --forceExit",
@@ -15,9 +20,13 @@
     "copy-rbush": "cp node_modules/rbush/index.js src/external/rbush.js",
     "copy-quickselect": "cp node_modules/quickselect/index.js src/external/quickselect.js",
     "copy-npm-modules": "npm run copy-rbush && npm run copy-quickselect && npm run use-latest-quickselect",
-    "prebuild": "rm -rf dist && npm run copy-npm-modules",
-    "build": "tsc",
+    "prebuild": "npm run copy-npm-modules",
+    "build": "yarn build:commonjs && yarn build:esm",
     "postbuild": "npm run test && npm run build:docs && npm run build:demo && [ -z \"$NO_BENCH\" ] && npm run benchmark",
+    "prebuild:commonjs": "rm -rf dist",
+    "build:commonjs": "tsc",
+    "prebuild:esm": "rm -rf esm",
+    "build:esm": "rollup -c",
     "build:docs": "typedoc --customCss typedoc.css",
     "postbuild:docs": "npm run docs-from-master || echo ok",
     "build:demo": "webpack",
@@ -36,9 +45,12 @@
   },
   "repository": "git://github.com/Prozi/detect-collisions.git",
   "files": [
+    "esm/*.*",
+    "esm/bodies",
+    "esm/external",
     "dist/*.*",
-    "dist/bodies/*.*",
-    "dist/external/*.*"
+    "dist/bodies",
+    "dist/external"
   ],
   "keywords": [
     "javascript",
@@ -69,15 +81,21 @@
   "homepage": "https://prozi.github.io/detect-collisions/",
   "dependencies": {
     "@types/sat": "^0.0.35",
+    "express": "^4.19.2",
     "poly-decomp-es": "^0.4.2",
-    "sat": "^0.9.0"
+    "sat": "^0.9.0",
+    "semver": "^7.5.3",
+    "terser": "^5.14.2"
   },
   "devDependencies": {
-    "@stylistic/eslint-plugin": "^3.1.0",
-    "@types/node": "^22.13.4",
+    "@rollup/plugin-commonjs": "^28.0.3",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "@stylistic/eslint-plugin": "^4.2.0",
+    "@types/node": "^22.4.1",
     "@types/rbush": "^4.0.0",
-    "chef-express": "^2.4.2",
-    "eslint": "^9.20.1",
+    "chef-express": "^3.2.1",
+    "eslint": "^9.26.0",
     "eslint-plugin-json": "^4.0.1",
     "html-webpack-plugin": "^5.6.3",
     "husky": "^9.1.7",
@@ -85,14 +103,15 @@
     "quickselect": "^3.0.0",
     "random-seed": "^0.3.0",
     "rbush": "^4.0.1",
-    "tinybench": "^3.1.1",
-    "ts-jest": "^29.2.5",
+    "rollup": "^4.40.2",
+    "tinybench": "^4.0.1",
+    "ts-jest": "^29.3.2",
     "ts-loader": "^9.5.2",
-    "typedoc": "^0.27.7",
+    "typedoc": "^0.28.4",
     "typescript": "^5",
-    "webpack": "^5.98.0",
+    "webpack": "^5.99.7",
     "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.0"
+    "webpack-dev-server": "^5.2.1"
   },
   "resolutions": {
     "@types/node": "^22.4.1",
