@@ -1771,21 +1771,21 @@ char-regex@^1.0.2:
   resolved "https://registry.yarnpkg.com/char-regex/-/char-regex-1.0.2.tgz#d744358226217f981ed58f479b1d6bcc29545dcf"
   integrity sha512-kWWXztvZ5SBQV+eRgKFeh8q5sLuZY2+8WUIzlxWVTg+oGwY14qylx1KbKzHd8P6ZYkAg0xyIDU9JMHhyJMZ1jw==
 
-chef-core@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/chef-core/-/chef-core-4.2.0.tgz#04cd4c1beee8636364816d3e1428ffac3a16efb9"
-  integrity sha512-HKOQJB8Xai2MrU4ltpdEk6b1czYI3MU3CPNo87h/nB2erZRCSJrE65Rzki5msqFpKJBSN40BwyLtctqRrsI0/g==
+chef-core@^4.2.1:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/chef-core/-/chef-core-4.2.1.tgz#281311304b49064eaabfb330c1a8224294a18675"
+  integrity sha512-gtsX86gQ8cuolSjSiQuo1eL+aJuJ5ARuLiI1ZQS/nSstMcfu838XiuyQ08k0JRv1wpWDVl0Il5g+XV6+DYKWRg==
   dependencies:
     "@pietal.dev/cache" "^2.0.2"
     mime-types "^3.0.1"
 
-chef-express@^3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/chef-express/-/chef-express-3.2.1.tgz#07523012a67d880468503611dba74fde8734db59"
-  integrity sha512-IhVB09AhTy4v8Co0KLFvix4qDKPmyLtYj1/mM806zs0GJ/zG0r8FZD1KyklocTOfIeaFOKXciFxHXWtAfCJ34g==
+chef-express@^3.2.3:
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/chef-express/-/chef-express-3.2.3.tgz#fb8f3b11b8dcaadad8396b6caed4deb912112bf3"
+  integrity sha512-Nt52DJx1rEbXYy6N6NESJDAY2Z1EyX76okKq5N/sbJS9EQRE8BaZwNE583T0QAfeMMrGRUWr35MvhEWJ2KS3HA==
   dependencies:
     "@pietal.dev/cache" "^2.0.2"
-    chef-core "^4.2.0"
+    chef-core "^4.2.1"
     express "^4"
 
 chokidar@^3.6.0:
