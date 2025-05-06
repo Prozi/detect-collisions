@@ -1,6 +1,6 @@
 {
   "name": "detect-collisions",
-  "version": "9.27.1",
+  "version": "9.27.2",
   "description": "Points, Lines, Boxes, Polygons (also hollow), Ellipses, Circles. RayCasting, offsets, rotation, scaling, bounding box padding, flags for static and ghost/trigger bodies",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -79,18 +79,15 @@
   "homepage": "https://prozi.github.io/detect-collisions/",
   "dependencies": {
     "@types/sat": "^0.0.35",
-    "express": "^4.19.2",
     "poly-decomp-es": "^0.4.2",
-    "sat": "^0.9.0",
-    "semver": "^7.5.3",
-    "terser": "^5.14.2"
+    "sat": "^0.9.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.3",
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-typescript": "^12.1.2",
     "@stylistic/eslint-plugin": "^4.2.0",
-    "@types/node": "^22.4.1",
+    "@types/node": "^22.15.13",
     "@types/rbush": "^4.0.0",
     "chef-express": "^3.2.1",
     "eslint": "^9.26.0",
@@ -107,7 +104,7 @@
     "ts-loader": "^9.5.2",
     "typedoc": "^0.28.4",
     "typescript": "^5",
-    "webpack": "^5.99.7",
+    "webpack": "^5.99.8",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.1"
   },
