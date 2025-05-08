@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Box = void 0;
 const model_1 = require("../model");
-const utils_1 = require("../utils");
 const polygon_1 = require("./polygon");
+const utils_1 = require("../utils");
 /**
  * collider - box
  */
@@ -62,9 +62,9 @@ class Box extends polygon_1.Polygon {
         this.setPoints((0, utils_1.createBox)(this._width, this._height));
     }
     /**
-     * do not attempt to use Polygon.updateIsConvex()
+     * do not attempt to use Polygon.updateConvex()
      */
-    updateIsConvex() {
+    updateConvex() {
         return;
     }
 }

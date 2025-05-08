@@ -35,7 +35,7 @@ export declare class Line<UserDataType = any> extends Polygon<UserDataType> {
     set end({ x, y }: Vector);
     getCentroid(): SATVector;
     /**
-     * do not attempt to use Polygon.updateIsConvex()
+     * do not attempt to use Polygon.updateConvex()
      */
-    protected updateIsConvex(): void;
+    protected updateConvex(): void;
 }

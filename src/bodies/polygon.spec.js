@@ -312,6 +312,31 @@ describe("GIVEN Polygon", () => {
   });
 
   describe("AND you scale it", () => {
+    // https://github.com/Prozi/detect-collisions/issues/91
+    it("THEN it collides properly", () => {
+      const { System } = require("../../src");
+
+      const physics = new System();
+      const circle = physics.createCircle({ x: 50, y: 60 }, 4);
+      const polygon = physics.createPolygon({ x: 0, y: 0 }, [
+        { x: 25, y: 0 },
+        { x: 33.8, y: 18.6 },
+        { x: 44.3, y: 21 },
+        { x: 50, y: 34.7 },
+        { x: 48.5, y: 45 },
+        { x: 37.6, y: 46 },
+        { x: 12.7, y: 46 },
+        { x: 1.5, y: 45 },
+        { x: 0, y: 34.7 },
+        { x: 5.7, y: 21 },
+        { x: 16.2, y: 18.6 },
+      ]);
+
+      polygon.setScale(2);
+
+      expect(physics.checkCollision(circle, polygon)).toBe(true);
+    });
+
     it("THEN it rescales properly", () => {
       const { System } = require("../../src");
 
@@ -530,7 +555,11 @@ describe("GIVEN Polygon", () => {
     const { Polygon } = require("../../src");
 
     const pos = { x: 100, y: 50 };
-    const points = [{ x: 40, y: 20 }, { x: 200, y: 100 }, { x: 100, y: 60 }];
+    const points = [
+      { x: 40, y: 20 },
+      { x: 200, y: 100 },
+      { x: 100, y: 60 },
+    ];
     const angle = Math.PI / 7;
 
     const polygon1 = new Polygon(pos, points, {

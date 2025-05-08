@@ -2226,8 +2226,8 @@ exports.BaseSystem = BaseSystem;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Box = void 0;
 const model_1 = __webpack_require__(/*! ../model */ "./src/model.ts");
-const utils_1 = __webpack_require__(/*! ../utils */ "./src/utils.ts");
 const polygon_1 = __webpack_require__(/*! ./polygon */ "./src/bodies/polygon.ts");
+const utils_1 = __webpack_require__(/*! ../utils */ "./src/utils.ts");
 /**
  * collider - box
  */
@@ -2286,9 +2286,9 @@ class Box extends polygon_1.Polygon {
         this.setPoints((0, utils_1.createBox)(this._width, this._height));
     }
     /**
-     * do not attempt to use Polygon.updateIsConvex()
+     * do not attempt to use Polygon.updateConvex()
      */
-    updateIsConvex() {
+    updateConvex() {
         return;
     }
 }
@@ -2544,8 +2544,8 @@ exports.Circle = Circle;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Ellipse = void 0;
 const model_1 = __webpack_require__(/*! ../model */ "./src/model.ts");
-const utils_1 = __webpack_require__(/*! ../utils */ "./src/utils.ts");
 const polygon_1 = __webpack_require__(/*! ./polygon */ "./src/bodies/polygon.ts");
+const utils_1 = __webpack_require__(/*! ../utils */ "./src/utils.ts");
 /**
  * collider - ellipse
  */
@@ -2627,9 +2627,9 @@ class Ellipse extends polygon_1.Polygon {
         return;
     }
     /**
-     * do not attempt to use Polygon.updateIsConvex()
+     * do not attempt to use Polygon.updateConvex()
      */
-    updateIsConvex() {
+    updateConvex() {
         return;
     }
 }
@@ -2710,9 +2710,9 @@ class Line extends polygon_1.Polygon {
         return new model_1.SATVector((this.end.x - this.start.x) / 2, (this.end.y - this.start.y) / 2);
     }
     /**
-     * do not attempt to use Polygon.updateIsConvex()
+     * do not attempt to use Polygon.updateConvex()
      */
-    updateIsConvex() {
+    updateConvex() {
         return;
     }
 }
@@ -2769,8 +2769,8 @@ exports.Point = Point;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Polygon = void 0;
 const model_1 = __webpack_require__(/*! ../model */ "./src/model.ts");
-const optimized_1 = __webpack_require__(/*! ../optimized */ "./src/optimized.ts");
 const utils_1 = __webpack_require__(/*! ../utils */ "./src/utils.ts");
+const optimized_1 = __webpack_require__(/*! ../optimized */ "./src/optimized.ts");
 /**
  * collider - polygon
  */
@@ -2900,7 +2900,9 @@ class Polygon extends model_1.SATPolygon {
     setScale(x, y = x, updateNow = true) {
         this.scaleVector.x = Math.abs(x);
         this.scaleVector.y = Math.abs(y);
+        // super instead of this to not taint pointsBackup 
         super.setPoints((0, optimized_1.map)(this.points, (_point, index) => new model_1.SATVector(this.pointsBackup[index].x * this.scaleVector.x, this.pointsBackup[index].y * this.scaleVector.y)));
+        this.updateConvex();
         this.markAsDirty(updateNow);
         return this;
     }
@@ -2959,7 +2961,7 @@ class Polygon extends model_1.SATPolygon {
      */
     setPoints(points) {
         super.setPoints(points);
-        this.updateIsConvex();
+        this.updateConvex();
         this.pointsBackup = (0, utils_1.clonePointsArray)(points);
         return this;
     }
@@ -3070,7 +3072,7 @@ class Polygon extends model_1.SATPolygon {
     /**
      * after points update set is convex
      */
-    updateIsConvex() {
+    updateConvex() {
         // all other types other than polygon are always convex
         const convex = this.getConvex();
         // everything with empty array or one element array

@@ -63,9 +63,9 @@ class Line extends polygon_1.Polygon {
         return new model_1.SATVector((this.end.x - this.start.x) / 2, (this.end.y - this.start.y) / 2);
     }
     /**
-     * do not attempt to use Polygon.updateIsConvex()
+     * do not attempt to use Polygon.updateConvex()
      */
-    updateIsConvex() {
+    updateConvex() {
         return;
     }
 }

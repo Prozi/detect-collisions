@@ -13,8 +13,6 @@ import {
   isSimple,
   quickDecomp,
 } from "../model";
-import { forEach, map } from "../optimized";
-import { System } from "../system";
 import {
   clonePointsArray,
   drawBVH,
@@ -27,6 +25,9 @@ import {
   mapVectorToArray,
   move,
 } from "../utils";
+import { forEach, map } from "../optimized";
+
+import { System } from "../system";
 
 export interface PolygonConstructor<TPolygon extends Polygon> {
   new (
@@ -283,6 +284,7 @@ export class Polygon<UserDataType = any>
     this.scaleVector.x = Math.abs(x);
     this.scaleVector.y = Math.abs(y);
 
+    // super instead of this to not taint pointsBackup 
     super.setPoints(
       map(
         this.points,
@@ -294,6 +296,7 @@ export class Polygon<UserDataType = any>
       )
     );
 
+    this.updateConvex();
     this.markAsDirty(updateNow);
 
     return this;
@@ -364,7 +367,7 @@ export class Polygon<UserDataType = any>
    */
   setPoints(points: SATVector[]): Polygon {
     super.setPoints(points);
-    this.updateIsConvex();
+    this.updateConvex();
     this.pointsBackup = clonePointsArray(points);
 
     return this;
@@ -499,7 +502,7 @@ export class Polygon<UserDataType = any>
   /**
    * after points update set is convex
    */
-  protected updateIsConvex(): void {
+  protected updateConvex(): void {
     // all other types other than polygon are always convex
     const convex = this.getConvex();
     // everything with empty array or one element array

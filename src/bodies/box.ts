@@ -1,6 +1,7 @@
 import { BodyGroup, BodyOptions, BodyType, PotentialVector } from "../model";
-import { createBox } from "../utils";
+
 import { Polygon } from "./polygon";
+import { createBox } from "../utils";
 
 export interface BoxConstructor<TBox extends Box> {
   new (
@@ -94,9 +95,9 @@ export class Box<UserDataType = any> extends Polygon<UserDataType> {
   }
 
   /**
-   * do not attempt to use Polygon.updateIsConvex()
+   * do not attempt to use Polygon.updateConvex()
    */
-  protected updateIsConvex(): void {
+  protected updateConvex(): void {
     return;
   }
 }

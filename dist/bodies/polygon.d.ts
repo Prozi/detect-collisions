@@ -206,5 +206,5 @@ export declare class Polygon<UserDataType = any> extends SATPolygon implements B
     /**
      * after points update set is convex
      */
-    protected updateIsConvex(): void;
+    protected updateConvex(): void;
 }

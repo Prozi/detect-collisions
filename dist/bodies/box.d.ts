@@ -53,7 +53,7 @@ export declare class Box<UserDataType = any> extends Polygon<UserDataType> {
      */
     protected afterUpdateSize(): void;
     /**
-     * do not attempt to use Polygon.updateIsConvex()
+     * do not attempt to use Polygon.updateConvex()
      */
-    protected updateIsConvex(): void;
+    protected updateConvex(): void;
 }

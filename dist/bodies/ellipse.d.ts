@@ -66,7 +66,7 @@ export declare class Ellipse<UserDataType = any> extends Polygon<UserDataType> {
      */
     center(): void;
     /**
-     * do not attempt to use Polygon.updateIsConvex()
+     * do not attempt to use Polygon.updateConvex()
      */
-    protected updateIsConvex(): void;
+    protected updateConvex(): void;
 }

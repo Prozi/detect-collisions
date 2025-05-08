@@ -1,4 +1,5 @@
 import { BodyGroup, BodyOptions, BodyType, SATVector, Vector } from "../model";
+
 import { Polygon } from "./polygon";
 
 export interface LineConstructor<TLine extends Line> {
@@ -83,9 +84,9 @@ export class Line<UserDataType = any> extends Polygon<UserDataType> {
   }
 
   /**
-   * do not attempt to use Polygon.updateIsConvex()
+   * do not attempt to use Polygon.updateConvex()
    */
-  protected updateIsConvex(): void {
+  protected updateConvex(): void {
     return;
   }
 }

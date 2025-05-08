@@ -3032,7 +3032,9 @@ class Polygon extends SATExports.Polygon {
     setScale(x, y = x, updateNow = true) {
         this.scaleVector.x = Math.abs(x);
         this.scaleVector.y = Math.abs(y);
+        // super instead of this to not taint pointsBackup 
         super.setPoints(map(this.points, (_point, index) => new SATExports.Vector(this.pointsBackup[index].x * this.scaleVector.x, this.pointsBackup[index].y * this.scaleVector.y)));
+        this.updateConvex();
         this.markAsDirty(updateNow);
         return this;
     }
@@ -3091,7 +3093,7 @@ class Polygon extends SATExports.Polygon {
      */
     setPoints(points) {
         super.setPoints(points);
-        this.updateIsConvex();
+        this.updateConvex();
         this.pointsBackup = clonePointsArray(points);
         return this;
     }
@@ -3201,7 +3203,7 @@ class Polygon extends SATExports.Polygon {
     /**
      * after points update set is convex
      */
-    updateIsConvex() {
+    updateConvex() {
         // all other types other than polygon are always convex
         const convex = this.getConvex();
         // everything with empty array or one element array
@@ -3291,9 +3293,9 @@ class Ellipse extends Polygon {
         return;
     }
     /**
-     * do not attempt to use Polygon.updateIsConvex()
+     * do not attempt to use Polygon.updateConvex()
      */
-    updateIsConvex() {
+    updateConvex() {
         return;
     }
 }
@@ -3356,9 +3358,9 @@ class Box extends Polygon {
         this.setPoints(createBox(this._width, this._height));
     }
     /**
-     * do not attempt to use Polygon.updateIsConvex()
+     * do not attempt to use Polygon.updateConvex()
      */
-    updateIsConvex() {
+    updateConvex() {
         return;
     }
 }
@@ -3443,9 +3445,9 @@ class Line extends Polygon {
         return new SATExports.Vector((this.end.x - this.start.x) / 2, (this.end.y - this.start.y) / 2);
     }
     /**
-     * do not attempt to use Polygon.updateIsConvex()
+     * do not attempt to use Polygon.updateConvex()
      */
-    updateIsConvex() {
+    updateConvex() {
         return;
     }
 }

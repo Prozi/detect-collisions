@@ -1,6 +1,7 @@
 import { BodyGroup, BodyOptions, BodyType, PotentialVector } from "../model";
-import { createEllipse } from "../utils";
+
 import { Polygon } from "./polygon";
+import { createEllipse } from "../utils";
 
 export interface EllipseConstructor<TEllipse extends Ellipse> {
   new (
@@ -120,9 +121,9 @@ export class Ellipse<UserDataType = any> extends Polygon<UserDataType> {
   }
 
   /**
-   * do not attempt to use Polygon.updateIsConvex()
+   * do not attempt to use Polygon.updateConvex()
    */
-  protected updateIsConvex(): void {
+  protected updateConvex(): void {
     return;
   }
 }

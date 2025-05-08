@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Polygon = void 0;
 const model_1 = require("../model");
-const optimized_1 = require("../optimized");
 const utils_1 = require("../utils");
+const optimized_1 = require("../optimized");
 /**
  * collider - polygon
  */
@@ -133,7 +133,9 @@ class Polygon extends model_1.SATPolygon {
     setScale(x, y = x, updateNow = true) {
         this.scaleVector.x = Math.abs(x);
         this.scaleVector.y = Math.abs(y);
+        // super instead of this to not taint pointsBackup 
         super.setPoints((0, optimized_1.map)(this.points, (_point, index) => new model_1.SATVector(this.pointsBackup[index].x * this.scaleVector.x, this.pointsBackup[index].y * this.scaleVector.y)));
+        this.updateConvex();
         this.markAsDirty(updateNow);
         return this;
     }
@@ -192,7 +194,7 @@ class Polygon extends model_1.SATPolygon {
      */
     setPoints(points) {
         super.setPoints(points);
-        this.updateIsConvex();
+        this.updateConvex();
         this.pointsBackup = (0, utils_1.clonePointsArray)(points);
         return this;
     }
@@ -303,7 +305,7 @@ class Polygon extends model_1.SATPolygon {
     /**
      * after points update set is convex
      */
-    updateIsConvex() {
+    updateConvex() {
         // all other types other than polygon are always convex
         const convex = this.getConvex();
         // everything with empty array or one element array
