@@ -188,9 +188,9 @@ In this example, `point` is a `Vector` with the coordinates of the nearest inter
 
 ## Usage in Browsers
 
-Just do what I did here, import from proper cdn as module, and v'oila:
-
-<https://code.pietal.dev/#/boilerplate/detect-collisions?pans=html,console>
+```js
+import { System } from "https://esm.sh/detect-collisions";
+```
 
 ## Contributing to the Project
 
