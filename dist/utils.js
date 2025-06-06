@@ -44,11 +44,11 @@ const testMap = {
     inCircleCircle: intersect_1.circleInCircle,
     inCirclePolygon: intersect_1.circleInPolygon,
     inPolygonCircle: intersect_1.polygonInCircle,
-    inPolygonPolygon: intersect_1.polygonInPolygon,
+    inPolygonPolygon: intersect_1.polygonInPolygon
 };
 function createArray(bodyType, testType) {
     const arrayResult = [];
-    const bodyGroups = Object.values(model_1.BodyGroup).filter((value) => typeof value === "number");
+    const bodyGroups = Object.values(model_1.BodyGroup).filter((value) => typeof value === 'number');
     (0, optimized_1.forEach)(bodyGroups, (bodyGroup) => {
         arrayResult[bodyGroup] = (bodyGroup === model_1.BodyGroup.Circle
             ? testMap[`${testType}${bodyType}Circle`]
@@ -56,10 +56,10 @@ function createArray(bodyType, testType) {
     });
     return arrayResult;
 }
-const circleSATFunctions = createArray(model_1.BodyType.Circle, "sat");
-const circleInFunctions = createArray(model_1.BodyType.Circle, "in");
-const polygonSATFunctions = createArray(model_1.BodyType.Polygon, "sat");
-const polygonInFunctions = createArray(model_1.BodyType.Polygon, "in");
+const circleSATFunctions = createArray(model_1.BodyType.Circle, 'sat');
+const circleInFunctions = createArray(model_1.BodyType.Circle, 'in');
+const polygonSATFunctions = createArray(model_1.BodyType.Polygon, 'sat');
+const polygonInFunctions = createArray(model_1.BodyType.Polygon, 'in');
 exports.DEG2RAD = Math.PI / 180;
 exports.RAD2DEG = 180 / Math.PI;
 /**
@@ -97,7 +97,7 @@ function createBox(width, height) {
         new model_1.SATVector(0, 0),
         new model_1.SATVector(width, 0),
         new model_1.SATVector(width, height),
-        new model_1.SATVector(0, height),
+        new model_1.SATVector(0, height)
     ];
 }
 /**
@@ -145,7 +145,7 @@ function extendBody(body, options = {}) {
     body.padding = options.padding || 0;
     // Default value should be reflected in documentation of `BodyOptions.group`
     body.group = (_a = options.group) !== null && _a !== void 0 ? _a : 0x7fffffff;
-    if ("userData" in options) {
+    if ('userData' in options) {
         body.userData = options.userData;
     }
     if (options.isCentered && body.typeGroup !== model_1.BodyGroup.Circle) {
@@ -296,7 +296,7 @@ function dashLineTo(context, fromX, fromY, toX, toY, dash = 2, gap = 4) {
  * @param polygon
  * @param isTrigger
  */
-function drawPolygon(context, { pos, calcPoints, }, isTrigger = false) {
+function drawPolygon(context, { pos, calcPoints }, isTrigger = false) {
     const lastPoint = calcPoints[calcPoints.length - 1];
     const fromX = pos.x + lastPoint.x;
     const fromY = pos.y + lastPoint.y;
@@ -324,7 +324,7 @@ function drawPolygon(context, { pos, calcPoints, }, isTrigger = false) {
 function drawBVH(context, body, isTrigger = true) {
     drawPolygon(context, {
         pos: { x: body.minX, y: body.minY },
-        calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY),
+        calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY)
     }, isTrigger);
 }
 /**
@@ -358,7 +358,7 @@ function getGroup(group) {
  * binary string to decimal number
  */
 function bin2dec(binary) {
-    return Number(`0b${binary}`.replace(/\s/g, ""));
+    return Number(`0b${binary}`.replace(/\s/g, ''));
 }
 /**
  * helper for groupBits()
@@ -366,7 +366,7 @@ function bin2dec(binary) {
  * @param input - number or binary string
  */
 function ensureNumber(input) {
-    return typeof input === "number" ? input : bin2dec(input);
+    return typeof input === 'number' ? input : bin2dec(input);
 }
 /**
  * create group bits from category and mask

@@ -1,5 +1,5 @@
-import { BodyGroup, BodyOptions, BodyType, SATVector, Vector } from "../model";
-import { Polygon } from "./polygon";
+import { BodyGroup, BodyOptions, BodyType, SATVector, Vector } from '../model';
+import { Polygon } from './polygon';
 export interface LineConstructor<TLine extends Line> {
     new (start: Vector, end: Vector, options?: BodyOptions): TLine;
 }

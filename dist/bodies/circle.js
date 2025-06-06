@@ -154,7 +154,7 @@ class Circle extends model_1.SATCircle {
             minX: x - this.r,
             maxX: x + this.r,
             minY: y - this.r,
-            maxY: y + this.r,
+            maxY: y + this.r
         };
     }
     /**

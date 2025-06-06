@@ -4,15 +4,15 @@ import {
   testCircleCircle,
   testCirclePolygon,
   testPolygonCircle,
-  testPolygonPolygon,
-} from "sat";
-import { Polygon } from "./bodies/polygon";
+  testPolygonPolygon
+} from 'sat'
+import { Polygon } from './bodies/polygon'
 import {
   circleInCircle,
   circleInPolygon,
   polygonInCircle,
-  polygonInPolygon,
-} from "./intersect";
+  polygonInPolygon
+} from './intersect'
 import {
   BBox,
   Body,
@@ -26,9 +26,9 @@ import {
   SATPolygon,
   SATTest,
   SATVector,
-  Vector,
-} from "./model";
-import { forEach, map } from "./optimized";
+  Vector
+} from './model'
+import { forEach, map } from './optimized'
 
 /* helpers for faster getSATTest() and checkAInB() */
 
@@ -40,50 +40,50 @@ const testMap = {
   inCircleCircle: circleInCircle,
   inCirclePolygon: circleInPolygon,
   inPolygonCircle: polygonInCircle,
-  inPolygonPolygon: polygonInPolygon,
-};
+  inPolygonPolygon: polygonInPolygon
+}
 
 function createArray<T = SATTest | InTest>(
   bodyType: BodyType.Circle | BodyType.Polygon,
-  testType: "sat" | "in"
+  testType: 'sat' | 'in'
 ): T[] {
-  const arrayResult: T[] = [];
+  const arrayResult: T[] = []
   const bodyGroups = Object.values(BodyGroup).filter(
-    (value) => typeof value === "number"
-  );
+    (value) => typeof value === 'number'
+  )
 
   forEach(bodyGroups, (bodyGroup: BodyGroup) => {
     arrayResult[bodyGroup] = (
       bodyGroup === BodyGroup.Circle
         ? testMap[`${testType}${bodyType}Circle`]
         : testMap[`${testType}${bodyType}Polygon`]
-    ) as T;
-  });
+    ) as T
+  })
 
-  return arrayResult;
+  return arrayResult
 }
 
-const circleSATFunctions = createArray<SATTest>(BodyType.Circle, "sat");
-const circleInFunctions = createArray<InTest>(BodyType.Circle, "in");
-const polygonSATFunctions = createArray<SATTest>(BodyType.Polygon, "sat");
-const polygonInFunctions = createArray<InTest>(BodyType.Polygon, "in");
+const circleSATFunctions = createArray<SATTest>(BodyType.Circle, 'sat')
+const circleInFunctions = createArray<InTest>(BodyType.Circle, 'in')
+const polygonSATFunctions = createArray<SATTest>(BodyType.Polygon, 'sat')
+const polygonInFunctions = createArray<InTest>(BodyType.Polygon, 'in')
 
-export const DEG2RAD = Math.PI / 180;
+export const DEG2RAD = Math.PI / 180
 
-export const RAD2DEG = 180 / Math.PI;
+export const RAD2DEG = 180 / Math.PI
 
 /**
  * convert from degrees to radians
  */
 export function deg2rad(degrees: number) {
-  return degrees * DEG2RAD;
+  return degrees * DEG2RAD
 }
 
 /**
  * convert from radians to degrees
  */
 export function rad2deg(radians: number) {
-  return radians * RAD2DEG;
+  return radians * RAD2DEG
 }
 
 /**
@@ -94,19 +94,19 @@ export function createEllipse(
   radiusY: number = radiusX,
   step = 1
 ): SATVector[] {
-  const steps: number = Math.PI * Math.hypot(radiusX, radiusY) * 2;
-  const length: number = Math.max(8, Math.ceil(steps / Math.max(1, step)));
-  const ellipse: SATVector[] = [];
+  const steps: number = Math.PI * Math.hypot(radiusX, radiusY) * 2
+  const length: number = Math.max(8, Math.ceil(steps / Math.max(1, step)))
+  const ellipse: SATVector[] = []
 
   for (let index = 0; index < length; index++) {
-    const value: number = (index / length) * 2 * Math.PI;
-    const x: number = Math.cos(value) * radiusX;
-    const y: number = Math.sin(value) * radiusY;
+    const value: number = (index / length) * 2 * Math.PI
+    const x: number = Math.cos(value) * radiusX
+    const y: number = Math.sin(value) * radiusY
 
-    ellipse.push(new SATVector(x, y));
+    ellipse.push(new SATVector(x, y))
   }
 
-  return ellipse;
+  return ellipse
 }
 
 /**
@@ -117,8 +117,8 @@ export function createBox(width: number, height: number): SATVector[] {
     new SATVector(0, 0),
     new SATVector(width, 0),
     new SATVector(width, height),
-    new SATVector(0, height),
-  ];
+    new SATVector(0, height)
+  ]
 }
 
 /**
@@ -127,7 +127,7 @@ export function createBox(width: number, height: number): SATVector[] {
 export function ensureVectorPoint(point: PotentialVector = {}): SATVector {
   return point instanceof SATVector
     ? point
-    : new SATVector(point.x || 0, point.y || 0);
+    : new SATVector(point.x || 0, point.y || 0)
 }
 
 /**
@@ -136,57 +136,57 @@ export function ensureVectorPoint(point: PotentialVector = {}): SATVector {
 export function ensurePolygonPoints(
   points: PotentialVector[] = []
 ): SATVector[] {
-  const polygonPoints: SATVector[] = map(points, ensureVectorPoint);
+  const polygonPoints: SATVector[] = map(points, ensureVectorPoint)
 
-  return clockwise(polygonPoints) ? polygonPoints.reverse() : polygonPoints;
+  return clockwise(polygonPoints) ? polygonPoints.reverse() : polygonPoints
 }
 
 /**
  * get distance between two Vector points
  */
 export function distance(bodyA: Vector, bodyB: Vector): number {
-  const xDiff = bodyA.x - bodyB.x;
-  const yDiff = bodyA.y - bodyB.y;
+  const xDiff = bodyA.x - bodyB.x
+  const yDiff = bodyA.y - bodyB.y
 
-  return Math.hypot(xDiff, yDiff);
+  return Math.hypot(xDiff, yDiff)
 }
 
 /**
  * check [is clockwise] direction of polygon
  */
 export function clockwise(points: Vector[]): boolean {
-  const length = points.length;
-  let sum = 0;
+  const length = points.length
+  let sum = 0
 
   forEach(points, (v1, index) => {
-    const v2 = points[(index + 1) % length];
+    const v2 = points[(index + 1) % length]
 
-    sum += (v2.x - v1.x) * (v2.y + v1.y);
-  });
+    sum += (v2.x - v1.x) * (v2.y + v1.y)
+  })
 
-  return sum > 0;
+  return sum > 0
 }
 
 /**
  * used for all types of bodies in constructor
  */
 export function extendBody(body: Body, options: BodyOptions = {}): void {
-  body.isStatic = !!options.isStatic;
-  body.isTrigger = !!options.isTrigger;
-  body.padding = options.padding || 0;
+  body.isStatic = !!options.isStatic
+  body.isTrigger = !!options.isTrigger
+  body.padding = options.padding || 0
   // Default value should be reflected in documentation of `BodyOptions.group`
-  body.group = options.group ?? 0x7fffffff;
+  body.group = options.group ?? 0x7fffffff
 
-  if ("userData" in options) {
-    body.userData = options.userData;
+  if ('userData' in options) {
+    body.userData = options.userData
   }
 
   if (options.isCentered && body.typeGroup !== BodyGroup.Circle) {
-    body.isCentered = true;
+    body.isCentered = true
   }
 
   if (options.angle) {
-    body.setAngle(options.angle);
+    body.setAngle(options.angle)
   }
 }
 
@@ -194,11 +194,11 @@ export function extendBody(body: Body, options: BodyOptions = {}): void {
  * check if body moved outside of its padding
  */
 export function bodyMoved(body: Body): boolean {
-  const { bbox, minX, minY, maxX, maxY } = body;
+  const { bbox, minX, minY, maxX, maxY } = body
 
   return (
     bbox.minX < minX || bbox.minY < minY || bbox.maxX > maxX || bbox.maxY > maxY
-  );
+  )
 }
 
 /**
@@ -210,14 +210,14 @@ export function notIntersectAABB(bodyA: BBox, bodyB: BBox): boolean {
     bodyB.minY > bodyA.maxY ||
     bodyB.maxX < bodyA.minX ||
     bodyB.maxY < bodyA.minY
-  );
+  )
 }
 
 /**
  * checks if two boxes intersect
  */
 export function intersectAABB(bodyA: BBox, bodyB: BBox): boolean {
-  return !notIntersectAABB(bodyA, bodyB);
+  return !notIntersectAABB(bodyA, bodyB)
 }
 
 /**
@@ -259,11 +259,11 @@ export function canInteract(
   { group: groupA }: Body,
   { group: groupB }: Body
 ): boolean {
-  const categoryA = groupA >> 16;
-  const categoryB = groupB >> 16;
-  const maskA = groupA & 0xffff;
-  const maskB = groupB & 0xffff;
-  return (categoryA & maskB) !== 0 && (categoryB & maskA) !== 0; // Box2D rules
+  const categoryA = groupA >> 16
+  const categoryB = groupB >> 16
+  const maskA = groupA & 0xffff
+  const maskB = groupB & 0xffff
+  return (categoryA & maskB) !== 0 && (categoryB & maskA) !== 0 // Box2D rules
 }
 
 /**
@@ -273,16 +273,16 @@ export function checkAInB(bodyA: Body, bodyB: Body): boolean {
   const check =
     bodyA.typeGroup === BodyGroup.Circle
       ? circleInFunctions
-      : polygonInFunctions;
+      : polygonInFunctions
 
-  return check[bodyB.typeGroup](bodyA, bodyB);
+  return check[bodyB.typeGroup](bodyA, bodyB)
 }
 
 /**
  * clone sat vector points array into vector points array
  */
 export function clonePointsArray(points: SATVector[]): Vector[] {
-  return map(points, ({ x, y }: Vector) => ({ x, y }));
+  return map(points, ({ x, y }: Vector) => ({ x, y }))
 }
 
 /**
@@ -293,7 +293,7 @@ export function clonePointsArray(points: SATVector[]): Vector[] {
 export function mapVectorToArray(
   { x, y }: Vector = { x: 0, y: 0 }
 ): DecompPoint {
-  return [x, y];
+  return [x, y]
 }
 
 /**
@@ -302,18 +302,18 @@ export function mapVectorToArray(
  * @param positionAsArray
  */
 export function mapArrayToVector([x, y]: DecompPoint = [0, 0]): Vector {
-  return { x, y };
+  return { x, y }
 }
 
 /**
  * given 2 bodies calculate vector of bounce assuming equal mass and they are circles
  */
 export function getBounceDirection(body: Vector, collider: Vector): SATVector {
-  const v2 = new SATVector(collider.x - body.x, collider.y - body.y);
-  const v1 = new SATVector(body.x - collider.x, body.y - collider.y);
-  const len = v1.dot(v2.normalize()) * 2;
+  const v2 = new SATVector(collider.x - body.x, collider.y - body.y)
+  const v1 = new SATVector(body.x - collider.x, body.y - collider.y)
+  const len = v1.dot(v2.normalize()) * 2
 
-  return new SATVector(v2.x * len - v1.x, v2.y * len - v1.y).normalize();
+  return new SATVector(v2.x * len - v1.x, v2.y * len - v1.y).normalize()
 }
 
 /**
@@ -323,9 +323,9 @@ export function getSATTest(bodyA: Body, bodyB: Body): SATTest {
   const check =
     bodyA.typeGroup === BodyGroup.Circle
       ? circleSATFunctions
-      : polygonSATFunctions;
+      : polygonSATFunctions
 
-  return check[bodyB.typeGroup];
+  return check[bodyB.typeGroup]
 }
 
 /**
@@ -340,23 +340,23 @@ export function dashLineTo(
   dash = 2,
   gap = 4
 ): void {
-  const xDiff = toX - fromX;
-  const yDiff = toY - fromY;
-  const arc = Math.atan2(yDiff, xDiff);
-  const offsetX = Math.cos(arc);
-  const offsetY = Math.sin(arc);
+  const xDiff = toX - fromX
+  const yDiff = toY - fromY
+  const arc = Math.atan2(yDiff, xDiff)
+  const offsetX = Math.cos(arc)
+  const offsetY = Math.sin(arc)
 
-  let posX = fromX;
-  let posY = fromY;
-  let dist = Math.hypot(xDiff, yDiff);
+  let posX = fromX
+  let posY = fromY
+  let dist = Math.hypot(xDiff, yDiff)
 
   while (dist > 0) {
-    const step = Math.min(dist, dash);
-    context.moveTo(posX, posY);
-    context.lineTo(posX + offsetX * step, posY + offsetY * step);
-    posX += offsetX * (dash + gap);
-    posY += offsetY * (dash + gap);
-    dist -= dash + gap;
+    const step = Math.min(dist, dash)
+    context.moveTo(posX, posY)
+    context.lineTo(posX + offsetX * step, posY + offsetY * step)
+    posX += offsetX * (dash + gap)
+    posY += offsetY * (dash + gap)
+    dist -= dash + gap
   }
 }
 
@@ -371,31 +371,31 @@ export function drawPolygon(
   context: CanvasRenderingContext2D,
   {
     pos,
-    calcPoints,
-  }: Pick<Polygon | SATPolygon, "calcPoints"> & { pos: Vector },
+    calcPoints
+  }: Pick<Polygon | SATPolygon, 'calcPoints'> & { pos: Vector },
   isTrigger = false
 ): void {
-  const lastPoint = calcPoints[calcPoints.length - 1];
-  const fromX = pos.x + lastPoint.x;
-  const fromY = pos.y + lastPoint.y;
+  const lastPoint = calcPoints[calcPoints.length - 1]
+  const fromX = pos.x + lastPoint.x
+  const fromY = pos.y + lastPoint.y
 
   if (calcPoints.length === 1) {
-    context.arc(fromX, fromY, 1, 0, Math.PI * 2);
+    context.arc(fromX, fromY, 1, 0, Math.PI * 2)
   } else {
-    context.moveTo(fromX, fromY);
+    context.moveTo(fromX, fromY)
   }
 
   forEach(calcPoints, (point, index) => {
-    const toX = pos.x + point.x;
-    const toY = pos.y + point.y;
+    const toX = pos.x + point.x
+    const toY = pos.y + point.y
 
     if (isTrigger) {
-      const prev = calcPoints[index - 1] || lastPoint;
-      dashLineTo(context, pos.x + prev.x, pos.y + prev.y, toX, toY);
+      const prev = calcPoints[index - 1] || lastPoint
+      dashLineTo(context, pos.x + prev.x, pos.y + prev.y, toX, toY)
     } else {
-      context.lineTo(toX, toY);
+      context.lineTo(toX, toY)
     }
-  });
+  })
 }
 
 /**
@@ -410,48 +410,48 @@ export function drawBVH(
     context,
     {
       pos: { x: body.minX, y: body.minY },
-      calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY),
+      calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY)
     },
     isTrigger
-  );
+  )
 }
 
 /**
  * clone response object returning new response with previous ones values
  */
 export function cloneResponse(response: Response) {
-  const clone = new Response();
-  const { a, b, overlap, overlapN, overlapV, aInB, bInA } = response;
-  clone.a = a;
-  clone.b = b;
-  clone.overlap = overlap;
-  clone.overlapN = overlapN.clone();
-  clone.overlapV = overlapV.clone();
-  clone.aInB = aInB;
-  clone.bInA = bInA;
+  const clone = new Response()
+  const { a, b, overlap, overlapN, overlapV, aInB, bInA } = response
+  clone.a = a
+  clone.b = b
+  clone.overlap = overlap
+  clone.overlapN = overlapN.clone()
+  clone.overlapV = overlapV.clone()
+  clone.aInB = aInB
+  clone.bInA = bInA
 
-  return clone;
+  return clone
 }
 
 /**
  * dummy fn used as default, for optimization
  */
 export function returnTrue() {
-  return true;
+  return true
 }
 
 /**
  * for groups
  */
 export function getGroup(group: number): number {
-  return Math.max(0, Math.min(group, 0x7fffffff));
+  return Math.max(0, Math.min(group, 0x7fffffff))
 }
 
 /**
  * binary string to decimal number
  */
 export function bin2dec(binary: string): number {
-  return Number(`0b${binary}`.replace(/\s/g, ""));
+  return Number(`0b${binary}`.replace(/\s/g, ''))
 }
 
 /**
@@ -460,7 +460,7 @@ export function bin2dec(binary: string): number {
  * @param input - number or binary string
  */
 export function ensureNumber(input: number | string): number {
-  return typeof input === "number" ? input : bin2dec(input);
+  return typeof input === 'number' ? input : bin2dec(input)
 }
 
 /**
@@ -473,14 +473,14 @@ export function groupBits(
   category: number | string,
   mask: number | string = category
 ) {
-  return (ensureNumber(category) << 16) | ensureNumber(mask);
+  return (ensureNumber(category) << 16) | ensureNumber(mask)
 }
 
 export function move(body: Body, speed = 1, updateNow = true) {
   if (!speed) {
-    return;
+    return
   }
-  const moveX = Math.cos(body.angle) * speed;
-  const moveY = Math.sin(body.angle) * speed;
-  body.setPosition(body.x + moveX, body.y + moveY, updateNow);
+  const moveX = Math.cos(body.angle) * speed
+  const moveY = Math.sin(body.angle) * speed
+  body.setPosition(body.x + moveX, body.y + moveY, updateNow)
 }

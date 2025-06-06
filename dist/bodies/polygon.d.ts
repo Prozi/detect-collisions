@@ -1,5 +1,5 @@
-import { BBox, BodyGroup, BodyOptions, BodyProps, BodyType, DecompPolygon, PotentialVector, SATPolygon, SATVector, Vector } from "../model";
-import { System } from "../system";
+import { BBox, BodyGroup, BodyOptions, BodyProps, BodyType, DecompPolygon, PotentialVector, SATPolygon, SATVector, Vector } from '../model';
+import { System } from '../system';
 export interface PolygonConstructor<TPolygon extends Polygon> {
     new (position: PotentialVector, points: PotentialVector[], options?: BodyOptions): TPolygon;
 }
@@ -58,7 +58,7 @@ export declare class Polygon<UserDataType = any> extends SATPolygon implements B
     /**
      * allows the user to set any misc data for client use
      */
-    userData?: BodyProps<UserDataType>["userData"];
+    userData?: BodyProps<UserDataType>['userData'];
     /**
      * type of body
      */

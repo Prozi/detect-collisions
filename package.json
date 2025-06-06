@@ -1,13 +1,16 @@
 {
   "name": "detect-collisions",
-  "version": "9.27.5",
+  "version": "9.27.6",
   "description": "Points, Lines, Boxes, Polygons (also hollow), Ellipses, Circles. RayCasting, offsets, rotation, scaling, bounding box padding, flags for static and ghost/trigger bodies",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "module": "./esm/index.js",
   "exports": {
-    "import": "./esm/index.js",
-    "require": "./dist/index.js"
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   },
   "scripts": {
     "start": "chef-express dist/demo --debug",
@@ -21,7 +24,7 @@
     "copy-quickselect": "cp node_modules/quickselect/index.js src/external/quickselect.js",
     "copy-npm-modules": "npm run copy-rbush && npm run copy-quickselect && npm run use-latest-quickselect",
     "prebuild": "npm run copy-npm-modules",
-    "build": "yarn build:commonjs && yarn build:esm",
+    "build": "npm run build:commonjs && npm run build:esm",
     "postbuild": "npm run test && npm run build:docs && npm run build:demo && [ -z \"$NO_BENCH\" ] && npm run benchmark",
     "prebuild:commonjs": "rm -rf dist",
     "build:commonjs": "tsc",
@@ -37,8 +40,9 @@
     "docs-from-master-linux": "find docs -type f -name '*.html' -exec sed -i -r 's_/blob/[^/]+/_/blob/master/_g' {} +",
     "docs-from-master": "npm run docs-from-master-macos || npm run docs-from-master-linux",
     "demo": "npm run build:demo && npm start",
-    "precommit": "npm run lint && npm run build",
+    "precommit": "npm run lint && npm run format && npm run build",
     "lint": "eslint src --fix",
+    "format": "prettier . --write",
     "benchmark": "./clean-dist.sh && npm run benchmark-insertion && npm run benchmark-stress",
     "benchmark-stress": "node -e 'import(\"./dist/benchmarks/index.js\").then(({ stressBenchmark }) => stressBenchmark());'",
     "benchmark-insertion": "node -e 'import(\"./dist/benchmarks/index.js\").then(({ insertionBenchmark }) => insertionBenchmark());'"
@@ -95,6 +99,7 @@
     "html-webpack-plugin": "^5.6.3",
     "husky": "^9.1.7",
     "jest": "^29.7.0",
+    "prettier": "^3.5.3",
     "quickselect": "^3.0.0",
     "random-seed": "^0.3.0",
     "rbush": "^4.0.1",

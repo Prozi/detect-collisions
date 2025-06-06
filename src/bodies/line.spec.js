@@ -1,64 +1,64 @@
-describe("GIVEN Line", () => {
-  it("THEN without constructor values it throws", () => {
-    const { Line } = require("../../src");
+describe('GIVEN Line', () => {
+  it('THEN without constructor values it throws', () => {
+    const { Line } = require('../../src')
 
-    const case1 = () => new Line({});
+    const case1 = () => new Line({})
 
-    expect(case1).toThrow();
-  });
+    expect(case1).toThrow()
+  })
 
-  it("THEN two lines collide", () => {
-    const { System, Line } = require("../../src");
+  it('THEN two lines collide', () => {
+    const { System, Line } = require('../../src')
 
-    const physics = new System();
-    const line1 = new Line({ x: -10, y: -10 }, { x: 10, y: 10 });
-    const line2 = new Line({ x: 10, y: -10 }, { x: -10, y: 10 });
+    const physics = new System()
+    const line1 = new Line({ x: -10, y: -10 }, { x: 10, y: 10 })
+    const line2 = new Line({ x: 10, y: -10 }, { x: -10, y: 10 })
 
-    physics.insert(line1);
-    physics.insert(line2);
+    physics.insert(line1)
+    physics.insert(line2)
 
-    let results = 0;
+    let results = 0
 
     physics.checkAll(() => {
-      results++;
-    });
+      results++
+    })
 
-    expect(results).toBeGreaterThan(0);
-  });
+    expect(results).toBeGreaterThan(0)
+  })
 
-  it("THEN you can set and get start and end", () => {
-    const { System } = require("../../src");
-    const physics = new System();
+  it('THEN you can set and get start and end', () => {
+    const { System } = require('../../src')
+    const physics = new System()
 
-    const start = { x: 13, y: 13 };
-    const end = { x: 69, y: 69 };
-    const line = physics.createLine(start, end);
+    const start = { x: 13, y: 13 }
+    const end = { x: 69, y: 69 }
+    const line = physics.createLine(start, end)
 
-    expect(line.start).toStrictEqual(start);
-    expect(line.end).toStrictEqual(end);
+    expect(line.start).toStrictEqual(start)
+    expect(line.end).toStrictEqual(end)
 
-    line.start = { x: 10, y: 10 };
-    expect(line.start).toStrictEqual({ x: 10, y: 10 });
+    line.start = { x: 10, y: 10 }
+    expect(line.start).toStrictEqual({ x: 10, y: 10 })
 
-    line.end = { x: 99, y: 99 };
-    expect(line.end).toStrictEqual({ x: 99, y: 99 });
-  });
+    line.end = { x: 99, y: 99 }
+    expect(line.end).toStrictEqual({ x: 99, y: 99 })
+  })
 
-  describe("AND you set options", () => {
-    it("THEN the parameters are set", () => {
-      const { System } = require("../../src");
-      const physics = new System();
+  describe('AND you set options', () => {
+    it('THEN the parameters are set', () => {
+      const { System } = require('../../src')
+      const physics = new System()
       const body = physics.createLine(
         { x: 0, y: 0 },
         { x: 10, y: 0 },
         {
           isStatic: true,
-          isTrigger: true,
-        },
-      );
+          isTrigger: true
+        }
+      )
 
-      expect(body.isStatic).toBe(true);
-      expect(body.isTrigger).toBe(true);
-    });
-  });
-});
+      expect(body.isStatic).toBe(true)
+      expect(body.isTrigger).toBe(true)
+    })
+  })
+})

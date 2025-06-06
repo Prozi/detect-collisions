@@ -21,7 +21,7 @@ const stressBenchmark = () => __awaiter(void 0, void 0, void 0, function* () {
     let stressTest;
     const benchmark = new tinybench_1.Bench({
         time: 1000,
-        warmupIterations: 0,
+        warmupIterations: 0
     });
     amounts.forEach((items) => {
         benchmark.add(`stress test, items=${items}`, () => {
@@ -33,7 +33,7 @@ const stressBenchmark = () => __awaiter(void 0, void 0, void 0, function* () {
             },
             afterEach: () => {
                 stressTest.physics.clear();
-            },
+            }
         });
     });
     yield benchmark.run();

@@ -1,7 +1,7 @@
-import { BodyGroup, BodyOptions, BodyType, PotentialVector } from "../model";
+import { BodyGroup, BodyOptions, BodyType, PotentialVector } from '../model'
 
-import { Polygon } from "./polygon";
-import { createBox } from "../utils";
+import { Polygon } from './polygon'
+import { createBox } from '../utils'
 
 export interface BoxConstructor<TBox extends Box> {
   new (
@@ -9,7 +9,7 @@ export interface BoxConstructor<TBox extends Box> {
     width: number,
     height: number,
     options?: BodyOptions
-  ): TBox;
+  ): TBox
 }
 
 /**
@@ -19,27 +19,27 @@ export class Box<UserDataType = any> extends Polygon<UserDataType> {
   /**
    * type of body
    */
-  readonly type: BodyType.Box | BodyType.Point = BodyType.Box;
+  readonly type: BodyType.Box | BodyType.Point = BodyType.Box
 
   /**
    * faster than type
    */
-  readonly typeGroup: BodyGroup.Box | BodyGroup.Point = BodyGroup.Box;
+  readonly typeGroup: BodyGroup.Box | BodyGroup.Point = BodyGroup.Box
 
   /**
    * boxes are convex
    */
-  readonly isConvex = true;
+  readonly isConvex = true
 
   /**
    * inner width
    */
-  protected _width: number;
+  protected _width: number
 
   /**
    * inner height
    */
-  protected _height: number;
+  protected _height: number
 
   /**
    * collider - box
@@ -50,40 +50,40 @@ export class Box<UserDataType = any> extends Polygon<UserDataType> {
     height: number,
     options?: BodyOptions<UserDataType>
   ) {
-    super(position, createBox(width, height), options);
+    super(position, createBox(width, height), options)
 
-    this._width = width;
-    this._height = height;
+    this._width = width
+    this._height = height
   }
 
   /**
    * get box width
    */
   get width(): number {
-    return this._width;
+    return this._width
   }
 
   /**
    * set box width, update points
    */
   set width(width: number) {
-    this._width = width;
-    this.afterUpdateSize();
+    this._width = width
+    this.afterUpdateSize()
   }
 
   /**
    * get box height
    */
   get height(): number {
-    return this._height;
+    return this._height
   }
 
   /**
    * set box height, update points
    */
   set height(height: number) {
-    this._height = height;
-    this.afterUpdateSize();
+    this._height = height
+    this.afterUpdateSize()
   }
 
   /**
@@ -91,13 +91,13 @@ export class Box<UserDataType = any> extends Polygon<UserDataType> {
    * see https://github.com/Prozi/detect-collisions/issues/70
    */
   protected afterUpdateSize(): void {
-    this.setPoints(createBox(this._width, this._height));
+    this.setPoints(createBox(this._width, this._height))
   }
 
   /**
    * do not attempt to use Polygon.updateConvex()
    */
   protected updateConvex(): void {
-    return;
+    return
   }
 }

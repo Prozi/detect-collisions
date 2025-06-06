@@ -35,7 +35,7 @@ function polygonInCircle(polygon, circle) {
     return (0, optimized_1.every)(polygon.calcPoints, (p) => {
         const point = {
             x: p.x + polygon.pos.x,
-            y: p.y + polygon.pos.y,
+            y: p.y + polygon.pos.y
         };
         return (0, sat_1.pointInCircle)(point, circle);
     });
@@ -93,7 +93,7 @@ function circleInPolygon(circle, polygon) {
     // Necessary add polygon pos to points
     const points = (0, optimized_1.map)(polygon.calcPoints, ({ x, y }) => ({
         x: x + polygon.pos.x,
-        y: y + polygon.pos.y,
+        y: y + polygon.pos.y
     }));
     // If the center of the circle is within the polygon,
     // the circle is not outside of the polygon completely.
@@ -134,7 +134,7 @@ function circleOutsidePolygon(circle, polygon) {
     // Necessary add polygon pos to points
     const points = (0, optimized_1.map)(polygon.calcPoints, ({ x, y }) => ({
         x: x + polygon.pos.x,
-        y: y + polygon.pos.y,
+        y: y + polygon.pos.y
     }));
     // If the center of the circle is within the polygon,
     // the circle is not outside of the polygon completely.
@@ -239,7 +239,7 @@ function intersectLinePolygon(line, polygon) {
             : polygon.calcPoints[polygon.calcPoints.length - 1];
         const side = {
             start: { x: from.x + polygon.pos.x, y: from.y + polygon.pos.y },
-            end: { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y },
+            end: { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y }
         };
         const hit = intersectLineLine(line, side);
         if (hit) {
@@ -272,12 +272,12 @@ function intersectCircleCircle(circle1, circle2) {
     const py = y1 + (dy * a) / dist;
     const intersection1 = {
         x: px + (h * dy) / dist,
-        y: py - (h * dx) / dist,
+        y: py - (h * dx) / dist
     };
     results.push(intersection1);
     const intersection2 = {
         x: px - (h * dy) / dist,
-        y: py + (h * dx) / dist,
+        y: py + (h * dx) / dist
     };
     results.push(intersection2);
     return results;

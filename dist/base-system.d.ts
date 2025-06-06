@@ -1,10 +1,10 @@
-import { Body, BodyOptions, ChildrenData, Data, InTest, Leaf, PotentialVector, RBush, TraverseFunction, Vector } from "./model";
-import { Box, BoxConstructor } from "./bodies/box";
-import { Circle, CircleConstructor } from "./bodies/circle";
-import { Ellipse, EllipseConstructor } from "./bodies/ellipse";
-import { Line, LineConstructor } from "./bodies/line";
-import { Point, PointConstructor } from "./bodies/point";
-import { Polygon, PolygonConstructor } from "./bodies/polygon";
+import { Body, BodyOptions, ChildrenData, Data, InTest, Leaf, PotentialVector, RBush, TraverseFunction, Vector } from './model';
+import { Box, BoxConstructor } from './bodies/box';
+import { Circle, CircleConstructor } from './bodies/circle';
+import { Ellipse, EllipseConstructor } from './bodies/ellipse';
+import { Line, LineConstructor } from './bodies/line';
+import { Point, PointConstructor } from './bodies/point';
+import { Polygon, PolygonConstructor } from './bodies/polygon';
 /**
  * very base collision system (create, insert, update, draw, remove)
  */

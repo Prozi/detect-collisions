@@ -8,16 +8,16 @@ import {
   PotentialVector,
   RBush,
   TraverseFunction,
-  Vector,
-} from "./model";
-import { filter, forEach } from "./optimized";
-import { bodyMoved, drawBVH } from "./utils";
-import { Box, BoxConstructor } from "./bodies/box";
-import { Circle, CircleConstructor } from "./bodies/circle";
-import { Ellipse, EllipseConstructor } from "./bodies/ellipse";
-import { Line, LineConstructor } from "./bodies/line";
-import { Point, PointConstructor } from "./bodies/point";
-import { Polygon, PolygonConstructor } from "./bodies/polygon";
+  Vector
+} from './model'
+import { filter, forEach } from './optimized'
+import { bodyMoved, drawBVH } from './utils'
+import { Box, BoxConstructor } from './bodies/box'
+import { Circle, CircleConstructor } from './bodies/circle'
+import { Ellipse, EllipseConstructor } from './bodies/ellipse'
+import { Line, LineConstructor } from './bodies/line'
+import { Point, PointConstructor } from './bodies/point'
+import { Polygon, PolygonConstructor } from './bodies/polygon'
 
 /**
  * very base collision system (create, insert, update, draw, remove)
@@ -26,7 +26,7 @@ export class BaseSystem<TBody extends Body = Body>
   extends RBush
   implements Data<TBody>
 {
-  data!: ChildrenData<TBody>;
+  data!: ChildrenData<TBody>
 
   /**
    * create point at position with options and add to system
@@ -36,12 +36,12 @@ export class BaseSystem<TBody extends Body = Body>
     options?: BodyOptions,
     Class?: PointConstructor<TPoint>
   ): TPoint | Point {
-    const PointClass = Class || Point;
-    const point = new PointClass(position, options);
+    const PointClass = Class || Point
+    const point = new PointClass(position, options)
 
-    this.insert(point as TBody);
+    this.insert(point as TBody)
 
-    return point;
+    return point
   }
 
   /**
@@ -53,12 +53,12 @@ export class BaseSystem<TBody extends Body = Body>
     options?: BodyOptions,
     Class?: LineConstructor<TLine>
   ): TLine | Line {
-    const LineClass = Class || Line;
-    const line = new LineClass(start, end, options);
+    const LineClass = Class || Line
+    const line = new LineClass(start, end, options)
 
-    this.insert(line as TBody);
+    this.insert(line as TBody)
 
-    return line;
+    return line
   }
 
   /**
@@ -70,12 +70,12 @@ export class BaseSystem<TBody extends Body = Body>
     options?: BodyOptions,
     Class?: CircleConstructor<TCircle>
   ): TCircle | Circle {
-    const CircleClass = Class || Circle;
-    const circle = new CircleClass(position, radius, options);
+    const CircleClass = Class || Circle
+    const circle = new CircleClass(position, radius, options)
 
-    this.insert(circle as TBody);
+    this.insert(circle as TBody)
 
-    return circle;
+    return circle
   }
 
   /**
@@ -88,12 +88,12 @@ export class BaseSystem<TBody extends Body = Body>
     options?: BodyOptions,
     Class?: BoxConstructor<TBox>
   ): TBox | Box {
-    const BoxClass = Class || Box;
-    const box = new BoxClass(position, width, height, options);
+    const BoxClass = Class || Box
+    const box = new BoxClass(position, width, height, options)
 
-    this.insert(box as TBody);
+    this.insert(box as TBody)
 
-    return box;
+    return box
   }
 
   /**
@@ -107,12 +107,12 @@ export class BaseSystem<TBody extends Body = Body>
     options?: BodyOptions,
     Class?: EllipseConstructor<TEllipse>
   ): TEllipse | Ellipse {
-    const EllipseClass = Class || Ellipse;
-    const ellipse = new EllipseClass(position, radiusX, radiusY, step, options);
+    const EllipseClass = Class || Ellipse
+    const ellipse = new EllipseClass(position, radiusX, radiusY, step, options)
 
-    this.insert(ellipse as TBody);
+    this.insert(ellipse as TBody)
 
-    return ellipse;
+    return ellipse
   }
 
   /**
@@ -124,12 +124,12 @@ export class BaseSystem<TBody extends Body = Body>
     options?: BodyOptions,
     Class?: PolygonConstructor<TPolygon>
   ): TPolygon | Polygon {
-    const PolygonClass = Class || Polygon;
-    const polygon = new PolygonClass(position, points, options);
+    const PolygonClass = Class || Polygon
+    const polygon = new PolygonClass(position, points, options)
 
-    this.insert(polygon as TBody);
+    this.insert(polygon as TBody)
 
-    return polygon;
+    return polygon
   }
 
   /**
@@ -137,33 +137,33 @@ export class BaseSystem<TBody extends Body = Body>
    * every body can be part of only one system
    */
   insert(body: TBody): this {
-    body.bbox = body.getAABBAsBBox();
+    body.bbox = body.getAABBAsBBox()
 
     if (body.system) {
       // allow end if body inserted and not moved
       if (!bodyMoved(body)) {
-        return this;
+        return this
       }
 
       // old bounding box *needs* to be removed
-      body.system.remove(body);
+      body.system.remove(body)
     }
 
     // only then we update min, max
-    body.minX = body.bbox.minX - body.padding;
-    body.minY = body.bbox.minY - body.padding;
-    body.maxX = body.bbox.maxX + body.padding;
-    body.maxY = body.bbox.maxY + body.padding;
+    body.minX = body.bbox.minX - body.padding
+    body.minY = body.bbox.minY - body.padding
+    body.maxX = body.bbox.maxX + body.padding
+    body.maxY = body.bbox.maxY + body.padding
 
     // reinsert bounding box to collision tree
-    return super.insert(body);
+    return super.insert(body)
   }
 
   /**
    * updates body in collision tree
    */
   updateBody(body: TBody): void {
-    body.updateBody();
+    body.updateBody()
   }
 
   /**
@@ -171,8 +171,8 @@ export class BaseSystem<TBody extends Body = Body>
    */
   update(): void {
     forEach(this.all(), (body: TBody) => {
-      this.updateBody(body);
-    });
+      this.updateBody(body)
+    })
   }
 
   /**
@@ -180,8 +180,8 @@ export class BaseSystem<TBody extends Body = Body>
    */
   draw(context: CanvasRenderingContext2D): void {
     forEach(this.all(), (body: TBody) => {
-      body.draw(context);
-    });
+      body.draw(context)
+    })
   }
 
   /**
@@ -189,22 +189,22 @@ export class BaseSystem<TBody extends Body = Body>
    */
   drawBVH(context: CanvasRenderingContext2D, isTrigger = true): void {
     const drawChildren = (body: Leaf<TBody>) => {
-      drawBVH(context, body, isTrigger);
+      drawBVH(context, body, isTrigger)
       if (body.children) {
-        forEach(body.children, drawChildren);
+        forEach(body.children, drawChildren)
       }
-    };
+    }
 
-    forEach(this.data.children, drawChildren);
+    forEach(this.data.children, drawChildren)
   }
 
   /**
    * remove body aabb from collision tree
    */
   remove(body: TBody, equals?: InTest<TBody>): this {
-    body.system = undefined;
+    body.system = undefined
 
-    return super.remove(body, equals);
+    return super.remove(body, equals)
   }
 
   /**
@@ -213,7 +213,7 @@ export class BaseSystem<TBody extends Body = Body>
    */
   getPotentials(body: TBody): TBody[] {
     // filter here is required as collides with self
-    return filter(this.search(body), (candidate: TBody) => candidate !== body);
+    return filter(this.search(body), (candidate: TBody) => candidate !== body)
   }
 
   /**
@@ -228,17 +228,17 @@ export class BaseSystem<TBody extends Body = Body>
   ): TBody | undefined {
     return children?.find((body, index) => {
       if (!body) {
-        return false;
+        return false
       }
 
       if (body.typeGroup && traverseFunction(body, children, index)) {
-        return true;
+        return true
       }
 
       // if callback returns true, ends forEach
       if (body.children) {
-        this.traverse(traverseFunction, body);
+        this.traverse(traverseFunction, body)
       }
-    });
+    })
   }
 }

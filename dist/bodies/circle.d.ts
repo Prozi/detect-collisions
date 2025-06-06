@@ -1,5 +1,5 @@
-import { BBox, BodyGroup, BodyOptions, BodyProps, BodyType, PotentialVector, SATCircle, SATVector, Vector } from "../model";
-import { System } from "../system";
+import { BBox, BodyGroup, BodyOptions, BodyProps, BodyType, PotentialVector, SATCircle, SATVector, Vector } from '../model';
+import { System } from '../system';
 export interface CircleConstructor<TCircle extends Circle> {
     new (position: PotentialVector, radius: number, options?: BodyOptions): TCircle;
 }
@@ -62,7 +62,7 @@ export declare class Circle<UserDataType = any> extends SATCircle implements BBo
     /**
      * allows the user to set any misc data for client use
      */
-    userData?: BodyProps<UserDataType>["userData"];
+    userData?: BodyProps<UserDataType>['userData'];
     readonly isConvex = true;
     /**
      * circle type

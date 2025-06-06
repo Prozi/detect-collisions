@@ -1,5 +1,5 @@
-import { Polygon } from "./bodies/polygon";
-import { BBox, Body, BodyOptions, DecompPoint, PotentialVector, Response, SATPolygon, SATTest, SATVector, Vector } from "./model";
+import { Polygon } from './bodies/polygon';
+import { BBox, Body, BodyOptions, DecompPoint, PotentialVector, Response, SATPolygon, SATTest, SATVector, Vector } from './model';
 export declare const DEG2RAD: number;
 export declare const RAD2DEG: number;
 /**
@@ -125,7 +125,7 @@ export declare function dashLineTo(context: CanvasRenderingContext2D, fromX: num
  * @param polygon
  * @param isTrigger
  */
-export declare function drawPolygon(context: CanvasRenderingContext2D, { pos, calcPoints, }: Pick<Polygon | SATPolygon, "calcPoints"> & {
+export declare function drawPolygon(context: CanvasRenderingContext2D, { pos, calcPoints }: Pick<Polygon | SATPolygon, 'calcPoints'> & {
     pos: Vector;
 }, isTrigger?: boolean): void;
 /**

@@ -1,5 +1,5 @@
-import { BodyGroup, BodyOptions, BodyType, PotentialVector } from "../model";
-import { Box } from "./box";
+import { BodyGroup, BodyOptions, BodyType, PotentialVector } from '../model';
+import { Box } from './box';
 export interface PointConstructor<TPoint extends Point> {
     new (position: PotentialVector, options?: BodyOptions): TPoint;
 }

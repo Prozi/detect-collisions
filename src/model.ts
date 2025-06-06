@@ -2,50 +2,50 @@ import {
   Response,
   Circle as SATCircle,
   Polygon as SATPolygon,
-  Vector as SATVector,
-} from "sat";
-import { Box } from "./bodies/box";
-import { Circle } from "./bodies/circle";
-import { Ellipse } from "./bodies/ellipse";
-import { Line } from "./bodies/line";
-import { Point } from "./bodies/point";
-import { Polygon } from "./bodies/polygon";
-import { System } from "./system";
+  Vector as SATVector
+} from 'sat'
+import { Box } from './bodies/box'
+import { Circle } from './bodies/circle'
+import { Ellipse } from './bodies/ellipse'
+import { Line } from './bodies/line'
+import { Point } from './bodies/point'
+import { Polygon } from './bodies/polygon'
+import { System } from './system'
 
 // version 4.0.0 1=1 copy
-import RBush from "./external/rbush";
+import RBush from './external/rbush'
 
 // Import type for documentation linking
-import type { canInteract } from "./utils";
+import type { canInteract } from './utils'
 
 export {
   Point as DecompPoint,
   Polygon as DecompPolygon,
   isSimple,
-  quickDecomp,
-} from "poly-decomp-es";
+  quickDecomp
+} from 'poly-decomp-es'
 
 export interface BBox {
-  minX: number;
-  minY: number;
-  maxX: number;
-  maxY: number;
+  minX: number
+  minY: number
+  maxX: number
+  maxY: number
 }
 
-export { RBush, Response, SATCircle, SATPolygon, SATVector };
+export { RBush, Response, SATCircle, SATPolygon, SATVector }
 
-export type CollisionCallback = (response: Response) => boolean | void;
+export type CollisionCallback = (response: Response) => boolean | void
 
 /**
  * types
  */
 export enum BodyType {
-  Ellipse = "Ellipse",
-  Circle = "Circle",
-  Polygon = "Polygon",
-  Box = "Box",
-  Line = "Line",
-  Point = "Point",
+  Ellipse = 'Ellipse',
+  Circle = 'Circle',
+  Polygon = 'Polygon',
+  Box = 'Box',
+  Line = 'Line',
+  Point = 'Point'
 }
 
 /**
@@ -57,28 +57,28 @@ export enum BodyGroup {
   Polygon = 0b00001000,
   Box = 0b00000100,
   Line = 0b00000010,
-  Point = 0b00000001,
+  Point = 0b00000001
 }
 
 /**
  * body with children (rbush)
  */
 export type Leaf<TBody extends Body> = TBody & {
-  children?: Leaf<TBody>[];
-};
+  children?: Leaf<TBody>[]
+}
 
 /**
  * rbush data
  */
 export interface ChildrenData<TBody extends Body> {
-  children: Leaf<TBody>[];
+  children: Leaf<TBody>[]
 }
 
 /**
  * for use of private function of sat.js
  */
 export interface Data<TBody extends Body> {
-  data: ChildrenData<TBody>;
+  data: ChildrenData<TBody>
 }
 
 /**
@@ -88,28 +88,28 @@ export interface BodyOptions<UserDataType = any> {
   /**
    * system.separate() doesn't move this body
    */
-  isStatic?: boolean;
+  isStatic?: boolean
 
   /**
    * system.separate() doesn't trigger collision of this body
    */
-  isTrigger?: boolean;
+  isTrigger?: boolean
 
   /**
    * is body offset centered for rotation purpouses
    */
-  isCentered?: boolean;
+  isCentered?: boolean
 
   /**
    * body angle in radians use deg2rad to convert
    * move(speed) moves at `1 speed = 1px` towards angle
    */
-  angle?: number;
+  angle?: number
 
   /**
    * BHV padding for bounding box, preventing costly updates
    */
-  padding?: number;
+  padding?: number
 
   /**
    * group for collision filtering
@@ -125,43 +125,43 @@ export interface BodyOptions<UserDataType = any> {
    * @see {@link canInteract} for how groups are used
    * @default 0x7fffffff // member of all groups (can interact with everyting)
    */
-  group?: number;
+  group?: number
 
   /**
    * allows the user to set any misc data for client use
    */
-  userData?: UserDataType;
+  userData?: UserDataType
 }
 
 /**
  * system.raycast(from, to) result
  */
 export interface RaycastHit<TBody> {
-  point: Vector;
-  body: TBody;
+  point: Vector
+  body: TBody
 }
 
 /**
  * potential vector
  */
 export interface PotentialVector {
-  x?: number;
-  y?: number;
+  x?: number
+  y?: number
 }
 
 /**
  * x, y vector
  */
 export interface Vector extends PotentialVector {
-  x: number;
-  y: number;
+  x: number
+  y: number
 }
 
 /**
  * for use of private function of sat.js
  */
 export interface GetAABBAsBox {
-  getAABBAsBox(): { pos: Vector; w: number; h: number };
+  getAABBAsBox(): { pos: Vector; w: number; h: number }
 }
 
 /**
@@ -173,7 +173,7 @@ export type Body<UserDataType = any> =
   | Ellipse<UserDataType>
   | Circle<UserDataType>
   | Box<UserDataType>
-  | Polygon<UserDataType>;
+  | Polygon<UserDataType>
 
 /**
  * each body contains those regardless of type
@@ -183,101 +183,101 @@ export interface BodyProps<UserDataType = any>
   /**
    * type of body
    */
-  readonly type: BodyType;
+  readonly type: BodyType
 
   /**
    * faster for comparision, inner, type of body as number
    */
-  readonly typeGroup: BodyGroup;
+  readonly typeGroup: BodyGroup
 
   /**
    * flag to show is it a convex body or non convex polygon
    */
-  isConvex: boolean;
+  isConvex: boolean
 
   /**
    * bounding box cache, without padding
    */
-  bbox: BBox;
+  bbox: BBox
 
   /**
    * each body may have offset from center
    */
-  offset: SATVector;
+  offset: SATVector
 
   /**
    * collisions system reference
    */
-  system?: System;
+  system?: System
 
   /**
    * was the body modified and needs update in the next checkCollision
    */
-  dirty: boolean;
+  dirty: boolean
 
   /**
    * scale getter (x)
    */
-  get scaleX(): number;
+  get scaleX(): number
 
   /**
    * scale getter (y = x for Circle)
    */
-  get scaleY(): number;
+  get scaleY(): number
 
   /**
    * update position BY MOVING FORWARD IN ANGLE DIRECTION
    */
-  move(speed: number, updateNow?: boolean): Circle | SATPolygon;
+  move(speed: number, updateNow?: boolean): Circle | SATPolygon
 
   /**
    * update position BY TELEPORTING
    */
-  setPosition(x: number, y: number, updateNow?: boolean): Circle | SATPolygon;
+  setPosition(x: number, y: number, updateNow?: boolean): Circle | SATPolygon
 
   /**
    * for setting scale
    */
-  setScale(x: number, y: number, updateNow?: boolean): Circle | SATPolygon;
+  setScale(x: number, y: number, updateNow?: boolean): Circle | SATPolygon
 
   /**
    * for setting angle
    */
-  setAngle(angle: number, updateNow?: boolean): Circle | SATPolygon;
+  setAngle(angle: number, updateNow?: boolean): Circle | SATPolygon
 
   /**
    * for setting offset from center
    */
-  setOffset(offset: Vector, updateNow?: boolean): Circle | SATPolygon;
+  setOffset(offset: Vector, updateNow?: boolean): Circle | SATPolygon
 
   /**
    * draw the bounding box
    */
-  drawBVH(context: CanvasRenderingContext2D): void;
+  drawBVH(context: CanvasRenderingContext2D): void
 
   /**
    * draw the collider
    */
-  draw(context: CanvasRenderingContext2D): void;
+  draw(context: CanvasRenderingContext2D): void
 
   /**
    * return bounding box without padding
    */
-  getAABBAsBBox(): BBox;
+  getAABBAsBBox(): BBox
 }
 
 export type SATTest<
   T extends {} = Circle | Polygon | SATPolygon,
   Y extends {} = Circle | Polygon | SATPolygon
-> = (bodyA: T, bodyB: Y, response: Response) => boolean;
+> = (bodyA: T, bodyB: Y, response: Response) => boolean
 
 export type InTest<TBody extends Body = Body> = (
   bodyA: TBody,
   bodyB: TBody
-) => boolean;
+) => boolean
 
 export type TraverseFunction<TBody extends Body = Body> = (
   child: Leaf<TBody>,
   children: Leaf<TBody>[],
   index: number
-) => boolean | void;
+) => boolean | void

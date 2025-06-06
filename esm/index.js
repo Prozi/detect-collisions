@@ -2085,7 +2085,7 @@ function polygonInCircle(polygon, circle) {
     return every(polygon.calcPoints, (p) => {
         const point = {
             x: p.x + polygon.pos.x,
-            y: p.y + polygon.pos.y,
+            y: p.y + polygon.pos.y
         };
         return SATExports.pointInCircle(point, circle);
     });
@@ -2143,7 +2143,7 @@ function circleInPolygon(circle, polygon) {
     // Necessary add polygon pos to points
     const points = map(polygon.calcPoints, ({ x, y }) => ({
         x: x + polygon.pos.x,
-        y: y + polygon.pos.y,
+        y: y + polygon.pos.y
     }));
     // If the center of the circle is within the polygon,
     // the circle is not outside of the polygon completely.
@@ -2184,7 +2184,7 @@ function circleOutsidePolygon(circle, polygon) {
     // Necessary add polygon pos to points
     const points = map(polygon.calcPoints, ({ x, y }) => ({
         x: x + polygon.pos.x,
-        y: y + polygon.pos.y,
+        y: y + polygon.pos.y
     }));
     // If the center of the circle is within the polygon,
     // the circle is not outside of the polygon completely.
@@ -2289,7 +2289,7 @@ function intersectLinePolygon(line, polygon) {
             : polygon.calcPoints[polygon.calcPoints.length - 1];
         const side = {
             start: { x: from.x + polygon.pos.x, y: from.y + polygon.pos.y },
-            end: { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y },
+            end: { x: to.x + polygon.pos.x, y: to.y + polygon.pos.y }
         };
         const hit = intersectLineLine(line, side);
         if (hit) {
@@ -2322,12 +2322,12 @@ function intersectCircleCircle(circle1, circle2) {
     const py = y1 + (dy * a) / dist;
     const intersection1 = {
         x: px + (h * dy) / dist,
-        y: py - (h * dx) / dist,
+        y: py - (h * dx) / dist
     };
     results.push(intersection1);
     const intersection2 = {
         x: px - (h * dy) / dist,
-        y: py + (h * dx) / dist,
+        y: py + (h * dx) / dist
     };
     results.push(intersection2);
     return results;
@@ -2343,11 +2343,11 @@ const testMap = {
     inCircleCircle: circleInCircle,
     inCirclePolygon: circleInPolygon,
     inPolygonCircle: polygonInCircle,
-    inPolygonPolygon: polygonInPolygon,
+    inPolygonPolygon: polygonInPolygon
 };
 function createArray(bodyType, testType) {
     const arrayResult = [];
-    const bodyGroups = Object.values(BodyGroup).filter((value) => typeof value === "number");
+    const bodyGroups = Object.values(BodyGroup).filter((value) => typeof value === 'number');
     forEach(bodyGroups, (bodyGroup) => {
         arrayResult[bodyGroup] = (bodyGroup === BodyGroup.Circle
             ? testMap[`${testType}${bodyType}Circle`]
@@ -2355,10 +2355,10 @@ function createArray(bodyType, testType) {
     });
     return arrayResult;
 }
-const circleSATFunctions = createArray(BodyType.Circle, "sat");
-const circleInFunctions = createArray(BodyType.Circle, "in");
-const polygonSATFunctions = createArray(BodyType.Polygon, "sat");
-const polygonInFunctions = createArray(BodyType.Polygon, "in");
+const circleSATFunctions = createArray(BodyType.Circle, 'sat');
+const circleInFunctions = createArray(BodyType.Circle, 'in');
+const polygonSATFunctions = createArray(BodyType.Polygon, 'sat');
+const polygonInFunctions = createArray(BodyType.Polygon, 'in');
 const DEG2RAD = Math.PI / 180;
 const RAD2DEG = 180 / Math.PI;
 /**
@@ -2396,7 +2396,7 @@ function createBox(width, height) {
         new SATExports.Vector(0, 0),
         new SATExports.Vector(width, 0),
         new SATExports.Vector(width, height),
-        new SATExports.Vector(0, height),
+        new SATExports.Vector(0, height)
     ];
 }
 /**
@@ -2443,7 +2443,7 @@ function extendBody(body, options = {}) {
     body.padding = options.padding || 0;
     // Default value should be reflected in documentation of `BodyOptions.group`
     body.group = options.group ?? 0x7fffffff;
-    if ("userData" in options) {
+    if ('userData' in options) {
         body.userData = options.userData;
     }
     if (options.isCentered && body.typeGroup !== BodyGroup.Circle) {
@@ -2594,7 +2594,7 @@ function dashLineTo(context, fromX, fromY, toX, toY, dash = 2, gap = 4) {
  * @param polygon
  * @param isTrigger
  */
-function drawPolygon(context, { pos, calcPoints, }, isTrigger = false) {
+function drawPolygon(context, { pos, calcPoints }, isTrigger = false) {
     const lastPoint = calcPoints[calcPoints.length - 1];
     const fromX = pos.x + lastPoint.x;
     const fromY = pos.y + lastPoint.y;
@@ -2622,7 +2622,7 @@ function drawPolygon(context, { pos, calcPoints, }, isTrigger = false) {
 function drawBVH(context, body, isTrigger = true) {
     drawPolygon(context, {
         pos: { x: body.minX, y: body.minY },
-        calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY),
+        calcPoints: createBox(body.maxX - body.minX, body.maxY - body.minY)
     }, isTrigger);
 }
 /**
@@ -2656,7 +2656,7 @@ function getGroup(group) {
  * binary string to decimal number
  */
 function bin2dec(binary) {
-    return Number(`0b${binary}`.replace(/\s/g, ""));
+    return Number(`0b${binary}`.replace(/\s/g, ''));
 }
 /**
  * helper for groupBits()
@@ -2664,7 +2664,7 @@ function bin2dec(binary) {
  * @param input - number or binary string
  */
 function ensureNumber(input) {
-    return typeof input === "number" ? input : bin2dec(input);
+    return typeof input === 'number' ? input : bin2dec(input);
 }
 /**
  * create group bits from category and mask
@@ -2835,7 +2835,7 @@ class Circle extends SATExports.Circle {
             minX: x - this.r,
             maxX: x + this.r,
             minY: y - this.r,
-            maxY: y + this.r,
+            maxY: y + this.r
         };
     }
     /**
@@ -2933,7 +2933,7 @@ class Polygon extends SATExports.Polygon {
          */
         this.scaleVector = { x: 1, y: 1 };
         if (!points.length) {
-            throw new Error("No points in polygon");
+            throw new Error('No points in polygon');
         }
         extendBody(this, options);
     }
@@ -3032,7 +3032,7 @@ class Polygon extends SATExports.Polygon {
     setScale(x, y = x, updateNow = true) {
         this.scaleVector.x = Math.abs(x);
         this.scaleVector.y = Math.abs(y);
-        // super instead of this to not taint pointsBackup 
+        // super instead of this to not taint pointsBackup
         super.setPoints(map(this.points, (_point, index) => new SATExports.Vector(this.pointsBackup[index].x * this.scaleVector.x, this.pointsBackup[index].y * this.scaleVector.y)));
         this.updateConvex();
         this.markAsDirty(updateNow);
@@ -3057,7 +3057,7 @@ class Polygon extends SATExports.Polygon {
             minX: pos.x,
             minY: pos.y,
             maxX: pos.x + w,
-            maxY: pos.y + h,
+            maxY: pos.y + h
         };
     }
     /**
@@ -3068,11 +3068,11 @@ class Polygon extends SATExports.Polygon {
         const next = this.calcPoints[(index + 1) % this.calcPoints.length];
         const start = {
             x: this.x + x,
-            y: this.y + y,
+            y: this.y + y
         };
         const end = {
             x: this.x + next.x,
-            y: this.y + next.y,
+            y: this.y + next.y
         };
         return { start, end };
     }
@@ -3395,7 +3395,7 @@ class Line extends Polygon {
     constructor(start, end, options) {
         super(start, [
             { x: 0, y: 0 },
-            { x: end.x - start.x, y: end.y - start.y },
+            { x: end.x - start.x, y: end.y - start.y }
         ], options);
         /**
          * line type
@@ -3411,13 +3411,13 @@ class Line extends Polygon {
         this.isConvex = true;
         if (this.calcPoints.length === 1 || !end) {
             console.error({ start, end });
-            throw new Error("No end point for line provided");
+            throw new Error('No end point for line provided');
         }
     }
     get start() {
         return {
             x: this.x + this.calcPoints[0].x,
-            y: this.y + this.calcPoints[0].y,
+            y: this.y + this.calcPoints[0].y
         };
     }
     /**
@@ -3430,7 +3430,7 @@ class Line extends Polygon {
     get end() {
         return {
             x: this.x + this.calcPoints[1].x,
-            y: this.y + this.calcPoints[1].y,
+            y: this.y + this.calcPoints[1].y
         };
     }
     /**

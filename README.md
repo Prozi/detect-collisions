@@ -34,8 +34,8 @@ For detailed documentation on the library's API, refer to the following link:
 Initialize a unique collision system using Detect-Collisions:
 
 ```ts
-const { System } = require("detect-collisions");
-const system = new System();
+const { System } = require('detect-collisions')
+const system = new System()
 ```
 
 ### Step 2: Understand Body Attributes
@@ -62,15 +62,15 @@ const {
   Ellipse,
   Line,
   Point,
-  Polygon,
-} = require("detect-collisions");
+  Polygon
+} = require('detect-collisions')
 
 // Example: Create and insert box1 body
-const box1 = system.createBox(position, width, height, options);
+const box1 = system.createBox(position, width, height, options)
 // Example: Create box2 body
-const box2 = new Box(position, width, height, options);
+const box2 = new Box(position, width, height, options)
 // Example: Insert box2 body
-system.insert(box2);
+system.insert(box2)
 ```
 
 ### Step 4: Manipulate Bodies
@@ -79,23 +79,23 @@ Manipulate body attributes and update the collision system:
 
 ```ts
 // if omitted updateNow is true
-const updateNow = false;
+const updateNow = false
 // this should be time scaled, 1 for example
-const speed = 1;
+const speed = 1
 
 // teleport
-box.setPosition(x, y, updateNow);
-box.setScale(scaleX, scaleY, updateNow);
-box.setAngle(angle, updateNow);
-box.move(speed, updateNow);
-box.setOffset({ x, y }, updateNow);
-console.log(box.dirty); // true
+box.setPosition(x, y, updateNow)
+box.setScale(scaleX, scaleY, updateNow)
+box.setAngle(angle, updateNow)
+box.move(speed, updateNow)
+box.setOffset({ x, y }, updateNow)
+console.log(box.dirty) // true
 
-box.updateBody(); // Update the body once, when all manipulations are done
-console.log(box.dirty); // false
+box.updateBody() // Update the body once, when all manipulations are done
+console.log(box.dirty) // false
 
-box.group = group; // Immediate effect, no body/system update needed
-console.log(box.dirty); // false
+box.group = group // Immediate effect, no body/system update needed
+console.log(box.dirty) // false
 ```
 
 ### Step 5: Collision Detection and Resolution
@@ -104,7 +104,7 @@ Detect collisions and respond accordingly:
 
 ```ts
 const callback = (result) => {
-  console.info(result);
+  console.info(result)
 }
 
 if (system.checkAll(callback)) {
@@ -116,13 +116,13 @@ if (system.checkOne(body, callback)) {
 }
 
 // Or separate bodies based on isStatic/isTrigger
-system.separate();
+system.separate()
 ```
 
 Get exact collision points:
 
 ```ts
-const { a, b } = result;
+const { a, b } = result
 const points = system.getCollisionPoints(a, b)
 ```
 
@@ -131,7 +131,7 @@ const points = system.getCollisionPoints(a, b)
 Remove bodies when they're no longer needed:
 
 ```ts
-system.remove(body);
+system.remove(body)
 ```
 
 And that's it! You're now ready to utilize the Detect-Collisions library in your project.
@@ -141,28 +141,28 @@ And that's it! You're now ready to utilize the Detect-Collisions library in your
 To facilitate debugging, Detect-Collisions allows you to visually represent the collision bodies. By invoking the `draw()` method and supplying a 2D context of a `<canvas>` element, you can draw all the bodies within a collision system. You can also opt to draw individual bodies.
 
 ```ts
-const canvas = document.createElement("canvas");
-const context = canvas.getContext("2d");
+const canvas = document.createElement('canvas')
+const context = canvas.getContext('2d')
 
-context.strokeStyle = "#FFFFFF";
-context.beginPath();
+context.strokeStyle = '#FFFFFF'
+context.beginPath()
 // draw specific body
-body.draw(context);
+body.draw(context)
 // draw whole system
-system.draw(context);
-context.stroke();
+system.draw(context)
+context.stroke()
 ```
 
 To assess the [Bounding Volume Hierarchy](https://en.wikipedia.org/wiki/Bounding_volume_hierarchy), you can draw the BVH.
 
 ```ts
-context.strokeStyle = "#FFFFFF";
-context.beginPath();
+context.strokeStyle = '#FFFFFF'
+context.beginPath()
 // draw specific body bounding box
-body.drawBVH(context);
+body.drawBVH(context)
 // draw bounding volume hierarchy of the system
-system.drawBVH(context);
-context.stroke();
+system.drawBVH(context)
+context.stroke()
 ```
 
 ## Raycasting
@@ -170,17 +170,17 @@ context.stroke();
 Detect-Collisions provides the functionality to gather raycast data. Here's how:
 
 ```ts
-const start = { x: 0, y: 0 };
-const end = { x: 0, y: -10 };
+const start = { x: 0, y: 0 }
+const end = { x: 0, y: -10 }
 const hit = system.raycast(start, end, (body, ray) => {
   // if you don't want the body to be hit by raycast return false
-  return true;
-});
+  return true
+})
 
 if (hit) {
-  const { point, body } = hit;
+  const { point, body } = hit
 
-  console.log({ point, body });
+  console.log({ point, body })
 }
 ```
 
@@ -189,7 +189,7 @@ In this example, `point` is a `Vector` with the coordinates of the nearest inter
 ## Usage in Browsers
 
 ```js
-import { System } from "https://esm.sh/detect-collisions";
+import { System } from 'https://esm.sh/detect-collisions'
 ```
 
 ## Contributing to the Project

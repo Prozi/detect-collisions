@@ -13,7 +13,7 @@ class Line extends polygon_1.Polygon {
     constructor(start, end, options) {
         super(start, [
             { x: 0, y: 0 },
-            { x: end.x - start.x, y: end.y - start.y },
+            { x: end.x - start.x, y: end.y - start.y }
         ], options);
         /**
          * line type
@@ -29,13 +29,13 @@ class Line extends polygon_1.Polygon {
         this.isConvex = true;
         if (this.calcPoints.length === 1 || !end) {
             console.error({ start, end });
-            throw new Error("No end point for line provided");
+            throw new Error('No end point for line provided');
         }
     }
     get start() {
         return {
             x: this.x + this.calcPoints[0].x,
-            y: this.y + this.calcPoints[0].y,
+            y: this.y + this.calcPoints[0].y
         };
     }
     /**
@@ -48,7 +48,7 @@ class Line extends polygon_1.Polygon {
     get end() {
         return {
             x: this.x + this.calcPoints[1].x,
-            y: this.y + this.calcPoints[1].y,
+            y: this.y + this.calcPoints[1].y
         };
     }
     /**

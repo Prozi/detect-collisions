@@ -1,8 +1,8 @@
-@import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro&family=Source+Code+Pro&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&family=Source+Code+Pro&display=swap');
 
 body,
 p {
-  font-family: "Source Sans Pro", Arial, Helvetica, sans-serif;
+  font-family: 'Source Sans Pro', Arial, Helvetica, sans-serif;
   font-size: 18px;
 }
 
@@ -13,7 +13,7 @@ h4 {
 pre,
 code,
 .tsd-signature {
-  font-family: "Source Code Pro", "Courier New", Courier, monospace;
+  font-family: 'Source Code Pro', 'Courier New', Courier, monospace;
   padding: 0 0.5em;
   line-height: 1.75;
   margin: 1px;

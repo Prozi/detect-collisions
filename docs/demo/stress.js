@@ -1,9 +1,9 @@
 "use strict";
-const { BodyGroup } = require("../model");
-const { System } = require("../system");
-const { getBounceDirection, groupBits } = require("../utils");
-const { win, doc, width, height, loop } = require("./canvas");
-const seededRandom = require("random-seed").create("@Prozi").random;
+const { BodyGroup } = require('../model');
+const { System } = require('../system');
+const { getBounceDirection, groupBits } = require('../utils');
+const { win, doc, width, height, loop } = require('./canvas');
+const seededRandom = require('random-seed').create('@Prozi').random;
 function random(min, max) {
     return Math.floor(seededRandom() * max) + min;
 }
@@ -43,21 +43,21 @@ class Stress {
         this.updateBody = this.updateBody.bind(this);
         // observer #debug & add filtering checkbox event
         if (win.MutationObserver) {
-            const observer = new win.MutationObserver(mutations => {
-                mutations.forEach(mutation => {
-                    mutation.addedNodes.forEach(node => {
-                        if (node.id === "debug") {
+            const observer = new win.MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    mutation.addedNodes.forEach((node) => {
+                        if (node.id === 'debug') {
                             document
-                                .querySelector("#filtering")
-                                .addEventListener("change", () => this.toggleFiltering());
+                                .querySelector('#filtering')
+                                .addEventListener('change', () => this.toggleFiltering());
                             observer.disconnect();
                         }
                     });
                 });
             });
-            observer.observe(doc.querySelector("body"), {
+            observer.observe(doc.querySelector('body'), {
                 subtree: false,
-                childList: true,
+                childList: true
             });
         }
         this.start = () => {
@@ -67,17 +67,17 @@ class Stress {
     getBounds() {
         return [
             this.physics.createBox({ x: 0, y: 0 }, width, 10, {
-                isStatic: true,
+                isStatic: true
             }),
             this.physics.createBox({ x: width - 10, y: 0 }, 10, height, {
-                isStatic: true,
+                isStatic: true
             }),
             this.physics.createBox({ x: 0, y: height - 10 }, width, 10, {
-                isStatic: true,
+                isStatic: true
             }),
             this.physics.createBox({ x: 0, y: 0 }, 10, height, {
-                isStatic: true,
-            }),
+                isStatic: true
+            })
         ];
     }
     toggleFiltering() {
@@ -132,11 +132,11 @@ class Stress {
             const size = 0.5 * (body.scaleX + body.scaleY);
             const bounce = getBounceDirection(body, {
                 x: body.x + bounces.x,
-                y: body.y + bounces.y,
+                y: body.y + bounces.y
             });
             bounce.scale(body.size).add({
                 x: body.directionX * size,
-                y: body.directionY * size,
+                y: body.directionY * size
             });
             const { x, y } = bounce.normalize();
             body.directionX = x;
@@ -153,7 +153,7 @@ class Stress {
         const direction = (random(0, 360) * Math.PI) / 180;
         const options = {
             isCentered: true,
-            padding: (minSize + maxSize) * 0.2,
+            padding: (minSize + maxSize) * 0.2
         };
         let body;
         const variant = this.lastVariant++ % 5;
@@ -187,7 +187,7 @@ class Stress {
                 }
                 body = this.physics.createLine({ x, y }, {
                     x: x + random(minSize, maxSize),
-                    y: y + random(minSize, maxSize),
+                    y: y + random(minSize, maxSize)
                 }, options);
                 ++this.lines;
                 break;
@@ -199,7 +199,7 @@ class Stress {
                     { x: -random(minSize, maxSize), y: random(minSize, maxSize) },
                     { x: random(minSize, maxSize), y: random(minSize, maxSize) },
                     { x: random(minSize, maxSize), y: -random(minSize, maxSize) },
-                    { x: -random(minSize, maxSize), y: -random(minSize, maxSize) },
+                    { x: -random(minSize, maxSize), y: -random(minSize, maxSize) }
                 ], options);
                 ++this.polygons;
                 break;

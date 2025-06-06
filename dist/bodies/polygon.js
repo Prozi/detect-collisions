@@ -34,7 +34,7 @@ class Polygon extends model_1.SATPolygon {
          */
         this.scaleVector = { x: 1, y: 1 };
         if (!points.length) {
-            throw new Error("No points in polygon");
+            throw new Error('No points in polygon');
         }
         (0, utils_1.extendBody)(this, options);
     }
@@ -133,7 +133,7 @@ class Polygon extends model_1.SATPolygon {
     setScale(x, y = x, updateNow = true) {
         this.scaleVector.x = Math.abs(x);
         this.scaleVector.y = Math.abs(y);
-        // super instead of this to not taint pointsBackup 
+        // super instead of this to not taint pointsBackup
         super.setPoints((0, optimized_1.map)(this.points, (_point, index) => new model_1.SATVector(this.pointsBackup[index].x * this.scaleVector.x, this.pointsBackup[index].y * this.scaleVector.y)));
         this.updateConvex();
         this.markAsDirty(updateNow);
@@ -158,7 +158,7 @@ class Polygon extends model_1.SATPolygon {
             minX: pos.x,
             minY: pos.y,
             maxX: pos.x + w,
-            maxY: pos.y + h,
+            maxY: pos.y + h
         };
     }
     /**
@@ -169,11 +169,11 @@ class Polygon extends model_1.SATPolygon {
         const next = this.calcPoints[(index + 1) % this.calcPoints.length];
         const start = {
             x: this.x + x,
-            y: this.y + y,
+            y: this.y + y
         };
         const end = {
             x: this.x + next.x,
-            y: this.y + next.y,
+            y: this.y + next.y
         };
         return { start, end };
     }

@@ -1,13 +1,13 @@
-import { Response, Circle as SATCircle, Polygon as SATPolygon, Vector as SATVector } from "sat";
-import { Box } from "./bodies/box";
-import { Circle } from "./bodies/circle";
-import { Ellipse } from "./bodies/ellipse";
-import { Line } from "./bodies/line";
-import { Point } from "./bodies/point";
-import { Polygon } from "./bodies/polygon";
-import { System } from "./system";
-import RBush from "./external/rbush";
-export { Point as DecompPoint, Polygon as DecompPolygon, isSimple, quickDecomp, } from "poly-decomp-es";
+import { Response, Circle as SATCircle, Polygon as SATPolygon, Vector as SATVector } from 'sat';
+import { Box } from './bodies/box';
+import { Circle } from './bodies/circle';
+import { Ellipse } from './bodies/ellipse';
+import { Line } from './bodies/line';
+import { Point } from './bodies/point';
+import { Polygon } from './bodies/polygon';
+import { System } from './system';
+import RBush from './external/rbush';
+export { Point as DecompPoint, Polygon as DecompPolygon, isSimple, quickDecomp } from 'poly-decomp-es';
 export interface BBox {
     minX: number;
     minY: number;

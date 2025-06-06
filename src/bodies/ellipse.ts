@@ -1,7 +1,7 @@
-import { BodyGroup, BodyOptions, BodyType, PotentialVector } from "../model";
+import { BodyGroup, BodyOptions, BodyType, PotentialVector } from '../model'
 
-import { Polygon } from "./polygon";
-import { createEllipse } from "../utils";
+import { Polygon } from './polygon'
+import { createEllipse } from '../utils'
 
 export interface EllipseConstructor<TEllipse extends Ellipse> {
   new (
@@ -10,7 +10,7 @@ export interface EllipseConstructor<TEllipse extends Ellipse> {
     radiusY?: number,
     step?: number,
     options?: BodyOptions
-  ): TEllipse;
+  ): TEllipse
 }
 
 /**
@@ -20,24 +20,24 @@ export class Ellipse<UserDataType = any> extends Polygon<UserDataType> {
   /**
    * ellipse type
    */
-  readonly type: BodyType.Ellipse = BodyType.Ellipse;
+  readonly type: BodyType.Ellipse = BodyType.Ellipse
 
   /**
    * faster than type
    */
-  readonly typeGroup: BodyGroup.Ellipse = BodyGroup.Ellipse;
+  readonly typeGroup: BodyGroup.Ellipse = BodyGroup.Ellipse
 
   /**
    * ellipses are convex
    */
-  readonly isConvex = true;
+  readonly isConvex = true
 
   /**
    * inner initial params save
    */
-  protected _radiusX: number;
-  protected _radiusY: number;
-  protected _step: number;
+  protected _radiusX: number
+  protected _radiusY: number
+  protected _step: number
 
   /**
    * collider - ellipse
@@ -49,11 +49,11 @@ export class Ellipse<UserDataType = any> extends Polygon<UserDataType> {
     step: number = (radiusX + radiusY) / Math.PI,
     options?: BodyOptions<UserDataType>
   ) {
-    super(position, createEllipse(radiusX, radiusY, step), options);
+    super(position, createEllipse(radiusX, radiusY, step), options)
 
-    this._radiusX = radiusX;
-    this._radiusY = radiusY;
-    this._step = step;
+    this._radiusX = radiusX
+    this._radiusY = radiusY
+    this._step = step
   }
 
   /**
@@ -65,65 +65,65 @@ export class Ellipse<UserDataType = any> extends Polygon<UserDataType> {
    * is body centered?
    */
   get isCentered(): boolean {
-    return true;
+    return true
   }
 
   /**
    * get ellipse step number
    */
   get step(): number {
-    return this._step;
+    return this._step
   }
 
   /**
    * set ellipse step number
    */
   set step(step: number) {
-    this._step = step;
-    this.setPoints(createEllipse(this._radiusX, this._radiusY, this._step));
+    this._step = step
+    this.setPoints(createEllipse(this._radiusX, this._radiusY, this._step))
   }
 
   /**
    * get ellipse radiusX
    */
   get radiusX(): number {
-    return this._radiusX;
+    return this._radiusX
   }
 
   /**
    * set ellipse radiusX, update points
    */
   set radiusX(radiusX: number) {
-    this._radiusX = radiusX;
-    this.setPoints(createEllipse(this._radiusX, this._radiusY, this._step));
+    this._radiusX = radiusX
+    this.setPoints(createEllipse(this._radiusX, this._radiusY, this._step))
   }
 
   /**
    * get ellipse radiusY
    */
   get radiusY(): number {
-    return this._radiusY;
+    return this._radiusY
   }
 
   /**
    * set ellipse radiusY, update points
    */
   set radiusY(radiusY: number) {
-    this._radiusY = radiusY;
-    this.setPoints(createEllipse(this._radiusX, this._radiusY, this._step));
+    this._radiusY = radiusY
+    this.setPoints(createEllipse(this._radiusX, this._radiusY, this._step))
   }
 
   /**
    * do not attempt to use Polygon.center()
    */
   center(): void {
-    return;
+    return
   }
 
   /**
    * do not attempt to use Polygon.updateConvex()
    */
   protected updateConvex(): void {
-    return;
+    return
   }
 }
